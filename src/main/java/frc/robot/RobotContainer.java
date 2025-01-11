@@ -4,18 +4,15 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-
+import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.swerve.BaseSwerveDrive;
-import com.pathplanner.lib.auto.AutoBuilder;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.subsystems.SwerveDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,12 +22,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer extends ChaosRobotContainer {
 
-
+  Pigeon2 m_gyro;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     super();
-    m_swerveDrive = new BaseSwerveDrive(null, null, null);
+    m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
+    m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
     
     // Configure the trigger bindings
     configureBindings();
@@ -46,8 +44,7 @@ public class RobotContainer extends ChaosRobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-
+    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive));
   }
 
   /**
@@ -59,13 +56,13 @@ public class RobotContainer extends ChaosRobotContainer {
   @Override
   public void configureDriverController() {
     // TODO Auto-generated method stub
-
+    m_driver = new Gamepad(0);
   }
 
   @Override
   public void configureOperatorController() {
     // TODO Auto-generated method stub
-    
+    m_operator = new Gamepad(1);
   }
 
   @Override
