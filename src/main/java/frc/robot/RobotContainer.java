@@ -17,6 +17,8 @@ import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.manipulator.Manipulator;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.auto.*;
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -34,12 +36,14 @@ public class RobotContainer extends ChaosRobotContainer {
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
+      * @throws Exception 
+      */
+     public RobotContainer() throws Exception {
     super();
     m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
     m_manipulator = new Manipulator();
+    BuildAutoer();
     // Configure the trigger bindings
     configureBindings();
   }
