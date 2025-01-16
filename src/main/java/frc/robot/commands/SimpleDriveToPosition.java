@@ -41,6 +41,7 @@ public class SimpleDriveToPosition extends Command {
   public void end(boolean interrupted) {
     m_swerveDrive.resetPids();
     m_swerveDrive.driverModeInit();
+    m_swerveDrive.stop();
   }
 
   // Returns true when the command should end.
