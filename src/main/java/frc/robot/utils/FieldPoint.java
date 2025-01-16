@@ -30,8 +30,8 @@ public class FieldPoint {
 
   protected final double fieldWidth = 8.052;
     public static final FieldPoint processor = new FieldPoint("processor", new Pose2d(5.988,0,Rotation2d.fromDegrees(90)));
-    public static final FieldPoint leftSource = new FieldPoint("leftSource", new Pose2d(0.930,7.445,Rotation2d.fromDegrees(90)));
-    public static final FieldPoint rightSource = new FieldPoint("rightSource", new Pose2d(0.930,0.6553,Rotation2d.fromDegrees(90)));
+    public static final FieldPoint leftSource = new FieldPoint("leftSource", new Pose2d(0.8512,7.396,Rotation2d.fromDegrees(90)));
+    public static final FieldPoint rightSource = new FieldPoint("rightSource", new Pose2d(0.852,0.6553,Rotation2d.fromDegrees(90)));
 
     public FieldPoint (String name, Pose2d pose) {
         m_name = name;
