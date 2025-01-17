@@ -45,7 +45,7 @@ public class RobotContainer extends ChaosRobotContainer {
     m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
     m_manipulator = new Manipulator();
-    BuildAutoer();
+    buildPathplannerAutoChooser();
     // Configure the trigger bindings
     configureBindings();
   }
