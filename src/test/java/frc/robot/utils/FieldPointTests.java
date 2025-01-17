@@ -14,17 +14,17 @@ public class FieldPointTests {
         assertEquals(8.056, red_pose.getTranslation().getY(), DELTA);
         final FieldPoint source_left = FieldPoint.leftSource;
         blu_pose = source_left.getBluePose(); // April Tag 2
-        assertEquals(16.685, blu_pose.getTranslation().getX(), DELTA);
+        assertEquals(0.852, blu_pose.getTranslation().getX(), DELTA);
         assertEquals(7.398, blu_pose.getTranslation().getY(), DELTA);
         red_pose = source_left.getRedPose(); // April Tag 12
-        assertEquals(0.852, red_pose.getTranslation().getX(), DELTA);
+        assertEquals(16.685, red_pose.getTranslation().getX(), DELTA);
         assertEquals(0.656, red_pose.getTranslation().getY(), DELTA);
         final FieldPoint source_right = FieldPoint.rightSource;
         blu_pose = source_right.getBluePose(); // April Tag 1
-        assertEquals(16.697, blu_pose.getTranslation().getX(), DELTA);
+        assertEquals(0.8512, blu_pose.getTranslation().getX(), DELTA);
         assertEquals(0.6553, blu_pose.getTranslation().getY(), DELTA);
         red_pose = source_right.getRedPose(); // April Tag 13
-        assertEquals(0.8512, red_pose.getTranslation().getX(), DELTA);
+        assertEquals( 16.697, red_pose.getTranslation().getX(), DELTA);
         assertEquals(7.396, red_pose.getTranslation().getY(), DELTA);
     }
 }

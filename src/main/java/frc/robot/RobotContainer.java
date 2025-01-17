@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.manipulator.Manipulator;
+import frc.robot.utils.FieldPoint;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.*;
@@ -64,6 +66,8 @@ public class RobotContainer extends ChaosRobotContainer {
    */
   private void configureBindings() {
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive));
+
+    m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
 
     m_operator.a().whileTrue(new RunCommand(()-> m_manipulator.m_lift.setSpeed(0.5), m_manipulator.m_lift));
     m_operator.b().whileTrue(new RunCommand(()-> m_manipulator.m_lift.setSpeed(-0.5), m_manipulator.m_lift));

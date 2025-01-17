@@ -9,6 +9,7 @@ import com.chaos131.poses.MirroredDrivePose;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /** Add your docs here. */
@@ -29,8 +30,8 @@ public class FieldPoint {
 
   protected final double fieldWidth = 8.052;
     public static final FieldPoint processor = new FieldPoint("processor", new Pose2d(5.988,0,Rotation2d.fromDegrees(90)));
-    public static final FieldPoint leftSource = new FieldPoint("leftSource", new Pose2d(16.685,7.398,Rotation2d.fromDegrees(90)));
-    public static final FieldPoint rightSource = new FieldPoint("rightSource", new Pose2d(16.685,0.6553,Rotation2d.fromDegrees(90)));
+    public static final FieldPoint leftSource = new FieldPoint("leftSource", new Pose2d(0.8512,7.396,Rotation2d.fromDegrees(90)));
+    public static final FieldPoint rightSource = new FieldPoint("rightSource", new Pose2d(0.852,0.6553,Rotation2d.fromDegrees(90)));
 
     public FieldPoint (String name, Pose2d pose) {
         m_name = name;
@@ -52,4 +53,19 @@ public class FieldPoint {
 
         return m_redPose;
     }
+    /**
+     * Gets the appropriate pose for the current alliance color. 
+     * (Override this when using unit testing since the call to DriverStation will throw an exception)
+     */
+    protected Alliance getCurrentAlliance() {
+        return DriverStation.getAlliance().orElse(m_defaultAlliance);
+    }
+
+    /**
+     * Gets the pose for the robot's current alliance. (If the DS is not connected, the default alliance is used)
+     */
+    public Pose2d getCurrentAlliancePose() {
+        return getCurrentAlliance() == Alliance.Blue ? m_bluePose : m_redPose;
+    }
+    
 }
