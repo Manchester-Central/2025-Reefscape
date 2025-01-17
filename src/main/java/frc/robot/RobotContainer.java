@@ -68,7 +68,7 @@ public class RobotContainer extends ChaosRobotContainer {
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive));
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
-
+    m_driver.b().whileTrue(((SwerveDrive)m_swerveDrive).followPathCommand("Test Path"));
     m_operator.a().whileTrue(new RunCommand(()-> m_manipulator.m_lift.setSpeed(0.5), m_manipulator.m_lift));
     m_operator.b().whileTrue(new RunCommand(()-> m_manipulator.m_lift.setSpeed(-0.5), m_manipulator.m_lift));
   }
