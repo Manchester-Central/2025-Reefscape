@@ -20,13 +20,13 @@ public class Lift extends SubsystemBase {
 
   // Simulator
   // TODO: add values to numMotors
-  private DCMotor m_pivotGearBox = DCMotor.getVex775Pro(4);
+  private DCMotor m_pivotGearBox = DCMotor.getKrakenX60(4);
   private SingleJointedArmSim m_pivotSim =
       new SingleJointedArmSim(
           m_pivotGearBox,
-          10.0,
-          4.0,
-          2.0,
+          24576 / 180.0,
+          SingleJointedArmSim.estimateMOI(1, 10),
+          1,
           Rotation2d.fromDegrees(30).getRadians(),
           Rotation2d.fromDegrees(75).getRadians(),
           true,
@@ -48,10 +48,16 @@ public class Lift extends SubsystemBase {
   @Override
   public void periodic() {
     m_elevatorSim.update(0.02);
+    m_pivotSim.update(0.02);
+    m_mechanism2dLift.setLength(m_elevatorSim.getPositionMeters());
+    m_mechanism2dLift.setAngle(Rotation2d.fromRadians(m_pivotSim.getAngleRads()));
   }
 
-  public void setSpeed(double speed) {
+  public void setElevateSpeed(double speed) {
     m_elevatorSim.setInput(speed);
-    m_mechanism2dLift.setLength(m_elevatorSim.getPositionMeters());
+  }
+
+  public void setPivotSpeed(double speed) {
+    m_pivotSim.setInput(speed);
   }
 }

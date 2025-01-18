@@ -7,7 +7,7 @@ package frc.robot;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriverRelativeDrive;
@@ -70,8 +70,28 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
-    m_operator.a().whileTrue(new RunCommand(() -> m_lift.setSpeed(0.5), m_lift));
-    m_operator.b().whileTrue(new RunCommand(() -> m_lift.setSpeed(-0.5), m_lift));
+
+    m_operator
+        .a()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_lift.setElevateSpeed(0.5), () -> m_lift.setElevateSpeed(0), m_lift));
+    m_operator
+        .b()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_lift.setElevateSpeed(-0.5), () -> m_lift.setElevateSpeed(0), m_lift));
+
+    m_operator
+        .x()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_lift.setPivotSpeed(0.5), () -> m_lift.setPivotSpeed(0), m_lift));
+    m_operator
+        .y()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_lift.setPivotSpeed(-0.5), () -> m_lift.setPivotSpeed(0), m_lift));
   }
 
   /**

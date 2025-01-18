@@ -15,7 +15,7 @@ public class Mech2DManager {
   private MechanismRoot2d m_mechanismRoot;
 
   public Mech2DManager() {
-    m_mechanismBase = new Mechanism2d(3, 3);
+    m_mechanismBase = new Mechanism2d(0.889, 3);
     m_mechanismRoot = m_mechanismBase.getRoot("Manipulator", 0, 0);
     SmartDashboard.putData("Manipulator", m_mechanismBase);
   }
