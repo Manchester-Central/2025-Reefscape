@@ -14,16 +14,19 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Lift extends SubsystemBase {
 
-  private MechanismLigament2d m_mechanism2dLift; 
+  private MechanismLigament2d m_mechanism2dLift;
 
-  //Simulator
+  // Simulator
   private DCMotor m_liftGearBox = DCMotor.getVex775Pro(4);
-  private ElevatorSim m_sim = new ElevatorSim(m_liftGearBox, 10, 4, Units.inchesToMeters(2), 0, 1.5, false, 0, 0.005, 0);
+  private ElevatorSim m_sim =
+      new ElevatorSim(m_liftGearBox, 10, 4, Units.inchesToMeters(2), 0, 1.5, false, 0, 0.005, 0);
 
   /** Creates a new Lift. */
   public Lift(MechanismRoot2d mechanismRoot) {
-    m_mechanism2dLift = mechanismRoot.append(new MechanismLigament2d("lift", m_sim.getPositionMeters(), 45, 6, new Color8Bit(0, 255, 0)));
-
+    m_mechanism2dLift =
+        mechanismRoot.append(
+            new MechanismLigament2d(
+                "lift", m_sim.getPositionMeters(), 45, 6, new Color8Bit(0, 255, 0)));
   }
 
   @Override
@@ -31,10 +34,8 @@ public class Lift extends SubsystemBase {
     m_sim.update(0.02);
   }
 
-  public void setSpeed(double speed){
+  public void setSpeed(double speed) {
     m_sim.setInput(speed);
     m_mechanism2dLift.setLength(m_sim.getPositionMeters());
   }
 }
-
-

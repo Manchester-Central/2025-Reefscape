@@ -2,7 +2,6 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public final class Constants {
@@ -19,7 +18,8 @@ public final class Constants {
     public static final int FLAbsoEncoCANID = 32;
     public static final InvertedValue FLInvertedSpeed = InvertedValue.Clockwise_Positive;
     public static final InvertedValue FLInvertedAngle = InvertedValue.Clockwise_Positive;
-    public static final SensorDirectionValue FLInvertedEncoder = SensorDirectionValue.Clockwise_Positive;
+    public static final SensorDirectionValue FLInvertedEncoder =
+        SensorDirectionValue.Clockwise_Positive;
     public static final double FLSpeedGearRatio = 1.0;
     public static final double FLAngleGearRatio = 1.0;
     public static final double FLSpeedCircumference = 0.2;
@@ -35,7 +35,8 @@ public final class Constants {
     public static final int FRAbsoEncoCANID = 35;
     public static final InvertedValue FRInvertedSpeed = InvertedValue.Clockwise_Positive;
     public static final InvertedValue FRInvertedAngle = InvertedValue.Clockwise_Positive;
-    public static final SensorDirectionValue FRInvertedEncoder = SensorDirectionValue.Clockwise_Positive;
+    public static final SensorDirectionValue FRInvertedEncoder =
+        SensorDirectionValue.Clockwise_Positive;
     public static final double FRSpeedGearRatio = 1.0;
     public static final double FRAngleGearRatio = 1.0;
     public static final double FRSpeedCircumference = 0.2;
@@ -51,7 +52,8 @@ public final class Constants {
     public static final int BLAbsoEncoCANID = 41;
     public static final InvertedValue BLInvertedSpeed = InvertedValue.Clockwise_Positive;
     public static final InvertedValue BLInvertedAngle = InvertedValue.Clockwise_Positive;
-    public static final SensorDirectionValue BLInvertedEncoder = SensorDirectionValue.Clockwise_Positive;
+    public static final SensorDirectionValue BLInvertedEncoder =
+        SensorDirectionValue.Clockwise_Positive;
     public static final double BLSpeedGearRatio = 1.0;
     public static final double BLAngleGearRatio = 1.0;
     public static final double BLSpeedCircumference = 0.2;
@@ -67,7 +69,8 @@ public final class Constants {
     public static final int BRAbsoEncoCANID = 38;
     public static final InvertedValue BRInvertedSpeed = InvertedValue.Clockwise_Positive;
     public static final InvertedValue BRInvertedAngle = InvertedValue.Clockwise_Positive;
-    public static final SensorDirectionValue BRInvertedEncoder = SensorDirectionValue.Clockwise_Positive;
+    public static final SensorDirectionValue BRInvertedEncoder =
+        SensorDirectionValue.Clockwise_Positive;
     public static final double BRSpeedGearRatio = 1.0;
     public static final double BRAngleGearRatio = 1.0;
     public static final double BRSpeedCircumference = 0.2;
@@ -76,7 +79,7 @@ public final class Constants {
     public static final Rotation2d BRAngleEncoderOffset = Rotation2d.fromDegrees(0);
   }
 
-  public static class GyroConstants{
+  public static class GyroConstants {
     public static final int GyroCANID = 0;
   }
 }

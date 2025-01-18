@@ -5,15 +5,18 @@
 package frc.robot.subsystems;
 
 import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule;
-
 import edu.wpi.first.math.geometry.Translation2d;
 
 /** Add your docs here. */
 public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
-    public SwerveModule2025(String nameString, Translation2d wheelPosition,
-     SpeedControllerConfig speedControl, AngleControllerConfig angleControl,
-     AbsoluteEncoderConfig absoEncoder, DriveConfig drivConfg) {
-        super(nameString, wheelPosition, speedControl, angleControl, absoEncoder, drivConfg);
-    }
-    //
+  public SwerveModule2025(
+      String nameString,
+      Translation2d wheelPosition,
+      SpeedControllerConfig speedControl,
+      AngleControllerConfig angleControl,
+      AbsoluteEncoderConfig absoEncoder,
+      DriveConfig drivConfg) {
+    super(nameString, wheelPosition, speedControl, angleControl, absoEncoder, drivConfg);
+  }
+  //
 }
