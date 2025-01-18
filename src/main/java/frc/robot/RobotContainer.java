@@ -16,6 +16,7 @@ import frc.robot.subsystems.FrontCamera;
 import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
+import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.utils.FieldPoint;
 
@@ -34,6 +35,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   private Intake m_intake;
   private Gripper m_gripper;
   private FrontCamera m_frontcamera;
+  private Mech2DManager m_mech2dManager;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -44,8 +46,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     super();
     m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
-    // m_manipulator = new Manipulator();
-    m_lift = new Lift(null); // TODO: fix mechanismRoot
+    m_mech2dManager = new Mech2DManager();
+    m_lift = new Lift(m_mech2dManager.getMechRoot());
     m_intake = new Intake();
     m_gripper = new Gripper();
     m_frontcamera = new FrontCamera();
