@@ -188,3 +188,5 @@ compile_commands.json
 
 secrets.json
 simgui-ds.json
+
+BuildConstants.java
