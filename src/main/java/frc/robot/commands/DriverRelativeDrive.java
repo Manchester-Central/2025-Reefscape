@@ -6,15 +6,15 @@ package frc.robot.commands;
 
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.swerve.BaseSwerveDrive;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SwerveDrive;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DriverRelativeDrive extends Command {
   /** Creates a new DriverRelativeDrive. */
   Gamepad m_driver;
+
   BaseSwerveDrive m_swerveDrive;
+
   public DriverRelativeDrive(Gamepad driver, BaseSwerveDrive swerve) {
     m_driver = driver;
     m_swerveDrive = swerve;
@@ -31,7 +31,8 @@ public class DriverRelativeDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerveDrive.moveFieldRelative(m_driver.getSlewLeftY(), -m_driver.getSlewLeftX(), -m_driver.getSlewRightX());
+    m_swerveDrive.moveFieldRelative(
+        m_driver.getSlewLeftY(), -m_driver.getSlewLeftX(), -m_driver.getSlewRightX());
   }
 
   // Called once the command ends or is interrupted.

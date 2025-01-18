@@ -20,14 +20,15 @@ public final class Main {
    * <p>If you change your main robot class, change the parameter type.
    */
   public static void main(String... args) {
-    RobotBase.startRobot(() -> {
-      try {
-        return new Robot();
-      } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-            return null;
-    });
+    RobotBase.startRobot(
+        () -> {
+          try {
+            return new Robot();
+          } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }
+          return null;
+        });
   }
 }

@@ -5,15 +5,14 @@
 package frc.robot.commands;
 
 import com.chaos131.swerve.BaseSwerveDrive;
-
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SwerveDrive;
 import frc.robot.utils.FieldPoint;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SimpleDriveToPosition extends Command {
   BaseSwerveDrive m_swerveDrive;
   FieldPoint m_fieldPoint;
+
   /** Creates a new SimpleDriveToPosition. */
   public SimpleDriveToPosition(BaseSwerveDrive swerveDrive, FieldPoint fieldPoint) {
     m_swerveDrive = swerveDrive;
