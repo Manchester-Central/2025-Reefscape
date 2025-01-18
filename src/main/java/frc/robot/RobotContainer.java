@@ -49,7 +49,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_mech2dManager = new Mech2DManager();
     m_lift = new Lift(m_mech2dManager.getMechRoot());
     m_intake = new Intake();
-    m_gripper = new Gripper();
+    m_gripper = new Gripper(m_lift.getMech2d());
     m_frontcamera = new FrontCamera();
     buildPathplannerAutoChooser();
     // Configure the trigger bindings
@@ -92,6 +92,18 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         .whileTrue(
             new StartEndCommand(
                 () -> m_lift.setPivotSpeed(-0.5), () -> m_lift.setPivotSpeed(0), m_lift));
+
+    m_operator
+        .leftTrigger()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_gripper.setPivotSpeed(-0.5), () -> m_gripper.setPivotSpeed(0), m_gripper));
+
+    m_operator
+        .rightTrigger()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_gripper.setPivotSpeed(0.5), () -> m_gripper.setPivotSpeed(0), m_gripper));
   }
 
   /**

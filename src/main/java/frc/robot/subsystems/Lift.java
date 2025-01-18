@@ -45,6 +45,10 @@ public class Lift extends SubsystemBase {
                 "lift", m_elevatorSim.getPositionMeters(), 45, 6, new Color8Bit(0, 255, 0)));
   }
 
+  public MechanismLigament2d getMech2d() {
+    return m_mechanism2dLift;
+  }
+
   @Override
   public void periodic() {
     m_elevatorSim.update(0.02);
