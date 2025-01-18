@@ -7,7 +7,6 @@ package frc.robot;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.pathplanner.lib.auto.*;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,7 +22,7 @@ import frc.robot.utils.FieldPoint;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
-public class RobotContainer extends ChaosRobotContainer {
+public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   Pigeon2 m_gyro;
 
@@ -57,7 +56,7 @@ public class RobotContainer extends ChaosRobotContainer {
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive));
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
-    m_driver.b().whileTrue(((SwerveDrive) m_swerveDrive).followPathCommand("Test Path"));
+    m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
     m_operator
         .a()
         .whileTrue(new RunCommand(() -> m_manipulator.m_lift.setSpeed(0.5), m_manipulator.m_lift));
