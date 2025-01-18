@@ -7,6 +7,7 @@ package frc.robot.subsystems.manipulator;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.Lift;
 
 /** Add your docs here. */
 public class Manipulator {

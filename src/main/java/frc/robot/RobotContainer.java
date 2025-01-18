@@ -12,8 +12,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
+import frc.robot.subsystems.FrontCamera;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.utils.FieldPoint;
 
 /**
@@ -26,7 +29,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   Pigeon2 m_gyro;
 
-  private Manipulator m_manipulator;
+  // private Manipulator m_manipulator;
+  private Lift m_lift;
+  private Intake m_intake;
+  private Gripper m_gripper;
+  private FrontCamera m_frontcamera;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -37,7 +44,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     super();
     m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
-    m_manipulator = new Manipulator();
+    // m_manipulator = new Manipulator();
+    m_lift = new Lift(null); // TODO: fix mechanismRoot
+    m_intake = new Intake();
+    m_gripper = new Gripper();
+    m_frontcamera = new FrontCamera();
     buildPathplannerAutoChooser();
     // Configure the trigger bindings
     configureBindings();
@@ -57,12 +68,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
-    m_operator
-        .a()
-        .whileTrue(new RunCommand(() -> m_manipulator.m_lift.setSpeed(0.5), m_manipulator.m_lift));
-    m_operator
-        .b()
-        .whileTrue(new RunCommand(() -> m_manipulator.m_lift.setSpeed(-0.5), m_manipulator.m_lift));
+    m_operator.a().whileTrue(new RunCommand(() -> m_lift.setSpeed(0.5), m_lift));
+    m_operator.b().whileTrue(new RunCommand(() -> m_lift.setSpeed(-0.5), m_lift));
   }
 
   /**
