@@ -7,13 +7,17 @@ package frc.robot;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
+import frc.robot.subsystems.FrontCamera;
+import frc.robot.subsystems.Gripper;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Lift;
+import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.manipulator.Manipulator;
 import frc.robot.utils.FieldPoint;
 
 /**
@@ -26,7 +30,12 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   Pigeon2 m_gyro;
 
-  private Manipulator m_manipulator;
+  // private Manipulator m_manipulator;
+  private Lift m_lift;
+  private Intake m_intake;
+  private Gripper m_gripper;
+  private FrontCamera m_frontcamera;
+  private Mech2DManager m_mech2dManager;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -37,7 +46,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     super();
     m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
-    m_manipulator = new Manipulator();
+    m_mech2dManager = new Mech2DManager();
+    m_lift = new Lift(m_mech2dManager.getMechRoot());
+    m_intake = new Intake();
+    m_gripper = new Gripper(m_lift.getMech2d());
+    m_frontcamera = new FrontCamera();
     buildPathplannerAutoChooser();
     // Configure the trigger bindings
     configureBindings();
@@ -57,12 +70,40 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
+
     m_operator
         .a()
-        .whileTrue(new RunCommand(() -> m_manipulator.m_lift.setSpeed(0.5), m_manipulator.m_lift));
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_lift.setElevateSpeed(0.5), () -> m_lift.setElevateSpeed(0), m_lift));
     m_operator
         .b()
-        .whileTrue(new RunCommand(() -> m_manipulator.m_lift.setSpeed(-0.5), m_manipulator.m_lift));
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_lift.setElevateSpeed(-0.5), () -> m_lift.setElevateSpeed(0), m_lift));
+
+    m_operator
+        .x()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_lift.setPivotSpeed(0.5), () -> m_lift.setPivotSpeed(0), m_lift));
+    m_operator
+        .y()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_lift.setPivotSpeed(-0.5), () -> m_lift.setPivotSpeed(0), m_lift));
+
+    m_operator
+        .leftTrigger()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_gripper.setPivotSpeed(-0.5), () -> m_gripper.setPivotSpeed(0), m_gripper));
+
+    m_operator
+        .rightTrigger()
+        .whileTrue(
+            new StartEndCommand(
+                () -> m_gripper.setPivotSpeed(0.5), () -> m_gripper.setPivotSpeed(0), m_gripper));
   }
 
   /**
