@@ -5,5 +5,4 @@
 package frc.robot.subsystems.shared;
 
 /** Add your docs here. */
-public interface ISubsystemState {
-}
+public interface ISubsystemState {}

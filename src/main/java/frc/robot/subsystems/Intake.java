@@ -11,17 +11,14 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
   public enum IntakeState implements ISubsystemState {
     START,
     STOW,
-    DEPLOY;
+    DEPLOY,
+    HANDOFF_PREP,
+    HANDOFF;
   };
 
   /** Creates a new Intake. */
   public Intake() {
     super(IntakeState.START);
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
   }
 
   @Override
@@ -33,13 +30,31 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
         break;
 
       case STOW:
+        stowState();
         break;
 
       case DEPLOY:
+        deployState();
+        break;
+
+      case HANDOFF_PREP:
+        handoffPrepState();
+        break;
+
+      case HANDOFF:
+        handoffState();
         break;
 
       default:
         break;
     }
   }
+
+  private void stowState() {}
+
+  private void deployState() {}
+
+  private void handoffPrepState() {}
+
+  private void handoffState() {}
 }
