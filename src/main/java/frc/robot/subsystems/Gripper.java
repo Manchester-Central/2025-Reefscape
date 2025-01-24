@@ -9,9 +9,14 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.shared.ISubsystemState;
+import frc.robot.subsystems.shared.StateBasedSubsystem;
 
-public class Gripper extends SubsystemBase {
+public class Gripper extends StateBasedSubsystem<Gripper.GripperState> {
+  public enum GripperState implements ISubsystemState {
+    START;
+  };
+
   private MechanismLigament2d m_mechanism2dGripper;
 
   // Simulator
@@ -30,6 +35,8 @@ public class Gripper extends SubsystemBase {
 
   /** Creates a new Gripper. */
   public Gripper(MechanismLigament2d liftMech2d) {
+    super(GripperState.START);
+    GripperSystem = this;
     m_mechanism2dGripper =
         liftMech2d.append(
             new MechanismLigament2d("gripper", 0.3, 0, 4, new Color8Bit(255, 0, 255)));
@@ -44,5 +51,10 @@ public class Gripper extends SubsystemBase {
 
   public void setPivotSpeed(double speed) {
     m_pivotSim.setInput(speed);
+  }
+
+  @Override
+  protected void runStateMachine() {
+    // TODO Auto-generated method stub
   }
 }

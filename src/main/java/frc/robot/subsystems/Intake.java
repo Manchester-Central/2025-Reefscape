@@ -19,6 +19,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
   /** Creates a new Intake. */
   public Intake() {
     super(IntakeState.START);
+    IntakeSystem = this;
   }
 
   @Override
@@ -50,7 +51,12 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
     }
   }
 
-  private void stowState() {}
+  private void stowState() {
+    if (DriverController.a().getAsBoolean()) {
+      m_currentState = IntakeState.DEPLOY;
+      return;
+    }
+  }
 
   private void deployState() {}
 

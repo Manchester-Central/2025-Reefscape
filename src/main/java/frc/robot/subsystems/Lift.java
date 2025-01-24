@@ -12,10 +12,13 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.shared.ISubsystemState;
+import frc.robot.subsystems.shared.StateBasedSubsystem;
 
-public class Lift extends SubsystemBase {
-
+public class Lift extends StateBasedSubsystem<Lift.LiftState> {
+  public enum LiftState implements ISubsystemState {
+    START;
+  };
   private MechanismLigament2d m_mechanism2dLift;
 
   // Simulator
@@ -39,6 +42,8 @@ public class Lift extends SubsystemBase {
 
   /** Creates a new Lift. */
   public Lift(MechanismRoot2d mechanismRoot) {
+    super(LiftState.START);
+    LiftSystem = this;
     m_mechanism2dLift =
         mechanismRoot.append(
             new MechanismLigament2d(
@@ -63,5 +68,10 @@ public class Lift extends SubsystemBase {
 
   public void setPivotSpeed(double speed) {
     m_pivotSim.setInput(speed);
+  }
+
+  @Override
+  protected void runStateMachine() {
+    // TODO Auto-generated method stub
   }
 }
