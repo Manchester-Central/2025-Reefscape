@@ -9,13 +9,16 @@ import com.chaos131.robot.ChaosRobotContainer;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.subsystems.FrontCamera;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.IdLift;
+import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.utils.FieldPoint;
 
 /**
@@ -65,6 +68,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
+    m_driver
+        .y()
+        .whileTrue(
+            new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
   }
 
   @Override
