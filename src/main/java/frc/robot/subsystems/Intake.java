@@ -4,14 +4,63 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.shared.ISubsystemState;
+import frc.robot.subsystems.shared.StateBasedSubsystem;
 
-public class Intake extends SubsystemBase {
+public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
+  public enum IntakeState implements ISubsystemState {
+    START,
+    STOW,
+    DEPLOY,
+    HANDOFF_PREP,
+    HANDOFF;
+  };
+
   /** Creates a new Intake. */
-  public Intake() {}
+  public Intake() {
+    super(IntakeState.START);
+    IntakeSystem = this;
+  }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  protected void runStateMachine() {
+    System.out.println(m_currentState);
+    switch (m_currentState) {
+      case START:
+        m_currentState = IntakeState.STOW;
+        break;
+
+      case STOW:
+        stowState();
+        break;
+
+      case DEPLOY:
+        deployState();
+        break;
+
+      case HANDOFF_PREP:
+        handoffPrepState();
+        break;
+
+      case HANDOFF:
+        handoffState();
+        break;
+
+      default:
+        break;
+    }
   }
+
+  private void stowState() {
+    if (DriverController.a().getAsBoolean()) {
+      m_currentState = IntakeState.DEPLOY;
+      return;
+    }
+  }
+
+  private void deployState() {}
+
+  private void handoffPrepState() {}
+
+  private void handoffState() {}
 }

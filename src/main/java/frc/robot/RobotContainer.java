@@ -18,6 +18,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.utils.FieldPoint;
 
 /**
@@ -70,57 +71,18 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
-
-    m_operator
-        .a()
-        .whileTrue(
-            new StartEndCommand(
-                () -> m_lift.setElevateSpeed(0.5), () -> m_lift.setElevateSpeed(0), m_lift));
-    m_operator
-        .b()
-        .whileTrue(
-            new StartEndCommand(
-                () -> m_lift.setElevateSpeed(-0.5), () -> m_lift.setElevateSpeed(0), m_lift));
-
-    m_operator
-        .x()
-        .whileTrue(
-            new StartEndCommand(
-                () -> m_lift.setPivotSpeed(0.5), () -> m_lift.setPivotSpeed(0), m_lift));
-    m_operator
-        .y()
-        .whileTrue(
-            new StartEndCommand(
-                () -> m_lift.setPivotSpeed(-0.5), () -> m_lift.setPivotSpeed(0), m_lift));
-
-    m_operator
-        .leftTrigger()
-        .whileTrue(
-            new StartEndCommand(
-                () -> m_gripper.setPivotSpeed(-0.5), () -> m_gripper.setPivotSpeed(0), m_gripper));
-
-    m_operator
-        .rightTrigger()
-        .whileTrue(
-            new StartEndCommand(
-                () -> m_gripper.setPivotSpeed(0.5), () -> m_gripper.setPivotSpeed(0), m_gripper));
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   @Override
   public void configureDriverController() {
-    // TODO Auto-generated method stub
     m_driver = new Gamepad(0);
+    StateBasedSubsystem.DriverController = m_driver;
   }
 
   @Override
   public void configureOperatorController() {
-    // TODO Auto-generated method stub
     m_operator = new Gamepad(1);
+    StateBasedSubsystem.OperatorController = m_operator;
   }
 
   @Override
