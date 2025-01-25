@@ -9,6 +9,11 @@ import frc.robot.subsystems.shared.StateBasedSubsystem;
 
 /** Add your docs here. */
 public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
+  private BasePivot m_basePivot = new BasePivot();
+  private Extender m_extender = new Extender();
+  private Gripper m_gripper = new Gripper();
+  private GripperPivot m_gripperPivot = new GripperPivot();
+
   public enum LiftState implements ISubsystemState {
     START,
     STOW,
