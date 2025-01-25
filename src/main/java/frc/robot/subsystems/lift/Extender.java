@@ -6,13 +6,13 @@ package frc.robot.subsystems.lift;
 
 /** Add your docs here. */
 public class Extender {
-  private double m_targetPosition;
+  private double m_targetLength = 1;
 
-  public void setTargetPosition(double newPosition) {
-    m_targetPosition = newPosition;
+  public void setTargetLength(double newLength) {
+    m_targetLength = newLength;
   }
 
-  public double getCurrentPosition() {
-    return m_targetPosition;
+  public double getCurrentLength() {
+    return m_targetLength;
   }
 }

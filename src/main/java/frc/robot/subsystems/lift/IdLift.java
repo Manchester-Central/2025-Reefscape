@@ -4,11 +4,28 @@
 
 package frc.robot.subsystems.lift;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.subsystems.shared.ISubsystemState;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 
 /** Add your docs here. */
 public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
+  public class IdLiftValues {
+    public Rotation2d basePivotAngle;
+    public Rotation2d gripperPivotAngle;
+    public double gripperSpeed;
+    public double extenderLength;
+  }
+
+  public IdLiftValues getLiftValues() {
+    IdLiftValues values = new IdLiftValues();
+    values.basePivotAngle = m_basePivot.getCurrentAngle();
+    values.gripperPivotAngle = m_gripperPivot.getCurrentAngle();
+    values.gripperSpeed = m_gripper.getCurrentSpeed();
+    values.extenderLength = m_extender.getCurrentLength();
+    return values;
+  }
+
   private BasePivot m_basePivot = new BasePivot();
   private Extender m_extender = new Extender();
   private Gripper m_gripper = new Gripper();

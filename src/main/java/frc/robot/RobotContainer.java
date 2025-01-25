@@ -45,9 +45,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     super();
     m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
-    m_mech2dManager = new Mech2DManager();
     m_idLift = new IdLift();
     m_intake = new Intake();
+    m_mech2dManager = new Mech2DManager(m_idLift, m_intake);
     m_frontcamera = new FrontCamera();
     buildPathplannerAutoChooser();
     // Configure the trigger bindings
