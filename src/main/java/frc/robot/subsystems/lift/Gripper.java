@@ -6,7 +6,7 @@ package frc.robot.subsystems.lift;
 
 /** Add your docs here. */
 public class Gripper {
-  private double m_targetSpeed;
+  private double m_targetSpeed = 0;
 
   public void setTargetSpeed(double newSpeed) {
     m_targetSpeed = newSpeed;

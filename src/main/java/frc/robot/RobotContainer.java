@@ -14,7 +14,6 @@ import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.subsystems.FrontCamera;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.IdLift;
@@ -45,9 +44,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     super();
     m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
-    m_mech2dManager = new Mech2DManager();
     m_idLift = new IdLift();
     m_intake = new Intake();
+    m_mech2dManager = new Mech2DManager(m_idLift, m_intake);
     m_frontcamera = new FrontCamera();
     buildPathplannerAutoChooser();
     // Configure the trigger bindings
@@ -68,10 +67,14 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
-    m_driver
-        .y()
-        .whileTrue(
-            new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
+
+    m_operator.start().whileTrue(new ChangeState().setLift(LiftState.STOW));
+    m_operator.leftBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR));
+    m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP));
+    m_operator.a().whileTrue(new ChangeState().setLift(LiftState.SCORE_L1));
+    m_operator.x().whileTrue(new ChangeState().setLift(LiftState.SCORE_L2));
+    m_operator.b().whileTrue(new ChangeState().setLift(LiftState.SCORE_L3));
+    m_operator.y().whileTrue(new ChangeState().setLift(LiftState.SCORE_L4));
   }
 
   @Override

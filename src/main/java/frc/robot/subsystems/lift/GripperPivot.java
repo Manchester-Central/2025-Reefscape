@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 /** Add your docs here. */
 public class GripperPivot {
-  private Rotation2d m_targetAngle;
+  private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
 
   public void setTargetAngle(Rotation2d newAngle) {
     m_targetAngle = newAngle;
