@@ -12,8 +12,8 @@ import java.util.Optional;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ChangeState extends Command {
-  Optional<LiftState> m_idLiftState;
-  Optional<IntakeState> m_intakeState;
+  Optional<LiftState> m_idLiftState = Optional.empty();
+  Optional<IntakeState> m_intakeState = Optional.empty();
 
   /** Creates a new uhhh. */
   public ChangeState() {

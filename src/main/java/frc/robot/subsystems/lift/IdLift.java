@@ -78,20 +78,54 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void startState() {}
+  private void startState() {
+    m_currentState = LiftState.STOW;
+  }
 
-  private void stowState() {}
+  private void stowState() {
+    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(120));
+    m_extender.setTargetLength(0.7);
+    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(90));
+    m_gripper.setTargetSpeed(0.0);
+  }
 
-  private void intakeFromFloorState() {}
+  private void intakeFromFloorState() {
+    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(136));
+    m_extender.setTargetLength(0.4);
+    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(51));
+    m_gripper.setTargetSpeed(0.5);
+  }
 
-  private void intakeFromHPState() {}
+  private void intakeFromHPState() {
+    stowState(); // TODO: THINK ABOUT HP PICKUP
+  }
 
-  private void scoreL1State() {}
+  private void scoreL1State() {
+    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(126));
+    m_extender.setTargetLength(0.97);
+    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(110));
+    m_gripper.setTargetSpeed(0.5);
+  }
 
-  private void scoreL2State() {}
+  private void scoreL2State() {
+    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(119));
+    m_extender.setTargetLength(1.0);
+    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(117));
+    m_gripper.setTargetSpeed(0.5);
+  }
 
-  private void scoreL3State() {}
+  private void scoreL3State() {
+    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(110));
+    m_extender.setTargetLength(1.31);
+    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(126));
+    m_gripper.setTargetSpeed(0.5);
+  }
 
-  private void scoreL4State() {}
+  private void scoreL4State() {
+    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(110));
+    m_extender.setTargetLength(1.8);
+    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-51));
+    m_gripper.setTargetSpeed(-0.5);
+  }
 }
 // RIP m_oldLift & m_oldGripper 2025-2025

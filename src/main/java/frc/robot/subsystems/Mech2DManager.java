@@ -33,9 +33,9 @@ public class Mech2DManager extends SubsystemBase {
     m_liftBase = new Mechanism2d(2, 3);
     m_liftRoot = m_liftBase.getRoot("Lift", 1.4, 0.2);
     m_extenderLigament =
-        m_liftRoot.append(new MechanismLigament2d("Extender", 0, 0, 0.4, kExtenderColor));
+        m_liftRoot.append(new MechanismLigament2d("Extender", 0, 0, 8, kExtenderColor));
     m_gripperLigament =
-        m_extenderLigament.append(new MechanismLigament2d("Gripper", 0.2, 0, 0.2, kGripperNeutral));
+        m_extenderLigament.append(new MechanismLigament2d("Gripper", 0.2, 0, 10, kGripperNeutral));
     SmartDashboard.putData("Mech2d/Lift", m_liftBase);
   }
 
