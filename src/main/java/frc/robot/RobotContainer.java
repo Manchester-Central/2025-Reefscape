@@ -7,18 +7,15 @@ package frc.robot;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.subsystems.FrontCamera;
-import frc.robot.subsystems.Gripper;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Lift;
 import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.shared.StateBasedSubsystem;
+import frc.robot.subsystems.lift.IdLift;
 import frc.robot.utils.FieldPoint;
 
 /**
@@ -31,12 +28,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   Pigeon2 m_gyro;
 
-  // private Manipulator m_manipulator;
-  private Lift m_lift;
-  private Intake m_intake;
-  private Gripper m_gripper;
-  private FrontCamera m_frontcamera;
-  private Mech2DManager m_mech2dManager;
+  public static IdLift m_idLift;
+  public static Intake m_intake;
+  public static FrontCamera m_frontcamera;
+  public static Mech2DManager m_mech2dManager;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -48,9 +43,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
     m_mech2dManager = new Mech2DManager();
-    m_lift = new Lift(m_mech2dManager.getMechRoot());
+    m_idLift = new IdLift();
     m_intake = new Intake();
-    m_gripper = new Gripper(m_lift.getMech2d());
     m_frontcamera = new FrontCamera();
     buildPathplannerAutoChooser();
     // Configure the trigger bindings
@@ -76,13 +70,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   @Override
   public void configureDriverController() {
     m_driver = new Gamepad(0);
-    StateBasedSubsystem.DriverController = m_driver;
   }
 
   @Override
   public void configureOperatorController() {
     m_operator = new Gamepad(1);
-    StateBasedSubsystem.OperatorController = m_operator;
   }
 
   @Override
