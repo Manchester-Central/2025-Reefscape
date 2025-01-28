@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.chaos131.gamepads.Gamepad;
+import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -44,7 +45,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     super();
     m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
-    m_idLift = new IdLift();
+    m_idLift = new IdLift(Mode.SIM);
     m_intake = new Intake();
     m_mech2dManager = new Mech2DManager(m_idLift, m_intake);
     m_frontcamera = new FrontCamera();

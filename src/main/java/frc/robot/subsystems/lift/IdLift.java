@@ -4,7 +4,13 @@
 
 package frc.robot.subsystems.lift;
 
+import com.chaos131.robot.ChaosRobot.Mode;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import frc.robot.subsystems.shared.ISubsystemState;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 
@@ -26,6 +32,16 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     return values;
   }
 
+  public TalonFX m_talonfx;
+  public CANcoder m_CANcoder;
+  public DCMotor m_DCMotor;
+  public ElevatorSim m_ElevatorSim;
+  public final double GearRatio = 1.54;
+  public final double ElevatorMassKg = 15.0;
+
+  public TalonFXSimState m_simMotor;
+  public Mode m_mode;
+
   private BasePivot m_basePivot = new BasePivot();
   private Extender m_extender = new Extender();
   private Gripper m_gripper = new Gripper();
@@ -43,13 +59,27 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   /** Creates a new Lift. */
-  public IdLift() {
+  public IdLift(Mode mode) {
     super(LiftState.START);
+    m_mode = mode;
+    m_talonfx = new TalonFX(0);
+    m_CANcoder = new CANcoder(0);
+    m_DCMotor = DCMotor.getKrakenX60(1);
+
+    m_simMotor = m_talonfx.getSimState();
+    m_ElevatorSim = new ElevatorSim(m_DCMotor, GearRatio, ElevatorMassKg, 0.076, 0, 2, false, 0);
+  }
+
+  private void SimUpdate() {
+    m_ElevatorSim.update(0.02);
   }
 
   @Override
   protected void runStateMachine() {
     System.out.println(m_currentState);
+    if (m_mode == Mode.SIM) {
+      this.SimUpdate();
+    }
     switch (m_currentState) {
       case START:
         startState();
@@ -83,15 +113,27 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void stowState() {
+    if (m_mode == Mode.SIM) {
+      m_extender.setTargetLength(m_ElevatorSim.getPositionMeters());
+      m_ElevatorSim.setState(
+          m_ElevatorSim.getPositionMeters(), (0.7 - m_ElevatorSim.getPositionMeters()) * 20);
+    } else {
+      m_extender.setTargetLength(0.7);
+    }
     m_basePivot.setTargetAngle(Rotation2d.fromDegrees(120));
-    m_extender.setTargetLength(0.7);
     m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(90));
     m_gripper.setTargetSpeed(0.0);
   }
 
   private void intakeFromFloorState() {
+    if (m_mode == Mode.SIM) {
+      m_extender.setTargetLength(m_ElevatorSim.getPositionMeters());
+      m_ElevatorSim.setState(
+          m_ElevatorSim.getPositionMeters(), (0.4 - m_ElevatorSim.getPositionMeters()) * 20);
+    } else {
+      m_extender.setTargetLength(0.4);
+    }
     m_basePivot.setTargetAngle(Rotation2d.fromDegrees(136));
-    m_extender.setTargetLength(0.4);
     m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(51));
     m_gripper.setTargetSpeed(0.5);
   }
@@ -101,29 +143,53 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void scoreL1State() {
+    if (m_mode == Mode.SIM) {
+      m_extender.setTargetLength(m_ElevatorSim.getPositionMeters());
+      m_ElevatorSim.setState(
+          m_ElevatorSim.getPositionMeters(), (0.97 - m_ElevatorSim.getPositionMeters()) * 20);
+    } else {
+      m_extender.setTargetLength(0.97);
+    }
     m_basePivot.setTargetAngle(Rotation2d.fromDegrees(126));
-    m_extender.setTargetLength(0.97);
     m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(110));
     m_gripper.setTargetSpeed(0.5);
   }
 
   private void scoreL2State() {
+    if (m_mode == Mode.SIM) {
+      m_extender.setTargetLength(m_ElevatorSim.getPositionMeters());
+      m_ElevatorSim.setState(
+          m_ElevatorSim.getPositionMeters(), (1.0 - m_ElevatorSim.getPositionMeters()) * 20);
+    } else {
+      m_extender.setTargetLength(1.0);
+    }
     m_basePivot.setTargetAngle(Rotation2d.fromDegrees(119));
-    m_extender.setTargetLength(1.0);
     m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(117));
     m_gripper.setTargetSpeed(0.5);
   }
 
   private void scoreL3State() {
+    if (m_mode == Mode.SIM) {
+      m_extender.setTargetLength(m_ElevatorSim.getPositionMeters());
+      m_ElevatorSim.setState(
+          m_ElevatorSim.getPositionMeters(), (1.31 - m_ElevatorSim.getPositionMeters()) * 20);
+    } else {
+      m_extender.setTargetLength(1.31);
+    }
     m_basePivot.setTargetAngle(Rotation2d.fromDegrees(110));
-    m_extender.setTargetLength(1.31);
     m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(126));
     m_gripper.setTargetSpeed(0.5);
   }
 
   private void scoreL4State() {
+    if (m_mode == Mode.SIM) {
+      m_extender.setTargetLength(m_ElevatorSim.getPositionMeters());
+      m_ElevatorSim.setState(
+          m_ElevatorSim.getPositionMeters(), (1.8 - m_ElevatorSim.getPositionMeters()) * 20);
+    } else {
+      m_extender.setTargetLength(1.8);
+    }
     m_basePivot.setTargetAngle(Rotation2d.fromDegrees(110));
-    m_extender.setTargetLength(1.8);
     m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-51));
     m_gripper.setTargetSpeed(-0.5);
   }
