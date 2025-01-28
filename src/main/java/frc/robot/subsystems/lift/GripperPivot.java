@@ -5,9 +5,10 @@
 package frc.robot.subsystems.lift;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
-public class GripperPivot {
+public class GripperPivot extends SubsystemBase {
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
 
   public void setTargetAngle(Rotation2d newAngle) {
