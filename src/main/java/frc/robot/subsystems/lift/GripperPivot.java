@@ -18,7 +18,7 @@ import frc.robot.utils.ChaosTalonFx;
 
 /** Add your docs here. */
 public class GripperPivot extends SubsystemBase {
-  private double kGearRatio = 100.0;
+  private double kGearRatio = 40.0;
   private double kJkgMetersSquared = 0.1;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
@@ -29,7 +29,7 @@ public class GripperPivot extends SubsystemBase {
           0.001,
           0.001);
   private ChaosTalonFx m_motor = new ChaosTalonFx(3, kGearRatio, m_motorSim);
-  private PIDTuner m_pidTuner = new PIDTuner("GripperPivot", true, 5.0, 0.001, 0.0, this::tunePID);
+  private PIDTuner m_pidTuner = new PIDTuner("GripperPivot", true, 1.0, 0.001, 0.0, this::tunePID);
 
   public GripperPivot() {
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -37,7 +37,7 @@ public class GripperPivot extends SubsystemBase {
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
     m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    m_motor.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
+    m_motor.Configuration.Feedback.SensorToMechanismRatio = 1; // TODO: get real value
     m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
     m_motor.applyConfig();
   }
