@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems.lift;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 /** Add your docs here. */
-public class Extender {
+public class Extender extends SubsystemBase {
   private double m_targetLength = 1;
 
   public void setTargetLength(double newLength) {

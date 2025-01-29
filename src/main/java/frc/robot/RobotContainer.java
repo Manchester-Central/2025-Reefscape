@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
+import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -101,6 +102,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   @Override
   public void periodic() {
+    // Enables Dashboard Numbers to be updated each loop
+    DashboardNumber.checkAll();
     // TODO Auto-generated method stub
 
   }
