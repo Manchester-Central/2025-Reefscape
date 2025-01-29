@@ -11,8 +11,8 @@ public final class Constants {
 
   public static class SwerveConstants {
     // FL
-    public static final double FLModoffsetX = 1;
-    public static final double FLModoffsetY = 1;
+    public static final double FLModoffsetX = 0.3; // TODO: GET REAL
+    public static final double FLModoffsetY = 0.3; // TODO: GET REAL
     public static final int FLSpeedCANID = 30;
     public static final int FLAngleCANID = 31;
     public static final int FLAbsoEncoCANID = 32;
@@ -28,8 +28,8 @@ public final class Constants {
     public static final Rotation2d FLAngleEncoderOffset = Rotation2d.fromDegrees(0);
 
     // FR
-    public static final double FRModoffsetX = 1;
-    public static final double FRModoffsetY = -1;
+    public static final double FRModoffsetX = 0.3; // TODO: GET REAL
+    public static final double FRModoffsetY = -0.3; // TODO: GET REAL
     public static final int FRSpeedCANID = 33;
     public static final int FRAngleCANID = 34;
     public static final int FRAbsoEncoCANID = 35;
@@ -45,8 +45,8 @@ public final class Constants {
     public static final Rotation2d FRAngleEncoderOffset = Rotation2d.fromDegrees(0);
 
     // BL
-    public static final double BLModoffsetX = -1;
-    public static final double BLModoffsetY = 1;
+    public static final double BLModoffsetX = -0.3; // TODO: GET REAL
+    public static final double BLModoffsetY = 0.3; // TODO: GET REAL
     public static final int BLSpeedCANID = 39;
     public static final int BLAngleCANID = 40;
     public static final int BLAbsoEncoCANID = 41;
@@ -62,8 +62,8 @@ public final class Constants {
     public static final Rotation2d BLAngleEncoderOffset = Rotation2d.fromDegrees(0);
 
     // BR
-    public static final double BRModoffsetX = -1;
-    public static final double BRModoffsetY = -1;
+    public static final double BRModoffsetX = -0.3; // TODO: GET REAL
+    public static final double BRModoffsetY = -0.3; // TODO: GET REAL
     public static final int BRSpeedCANID = 36;
     public static final int BRAngleCANID = 37;
     public static final int BRAbsoEncoCANID = 38;
