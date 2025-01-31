@@ -79,6 +79,28 @@ public final class Constants {
     public static final Rotation2d BRAngleEncoderOffset = Rotation2d.fromDegrees(0);
   }
 
+  public static class MidLiftConstants {
+    public static class BasePivotConstants {
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(30);
+      public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
+      public static final Rotation2d StowAngle = Rotation2d.fromDegrees(40);
+    }
+
+    public static class GripperPivotConstants {
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-45);
+      public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(45);
+      public static final Rotation2d StowAngle = Rotation2d.fromDegrees(0);
+    }
+
+    public static class ExtenderConstants {
+      public static final double MinLengthMeter = 0.1;
+      public static final double MaxLengthMeter = 1.6;
+      public static final double StowLengthMeter = 0.3;
+    }
+
+    public static class GripperConstants {}
+  }
+
   public static class GyroConstants {
     public static final int GyroCANID = 0;
   }

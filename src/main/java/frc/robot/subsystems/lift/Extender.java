@@ -27,8 +27,8 @@ public class Extender extends SubsystemBase {
           m_dcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_motor1 = new ChaosTalonFx(4, kGearRatio, m_motorSim);
-  private ChaosTalonFx m_motor2 = new ChaosTalonFx(5, kGearRatio, m_motorSim);
+  private ChaosTalonFx m_motor1 = new ChaosTalonFx(4, kGearRatio, m_motorSim, true);
+  private ChaosTalonFx m_motor2 = new ChaosTalonFx(5, kGearRatio, m_motorSim, false);
   private PIDTuner m_pidTuner = new PIDTuner("Extender", true, 1.0, 0.001, 0.0, this::tunePIDs);
 
   public Extender() {
