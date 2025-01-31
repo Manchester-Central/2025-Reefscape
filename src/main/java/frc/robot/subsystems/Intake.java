@@ -23,7 +23,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
 
   @Override
   protected void runStateMachine() {
-    System.out.println(m_currentState);
+    // System.out.println(m_currentState);
     switch (m_currentState) {
       case START:
         m_currentState = IntakeState.STOW;

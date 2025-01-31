@@ -28,7 +28,7 @@ public class GripperPivot extends SubsystemBase {
           m_dcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_motor = new ChaosTalonFx(3, kGearRatio, m_motorSim);
+  private ChaosTalonFx m_motor = new ChaosTalonFx(3, kGearRatio, m_motorSim, true);
   private PIDTuner m_pidTuner = new PIDTuner("GripperPivot", true, 1.0, 0.001, 0.0, this::tunePID);
 
   public GripperPivot() {
