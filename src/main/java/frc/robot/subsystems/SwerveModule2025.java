@@ -9,9 +9,12 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants.SwerveConstants;
+import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 
 /** Add your docs here. */
 public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
+  private SwerveModuleSimulation m_simulation;
+
   public SwerveModule2025(
       String nameString,
       Translation2d wheelPosition,
@@ -35,5 +38,8 @@ public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
         new DriveConfig(
             SwerveConstants.DriverRampRatePeriod, SwerveConstants.AutonomousRampRatePeriod));
   }
-  //
+
+  public void initSim(SwerveModuleSimulation simDrive) {
+    m_simulation = simDrive;
+  }
 }

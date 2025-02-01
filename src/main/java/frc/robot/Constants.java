@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.chaos131.robot.ChaosRobot.Mode;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -108,5 +109,10 @@ public final class Constants {
 
   public static class GyroConstants {
     public static final int GyroCANID = 0;
+  }
+
+  public static class GeneralConstant {
+    public static final double RobotMassKg = 54.43;
+    public static final Mode RobotMode = Mode.SIM;
   }
 }

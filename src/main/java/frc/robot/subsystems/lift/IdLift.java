@@ -54,7 +54,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   @Override
   protected void runStateMachine() {
-    System.out.println(m_currentState);
+    // System.out.println(m_currentState);
     switch (m_currentState) {
       case START:
         startState();
