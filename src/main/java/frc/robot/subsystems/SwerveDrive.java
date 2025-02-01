@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.SwerveConstants;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class SwerveDrive extends BaseSwerveDrive {
@@ -210,5 +211,11 @@ public class SwerveDrive extends BaseSwerveDrive {
       DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
       return Commands.none();
     }
+  }
+
+  @Override
+  public void periodic() {
+    super.periodic();
+    Logger.recordOutput("Swerve/Pose", getPose());
   }
 }
