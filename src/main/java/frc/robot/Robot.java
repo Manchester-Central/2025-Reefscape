@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.chaos131.robot.ChaosRobot;
+import edu.wpi.first.math.geometry.Pose3d;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -31,5 +33,14 @@ public class Robot extends ChaosRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    super.simulationPeriodic();
+    SimulatedArena.getInstance().simulationPeriodic();
+    Pose3d[] coralPose = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
+    Logger.recordOutput("Field/Piece", coralPose);
+    // System.out.println(coralPose.length);
   }
 }

@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.chaos131.swerve.BaseSwerveDrive;
-import com.chaos131.swerve.BaseSwerveModule;
 import com.chaos131.swerve.SwerveConfigs;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -15,6 +14,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,19 +25,38 @@ import frc.robot.Constants.SwerveConstants.SwerveBRConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFLConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFRConstants;
 import java.util.function.Supplier;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation.SelfControlledModuleSimulation;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class SwerveDrive extends BaseSwerveDrive {
 
   private RobotConfig m_pathPlannerConfig;
+  private DriveTrainSimulationConfig m_simDriveTrain;
+  public SwerveDriveSimulation m_driveSim;
+  private SelfControlledModuleSimulation m_simulatedDrive;
 
   private SwerveDrive(
-      BaseSwerveModule[] swerveModules,
+      SwerveModule2025[] swerveModules,
       SwerveConfigs swerveConfigs,
       Supplier<Rotation2d> getRotation)
       throws Exception {
     super(swerveModules, swerveConfigs, getRotation);
+
+    // COTS.ofSwerveX2(DCMotor.getKrakenX60(1), DCMotor.getKrakenX60(1), 1.2, 2)
+    // var cfg = new SwerveModuleSimulationConfig(null, null, m_driveToTargetTolerance,
+    // m_driveToTargetTolerance, null, null, null, null, m_driveToTargetTolerance);
+    // m_simDriveTrain =
+    //     new DriveTrainSimulationConfig(
+    //         GeneralConstant.RobotMassKg, 1.0, 1.0, 0.8, 0.8, COTS.ofPigeon2());
+    m_simDriveTrain = DriveTrainSimulationConfig.Default();
+
+    m_driveSim =
+        new SwerveDriveSimulation(m_simDriveTrain, new Pose2d(4, 1, Rotation2d.fromDegrees(90)));
+    SimulatedArena.getInstance().addDriveTrainSimulation(m_driveSim);
 
     try {
       m_pathPlannerConfig = RobotConfig.fromGUISettings();
