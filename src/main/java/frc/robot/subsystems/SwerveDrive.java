@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
 import com.chaos131.swerve.SwerveConfigs;
 import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule.AbsoluteEncoderConfig;
@@ -18,17 +19,21 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.GeneralConstant;
 import frc.robot.Constants.SwerveConstants;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation.SelfControlledModuleSimulation;
+import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 
@@ -37,8 +42,8 @@ public class SwerveDrive extends BaseSwerveDrive {
 
   private RobotConfig m_pathPlannerConfig;
   private DriveTrainSimulationConfig m_simDriveTrain;
-  public SwerveDriveSimulation m_driveSim;
-  private SelfControlledModuleSimulation m_simulatedDrive;
+  private SwerveDriveSimulation m_driveSim;
+  private SelfControlledSwerveDriveSimulation m_simulatedDrive;
 
   private SwerveDrive(
       SwerveModule2025[] swerveModules,
@@ -47,17 +52,14 @@ public class SwerveDrive extends BaseSwerveDrive {
       throws Exception {
     super(swerveModules, swerveConfigs, getRotation);
 
-    // COTS.ofSwerveX2(DCMotor.getKrakenX60(1), DCMotor.getKrakenX60(1), 1.2, 2)
-    // var cfg = new SwerveModuleSimulationConfig(null, null, m_driveToTargetTolerance,
-    // m_driveToTargetTolerance, null, null, null, null, m_driveToTargetTolerance);
-    // m_simDriveTrain =
-    //     new DriveTrainSimulationConfig(
-    //         GeneralConstant.RobotMassKg, 1.0, 1.0, 0.8, 0.8, COTS.ofPigeon2());
     m_simDriveTrain = DriveTrainSimulationConfig.Default();
-
     m_driveSim =
         new SwerveDriveSimulation(m_simDriveTrain, new Pose2d(4, 1, Rotation2d.fromDegrees(90)));
-    SimulatedArena.getInstance().addDriveTrainSimulation(m_driveSim);
+    // Creating the SelfControlledSwerveDriveSimulation instance
+    m_simulatedDrive = new SelfControlledSwerveDriveSimulation(m_driveSim);
+    // Register the drivetrain simulation to the simulation world
+    SimulatedArena.getInstance()
+        .addDriveTrainSimulation(m_simulatedDrive.getDriveTrainSimulation());
 
     try {
       m_pathPlannerConfig = RobotConfig.fromGUISettings();
@@ -187,11 +189,41 @@ public class SwerveDrive extends BaseSwerveDrive {
     return swerveDrive;
   }
 
+  @Override
+  public void move(ChassisSpeeds chassisSpeeds) {
+    chassisSpeeds.vxMetersPerSecond =
+        MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1)
+            * m_swerveConfigs.maxRobotSpeed_mps()
+            * TranslationSpeedModifier;
+    chassisSpeeds.vyMetersPerSecond =
+        MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)
+            * m_swerveConfigs.maxRobotSpeed_mps()
+            * TranslationSpeedModifier;
+    chassisSpeeds.omegaRadiansPerSecond =
+        MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1)
+            * m_swerveConfigs.maxRobotRotation_radps()
+            * RotationSpeedModifier;
+    if (chassisSpeeds.vxMetersPerSecond == 0
+        && chassisSpeeds.vyMetersPerSecond == 0
+        && chassisSpeeds.omegaRadiansPerSecond == 0) {
+      stop();
+      return;
+    }
+    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed_mps());
+    if (GeneralConstant.RobotMode == Mode.SIM) {
+      m_simulatedDrive.runSwerveStates(states);
+    } else {
+      for (var i = 0; i < states.length; i++) {
+        m_swerveModules.get(i).setTarget(states[i]);
+      }
+    }
+  }
+
   public void pathPlannerRobotRelative(
       ChassisSpeeds chassisSpeeds, DriveFeedforwards driveFeedforwards) {
     pathPlannerRobotRelative(chassisSpeeds);
-    // Investigate decision regarding the use of feed forwards
-
+    // TODO: Investigate decision regarding the use of feed forwards
   }
 
   public Command followPathCommand(String pathName) {
@@ -229,5 +261,13 @@ public class SwerveDrive extends BaseSwerveDrive {
       DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
       return Commands.none();
     }
+  }
+
+  @Override
+  public void periodic() {
+    if (GeneralConstant.RobotMode == Mode.SIM) {
+      m_simulatedDrive.periodic();
+    }
+    super.periodic();
   }
 }
