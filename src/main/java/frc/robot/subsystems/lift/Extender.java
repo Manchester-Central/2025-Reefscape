@@ -12,11 +12,12 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
+import java.util.function.Supplier;
 
 /** Add your docs here. */
-public class Extender extends SubsystemBase {
+public class Extender extends AbstractLiftPart {
   private double m_targetLength = 1;
   private double kGearRatio = 10.0;
   private double kJkgMetersSquared = 1.0;
@@ -31,7 +32,9 @@ public class Extender extends SubsystemBase {
   private ChaosTalonFx m_motor2 = new ChaosTalonFx(5, kGearRatio, m_motorSim, false);
   private PIDTuner m_pidTuner = new PIDTuner("Extender", true, 1.0, 0.001, 0.0, this::tunePIDs);
 
-  public Extender() {
+  public Extender(Supplier<IdLiftValues> idLiftValuesSupplier) {
+    super(idLiftValuesSupplier);
+
     m_motor1.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor1.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor1.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;

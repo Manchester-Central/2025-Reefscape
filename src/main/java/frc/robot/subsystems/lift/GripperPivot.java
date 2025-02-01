@@ -13,11 +13,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
+import java.util.function.Supplier;
 
 /** Add your docs here. */
-public class GripperPivot extends SubsystemBase {
+public class GripperPivot extends AbstractLiftPart {
   private double kGearRatio = 40.0;
   private double kJkgMetersSquared = 0.1;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
@@ -31,7 +32,8 @@ public class GripperPivot extends SubsystemBase {
   private ChaosTalonFx m_motor = new ChaosTalonFx(3, kGearRatio, m_motorSim, true);
   private PIDTuner m_pidTuner = new PIDTuner("GripperPivot", true, 1.0, 0.001, 0.0, this::tunePID);
 
-  public GripperPivot() {
+  public GripperPivot(Supplier<IdLiftValues> idLiftValuesSupplier) {
+    super(idLiftValuesSupplier);
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;

@@ -4,11 +4,16 @@
 
 package frc.robot.subsystems.lift;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.lift.IdLift.IdLiftValues;
+import java.util.function.Supplier;
 
 /** Add your docs here. */
-public class Gripper extends SubsystemBase {
+public class Gripper extends AbstractLiftPart {
   private double m_targetSpeed = 0;
+
+  public Gripper(Supplier<IdLiftValues> idLiftValuesSupplier) {
+    super(idLiftValuesSupplier);
+  }
 
   public void setTargetSpeed(double newSpeed) {
     m_targetSpeed = newSpeed;

@@ -18,6 +18,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     public Rotation2d gripperPivotAngle;
     public double gripperSpeed;
     public double extenderLength;
+    public boolean isBasePivotAtSafeAngle;
   }
 
   public IdLiftValues getLiftValues() {
@@ -26,13 +27,14 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     values.gripperPivotAngle = m_gripperPivot.getCurrentAngle();
     values.gripperSpeed = m_gripper.getCurrentSpeed();
     values.extenderLength = m_extender.getCurrentLength();
+    values.isBasePivotAtSafeAngle = m_basePivot.isSafeAngle();
     return values;
   }
 
-  private BasePivot m_basePivot = new BasePivot();
-  private Extender m_extender = new Extender();
-  private Gripper m_gripper = new Gripper();
-  private GripperPivot m_gripperPivot = new GripperPivot();
+  private BasePivot m_basePivot = new BasePivot(this::getLiftValues);
+  private Extender m_extender = new Extender(this::getLiftValues);
+  private Gripper m_gripper = new Gripper(this::getLiftValues);
+  private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
 
   public enum LiftState implements ISubsystemState {
     START,
