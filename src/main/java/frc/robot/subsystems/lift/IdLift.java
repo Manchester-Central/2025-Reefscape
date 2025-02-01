@@ -19,6 +19,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     public double gripperSpeed;
     public double extenderLength;
     public boolean isBasePivotAtSafeAngle;
+    public boolean isExtenderAtSafeLength;
   }
 
   public IdLiftValues getLiftValues() {
@@ -28,6 +29,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     values.gripperSpeed = m_gripper.getCurrentSpeed();
     values.extenderLength = m_extender.getCurrentLength();
     values.isBasePivotAtSafeAngle = m_basePivot.isSafeAngle();
+    values.isExtenderAtSafeLength = m_extender.isSafeLength();
     return values;
   }
 

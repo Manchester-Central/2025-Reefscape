@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import java.util.function.Supplier;
@@ -49,6 +50,9 @@ public class GripperPivot extends AbstractLiftPart {
   }
 
   public void setTargetAngle(Rotation2d newAngle) {
+    if (!getLiftValues().isBasePivotAtSafeAngle || !getLiftValues().isExtenderAtSafeLength) {
+      newAngle = GripperPivotConstants.StowAngle;
+    }
     m_targetAngle = newAngle;
     m_motor.moveToPosition(newAngle.getDegrees());
   }
