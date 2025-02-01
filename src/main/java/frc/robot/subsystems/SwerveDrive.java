@@ -158,20 +158,20 @@ public class SwerveDrive extends BaseSwerveDrive {
         MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1)
             * m_swerveConfigs.maxRobotRotation_radps()
             * RotationSpeedModifier;
+    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed_mps());
+    if (GeneralConstant.RobotMode == Mode.SIM) {
+      m_simulatedDrive.runSwerveStates(states);
+    }
     if (chassisSpeeds.vxMetersPerSecond == 0
         && chassisSpeeds.vyMetersPerSecond == 0
         && chassisSpeeds.omegaRadiansPerSecond == 0) {
       stop();
       return;
     }
-    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed_mps());
-    if (GeneralConstant.RobotMode == Mode.SIM) {
-      m_simulatedDrive.runSwerveStates(states);
-    } else {
-      for (var i = 0; i < states.length; i++) {
-        m_swerveModules.get(i).setTarget(states[i]);
-      }
+
+    for (var i = 0; i < states.length; i++) {
+      m_swerveModules.get(i).setTarget(states[i]);
     }
   }
 
