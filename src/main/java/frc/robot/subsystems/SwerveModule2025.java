@@ -5,18 +5,35 @@
 package frc.robot.subsystems;
 
 import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule;
+import com.ctre.phoenix6.signals.InvertedValue;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Constants.SwerveConstants;
 
 /** Add your docs here. */
 public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
   public SwerveModule2025(
       String nameString,
       Translation2d wheelPosition,
-      SpeedControllerConfig speedControl,
-      AngleControllerConfig angleControl,
-      AbsoluteEncoderConfig absoEncoder,
-      DriveConfig drivConfg) {
-    super(nameString, wheelPosition, speedControl, angleControl, absoEncoder, drivConfg);
+      int speedCANID,
+      int angleCANID,
+      int absoEncoCANID,
+      InvertedValue invertedSpeed,
+      Rotation2d angleEncoderOffset) {
+    super(
+        nameString,
+        wheelPosition,
+        new SpeedControllerConfig(
+            speedCANID,
+            invertedSpeed,
+            SwerveConstants.SpeedGearRatio,
+            SwerveConstants.SpeedCircumference),
+        new AngleControllerConfig(
+            angleCANID, SwerveConstants.InvertedAngle, SwerveConstants.AngleGearRatio),
+        new AbsoluteEncoderConfig(
+            absoEncoCANID, SwerveConstants.InvertedEncoder, angleEncoderOffset),
+        new DriveConfig(
+            SwerveConstants.DriverRampRatePeriod, SwerveConstants.AutonomousRampRatePeriod));
   }
   //
 }
