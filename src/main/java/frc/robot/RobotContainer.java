@@ -15,6 +15,7 @@ import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.subsystems.FrontCamera;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.IdLift;
@@ -69,13 +70,26 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
 
-    m_operator.start().whileTrue(new ChangeState().setLift(LiftState.STOW));
-    m_operator.leftBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR));
-    m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP));
-    m_operator.a().whileTrue(new ChangeState().setLift(LiftState.SCORE_L1));
-    m_operator.x().whileTrue(new ChangeState().setLift(LiftState.SCORE_L2));
-    m_operator.b().whileTrue(new ChangeState().setLift(LiftState.SCORE_L3));
-    m_operator.y().whileTrue(new ChangeState().setLift(LiftState.SCORE_L4));
+    m_operator
+        .start()
+        .whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
+    m_operator
+        .leftBumper()
+        .whileTrue(
+            new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
+    // m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP));
+    m_operator
+        .a()
+        .whileTrue(new ChangeState().setLift(LiftState.SCORE_L1).setIntake(IntakeState.STOW));
+    m_operator
+        .x()
+        .whileTrue(new ChangeState().setLift(LiftState.SCORE_L2).setIntake(IntakeState.STOW));
+    m_operator
+        .b()
+        .whileTrue(new ChangeState().setLift(LiftState.SCORE_L3).setIntake(IntakeState.STOW));
+    m_operator
+        .y()
+        .whileTrue(new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
   }
 
   @Override
