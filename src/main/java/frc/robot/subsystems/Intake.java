@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.shared.ISubsystemState;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.utils.ChaosTalonFx;
@@ -29,6 +30,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
   private double kGearRatio = 10.0;
   private double kJkgMetersSquared = 1.0;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
+  private double m_targetSpeed = 0.0;
   private DCMotor m_pivotDCMotor = DCMotor.getKrakenX60(2);
   private DCMotorSim m_pivotMotorSim =
       new DCMotorSim(
@@ -38,7 +40,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
           0.001);
   private ChaosTalonFx m_pivotMotor1 = new ChaosTalonFx(10, kGearRatio, m_pivotMotorSim, true);
   private ChaosTalonFx m_pivotMotor2 = new ChaosTalonFx(11, kGearRatio, m_pivotMotorSim, false);
-  private PIDTuner m_pidTuner = new PIDTuner("IntakePivot", true, 1.0, 0.001, 0.0, this::tunePIDs);
+  private PIDTuner m_pidTuner = new PIDTuner("IntakePivot", true, 0.1, 0.001, 0.0, this::tunePIDs);
 
   /** Creates a new Intake. */
   public Intake() {
@@ -49,7 +51,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
     m_pivotMotor1.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
     m_pivotMotor1.Configuration.Feedback.FeedbackSensorSource =
         FeedbackSensorSourceValue.RotorSensor;
-    m_pivotMotor1.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
+    m_pivotMotor1.Configuration.Feedback.SensorToMechanismRatio = 0.5; // TODO: get real value
     m_pivotMotor1.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
     m_pivotMotor1.applyConfig();
 
@@ -59,7 +61,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
     m_pivotMotor2.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
     m_pivotMotor2.Configuration.Feedback.FeedbackSensorSource =
         FeedbackSensorSourceValue.RotorSensor;
-    m_pivotMotor2.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
+    m_pivotMotor2.Configuration.Feedback.SensorToMechanismRatio = 0.5; // TODO: get real value
     m_pivotMotor2.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
     m_pivotMotor2.applyConfig();
   }
@@ -93,17 +95,37 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
     }
   }
 
-  private void stowState() {}
+  private void stowState() {
+    setTargetAngle(IntakeConstants.StowAngle);
+    setTargetSpeed(IntakeConstants.StowSpeed);
+  }
 
-  private void deployState() {}
+  private void deployState() {
+    setTargetAngle(IntakeConstants.DeployAngle);
+    setTargetSpeed(IntakeConstants.DeploySpeed);
+  }
 
-  private void handoffPrepState() {}
+  private void handoffPrepState() {
+    setTargetAngle(IntakeConstants.HandoffAngle);
+    setTargetSpeed(IntakeConstants.HandoffPrepSpeed);
+  }
 
-  private void handoffState() {}
+  private void handoffState() {
+    setTargetAngle(IntakeConstants.HandoffAngle);
+    setTargetSpeed(IntakeConstants.HandoffSpeed);
+  }
 
   public void tunePIDs(PIDFValue pidfValue) {
     m_pivotMotor1.tunePID(pidfValue, 0.0);
     m_pivotMotor2.tunePID(pidfValue, 0.0);
+  }
+
+  public void setTargetSpeed(double newSpeed) {
+    m_targetSpeed = newSpeed;
+  }
+
+  public double getCurrentSpeed() {
+    return m_targetSpeed;
   }
 
   public void setTargetAngle(Rotation2d newAngle) {

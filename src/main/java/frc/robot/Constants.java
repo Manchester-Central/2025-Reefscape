@@ -95,6 +95,17 @@ public final class Constants {
     public static class GripperConstants {}
   }
 
+  public static class IntakeConstants {
+    public static final Rotation2d StowAngle = Rotation2d.fromDegrees(100.0);
+    public static final Rotation2d DeployAngle = Rotation2d.fromDegrees(10.0);
+    public static final Rotation2d HandoffAngle = Rotation2d.fromDegrees(150.0);
+
+    public static final double StowSpeed = 0.0;
+    public static final double DeploySpeed = 1.0;
+    public static final double HandoffPrepSpeed = 0.0;
+    public static final double HandoffSpeed = -1.0;
+  }
+
   public static class GyroConstants {
     public static final int GyroCANID = 0;
   }
