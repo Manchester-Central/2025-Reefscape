@@ -13,11 +13,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
+import java.util.function.Supplier;
 
 /** Add your docs here. */
-public class BasePivot extends SubsystemBase {
+public class BasePivot extends AbstractLiftPart {
   private double kGearRatio = 10.0;
   private double kJkgMetersSquared = 1.0;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
@@ -32,7 +33,8 @@ public class BasePivot extends SubsystemBase {
   private ChaosTalonFx m_motor2 = new ChaosTalonFx(2, kGearRatio, m_motorSim, false);
   private PIDTuner m_pidTuner = new PIDTuner("BasePivot", true, 1.0, 0.001, 0.0, this::tunePIDs);
 
-  public BasePivot() {
+  public BasePivot(Supplier<IdLiftValues> idLiftValuesSupplier) {
+    super(idLiftValuesSupplier);
     m_motor1.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor1.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor1.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -66,6 +68,10 @@ public class BasePivot extends SubsystemBase {
   public Rotation2d getCurrentAngle() {
     return Rotation2d.fromDegrees(
         m_motor1.getPosition().getValueAsDouble()); // TODO get actual motor angle
+  }
+
+  public boolean isSafeAngle() {
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 10;
   }
 
   @Override
