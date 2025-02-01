@@ -63,18 +63,33 @@ public final class Constants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(30);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
       public static final Rotation2d StowAngle = Rotation2d.fromDegrees(40);
+      public static final Rotation2d HandoffAngle = Rotation2d.fromDegrees(30);
+      public static final Rotation2d ScoreL1Angle = Rotation2d.fromDegrees(54);
+      public static final Rotation2d ScoreL2Angle = Rotation2d.fromDegrees(61);
+      public static final Rotation2d ScoreL3Angle = Rotation2d.fromDegrees(70);
+      public static final Rotation2d ScoreL4Angle = Rotation2d.fromDegrees(70);
     }
 
     public static class GripperPivotConstants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-45);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(45);
       public static final Rotation2d StowAngle = Rotation2d.fromDegrees(0);
+      public static final Rotation2d HandoffAngle = Rotation2d.fromDegrees(-45);
+      public static final Rotation2d ScoreL1Angle = Rotation2d.fromDegrees(-110);
+      public static final Rotation2d ScoreL2Angle = Rotation2d.fromDegrees(-117);
+      public static final Rotation2d ScoreL3Angle = Rotation2d.fromDegrees(-126);
+      public static final Rotation2d ScoreL4Angle = Rotation2d.fromDegrees(51);
     }
 
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.1;
       public static final double MaxLengthMeter = 1.6;
       public static final double StowLengthMeter = 0.3;
+      public static final double HandoffLengthMeter = 0.4;
+      public static final double ScoreL1LengthMeter = 0.97;
+      public static final double ScoreL2LengthMeter = 1.0;
+      public static final double ScoreL3LengthMeter = 1.31;
+      public static final double ScoreL4LengthMeter = 1.8;
     }
 
     public static class GripperConstants {}

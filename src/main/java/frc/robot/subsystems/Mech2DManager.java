@@ -31,7 +31,7 @@ public class Mech2DManager extends SubsystemBase {
     m_idLift = idLift;
     m_intake = intake;
     m_liftBase = new Mechanism2d(2, 3);
-    m_liftRoot = m_liftBase.getRoot("Lift", 1.2, 0.2);
+    m_liftRoot = m_liftBase.getRoot("Lift", 0.8, 0.2);
     m_extenderLigament =
         m_liftRoot.append(new MechanismLigament2d("Extender", 0, 0, 8, kExtenderColor));
     m_gripperLigament =
