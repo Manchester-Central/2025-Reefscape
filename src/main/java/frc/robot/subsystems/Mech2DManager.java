@@ -38,7 +38,6 @@ public class Mech2DManager extends SubsystemBase {
   private final Color8Bit kIntakeForwardColor = new Color8Bit(0, 255, 0);
   private final Color8Bit kIntakeReverseColor = new Color8Bit(255, 0, 0);
 
-
   public Mech2DManager(IdLift idLift, Intake intake) {
     m_idLift = idLift;
     m_intake = intake;
