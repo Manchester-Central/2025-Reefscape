@@ -6,9 +6,24 @@ package frc.robot.subsystems;
 
 import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule;
 import edu.wpi.first.math.geometry.Translation2d;
+import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 
 /** Add your docs here. */
 public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
+  public SwerveModuleSimulation m_simulation;
+
+  public SwerveModule2025(
+      String nameString,
+      Translation2d wheelPosition,
+      SpeedControllerConfig speedControl,
+      AngleControllerConfig angleControl,
+      AbsoluteEncoderConfig absoEncoder,
+      DriveConfig drivConfg,
+      SwerveModuleSimulation simulation) {
+    super(nameString, wheelPosition, speedControl, angleControl, absoEncoder, drivConfg);
+    m_simulation = simulation;
+  }
+
   public SwerveModule2025(
       String nameString,
       Translation2d wheelPosition,
@@ -18,5 +33,8 @@ public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
       DriveConfig drivConfg) {
     super(nameString, wheelPosition, speedControl, angleControl, absoEncoder, drivConfg);
   }
-  //
+
+  public void initSim(SwerveModuleSimulation simDrive) {
+    m_simulation = simDrive;
+  }
 }

@@ -8,6 +8,9 @@ import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ChangeState;
@@ -20,6 +23,9 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.IdLift;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.utils.FieldPoint;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -35,6 +41,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public static Intake m_intake;
   public static FrontCamera m_frontcamera;
   public static Mech2DManager m_mech2dManager;
+  public static SwerveDriveSimulation m_driveSim;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -76,6 +83,17 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.x().whileTrue(new ChangeState().setLift(LiftState.SCORE_L2));
     m_operator.b().whileTrue(new ChangeState().setLift(LiftState.SCORE_L3));
     m_operator.y().whileTrue(new ChangeState().setLift(LiftState.SCORE_L4));
+
+    m_simKeyboard
+        .b()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  System.out.println("Adding Game Piece");
+                  SimulatedArena.getInstance()
+                      .addGamePiece(
+                          new ReefscapeCoralOnField(new Pose2d(2, 1, Rotation2d.fromDegrees(90))));
+                }));
   }
 
   @Override
@@ -96,6 +114,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   @Override
   public void configureSimKeyboard() {
+    m_simKeyboard = new Gamepad(2);
     // TODO Auto-generated method stub
 
   }
