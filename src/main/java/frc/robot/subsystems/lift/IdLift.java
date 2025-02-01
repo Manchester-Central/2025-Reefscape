@@ -5,6 +5,9 @@
 package frc.robot.subsystems.lift;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
+import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
+import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.subsystems.shared.ISubsystemState;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 
@@ -83,16 +86,16 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void stowState() {
-    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(120));
-    m_extender.setTargetLength(0.7);
-    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(90));
+    m_basePivot.setTargetAngle(BasePivotConstants.StowAngle);
+    m_extender.setTargetLength(ExtenderConstants.StowLengthMeter);
+    m_gripperPivot.setTargetAngle(GripperPivotConstants.StowAngle);
     m_gripper.setTargetSpeed(0.0);
   }
 
   private void intakeFromFloorState() {
-    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(136));
-    m_extender.setTargetLength(0.4);
-    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(51));
+    m_basePivot.setTargetAngle(BasePivotConstants.HandoffAngle);
+    m_extender.setTargetLength(ExtenderConstants.HandoffLengthMeter);
+    m_gripperPivot.setTargetAngle(GripperPivotConstants.HandoffAngle);
     m_gripper.setTargetSpeed(0.5);
   }
 
@@ -101,30 +104,30 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void scoreL1State() {
-    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(126));
-    m_extender.setTargetLength(0.97);
-    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(110));
+    m_basePivot.setTargetAngle(BasePivotConstants.ScoreL1Angle);
+    m_extender.setTargetLength(ExtenderConstants.ScoreL1LengthMeter);
+    m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL1Angle);
     m_gripper.setTargetSpeed(0.5);
   }
 
   private void scoreL2State() {
-    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(119));
-    m_extender.setTargetLength(1.0);
-    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(117));
+    m_basePivot.setTargetAngle(BasePivotConstants.ScoreL2Angle);
+    m_extender.setTargetLength(ExtenderConstants.ScoreL2LengthMeter);
+    m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL2Angle);
     m_gripper.setTargetSpeed(0.5);
   }
 
   private void scoreL3State() {
-    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(110));
-    m_extender.setTargetLength(1.31);
-    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(126));
+    m_basePivot.setTargetAngle(BasePivotConstants.ScoreL3Angle);
+    m_extender.setTargetLength(ExtenderConstants.ScoreL3LengthMeter);
+    m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL3Angle);
     m_gripper.setTargetSpeed(0.5);
   }
 
   private void scoreL4State() {
-    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(110));
-    m_extender.setTargetLength(1.8);
-    m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-51));
+    m_basePivot.setTargetAngle(BasePivotConstants.ScoreL4Angle);
+    m_extender.setTargetLength(ExtenderConstants.ScoreL4LengthMeter);
+    m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL4Angle);
     m_gripper.setTargetSpeed(-0.5);
   }
 }

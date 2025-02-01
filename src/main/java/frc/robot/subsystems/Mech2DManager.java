@@ -21,22 +21,44 @@ public class Mech2DManager extends SubsystemBase {
   private MechanismLigament2d m_extenderLigament;
   private MechanismLigament2d m_gripperLigament;
   private IdLift m_idLift;
-  private Intake m_intake;
+
   private final Color8Bit kExtenderColor = new Color8Bit(0, 0, 255);
   private final Color8Bit kGripperNeutral = new Color8Bit(100, 100, 100);
   private final Color8Bit kGripperForward = new Color8Bit(0, 255, 0);
   private final Color8Bit kGripperReverse = new Color8Bit(255, 0, 0);
 
+  private Mechanism2d m_intakeBase;
+  private MechanismRoot2d m_intakeRoot;
+  private MechanismLigament2d m_innerIntakeLigament;
+  private MechanismLigament2d m_outerIntakeLigament;
+  private Intake m_intake;
+
+  private final Color8Bit kInnerIntakeColor = new Color8Bit(255, 0, 255);
+  private final Color8Bit kIntakeNeutralColor = new Color8Bit(100, 100, 100);
+  private final Color8Bit kIntakeForwardColor = new Color8Bit(0, 255, 0);
+  private final Color8Bit kIntakeReverseColor = new Color8Bit(255, 0, 0);
+
+
   public Mech2DManager(IdLift idLift, Intake intake) {
     m_idLift = idLift;
     m_intake = intake;
+
     m_liftBase = new Mechanism2d(2, 3);
-    m_liftRoot = m_liftBase.getRoot("Lift", 1.2, 0.2);
+    m_liftRoot = m_liftBase.getRoot("Lift", 0.8, 0.2);
     m_extenderLigament =
         m_liftRoot.append(new MechanismLigament2d("Extender", 0, 0, 8, kExtenderColor));
     m_gripperLigament =
         m_extenderLigament.append(new MechanismLigament2d("Gripper", 0.2, 0, 10, kGripperNeutral));
     SmartDashboard.putData("Mech2d/Lift", m_liftBase);
+
+    m_intakeBase = new Mechanism2d(2, 3);
+    m_intakeRoot = m_intakeBase.getRoot("Intake", 1.2, 0.2);
+    m_innerIntakeLigament =
+        m_intakeRoot.append(new MechanismLigament2d("InnerIntake", 0.3, 90, 8, kInnerIntakeColor));
+    m_outerIntakeLigament =
+        m_innerIntakeLigament.append(
+            new MechanismLigament2d("OuterIntake", 0.2, -90, 10, kIntakeNeutralColor));
+    SmartDashboard.putData("Mech2d/Intake", m_intakeBase);
   }
 
   @Override
@@ -51,6 +73,15 @@ public class Mech2DManager extends SubsystemBase {
       m_gripperLigament.setColor(kGripperForward);
     } else {
       m_gripperLigament.setColor(kGripperReverse);
+    }
+
+    m_innerIntakeLigament.setAngle(m_intake.getCurrentAngle());
+    if (m_intake.getCurrentSpeed() > 0) {
+      m_outerIntakeLigament.setColor(kIntakeForwardColor);
+    } else if (m_intake.getCurrentSpeed() < 0) {
+      m_outerIntakeLigament.setColor(kIntakeReverseColor);
+    } else {
+      m_outerIntakeLigament.setColor(kIntakeNeutralColor);
     }
   }
 }

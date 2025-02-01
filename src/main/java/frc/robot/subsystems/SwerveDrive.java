@@ -7,10 +7,6 @@ package frc.robot.subsystems;
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
 import com.chaos131.swerve.SwerveConfigs;
-import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule.AbsoluteEncoderConfig;
-import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule.AngleControllerConfig;
-import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule.DriveConfig;
-import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule.SpeedControllerConfig;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -22,7 +18,6 @@ import com.pathplanner.lib.util.DriveFeedforwards;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -30,12 +25,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.GeneralConstant;
-import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.SwerveConstants.SwerveBLConstants;
+import frc.robot.Constants.SwerveConstants.SwerveBRConstants;
+import frc.robot.Constants.SwerveConstants.SwerveFLConstants;
+import frc.robot.Constants.SwerveConstants.SwerveFRConstants;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class SwerveDrive extends BaseSwerveDrive {
@@ -104,83 +103,39 @@ public class SwerveDrive extends BaseSwerveDrive {
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(
             "FL",
-            new Translation2d(SwerveConstants.FLModoffsetX, SwerveConstants.FLModoffsetY),
-            new SpeedControllerConfig(
-                SwerveConstants.FLSpeedCANID,
-                SwerveConstants.FLInvertedSpeed,
-                SwerveConstants.FLSpeedGearRatio,
-                SwerveConstants.FLSpeedCircumference),
-            new AngleControllerConfig(
-                SwerveConstants.FLAngleCANID,
-                SwerveConstants.FLInvertedAngle,
-                SwerveConstants.FLAngleGearRatio),
-            new AbsoluteEncoderConfig(
-                SwerveConstants.FLAbsoEncoCANID,
-                SwerveConstants.FLInvertedEncoder,
-                SwerveConstants.FLAngleEncoderOffset),
-            new DriveConfig(
-                SwerveConstants.FLDriverRampRatePeriod,
-                SwerveConstants.FLAutonomousRampRatePeriod));
+            SwerveFLConstants.ModOffset,
+            SwerveFLConstants.SpeedCANID,
+            SwerveFLConstants.AngleCANID,
+            SwerveFLConstants.AbsoEncoCANID,
+            SwerveFLConstants.InvertedSpeed,
+            SwerveFLConstants.AngleEncoderOffset);
     SwerveModule2025 frontRightSwerveModule =
         new SwerveModule2025(
             "FR",
-            new Translation2d(SwerveConstants.FRModoffsetX, SwerveConstants.FRModoffsetY),
-            new SpeedControllerConfig(
-                SwerveConstants.FRSpeedCANID,
-                SwerveConstants.FRInvertedSpeed,
-                SwerveConstants.FRSpeedGearRatio,
-                SwerveConstants.FRSpeedCircumference),
-            new AngleControllerConfig(
-                SwerveConstants.FRAngleCANID,
-                SwerveConstants.FRInvertedAngle,
-                SwerveConstants.FRAngleGearRatio),
-            new AbsoluteEncoderConfig(
-                SwerveConstants.FRAbsoEncoCANID,
-                SwerveConstants.FRInvertedEncoder,
-                SwerveConstants.FRAngleEncoderOffset),
-            new DriveConfig(
-                SwerveConstants.FRDriverRampRatePeriod,
-                SwerveConstants.FRAutonomousRampRatePeriod));
+            SwerveFRConstants.ModOffset,
+            SwerveFRConstants.SpeedCANID,
+            SwerveFRConstants.AngleCANID,
+            SwerveFRConstants.AbsoEncoCANID,
+            SwerveFRConstants.InvertedSpeed,
+            SwerveFRConstants.AngleEncoderOffset);
     SwerveModule2025 backLeftSwerveModule =
         new SwerveModule2025(
             "BL",
-            new Translation2d(SwerveConstants.BLModoffsetX, SwerveConstants.BLModoffsetY),
-            new SpeedControllerConfig(
-                SwerveConstants.BLSpeedCANID,
-                SwerveConstants.BLInvertedSpeed,
-                SwerveConstants.BLSpeedGearRatio,
-                SwerveConstants.BLSpeedCircumference),
-            new AngleControllerConfig(
-                SwerveConstants.BLAngleCANID,
-                SwerveConstants.BLInvertedAngle,
-                SwerveConstants.BLAngleGearRatio),
-            new AbsoluteEncoderConfig(
-                SwerveConstants.BLAbsoEncoCANID,
-                SwerveConstants.BLInvertedEncoder,
-                SwerveConstants.BLAngleEncoderOffset),
-            new DriveConfig(
-                SwerveConstants.BLDriverRampRatePeriod,
-                SwerveConstants.BLAutonomousRampRatePeriod));
+            SwerveBLConstants.ModOffset,
+            SwerveBLConstants.SpeedCANID,
+            SwerveBLConstants.AngleCANID,
+            SwerveBLConstants.AbsoEncoCANID,
+            SwerveBLConstants.InvertedSpeed,
+            SwerveBLConstants.AngleEncoderOffset);
     SwerveModule2025 backRightSwerveModule =
         new SwerveModule2025(
             "BR",
-            new Translation2d(SwerveConstants.BRModoffsetX, SwerveConstants.BRModoffsetY),
-            new SpeedControllerConfig(
-                SwerveConstants.BRSpeedCANID,
-                SwerveConstants.BRInvertedSpeed,
-                SwerveConstants.BRSpeedGearRatio,
-                SwerveConstants.BRSpeedCircumference),
-            new AngleControllerConfig(
-                SwerveConstants.BRAngleCANID,
-                SwerveConstants.BRInvertedAngle,
-                SwerveConstants.BRAngleGearRatio),
-            new AbsoluteEncoderConfig(
-                SwerveConstants.BRAbsoEncoCANID,
-                SwerveConstants.BRInvertedEncoder,
-                SwerveConstants.BRAngleEncoderOffset),
-            new DriveConfig(
-                SwerveConstants.BRDriverRampRatePeriod,
-                SwerveConstants.BRAutonomousRampRatePeriod));
+            SwerveBRConstants.ModOffset,
+            SwerveBRConstants.SpeedCANID,
+            SwerveBRConstants.AngleCANID,
+            SwerveBRConstants.AbsoEncoCANID,
+            SwerveBRConstants.InvertedSpeed,
+            SwerveBRConstants.AngleEncoderOffset);
     SwerveModule2025[] swerveModule2025s = {
       frontLeftSwerveModule, frontRightSwerveModule, backLeftSwerveModule, backRightSwerveModule
     };
@@ -267,7 +222,9 @@ public class SwerveDrive extends BaseSwerveDrive {
   public void periodic() {
     if (GeneralConstant.RobotMode == Mode.SIM) {
       m_simulatedDrive.periodic();
+      Logger.recordOutput("Swerve/SimPose", m_simulatedDrive.getOdometryEstimatedPose());
     }
     super.periodic();
+    Logger.recordOutput("Swerve/Pose", getPose());
   }
 }
