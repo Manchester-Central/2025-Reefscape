@@ -3,6 +3,7 @@ package frc.robot;
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -113,8 +114,9 @@ public final class Constants {
     public static final int GyroCANID = 45;
   }
 
-  public static class GeneralConstant {
+  public static class GeneralConstants {
     public static final double RobotMassKg = 54.43;
     public static final Mode RobotMode = Mode.SIM;
+    public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
   }
 }

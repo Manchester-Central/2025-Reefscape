@@ -16,7 +16,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -24,7 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.GeneralConstant;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.SwerveConstants.SwerveBLConstants;
 import frc.robot.Constants.SwerveConstants.SwerveBRConstants;
@@ -52,9 +51,9 @@ public class SwerveDrive extends BaseSwerveDrive {
       throws Exception {
     super(swerveModules, swerveConfigs, getRotation);
 
+    resetPose(GeneralConstants.InitialRobotPose);
     m_simDriveTrain = DriveTrainSimulationConfig.Default();
-    m_driveSim =
-        new SwerveDriveSimulation(m_simDriveTrain, new Pose2d(4, 1, Rotation2d.fromDegrees(90)));
+    m_driveSim = new SwerveDriveSimulation(m_simDriveTrain, GeneralConstants.InitialRobotPose);
     // Creating the SelfControlledSwerveDriveSimulation instance
     m_simulatedDrive = new SelfControlledSwerveDriveSimulation(m_driveSim);
     // Register the drivetrain simulation to the simulation world
@@ -164,7 +163,7 @@ public class SwerveDrive extends BaseSwerveDrive {
             * RotationSpeedModifier;
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed_mps());
-    if (GeneralConstant.RobotMode == Mode.SIM) {
+    if (GeneralConstants.RobotMode == Mode.SIM) {
       m_simulatedDrive.runSwerveStates(states);
     }
     if (chassisSpeeds.vxMetersPerSecond == 0
@@ -223,10 +222,20 @@ public class SwerveDrive extends BaseSwerveDrive {
   }
 
   @Override
+  public Rotation2d getGyroRotation() {
+    if (GeneralConstants.RobotMode == Mode.SIM) {
+      return m_simulatedDrive != null
+          ? m_simulatedDrive.getActualPoseInSimulationWorld().getRotation()
+          : GeneralConstants.InitialRobotPose.getRotation();
+    }
+    return super.getGyroRotation();
+  }
+
+  @Override
   public void periodic() {
-    if (GeneralConstant.RobotMode == Mode.SIM) {
+    if (GeneralConstants.RobotMode == Mode.SIM) {
       m_simulatedDrive.periodic();
-      Logger.recordOutput("Swerve/SimPose", m_simulatedDrive.getOdometryEstimatedPose());
+      Logger.recordOutput("Swerve/SimPose", m_simulatedDrive.getActualPoseInSimulationWorld());
     }
     super.periodic();
     Logger.recordOutput("Swerve/Pose", getPose());
