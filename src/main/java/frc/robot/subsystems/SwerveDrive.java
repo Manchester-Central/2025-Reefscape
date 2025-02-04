@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.GeneralConstant;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.SwerveConstants.SwerveBLConstants;
 import frc.robot.Constants.SwerveConstants.SwerveBRConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFLConstants;
@@ -99,7 +100,10 @@ public class SwerveDrive extends BaseSwerveDrive {
   }
 
   public static SwerveDrive SeparateConstructor(Pigeon2 gyrPigeon2) throws Exception {
-    SwerveConfigs swerveConfigs = new SwerveConfigs();
+    SwerveConfigs swerveConfigs =
+        new SwerveConfigs()
+            .setMaxRobotSpeed_mps(SwerveConstants.MaxFreeSpeedMPS)
+            .setMaxRobotRotation_radps(SwerveConstants.MaxRotationSpeedRadPS);
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(
             "FL",
