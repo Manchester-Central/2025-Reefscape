@@ -17,14 +17,16 @@ public final class Constants {
     public static final InvertedValue InvertedAngle = InvertedValue.Clockwise_Positive;
     public static final SensorDirectionValue InvertedEncoder =
         SensorDirectionValue.Clockwise_Positive;
-    public static final double SpeedGearRatio = 6.55; // TODO: GET REAL
-    public static final double AngleGearRatio = 144.0 / 14.0; // TODO: GET REAL
-    public static final double SpeedCircumference = 0.1016 * Math.PI; // TODO: GET REAL
+    public static final double SpeedGearRatio = 7.674;
+    public static final double AngleGearRatio = 12.1;
+    public static final double SpeedCircumference = 0.1016 * Math.PI;
     public static final double DriverRampRatePeriod = 0.05; // TODO: GET REAL
-    public static final double AutonomousRampRatePeriod = 0.65; // TODO: GET REAL
+    public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
+    public static final double MaxFreeSpeedMPS = 4.1605;
+    public static final double MaxRotationSpeedRadPS = 12.0; // TODO: GET REAL
 
     public static class SwerveFLConstants {
-      public static final Translation2d ModOffset = new Translation2d(0.3, 0.3); // TODO: GET REAL
+      public static final Translation2d ModOffset = new Translation2d(0.3048, 0.3048);
       public static final int SpeedCANID = 30;
       public static final int AngleCANID = 31;
       public static final int AbsoEncoCANID = 32;
@@ -33,7 +35,7 @@ public final class Constants {
     }
 
     public static class SwerveFRConstants {
-      public static final Translation2d ModOffset = new Translation2d(0.3, -0.3); // TODO: GET REAL
+      public static final Translation2d ModOffset = new Translation2d(0.3048, -0.3048);
       public static final int SpeedCANID = 33;
       public static final int AngleCANID = 34;
       public static final int AbsoEncoCANID = 35;
@@ -42,7 +44,7 @@ public final class Constants {
     }
 
     public static class SwerveBLConstants {
-      public static final Translation2d ModOffset = new Translation2d(-0.3, 0.3); // TODO: GET REAL
+      public static final Translation2d ModOffset = new Translation2d(-0.3048, 0.3048);
       public static final int SpeedCANID = 39;
       public static final int AngleCANID = 40;
       public static final int AbsoEncoCANID = 41;
@@ -51,7 +53,7 @@ public final class Constants {
     }
 
     public static class SwerveBRConstants {
-      public static final Translation2d ModOffset = new Translation2d(-0.3, -0.3); // TODO: GET REAL
+      public static final Translation2d ModOffset = new Translation2d(-0.3048, -0.3048);
       public static final int SpeedCANID = 36;
       public static final int AngleCANID = 37;
       public static final int AbsoEncoCANID = 38;
@@ -109,7 +111,7 @@ public final class Constants {
   }
 
   public static class GyroConstants {
-    public static final int GyroCANID = 0;
+    public static final int GyroCANID = 45;
   }
 
   public static class GeneralConstants {
