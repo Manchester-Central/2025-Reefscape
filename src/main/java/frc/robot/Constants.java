@@ -12,6 +12,22 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
+  public static class CanIdentifiers {
+    public static final int FLSpeedCANID = 30;
+    public static final int FLAngleCANID = 31;
+    public static final int FLAbsoEncoCANID = 32;
+    public static final int FRSpeedCANID = 33;
+    public static final int FRAngleCANID = 34;
+    public static final int FRAbsoEncoCANID = 35;
+    public static final int BLSpeedCANID = 39;
+    public static final int BLAngleCANID = 40;
+    public static final int BLAbsoEncoCANID = 41;
+    public static final int BRSpeedCANID = 36;
+    public static final int BRAngleCANID = 37;
+    public static final int BRAbsoEncoCANID = 38;
+    public static final int GyroCANID = 45;
+  }
+
   public static class SwerveConstants {
 
     public static final InvertedValue InvertedAngle = InvertedValue.Clockwise_Positive;
@@ -27,36 +43,24 @@ public final class Constants {
 
     public static class SwerveFLConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, 0.3048);
-      public static final int SpeedCANID = 30;
-      public static final int AngleCANID = 31;
-      public static final int AbsoEncoCANID = 32;
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
       public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
     }
 
     public static class SwerveFRConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, -0.3048);
-      public static final int SpeedCANID = 33;
-      public static final int AngleCANID = 34;
-      public static final int AbsoEncoCANID = 35;
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
       public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
     }
 
     public static class SwerveBLConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, 0.3048);
-      public static final int SpeedCANID = 39;
-      public static final int AngleCANID = 40;
-      public static final int AbsoEncoCANID = 41;
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
       public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
     }
 
     public static class SwerveBRConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, -0.3048);
-      public static final int SpeedCANID = 36;
-      public static final int AngleCANID = 37;
-      public static final int AbsoEncoCANID = 38;
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
       public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
     }
@@ -108,10 +112,6 @@ public final class Constants {
     public static final double DeploySpeed = 1.0;
     public static final double HandoffPrepSpeed = 0.0;
     public static final double HandoffSpeed = -1.0;
-  }
-
-  public static class GyroConstants {
-    public static final int GyroCANID = 45;
   }
 
   public static class GeneralConstants {

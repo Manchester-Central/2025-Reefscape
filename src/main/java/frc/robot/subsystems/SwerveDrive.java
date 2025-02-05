@@ -23,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.SwerveConstants.SwerveBLConstants;
@@ -107,36 +108,36 @@ public class SwerveDrive extends BaseSwerveDrive {
         new SwerveModule2025(
             "FL",
             SwerveFLConstants.ModOffset,
-            SwerveFLConstants.SpeedCANID,
-            SwerveFLConstants.AngleCANID,
-            SwerveFLConstants.AbsoEncoCANID,
+            CanIdentifiers.FLSpeedCANID,
+            CanIdentifiers.FLAngleCANID,
+            CanIdentifiers.FLAbsoEncoCANID,
             SwerveFLConstants.InvertedSpeed,
             SwerveFLConstants.AngleEncoderOffset);
     SwerveModule2025 frontRightSwerveModule =
         new SwerveModule2025(
             "FR",
             SwerveFRConstants.ModOffset,
-            SwerveFRConstants.SpeedCANID,
-            SwerveFRConstants.AngleCANID,
-            SwerveFRConstants.AbsoEncoCANID,
+            CanIdentifiers.FRSpeedCANID,
+            CanIdentifiers.FRAngleCANID,
+            CanIdentifiers.FRAbsoEncoCANID,
             SwerveFRConstants.InvertedSpeed,
             SwerveFRConstants.AngleEncoderOffset);
     SwerveModule2025 backLeftSwerveModule =
         new SwerveModule2025(
             "BL",
             SwerveBLConstants.ModOffset,
-            SwerveBLConstants.SpeedCANID,
-            SwerveBLConstants.AngleCANID,
-            SwerveBLConstants.AbsoEncoCANID,
+            CanIdentifiers.BLSpeedCANID,
+            CanIdentifiers.BLAngleCANID,
+            CanIdentifiers.BLAbsoEncoCANID,
             SwerveBLConstants.InvertedSpeed,
             SwerveBLConstants.AngleEncoderOffset);
     SwerveModule2025 backRightSwerveModule =
         new SwerveModule2025(
             "BR",
             SwerveBRConstants.ModOffset,
-            SwerveBRConstants.SpeedCANID,
-            SwerveBRConstants.AngleCANID,
-            SwerveBRConstants.AbsoEncoCANID,
+            CanIdentifiers.BRSpeedCANID,
+            CanIdentifiers.BRAngleCANID,
+            CanIdentifiers.BRAbsoEncoCANID,
             SwerveBRConstants.InvertedSpeed,
             SwerveBRConstants.AngleEncoderOffset);
     SwerveModule2025[] swerveModule2025s = {
