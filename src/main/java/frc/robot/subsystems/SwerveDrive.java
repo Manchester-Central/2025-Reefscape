@@ -58,8 +58,10 @@ public class SwerveDrive extends BaseSwerveDrive {
     // Creating the SelfControlledSwerveDriveSimulation instance
     m_simulatedDrive = new SelfControlledSwerveDriveSimulation(m_driveSim);
     // Register the drivetrain simulation to the simulation world
-    SimulatedArena.getInstance()
-        .addDriveTrainSimulation(m_simulatedDrive.getDriveTrainSimulation());
+    if (GeneralConstants.RobotMode == Mode.SIM) {
+      SimulatedArena.getInstance()
+          .addDriveTrainSimulation(m_simulatedDrive.getDriveTrainSimulation());
+    }
 
     try {
       m_pathPlannerConfig = RobotConfig.fromGUISettings();

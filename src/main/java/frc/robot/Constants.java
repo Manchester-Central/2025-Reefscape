@@ -13,6 +13,8 @@ public final class Constants {
   }
 
   public static class CanIdentifiers {
+    public static final String CTRECANBus = "CTRE bus";
+
     public static final int FLSpeedCANID = 30;
     public static final int FLAngleCANID = 31;
     public static final int FLAbsoEncoCANID = 32;
@@ -116,7 +118,7 @@ public final class Constants {
 
   public static class GeneralConstants {
     public static final double RobotMassKg = 54.43;
-    public static final Mode RobotMode = Mode.SIM;
+    public static final Mode RobotMode = Mode.REAL;
     public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
   }
 }

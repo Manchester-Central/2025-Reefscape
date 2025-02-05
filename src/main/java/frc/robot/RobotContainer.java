@@ -52,7 +52,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    */
   public RobotContainer() throws Exception {
     super();
-    m_gyro = new Pigeon2(CanIdentifiers.GyroCANID);
+    m_gyro = new Pigeon2(CanIdentifiers.GyroCANID, CanIdentifiers.CTRECANBus);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
     m_idLift = new IdLift();
     m_intake = new Intake();
