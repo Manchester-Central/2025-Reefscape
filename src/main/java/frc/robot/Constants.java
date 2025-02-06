@@ -34,9 +34,9 @@ public final class Constants {
 
   public static class SwerveConstants {
 
-    public static final InvertedValue InvertedAngle = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue InvertedAngle = InvertedValue.CounterClockwise_Positive;
     public static final SensorDirectionValue InvertedEncoder =
-        SensorDirectionValue.Clockwise_Positive;
+        SensorDirectionValue.CounterClockwise_Positive;
     public static final double SpeedGearRatio = 7.674;
     public static final double AngleGearRatio = 12.1;
     public static final double SpeedCircumference = 0.1016 * Math.PI;
@@ -51,25 +51,25 @@ public final class Constants {
     public static class SwerveFLConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, 0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
+      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(-28.92);
     }
 
     public static class SwerveFRConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, -0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
+      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(111.71);
     }
 
     public static class SwerveBLConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, 0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
+      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(129.56);
     }
 
     public static class SwerveBRConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, -0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
+      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(96.33);
     }
   }
 
