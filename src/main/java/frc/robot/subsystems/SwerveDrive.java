@@ -105,7 +105,9 @@ public class SwerveDrive extends BaseSwerveDrive {
     SwerveConfigs swerveConfigs =
         new SwerveConfigs()
             .setMaxRobotSpeed_mps(SwerveConstants.MaxFreeSpeedMPS)
-            .setMaxRobotRotation_radps(SwerveConstants.MaxRotationSpeedRadPS);
+            .setMaxRobotRotation_radps(SwerveConstants.MaxRotationSpeedRadPS)
+            .setDefaultModuleVelocityPIDFValues(SwerveConstants.DefaultModuleVelocityPIDFValues)
+            .setDefaultModuleAnglePIDValues(SwerveConstants.DefaultModuleAnglePIDValue);
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(
             "FL",
@@ -169,6 +171,7 @@ public class SwerveDrive extends BaseSwerveDrive {
     if (GeneralConstants.RobotMode == Mode.SIM) {
       m_simulatedDrive.runSwerveStates(states);
     }
+    Logger.recordOutput("Swerve/TargetSpeeds", states);
     if (chassisSpeeds.vxMetersPerSecond == 0
         && chassisSpeeds.vyMetersPerSecond == 0
         && chassisSpeeds.omegaRadiansPerSecond == 0) {
@@ -242,5 +245,6 @@ public class SwerveDrive extends BaseSwerveDrive {
     }
     super.periodic();
     Logger.recordOutput("Swerve/Pose", getPose());
+    Logger.recordOutput("Swerve/CurrentSpeeds", getModuleStates());
   }
 }

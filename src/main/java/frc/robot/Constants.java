@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.chaos131.pid.PIDFValue;
+import com.chaos131.pid.PIDValue;
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -42,6 +44,9 @@ public final class Constants {
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double MaxFreeSpeedMPS = 4.1605;
     public static final double MaxRotationSpeedRadPS = 12.0; // TODO: GET REAL
+    public static final PIDValue DefaultModuleAnglePIDValue = new PIDValue(60.0, 12.0, 0.0);
+    public static final PIDFValue DefaultModuleVelocityPIDFValues =
+        new PIDFValue(5.0, 0.0, 0.0, 2.19);
 
     public static class SwerveFLConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, 0.3048);
