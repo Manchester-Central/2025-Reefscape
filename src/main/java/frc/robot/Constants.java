@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.chaos131.pid.PIDFValue;
+import com.chaos131.pid.PIDValue;
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -12,11 +14,29 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
 
+  public static class CanIdentifiers {
+    public static final String CTRECANBus = "CTRE bus";
+
+    public static final int FLSpeedCANID = 30;
+    public static final int FLAngleCANID = 31;
+    public static final int FLAbsoEncoCANID = 32;
+    public static final int FRSpeedCANID = 33;
+    public static final int FRAngleCANID = 34;
+    public static final int FRAbsoEncoCANID = 35;
+    public static final int BLSpeedCANID = 39;
+    public static final int BLAngleCANID = 40;
+    public static final int BLAbsoEncoCANID = 41;
+    public static final int BRSpeedCANID = 36;
+    public static final int BRAngleCANID = 37;
+    public static final int BRAbsoEncoCANID = 38;
+    public static final int GyroCANID = 45;
+  }
+
   public static class SwerveConstants {
 
-    public static final InvertedValue InvertedAngle = InvertedValue.Clockwise_Positive;
+    public static final InvertedValue InvertedAngle = InvertedValue.CounterClockwise_Positive;
     public static final SensorDirectionValue InvertedEncoder =
-        SensorDirectionValue.Clockwise_Positive;
+        SensorDirectionValue.CounterClockwise_Positive;
     public static final double SpeedGearRatio = 7.674;
     public static final double AngleGearRatio = 12.1;
     public static final double SpeedCircumference = 0.1016 * Math.PI;
@@ -24,41 +44,32 @@ public final class Constants {
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double MaxFreeSpeedMPS = 4.1605;
     public static final double MaxRotationSpeedRadPS = 12.0; // TODO: GET REAL
+    public static final PIDValue DefaultModuleAnglePIDValue = new PIDValue(60.0, 12.0, 0.0);
+    public static final PIDFValue DefaultModuleVelocityPIDFValues =
+        new PIDFValue(5.0, 0.0, 0.0, 2.19);
 
     public static class SwerveFLConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, 0.3048);
-      public static final int SpeedCANID = 30;
-      public static final int AngleCANID = 31;
-      public static final int AbsoEncoCANID = 32;
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
+      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(-28.92);
     }
 
     public static class SwerveFRConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, -0.3048);
-      public static final int SpeedCANID = 33;
-      public static final int AngleCANID = 34;
-      public static final int AbsoEncoCANID = 35;
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
+      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(111.71);
     }
 
     public static class SwerveBLConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, 0.3048);
-      public static final int SpeedCANID = 39;
-      public static final int AngleCANID = 40;
-      public static final int AbsoEncoCANID = 41;
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
+      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(129.56);
     }
 
     public static class SwerveBRConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, -0.3048);
-      public static final int SpeedCANID = 36;
-      public static final int AngleCANID = 37;
-      public static final int AbsoEncoCANID = 38;
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(0);
+      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(96.33);
     }
   }
 
@@ -110,13 +121,9 @@ public final class Constants {
     public static final double HandoffSpeed = -1.0;
   }
 
-  public static class GyroConstants {
-    public static final int GyroCANID = 45;
-  }
-
   public static class GeneralConstants {
     public static final double RobotMassKg = 54.43;
-    public static final Mode RobotMode = Mode.SIM;
+    public static final Mode RobotMode = Mode.REAL;
     public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
   }
 }

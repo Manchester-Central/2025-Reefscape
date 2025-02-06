@@ -8,6 +8,7 @@ import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.SwerveConstants;
 import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 
@@ -25,6 +26,7 @@ public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
       Rotation2d angleEncoderOffset) {
     super(
         nameString,
+        CanIdentifiers.CTRECANBus,
         wheelPosition,
         new SpeedControllerConfig(
             speedCANID,
