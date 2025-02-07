@@ -1,16 +1,16 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.utils;
 
+import com.chaos131.util.FieldData;
+import com.chaos131.vision.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.FieldDimensions;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-/** Add your docs here. */
 public class FieldPoint {
   /** The pre-calculated red pose */
   protected final Pose2d m_redPose;
@@ -24,9 +24,10 @@ public class FieldPoint {
   /** The corresponding alliance the original pose was built for */
   protected final Alliance m_defaultAlliance;
 
-  protected final double fieldLength = 17.524;
+  protected final double fieldLength = FieldDimensions.FieldLength;
+  protected final double fieldWidth = FieldDimensions.FieldWidth;
 
-  protected final double fieldWidth = 8.052;
+  // List of named points on the field
   public static final FieldPoint processor =
       new FieldPoint("processor", new Pose2d(5.988, 0, Rotation2d.fromDegrees(90)));
   public static final FieldPoint leftSource =
@@ -46,12 +47,10 @@ public class FieldPoint {
   }
 
   public Pose2d getBluePose() {
-
     return m_bluePose;
   }
 
   public Pose2d getRedPose() {
-
     return m_redPose;
   }
 
@@ -69,5 +68,34 @@ public class FieldPoint {
    */
   public Pose2d getCurrentAlliancePose() {
     return getCurrentAlliance() == Alliance.Blue ? m_bluePose : m_redPose;
+  }
+
+  private static HashMap<Integer, AprilTag> TagMap;
+  private static ArrayList<AprilTag> ReefTags;
+
+  public static HashMap<Integer, AprilTag> GetMapOfAprilTags() {
+    if (TagMap == null) {
+      TagMap = new HashMap<Integer, AprilTag>();
+      var tags = FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
+      for (var tag : tags) {
+        var april_tag = (AprilTag) tag;
+        TagMap.put(april_tag.id, april_tag);
+      }
+    }
+    return TagMap;
+  }
+
+  public static ArrayList<AprilTag> GetReefAprilTags() {
+    if (ReefTags == null) {
+      ReefTags = new ArrayList<>();
+      var tags = GetMapOfAprilTags();
+      ReefTags.add(tags.get(17));
+      ReefTags.add(tags.get(18));
+      ReefTags.add(tags.get(19));
+      ReefTags.add(tags.get(20));
+      ReefTags.add(tags.get(21));
+      ReefTags.add(tags.get(22));
+    }
+    return ReefTags;
   }
 }
