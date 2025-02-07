@@ -6,6 +6,7 @@ package frc.robot.subsystems.lift;
 
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDTuner;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -13,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
@@ -30,7 +32,10 @@ public class GripperPivot extends AbstractLiftPart {
           m_dcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_motor = new ChaosTalonFx(3, kGearRatio, m_motorSim, true);
+  private ChaosTalonFx m_motor =
+      new ChaosTalonFx(CanIdentifiers.GripperPivotMotorCANID, kGearRatio, m_motorSim, true);
+  private CANcoder m_canCoder =
+      new CANcoder(CanIdentifiers.GripperPivotCANCoderCANID, CanIdentifiers.CTRECANBus);
   private PIDTuner m_pidTuner = new PIDTuner("GripperPivot", true, 1.0, 0.001, 0.0, this::tunePID);
 
   public GripperPivot(Supplier<IdLiftValues> idLiftValuesSupplier) {

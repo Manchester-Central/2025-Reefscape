@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
@@ -22,15 +23,16 @@ public class Extender extends AbstractLiftPart {
   private double m_targetLength = 1;
   private double kGearRatio = 10.0;
   private double kJkgMetersSquared = 1.0;
-  private DCMotor m_dcMotor = DCMotor.getKrakenX60(2);
+  private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
           LinearSystemId.createDCMotorSystem(m_dcMotor, kJkgMetersSquared, kGearRatio),
           m_dcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_motor1 = new ChaosTalonFx(4, kGearRatio, m_motorSim, true);
-  private ChaosTalonFx m_motor2 = new ChaosTalonFx(5, kGearRatio, m_motorSim, false);
+  private ChaosTalonFx m_motor1 =
+      new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID, kGearRatio, m_motorSim, true);
+  // private ChaosTalonFx m_motor2 = new ChaosTalonFx(5, kGearRatio, m_motorSim, false);
   private PIDTuner m_pidTuner = new PIDTuner("Extender", true, 1.0, 0.001, 0.0, this::tunePIDs);
 
   public Extender(Supplier<IdLiftValues> idLiftValuesSupplier) {
@@ -45,19 +47,19 @@ public class Extender extends AbstractLiftPart {
     m_motor1.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
     m_motor1.applyConfig();
 
-    m_motor2.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    m_motor2.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    m_motor2.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    m_motor2.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
-    m_motor2.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    m_motor2.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
-    m_motor2.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
-    m_motor2.applyConfig();
+    // m_motor2.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    // m_motor2.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    // m_motor2.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    // m_motor2.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
+    // m_motor2.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    // m_motor2.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
+    // m_motor2.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+    // m_motor2.applyConfig();
   }
 
   public void tunePIDs(PIDFValue pidfValue) {
     m_motor1.tunePID(pidfValue, 0.0);
-    m_motor2.tunePID(pidfValue, 0.0);
+    // m_motor2.tunePID(pidfValue, 0.0);
   }
 
   public void setTargetLength(double newLength) {
@@ -66,7 +68,7 @@ public class Extender extends AbstractLiftPart {
     }
     m_targetLength = newLength;
     m_motor1.moveToPosition(newLength);
-    m_motor2.moveToPosition(newLength);
+    // m_motor2.moveToPosition(newLength);
   }
 
   public double getCurrentLength() {
@@ -85,6 +87,6 @@ public class Extender extends AbstractLiftPart {
   @Override
   public void simulationPeriodic() {
     m_motor1.simUpdate();
-    m_motor2.simUpdate();
+    // m_motor2.simUpdate();
   }
 }

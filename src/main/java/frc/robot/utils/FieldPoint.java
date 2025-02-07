@@ -4,11 +4,14 @@
 
 package frc.robot.utils;
 
+import com.chaos131.util.FieldData;
+import com.chaos131.util.Quad;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import java.util.ArrayList;
 
 /** Add your docs here. */
 public class FieldPoint {
@@ -33,6 +36,9 @@ public class FieldPoint {
       new FieldPoint("leftSource", new Pose2d(0.8512, 7.396, Rotation2d.fromDegrees(90)));
   public static final FieldPoint rightSource =
       new FieldPoint("rightSource", new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(90)));
+
+  public static final ArrayList<Quad> aprilTag =
+      FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
 
   public FieldPoint(String name, Pose2d pose) {
     m_name = name;

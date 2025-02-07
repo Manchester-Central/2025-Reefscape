@@ -30,6 +30,19 @@ public final class Constants {
     public static final int BRAngleCANID = 37;
     public static final int BRAbsoEncoCANID = 38;
     public static final int GyroCANID = 45;
+    public static final int BasePivotMotorCANID = 46;
+    public static final int BasePivotCANcoderCANID = 47;
+    public static final int GripperPivotMotorCANID = 48;
+    public static final int GripperPivotCANCoderCANID = 49;
+    public static final int GripperMotorCANID = 50;
+    public static final int ExtenderMotorCANID = 51;
+  }
+
+  public static class IOPortsConstants {
+
+    public static final int AlgaeChannelID = 0;
+    public static final int CoralOneChannelID = 1;
+    public static final int CoralTwoChannelID = 2;
   }
 
   public static class SwerveConstants {
