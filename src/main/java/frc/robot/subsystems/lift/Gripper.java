@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IOPortsConstants;
+import frc.robot.Robot;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import java.util.function.Supplier;
@@ -19,6 +20,8 @@ public class Gripper extends AbstractLiftPart {
   private double m_targetSpeed = 0;
   private double kGearRatio = 40.0;
   private double kJkgMetersSquared = 0.1;
+  public static boolean hasCoralFrontGrippedSim = false;
+  public static boolean hasCoralBackGrippedSim = false;
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
@@ -44,5 +47,19 @@ public class Gripper extends AbstractLiftPart {
 
   public double getCurrentSpeed() {
     return m_targetSpeed;
+  }
+
+  public boolean hasCoralFront() {
+    if (Robot.isSimulation()) {
+      return hasCoralFrontGrippedSim;
+    }
+    return m_coralSensor1.get();
+  }
+
+  public boolean hasCoralBack() {
+    if (Robot.isSimulation()) {
+      return hasCoralBackGrippedSim;
+    }
+    return m_coralSensor2.get();
   }
 }

@@ -25,6 +25,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.lift.Gripper;
 import frc.robot.subsystems.lift.IdLift;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.utils.DriveDirection;
@@ -120,7 +121,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
 
     m_simKeyboard
-        .b()
+        .y() // v on keyboard 0
         .onTrue(
             new InstantCommand(
                 () -> {
@@ -129,6 +130,17 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
                       .addGamePiece(
                           new ReefscapeCoralOnField(new Pose2d(2, 1, Rotation2d.fromDegrees(90))));
                 }));
+    m_simKeyboard
+        .a() // z on keyboard 0
+        .onTrue(
+            new InstantCommand(
+                () -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim));
+
+    m_simKeyboard
+        .b() // x on keyboard 0
+        .onTrue(
+            new InstantCommand(
+                () -> Gripper.hasCoralBackGrippedSim = !Gripper.hasCoralBackGrippedSim));
     m_operator
         .start()
         .whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
