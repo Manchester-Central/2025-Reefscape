@@ -19,6 +19,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
+import frc.robot.commands.UpdateHeading;
 import frc.robot.subsystems.FrontCamera;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeState;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.IdLift;
 import frc.robot.subsystems.lift.IdLift.LiftState;
+import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
 import org.ironmaple.simulation.SimulatedArena;
@@ -104,6 +106,18 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         .whileTrue(
             PathUtil.toCreateFindAPathToClosestPointCommand(
                 FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    m_driver
+        .povUp()
+        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
+    m_driver
+        .povDown()
+        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
+    m_driver
+        .povLeft()
+        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
+    m_driver
+        .povRight()
+        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
 
     m_simKeyboard
         .b()
