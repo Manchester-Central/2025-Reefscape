@@ -53,6 +53,13 @@ public class FieldPoint {
     return blueTagArrayList;
   }
 
+  public static ArrayList<AprilTag> blueHPAprilTags() {
+    ArrayList<AprilTag> blueTagArrayList = new ArrayList<AprilTag>();
+    blueTagArrayList.add(aprilTagMap.get(12));
+    blueTagArrayList.add(aprilTagMap.get(13));
+    return blueTagArrayList;
+  }
+
   public static ArrayList<FieldPoint> getReefDrivePoses() {
     ArrayList<FieldPoint> reefDrivePoses = new ArrayList<FieldPoint>();
     for (AprilTag aprilTag : blueReefAprilTags()) {
@@ -72,6 +79,27 @@ public class FieldPoint {
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefRight", rightPose));
     }
     return reefDrivePoses;
+  }
+
+  public static ArrayList<FieldPoint> getHPDrivePoses() {
+    ArrayList<FieldPoint> hpDrivePoses = new ArrayList<FieldPoint>();
+    for (AprilTag aprilTag : blueHPAprilTags()) {
+      Pose2d leftPose =
+          aprilTag.pose2d.transformBy(
+              new Transform2d(
+                  RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
+                  RobotDimensions.SideSideLengthMeters / 2 + 0.05,
+                  Rotation2d.fromDegrees(180)));
+      hpDrivePoses.add(new FieldPoint(aprilTag.id + " HPLeft", leftPose));
+      Pose2d rightPose =
+          aprilTag.pose2d.transformBy(
+              new Transform2d(
+                  RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
+                  -RobotDimensions.SideSideLengthMeters / 2 - 0.05,
+                  Rotation2d.fromDegrees(180)));
+      hpDrivePoses.add(new FieldPoint(aprilTag.id + " HPRight", rightPose));
+    }
+    return hpDrivePoses;
   }
 
   public FieldPoint(String name, Pose2d pose) {
