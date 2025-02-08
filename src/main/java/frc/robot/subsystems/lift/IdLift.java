@@ -10,6 +10,7 @@ import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.subsystems.shared.ISubsystemState;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
+import frc.robot.utils.ChaosTalonFx;
 
 /** Add your docs here. */
 public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
@@ -37,6 +38,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private Extender m_extender = new Extender(this::getLiftValues);
   private Gripper m_gripper = new Gripper(this::getLiftValues);
   private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
+
+  public ChaosTalonFx getPivotMotor() {
+    return m_basePivot.getMotor();
+  }
 
   public enum LiftState implements ISubsystemState {
     START,

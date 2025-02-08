@@ -37,6 +37,10 @@ public class BasePivot extends AbstractLiftPart {
       new CANcoder(CanIdentifiers.BasePivotCANcoderCANID, CanIdentifiers.CTRECANBus);
   private PIDTuner m_pidTuner = new PIDTuner("BasePivot", true, 1.0, 0.001, 0.0, this::tunePIDs);
 
+  public ChaosTalonFx getMotor() {
+    return m_motor;
+  }
+
   public BasePivot(Supplier<IdLiftValues> idLiftValuesSupplier) {
     super(idLiftValuesSupplier);
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;

@@ -7,10 +7,12 @@ package frc.robot;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
@@ -45,6 +47,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public static FrontCamera m_frontcamera;
   public static Mech2DManager m_mech2dManager;
   public static SwerveDriveSimulation m_driveSim;
+  private Orchestra m_Orchestra = new Orchestra();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -62,7 +65,23 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     buildPathplannerAutoChooser();
     // Configure the trigger bindings
     configureBindings();
+    m_Orchestra.addInstrument(m_idLift.getPivotMotor());
   }
+
+  public void playMusic() {
+    if (!m_Orchestra.isPlaying()) {
+
+      m_Orchestra.loadMusic("chaos2024.chrp");
+      m_Orchestra.play();
+    }
+  }
+
+  public void stopMusic() {
+    if (m_Orchestra.isPlaying()) {
+      m_Orchestra.stop();
+    }
+  }
+
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -84,6 +103,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         .whileTrue(
             PathUtil.toCreateFindAPathToClosestPointCommand(
                 FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    m_driver.rightBumper().whileTrue(new StartEndCommand(() -> playMusic(), () -> stopMusic()));
 
     m_simKeyboard
         .b()
