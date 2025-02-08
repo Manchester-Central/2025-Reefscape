@@ -21,12 +21,15 @@ public class Mech2DManager extends SubsystemBase {
   private LoggedMechanismRoot2d m_liftRoot;
   private LoggedMechanismLigament2d m_extenderLigament;
   private LoggedMechanismLigament2d m_gripperLigament;
+  private LoggedMechanismLigament2d m_gripperFrontLigament;
+  private LoggedMechanismLigament2d m_gripperBackLigament;
   private IdLift m_idLift;
 
   private final Color8Bit kExtenderColor = new Color8Bit(0, 0, 255);
   private final Color8Bit kGripperNeutral = new Color8Bit(100, 100, 100);
   private final Color8Bit kGripperForward = new Color8Bit(0, 255, 0);
   private final Color8Bit kGripperReverse = new Color8Bit(255, 0, 0);
+  private final Color8Bit kGripperhasCoral = new Color8Bit(255, 0, 255);
 
   @AutoLogOutput(key = "Mech2d/Intake")
   private LoggedMechanism2d m_intakeBase;
@@ -51,7 +54,14 @@ public class Mech2DManager extends SubsystemBase {
         m_liftRoot.append(new LoggedMechanismLigament2d("Extender", 0, 0, 8, kExtenderColor));
     m_gripperLigament =
         m_extenderLigament.append(
-            new LoggedMechanismLigament2d("Gripper", 0.2, 0, 10, kGripperNeutral));
+            new LoggedMechanismLigament2d("Gripper", 0.2, 0, 8, kGripperNeutral));
+    m_gripperBackLigament =
+        m_extenderLigament.append(
+            new LoggedMechanismLigament2d("GripperBack", 0.09, 0, 10, kGripperNeutral));
+
+    m_gripperFrontLigament =
+        m_gripperBackLigament.append(
+            new LoggedMechanismLigament2d("GripperFront", 0.09, 0, 10, kGripperNeutral));
     // SmartDashboard.putData("Mech2d/Lift", m_liftBase);
 
     m_intakeBase = new LoggedMechanism2d(2, 3);
@@ -71,12 +81,25 @@ public class Mech2DManager extends SubsystemBase {
     m_extenderLigament.setLength(values.extenderLength);
     m_extenderLigament.setAngle(values.basePivotAngle);
     m_gripperLigament.setAngle(values.gripperPivotAngle);
+    m_gripperBackLigament.setAngle(values.gripperPivotAngle);
     if (values.gripperSpeed == 0) {
       m_gripperLigament.setColor(kGripperNeutral);
     } else if (values.gripperSpeed > 0) {
       m_gripperLigament.setColor(kGripperForward);
     } else {
       m_gripperLigament.setColor(kGripperReverse);
+    }
+
+    if (values.hasCoralBackGripped) {
+      m_gripperBackLigament.setColor(kGripperhasCoral);
+    } else {
+      m_gripperBackLigament.setColor(kGripperNeutral);
+    }
+
+    if (values.hasCoralFrontGripped) {
+      m_gripperFrontLigament.setColor(kGripperhasCoral);
+    } else {
+      m_gripperFrontLigament.setColor(kGripperNeutral);
     }
 
     m_innerIntakeLigament.setAngle(m_intake.getCurrentAngle());
