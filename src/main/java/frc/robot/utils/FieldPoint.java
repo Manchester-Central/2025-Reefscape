@@ -1,8 +1,6 @@
 package frc.robot.utils;
 
 import com.chaos131.util.FieldData;
-import com.chaos131.vision.AprilTag;
-import com.chaos131.util.FieldData;
 import com.chaos131.util.Quad;
 import com.chaos131.vision.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,6 +8,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.FieldDimensions;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FieldPoint {
   /** The pre-calculated red pose */
@@ -37,15 +38,13 @@ public class FieldPoint {
   public static final FieldPoint testPoint =
       new FieldPoint("testPoint", new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
 
-  public static final ArrayList<Quad> aprilTag =
-      FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
-
   public static HashMap<Integer, AprilTag> aprilTagMap;
 
   public static HashMap<Integer, AprilTag> aprilTagReturn() {
     if (aprilTagMap == null) {
       aprilTagMap = new HashMap<Integer, AprilTag>();
-      for (Quad quad : aprilTag) {
+      var tags = FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
+      for (Quad quad : tags) {
         AprilTag tag = (AprilTag) quad;
         aprilTagMap.put(tag.id, tag);
       }
@@ -97,34 +96,5 @@ public class FieldPoint {
    */
   public Pose2d getCurrentAlliancePose() {
     return getCurrentAlliance() == Alliance.Blue ? m_bluePose : m_redPose;
-  }
-
-  private static HashMap<Integer, AprilTag> TagMap;
-  private static ArrayList<AprilTag> ReefTags;
-
-  public static HashMap<Integer, AprilTag> GetMapOfAprilTags() {
-    if (TagMap == null) {
-      TagMap = new HashMap<Integer, AprilTag>();
-      var tags = FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
-      for (var tag : tags) {
-        var april_tag = (AprilTag) tag;
-        TagMap.put(april_tag.id, april_tag);
-      }
-    }
-    return TagMap;
-  }
-
-  public static ArrayList<AprilTag> GetReefAprilTags() {
-    if (ReefTags == null) {
-      ReefTags = new ArrayList<>();
-      var tags = GetMapOfAprilTags();
-      ReefTags.add(tags.get(17));
-      ReefTags.add(tags.get(18));
-      ReefTags.add(tags.get(19));
-      ReefTags.add(tags.get(20));
-      ReefTags.add(tags.get(21));
-      ReefTags.add(tags.get(22));
-    }
-    return ReefTags;
   }
 }
