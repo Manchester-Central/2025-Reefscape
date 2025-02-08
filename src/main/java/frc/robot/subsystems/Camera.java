@@ -11,9 +11,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class FrontCamera extends LimelightCamera {
+public class Camera extends LimelightCamera {
   /** Creates a new FrontCamera. */
-  public FrontCamera(
+  public Camera(
       String name,
       LimelightVersion limelightVersion,
       CameraSpecs specs,
