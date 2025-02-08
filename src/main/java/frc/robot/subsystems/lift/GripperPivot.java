@@ -62,6 +62,10 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.moveToPosition(newAngle.getDegrees());
   }
 
+  public void setSpeed(double speed) {
+    m_motor.set(speed);
+  }
+
   public Rotation2d getCurrentAngle() {
     return Rotation2d.fromDegrees(
         m_motor.getPosition().getValueAsDouble()); // TODO get actual motor angle

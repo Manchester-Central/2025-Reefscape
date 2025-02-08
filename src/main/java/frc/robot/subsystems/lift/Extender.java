@@ -42,6 +42,8 @@ public class Extender extends AbstractLiftPart {
     m_motor1.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor1.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_motor1.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
+    m_motor1.Configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+    m_motor1.Configuration.CurrentLimits.StatorCurrentLimit = 40;
     m_motor1.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     m_motor1.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
     m_motor1.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
@@ -69,6 +71,10 @@ public class Extender extends AbstractLiftPart {
     m_targetLength = newLength;
     m_motor1.moveToPosition(newLength);
     // m_motor2.moveToPosition(newLength);
+  }
+
+  public void setSpeed(double speed) {
+    m_motor1.set(speed);
   }
 
   public double getCurrentLength() {
