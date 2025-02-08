@@ -7,6 +7,7 @@ package frc.robot;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
+import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,16 +15,19 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
-import frc.robot.subsystems.FrontCamera;
+import frc.robot.commands.UpdateHeading;
+import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.Mech2DManager;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.IdLift;
 import frc.robot.subsystems.lift.IdLift.LiftState;
+import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
 import org.ironmaple.simulation.SimulatedArena;
@@ -42,7 +46,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   public static IdLift m_idLift;
   public static Intake m_intake;
-  public static FrontCamera m_frontcamera;
+  public static Camera m_rightCamera;
+  public static Camera m_leftCamera;
   public static Mech2DManager m_mech2dManager;
   public static SwerveDriveSimulation m_driveSim;
 
@@ -58,7 +63,24 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_idLift = new IdLift();
     m_intake = new Intake();
     m_mech2dManager = new Mech2DManager(m_idLift, m_intake);
-    m_frontcamera = new FrontCamera();
+    m_rightCamera =
+        new Camera(
+            "limelight-right",
+            LimelightVersion.LL3G,
+            VisionConstants.limeLight3GSpecs,
+            () -> m_swerveDrive.getPose(),
+            (data) -> updatePoseEstimator(data),
+            () -> m_swerveDrive.getRobotSpeedMps(),
+            () -> m_swerveDrive.getRobotRotationSpeedRadsPerSec());
+    m_leftCamera =
+        new Camera(
+            "limelight-left",
+            LimelightVersion.LL3G,
+            VisionConstants.limeLight3GSpecs,
+            () -> m_swerveDrive.getPose(),
+            (data) -> updatePoseEstimator(data),
+            () -> m_swerveDrive.getRobotSpeedMps(),
+            () -> m_swerveDrive.getRobotRotationSpeedRadsPerSec());
     buildPathplannerAutoChooser();
     // Configure the trigger bindings
     configureBindings();
@@ -84,6 +106,18 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         .whileTrue(
             PathUtil.toCreateFindAPathToClosestPointCommand(
                 FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    m_driver
+        .povUp()
+        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
+    m_driver
+        .povDown()
+        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
+    m_driver
+        .povLeft()
+        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
+    m_driver
+        .povRight()
+        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
 
     m_simKeyboard
         .b()
