@@ -4,10 +4,12 @@ import com.chaos131.util.FieldData;
 import com.chaos131.vision.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldDimensions;
+import frc.robot.Constants.RobotDimensions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,28 +39,39 @@ public class FieldPoint {
   public static final FieldPoint testPoint =
       new FieldPoint("testPoint", new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
 
-  public static HashMap<Integer, AprilTag> aprilTagMap;
-
-  public static HashMap<Integer, AprilTag> aprilTagReturn() {
-    if (aprilTagMap == null) {
-      aprilTagMap = new HashMap<Integer, AprilTag>();
-      var tags = FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
-      for (AprilTag tag : tags) {
-        aprilTagMap.put(tag.id, tag);
-      }
-    }
-    return aprilTagMap;
-  }
+  public static HashMap<Integer, AprilTag> aprilTagMap =
+      FieldData.GetAprilTagMap("assets/frc2025.fmap");
 
   public static ArrayList<AprilTag> blueReefAprilTags() {
     ArrayList<AprilTag> blueTagArrayList = new ArrayList<AprilTag>();
-    blueTagArrayList.add(aprilTagReturn().get(17));
-    blueTagArrayList.add(aprilTagReturn().get(18));
-    blueTagArrayList.add(aprilTagReturn().get(19));
-    blueTagArrayList.add(aprilTagReturn().get(20));
-    blueTagArrayList.add(aprilTagReturn().get(21));
-    blueTagArrayList.add(aprilTagReturn().get(22));
+    blueTagArrayList.add(aprilTagMap.get(17));
+    blueTagArrayList.add(aprilTagMap.get(18));
+    blueTagArrayList.add(aprilTagMap.get(19));
+    blueTagArrayList.add(aprilTagMap.get(20));
+    blueTagArrayList.add(aprilTagMap.get(21));
+    blueTagArrayList.add(aprilTagMap.get(22));
     return blueTagArrayList;
+  }
+
+  public static ArrayList<FieldPoint> getReefDrivePoses() {
+    ArrayList<FieldPoint> reefDrivePoses = new ArrayList<FieldPoint>();
+    for (AprilTag aprilTag : blueReefAprilTags()) {
+      Pose2d leftPose =
+          aprilTag.pose2d.transformBy(
+              new Transform2d(
+                  RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
+                  FieldDimensions.ReefBranchLeft.getY(),
+                  Rotation2d.fromDegrees(180)));
+      reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefLeft", leftPose));
+      Pose2d rightPose =
+          aprilTag.pose2d.transformBy(
+              new Transform2d(
+                  RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
+                  FieldDimensions.ReefBranchRight.getY(),
+                  Rotation2d.fromDegrees(180)));
+      reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefRight", rightPose));
+    }
+    return reefDrivePoses;
   }
 
   public FieldPoint(String name, Pose2d pose) {

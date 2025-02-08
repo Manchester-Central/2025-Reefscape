@@ -5,10 +5,14 @@
 package frc.robot;
 
 import com.chaos131.robot.ChaosRobot;
+import com.chaos131.util.FieldData;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import frc.robot.utils.FieldPoint;
 import frc.robot.utils.LocalADStarAK;
+import java.util.ArrayList;
 import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.Logger;
 
@@ -44,6 +48,14 @@ public class Robot extends ChaosRobot {
     SimulatedArena.getInstance().simulationPeriodic();
     Pose3d[] coralPose = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
     Logger.recordOutput("Field/Piece", coralPose);
+    Logger.recordOutput(
+        "Field/Reef Apriltags", FieldData.GatherAprilTagPoses(FieldPoint.blueReefAprilTags()));
+    ArrayList<FieldPoint> reefSwervePoses = FieldPoint.getReefDrivePoses();
+    Pose2d[] ReefPositions = new Pose2d[reefSwervePoses.size()];
+    for (int i = 0; i < ReefPositions.length; i++) {
+      ReefPositions[i] = reefSwervePoses.get(i).getCurrentAlliancePose();
+    }
+    Logger.recordOutput("Field/ReefPositions", ReefPositions);
     // System.out.println(coralPose.length);
   }
 
