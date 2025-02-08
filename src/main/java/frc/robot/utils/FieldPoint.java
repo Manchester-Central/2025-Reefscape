@@ -1,21 +1,16 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.utils;
 
 import com.chaos131.util.FieldData;
-import com.chaos131.util.Quad;
 import com.chaos131.vision.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.FieldDimensions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/** Add your docs here. */
 public class FieldPoint {
   /** The pre-calculated red pose */
   protected final Pose2d m_redPose;
@@ -29,9 +24,10 @@ public class FieldPoint {
   /** The corresponding alliance the original pose was built for */
   protected final Alliance m_defaultAlliance;
 
-  protected final double fieldLength = 17.524;
+  protected final double fieldLength = FieldDimensions.FieldLength;
+  protected final double fieldWidth = FieldDimensions.FieldWidth;
 
-  protected final double fieldWidth = 8.052;
+  // List of named points on the field
   public static final FieldPoint processor =
       new FieldPoint("processor", new Pose2d(5.988, 0, Rotation2d.fromDegrees(90)));
   public static final FieldPoint leftSource =
@@ -41,23 +37,20 @@ public class FieldPoint {
   public static final FieldPoint testPoint =
       new FieldPoint("testPoint", new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
 
-  public static final ArrayList<Quad> aprilTag =
-      FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
-
   public static HashMap<Integer, AprilTag> aprilTagMap;
 
   public static HashMap<Integer, AprilTag> aprilTagReturn() {
     if (aprilTagMap == null) {
       aprilTagMap = new HashMap<Integer, AprilTag>();
-      for (Quad quad : aprilTag) {
-        AprilTag tag = (AprilTag) quad;
+      var tags = FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
+      for (AprilTag tag : tags) {
         aprilTagMap.put(tag.id, tag);
       }
     }
     return aprilTagMap;
   }
 
-  public static ArrayList<AprilTag> blueReefAprilTag() {
+  public static ArrayList<AprilTag> blueReefAprilTags() {
     ArrayList<AprilTag> blueTagArrayList = new ArrayList<AprilTag>();
     blueTagArrayList.add(aprilTagReturn().get(17));
     blueTagArrayList.add(aprilTagReturn().get(18));
@@ -80,12 +73,10 @@ public class FieldPoint {
   }
 
   public Pose2d getBluePose() {
-
     return m_bluePose;
   }
 
   public Pose2d getRedPose() {
-
     return m_redPose;
   }
 
