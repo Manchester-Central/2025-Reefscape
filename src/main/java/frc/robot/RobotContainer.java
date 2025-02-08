@@ -25,6 +25,7 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.IdLift;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.utils.FieldPoint;
+import frc.robot.utils.PathUtil;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
@@ -77,6 +78,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
+    m_driver
+        .y()
+        .whileTrue(
+            PathUtil.toCreateFindAPathCommand(new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(180))));
 
     m_simKeyboard
         .b()

@@ -5,7 +5,11 @@
 package frc.robot;
 
 import com.chaos131.robot.ChaosRobot;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.geometry.Pose3d;
+import frc.robot.utils.LocalADStarAK;
+
 import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.Logger;
 
@@ -42,5 +46,12 @@ public class Robot extends ChaosRobot {
     Pose3d[] coralPose = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
     Logger.recordOutput("Field/Piece", coralPose);
     // System.out.println(coralPose.length);
+  }
+
+  @Override
+  public void robotInit() {
+    Pathfinding.setPathfinder(new LocalADStarAK());
+    PathfindingCommand.warmupCommand().schedule();
+    super.robotInit();
   }
 }
