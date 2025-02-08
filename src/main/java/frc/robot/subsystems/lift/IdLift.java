@@ -4,10 +4,12 @@
 
 package frc.robot.subsystems.lift;
 
+import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
+import frc.robot.Robot;
 import frc.robot.subsystems.shared.ISubsystemState;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 
@@ -41,8 +43,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private Extender m_extender = new Extender(this::getLiftValues);
   private Gripper m_gripper = new Gripper(this::getLiftValues);
   private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
+  private Gamepad m_operator;
 
   public enum LiftState implements ISubsystemState {
+    MANUAL,
     START,
     STOW,
     INTAKE_FROM_FLOOR,
@@ -54,14 +58,18 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   /** Creates a new Lift. */
-  public IdLift() {
+  public IdLift(Gamepad operator) {
     super(LiftState.START);
+    m_operator = operator;
   }
 
   @Override
   protected void runStateMachine() {
     // System.out.println(m_currentState);
     switch (m_currentState) {
+      case MANUAL:
+        manualState();
+        break;
       case START:
         startState();
         break;
@@ -90,7 +98,18 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void startState() {
-    m_currentState = LiftState.STOW;
+    if (Robot.isSimulation()) {
+      m_currentState = LiftState.STOW;
+    } else {
+      m_currentState = LiftState.MANUAL;
+    }
+  }
+
+  private void manualState() {
+    m_basePivot.setSpeed(0.0);
+    m_gripper.setTargetSpeed(0.0);
+    m_gripperPivot.setSpeed(0.0);
+    m_extender.setSpeed(m_operator.getRightY() * 0.3);
   }
 
   private void stowState() {

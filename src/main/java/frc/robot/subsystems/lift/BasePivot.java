@@ -53,6 +53,10 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.tunePID(pidfValue, 0.0);
   }
 
+  public void setSpeed(double speed) {
+    m_motor.set(speed);
+  }
+
   public void setTargetAngle(Rotation2d newAngle) {
     m_targetAngle = newAngle;
     m_motor.moveToPosition(newAngle.getDegrees());
