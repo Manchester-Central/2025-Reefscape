@@ -4,11 +4,32 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.chaos131.vision.CameraSpecs;
+import com.chaos131.vision.LimelightCamera;
+import com.chaos131.vision.VisionData;
+import edu.wpi.first.math.geometry.Pose2d;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public class FrontCamera extends SubsystemBase {
+public class FrontCamera extends LimelightCamera {
   /** Creates a new FrontCamera. */
-  public FrontCamera() {}
+  public FrontCamera(
+      String name,
+      LimelightVersion limelightVersion,
+      CameraSpecs specs,
+      Supplier<Pose2d> poseSupplier,
+      Consumer<VisionData> poseConsumer,
+      Supplier<Double> robotSpeedSupplier,
+      Supplier<Double> robotRotationSpeedSupplier) {
+    super(
+        name,
+        limelightVersion,
+        specs,
+        poseSupplier,
+        poseConsumer,
+        robotSpeedSupplier,
+        robotRotationSpeedSupplier);
+  }
 
   @Override
   public void periodic() {

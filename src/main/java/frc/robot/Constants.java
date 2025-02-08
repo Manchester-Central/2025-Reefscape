@@ -3,6 +3,7 @@ package frc.robot;
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDValue;
 import com.chaos131.robot.ChaosRobot.Mode;
+import com.chaos131.vision.CameraSpecs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -85,6 +86,22 @@ public final class Constants {
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
       public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(96.33);
     }
+  }
+
+  public static class VisionConstants {
+    private static CameraSpecs initializeLimelight3G() {
+      CameraSpecs LimeLight3G = new CameraSpecs();
+      LimeLight3G.minimum_error = 0.02;
+      LimeLight3G.error_exponent = 2.2;
+      LimeLight3G.distance_scalar = 1 / 3.15;
+      LimeLight3G.error_multiplier = 1.0;
+      LimeLight3G.tag_count_scalar = 1.0;
+      LimeLight3G.VFOV = 56.0;
+      LimeLight3G.HFOV = 80.0;
+      return LimeLight3G;
+    }
+
+    public static final CameraSpecs limeLight3GSpecs = initializeLimelight3G();
   }
 
   public static class MidLiftConstants {
