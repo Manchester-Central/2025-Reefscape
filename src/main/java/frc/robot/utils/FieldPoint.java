@@ -1,7 +1,6 @@
 package frc.robot.utils;
 
 import com.chaos131.util.FieldData;
-import com.chaos131.util.Quad;
 import com.chaos131.vision.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -44,15 +43,14 @@ public class FieldPoint {
     if (aprilTagMap == null) {
       aprilTagMap = new HashMap<Integer, AprilTag>();
       var tags = FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
-      for (Quad quad : tags) {
-        AprilTag tag = (AprilTag) quad;
+      for (AprilTag tag : tags) {
         aprilTagMap.put(tag.id, tag);
       }
     }
     return aprilTagMap;
   }
 
-  public static ArrayList<AprilTag> blueReefAprilTag() {
+  public static ArrayList<AprilTag> blueReefAprilTags() {
     ArrayList<AprilTag> blueTagArrayList = new ArrayList<AprilTag>();
     blueTagArrayList.add(aprilTagReturn().get(17));
     blueTagArrayList.add(aprilTagReturn().get(18));
