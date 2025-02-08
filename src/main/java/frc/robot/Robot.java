@@ -9,7 +9,6 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.geometry.Pose3d;
 import frc.robot.utils.LocalADStarAK;
-
 import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.Logger;
 

@@ -6,9 +6,11 @@ package frc.robot.utils;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import frc.robot.subsystems.SwerveDrive;
+import java.util.Set;
 
 /** Add your docs here. */
 public class PathUtil {
@@ -17,8 +19,10 @@ public class PathUtil {
   static PathConstraints constraints =
       new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
-  public static Command toCreateFindAPathCommand(Pose2d targetPostion) {
-    Command pathfindingCommand = AutoBuilder.pathfindToPose(targetPostion, constraints, 0.0);
-    return pathfindingCommand;
+  public static Command toCreateFindAPathCommand(
+      FieldPoint targetPostion, SwerveDrive swerveDrive) {
+    return new DeferredCommand(
+        () -> AutoBuilder.pathfindToPose(targetPostion.getCurrentAlliancePose(), constraints, 0.0),
+        Set.of(swerveDrive));
   }
 }

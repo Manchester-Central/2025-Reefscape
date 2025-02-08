@@ -36,6 +36,8 @@ public class FieldPoint {
       new FieldPoint("leftSource", new Pose2d(0.8512, 7.396, Rotation2d.fromDegrees(90)));
   public static final FieldPoint rightSource =
       new FieldPoint("rightSource", new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(90)));
+  public static final FieldPoint testPoint =
+      new FieldPoint("testPoint", new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
 
   public static final ArrayList<Quad> aprilTag =
       FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
