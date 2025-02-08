@@ -4,10 +4,12 @@ import com.chaos131.util.FieldData;
 import com.chaos131.vision.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldDimensions;
+import frc.robot.Constants.RobotDimensions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -54,13 +56,12 @@ public class FieldPoint {
   public static ArrayList<FieldPoint> getReefDrivePoses() {
     ArrayList<FieldPoint> reefDrivePoses = new ArrayList<FieldPoint>();
     for (AprilTag aprilTag : blueReefAprilTags()) {
-      // Pose2d leftPose =
-      //     aprilTag.pose2d.transformBy(
-      //         new Transform2d(
-      //             0,
-      //             RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
-      //             Rotation2d.fromDegrees(180)));
-      Pose2d leftPose = aprilTag.pose2d;
+      Pose2d leftPose =
+          aprilTag.pose2d.transformBy(
+              new Transform2d(
+                  RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
+                  FieldDimensions.ReefBranchLeft.getY(),
+                  Rotation2d.fromDegrees(180)));
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefLeft", leftPose));
     }
     return reefDrivePoses;

@@ -48,7 +48,8 @@ public class Robot extends ChaosRobot {
     SimulatedArena.getInstance().simulationPeriodic();
     Pose3d[] coralPose = SimulatedArena.getInstance().getGamePiecesArrayByType("Coral");
     Logger.recordOutput("Field/Piece", coralPose);
-    Logger.recordOutput("Field/Reef Apriltags", FieldData.GatherAprilTagPoses(FieldPoint.blueReefAprilTags()));
+    Logger.recordOutput(
+        "Field/Reef Apriltags", FieldData.GatherAprilTagPoses(FieldPoint.blueReefAprilTags()));
     ArrayList<FieldPoint> reefSwervePoses = FieldPoint.getReefDrivePoses();
     Pose2d[] ReefPositions = new Pose2d[reefSwervePoses.size()];
     for (int i = 0; i < ReefPositions.length; i++) {
