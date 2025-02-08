@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants.CanIdentifiers;
 
 /** Add your docs here. */
 public class ChaosTalonFx extends TalonFX {
@@ -22,7 +23,7 @@ public class ChaosTalonFx extends TalonFX {
   public final TalonFXConfiguration Configuration = new TalonFXConfiguration();
 
   public ChaosTalonFx(int canID, double gearRatio, DCMotorSim dcMotorSim, boolean isMainSimMotor) {
-    super(canID);
+    super(canID, CanIdentifiers.CTRECANBus);
     this.m_gearRatio = gearRatio;
     m_motorSimModel = dcMotorSim;
     m_isMainSimMotor = isMainSimMotor;

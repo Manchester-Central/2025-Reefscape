@@ -2,14 +2,14 @@ package frc.robot.utils;
 
 import com.chaos131.util.FieldData;
 import com.chaos131.vision.AprilTag;
+import com.chaos131.util.FieldData;
+import com.chaos131.util.Quad;
+import com.chaos131.vision.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Constants.FieldDimensions;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FieldPoint {
   /** The pre-calculated red pose */
@@ -34,6 +34,35 @@ public class FieldPoint {
       new FieldPoint("leftSource", new Pose2d(0.8512, 7.396, Rotation2d.fromDegrees(90)));
   public static final FieldPoint rightSource =
       new FieldPoint("rightSource", new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(90)));
+  public static final FieldPoint testPoint =
+      new FieldPoint("testPoint", new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
+
+  public static final ArrayList<Quad> aprilTag =
+      FieldData.LoadTagLocationsFromFile("assets/frc2025.fmap");
+
+  public static HashMap<Integer, AprilTag> aprilTagMap;
+
+  public static HashMap<Integer, AprilTag> aprilTagReturn() {
+    if (aprilTagMap == null) {
+      aprilTagMap = new HashMap<Integer, AprilTag>();
+      for (Quad quad : aprilTag) {
+        AprilTag tag = (AprilTag) quad;
+        aprilTagMap.put(tag.id, tag);
+      }
+    }
+    return aprilTagMap;
+  }
+
+  public static ArrayList<AprilTag> blueReefAprilTag() {
+    ArrayList<AprilTag> blueTagArrayList = new ArrayList<AprilTag>();
+    blueTagArrayList.add(aprilTagReturn().get(17));
+    blueTagArrayList.add(aprilTagReturn().get(18));
+    blueTagArrayList.add(aprilTagReturn().get(19));
+    blueTagArrayList.add(aprilTagReturn().get(20));
+    blueTagArrayList.add(aprilTagReturn().get(21));
+    blueTagArrayList.add(aprilTagReturn().get(22));
+    return blueTagArrayList;
+  }
 
   public FieldPoint(String name, Pose2d pose) {
     m_name = name;

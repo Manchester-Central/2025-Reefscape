@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.CanIdentifiers;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
@@ -24,6 +25,7 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.IdLift;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.utils.FieldPoint;
+import frc.robot.utils.PathUtil;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
@@ -51,7 +53,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    */
   public RobotContainer() throws Exception {
     super();
-    m_gyro = new Pigeon2(Constants.GyroConstants.GyroCANID);
+    m_gyro = new Pigeon2(CanIdentifiers.GyroCANID, CanIdentifiers.CTRECANBus);
     m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
     m_idLift = new IdLift();
     m_intake = new Intake();
@@ -76,6 +78,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
+    m_driver.y().whileTrue(PathUtil.toCreateFindAPathCommand(FieldPoint.testPoint, m_swerveDrive));
 
     m_simKeyboard
         .b()
