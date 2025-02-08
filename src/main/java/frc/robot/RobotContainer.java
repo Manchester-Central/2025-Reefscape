@@ -79,6 +79,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
     m_driver.y().whileTrue(PathUtil.toCreateFindAPathCommand(FieldPoint.testPoint, m_swerveDrive));
+    m_driver
+        .x()
+        .whileTrue(
+            PathUtil.toCreateFindAPathToClosestPointCommand(
+                FieldPoint.getReefDrivePoses(), m_swerveDrive));
 
     m_simKeyboard
         .b()

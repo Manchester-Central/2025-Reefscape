@@ -6,10 +6,12 @@ package frc.robot.utils;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.subsystems.SwerveDrive;
+import java.util.ArrayList;
 import java.util.Set;
 
 /** Add your docs here. */
@@ -23,6 +25,20 @@ public class PathUtil {
       FieldPoint targetPostion, SwerveDrive swerveDrive) {
     return new DeferredCommand(
         () -> AutoBuilder.pathfindToPose(targetPostion.getCurrentAlliancePose(), constraints, 0.0),
+        Set.of(swerveDrive));
+  }
+
+  public static Command toCreateFindAPathToClosestPointCommand(
+      ArrayList<FieldPoint> possibleTargets, SwerveDrive swerveDrive) {
+    return new DeferredCommand(
+        () -> {
+          ArrayList<Pose2d> possiblePoses = new ArrayList<Pose2d>();
+          for (int i = 0; i < possibleTargets.size(); i++) {
+            possiblePoses.add(possibleTargets.get(i).getCurrentAlliancePose());
+          }
+          return AutoBuilder.pathfindToPose(
+              swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0);
+        },
         Set.of(swerveDrive));
   }
 }
