@@ -26,10 +26,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.SwerveConstants.SwerveBLConstants;
-import frc.robot.Constants.SwerveConstants.SwerveBRConstants;
-import frc.robot.Constants.SwerveConstants.SwerveFLConstants;
-import frc.robot.Constants.SwerveConstants.SwerveFRConstants;
+import frc.robot.Constants.SwerveConstants.SwerveBackLeftConstants;
+import frc.robot.Constants.SwerveConstants.SwerveBackRightConstants;
+import frc.robot.Constants.SwerveConstants.SwerveFrontLeftConstants;
+import frc.robot.Constants.SwerveConstants.SwerveFrontRightConstants;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
@@ -79,7 +79,7 @@ public class SwerveDrive extends BaseSwerveDrive {
         (speeds, feedforwards) -> move(speeds), // Method that will drive the robot given ROBOT
         // RELATIVE ChassisSpeeds. Also optionally
         // outputs individual module feedforwards
-        new PPHolonomicDriveController( // PPHolonomicController is the built in path following
+        new PPHolonomicDriveController(// PPHolonomicController is the built in path following
             // controller for holonomic drive trains
             new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
             new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
@@ -98,10 +98,13 @@ public class SwerveDrive extends BaseSwerveDrive {
           return false;
         },
         this // Reference to this subsystem to set requirements
-        );
+    );
   }
 
-  public static SwerveDrive SeparateConstructor(Pigeon2 gyrPigeon2) throws Exception {
+  /**
+   * Creates a new swerve drive with all the values for 2025's robot.
+   */
+  public static SwerveDrive createSwerveDrive(Pigeon2 gyrPigeon2) throws Exception {
     SwerveConfigs swerveConfigs =
         new SwerveConfigs()
             .setMaxRobotSpeed_mps(SwerveConstants.MaxFreeSpeedMPS)
@@ -112,39 +115,39 @@ public class SwerveDrive extends BaseSwerveDrive {
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(
             "FL",
-            SwerveFLConstants.ModOffset,
+            SwerveFrontLeftConstants.ModOffset,
             CanIdentifiers.FLSpeedCANID,
             CanIdentifiers.FLAngleCANID,
             CanIdentifiers.FLAbsoEncoCANID,
-            SwerveFLConstants.InvertedSpeed,
-            SwerveFLConstants.AngleEncoderOffset);
+            SwerveFrontLeftConstants.InvertedSpeed,
+            SwerveFrontLeftConstants.AngleEncoderOffset);
     SwerveModule2025 frontRightSwerveModule =
         new SwerveModule2025(
             "FR",
-            SwerveFRConstants.ModOffset,
+            SwerveFrontRightConstants.ModOffset,
             CanIdentifiers.FRSpeedCANID,
             CanIdentifiers.FRAngleCANID,
             CanIdentifiers.FRAbsoEncoCANID,
-            SwerveFRConstants.InvertedSpeed,
-            SwerveFRConstants.AngleEncoderOffset);
+            SwerveFrontRightConstants.InvertedSpeed,
+            SwerveFrontRightConstants.AngleEncoderOffset);
     SwerveModule2025 backLeftSwerveModule =
         new SwerveModule2025(
             "BL",
-            SwerveBLConstants.ModOffset,
+            SwerveBackLeftConstants.ModOffset,
             CanIdentifiers.BLSpeedCANID,
             CanIdentifiers.BLAngleCANID,
             CanIdentifiers.BLAbsoEncoCANID,
-            SwerveBLConstants.InvertedSpeed,
-            SwerveBLConstants.AngleEncoderOffset);
+            SwerveBackLeftConstants.InvertedSpeed,
+            SwerveBackLeftConstants.AngleEncoderOffset);
     SwerveModule2025 backRightSwerveModule =
         new SwerveModule2025(
             "BR",
-            SwerveBRConstants.ModOffset,
+            SwerveBackRightConstants.ModOffset,
             CanIdentifiers.BRSpeedCANID,
             CanIdentifiers.BRAngleCANID,
             CanIdentifiers.BRAbsoEncoCANID,
-            SwerveBRConstants.InvertedSpeed,
-            SwerveBRConstants.AngleEncoderOffset);
+            SwerveBackRightConstants.InvertedSpeed,
+            SwerveBackRightConstants.AngleEncoderOffset);
     SwerveModule2025[] swerveModule2025s = {
       frontLeftSwerveModule, frontRightSwerveModule, backLeftSwerveModule, backRightSwerveModule
     };
@@ -185,12 +188,18 @@ public class SwerveDrive extends BaseSwerveDrive {
     }
   }
 
-  public void pathPlannerRobotRelative(
+  /**
+   * Allows PathPlanner to drive our robot.
+   */
+  private void pathPlannerRobotRelative(
       ChassisSpeeds chassisSpeeds, DriveFeedforwards driveFeedforwards) {
     pathPlannerRobotRelative(chassisSpeeds);
     // TODO: Investigate decision regarding the use of feed forwards
   }
 
+  /**
+   * Tells the robot to follow a PathPlanner plan.
+   */
   public Command followPathCommand(String pathName) {
     try {
       PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
@@ -201,7 +210,7 @@ public class SwerveDrive extends BaseSwerveDrive {
           this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
           this::pathPlannerRobotRelative, // Method that will drive the robot given ROBOT RELATIVE
           // ChassisSpeeds, AND feedforwards
-          new PPHolonomicDriveController( // PPHolonomicController is the built in path
+          new PPHolonomicDriveController(// PPHolonomicController is the built in path
               // following controller for holonomic drive
               // trains
               new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants

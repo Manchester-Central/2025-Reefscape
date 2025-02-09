@@ -22,22 +22,27 @@ import java.util.function.Supplier;
 
 /** Add your docs here. */
 public class GripperPivot extends AbstractLiftPart {
-  private double kGearRatio = 40.0;
-  private double kJkgMetersSquared = 0.1;
+  private double m_gearRatio = 40.0;
+  private double m_jkgMetersSquared = 0.1;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
-          LinearSystemId.createDCMotorSystem(m_dcMotor, kJkgMetersSquared, kGearRatio),
+          LinearSystemId.createDCMotorSystem(m_dcMotor, m_jkgMetersSquared, m_gearRatio),
           m_dcMotor,
           0.001,
           0.001);
   private ChaosTalonFx m_motor =
-      new ChaosTalonFx(CanIdentifiers.GripperPivotMotorCANID, kGearRatio, m_motorSim, true);
+      new ChaosTalonFx(CanIdentifiers.GripperPivotMotorCANID, m_gearRatio, m_motorSim, true);
   private CANcoder m_canCoder =
       new CANcoder(CanIdentifiers.GripperPivotCANCoderCANID, CanIdentifiers.CTRECANBus);
-  private PIDTuner m_pidTuner = new PIDTuner("GripperPivot", true, 1.0, 0.001, 0.0, this::tunePID);
+  private PIDTuner m_pidTuner = new PIDTuner("GripperPivot", true, 1.0, 0.001, 0.0, this::tunePid);
 
+  /**
+   * Creates a new GripperPivot.
+   *
+   * @param idLiftValuesSupplier the supplier of lift values
+   */
   public GripperPivot(Supplier<IdLiftValues> idLiftValuesSupplier) {
     super(idLiftValuesSupplier);
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -50,10 +55,13 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.applyConfig();
   }
 
-  public void tunePID(PIDFValue pidfValue) {
-    m_motor.tunePID(pidfValue, 0.0);
+  private void tunePid(PIDFValue pidfValue) {
+    m_motor.tunePid(pidfValue, 0.0);
   }
 
+  /**
+   * Sets the target angle and tries to drive there.
+   */
   public void setTargetAngle(Rotation2d newAngle) {
     if (!getLiftValues().isBasePivotAtSafeAngle || !getLiftValues().isExtenderAtSafeLength) {
       newAngle = GripperPivotConstants.StowAngle;
@@ -62,6 +70,9 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.moveToPosition(newAngle.getDegrees());
   }
 
+  /**
+   * Sets the direct speed [-1.0, 1.0] of the motors.
+   */
   public void setSpeed(double speed) {
     m_motor.set(speed);
   }
@@ -71,6 +82,9 @@ public class GripperPivot extends AbstractLiftPart {
         m_motor.getPosition().getValueAsDouble()); // TODO get actual motor angle
   }
 
+  /**
+   * Checks if the current angle is at the goal angle.
+   */
   public boolean atTarget() {
     return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.1;
   }

@@ -8,20 +8,18 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-// copied from our 2023 code
+/**
+ * A direction for the robot in relation to the driver.
+ */
 public enum DriveDirection {
-  /** Away from the driver */
+  /** Away from the driver. */
   Away(0, 180),
-  /** Towards the driver */
+  /** Towards the driver. */
   Towards(180, 0),
-  /** To the driver's left */
+  /** To the driver's left. */
   Left(90, 270),
-  /** To the driver's right */
-  Right(270, 90),
-  /** To Stage Left */
-  FacingStageLeft(120, -60),
-  /** To Stage Right */
-  FacingStageRight(-120, 60);
+  /** To the driver's right. */
+  Right(270, 90);
 
   private Rotation2d m_blueAngle;
   private Rotation2d m_redAngle;

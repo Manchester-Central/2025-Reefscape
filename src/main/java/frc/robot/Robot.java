@@ -22,6 +22,10 @@ import org.littletonrobotics.junction.Logger;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends ChaosRobot {
+
+  /**
+   * Creates logging values from out BuildConstants.
+   */
   protected void setupRobot() {
     Logger.recordMetadata("RobotHash", BuildConstants.GIT_SHA);
     Logger.recordMetadata("RobotBranch", BuildConstants.GIT_BRANCH);
@@ -32,8 +36,6 @@ public class Robot extends ChaosRobot {
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
-   *
-   * @throws Exception
    */
   public Robot() throws Exception {
     super(Mode.SIM);
@@ -51,11 +53,11 @@ public class Robot extends ChaosRobot {
     Logger.recordOutput(
         "Field/Reef Apriltags", FieldData.GatherAprilTagPoses(FieldPoint.blueReefAprilTags()));
     ArrayList<FieldPoint> reefSwervePoses = FieldPoint.getReefDrivePoses();
-    Pose2d[] ReefPositions = new Pose2d[reefSwervePoses.size()];
-    for (int i = 0; i < ReefPositions.length; i++) {
-      ReefPositions[i] = reefSwervePoses.get(i).getCurrentAlliancePose();
+    Pose2d[] reefPositions = new Pose2d[reefSwervePoses.size()];
+    for (int i = 0; i < reefPositions.length; i++) {
+      reefPositions[i] = reefSwervePoses.get(i).getCurrentAlliancePose();
     }
-    Logger.recordOutput("Field/ReefPositions", ReefPositions);
+    Logger.recordOutput("Field/ReefPositions", reefPositions);
     // System.out.println(coralPose.length);
   }
 

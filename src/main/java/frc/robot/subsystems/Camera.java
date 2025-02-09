@@ -11,6 +11,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Our implementation of a LimeLightCamera.
+ */
 public class Camera extends LimelightCamera {
   /** Creates a new FrontCamera. */
   public Camera(

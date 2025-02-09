@@ -8,17 +8,30 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
-public abstract class StateBasedSubsystem<TState extends ISubsystemState> extends SubsystemBase {
-  protected TState m_currentState;
+public abstract class StateBasedSubsystem<T extends SubsystemState> extends SubsystemBase {
+  protected T m_currentState;
 
-  protected StateBasedSubsystem(TState startState) {
+  /**
+   * The base contrusctor for all state based subsystems.
+   *
+   * @param startState the state to start the state machine in.
+   */
+  protected StateBasedSubsystem(T startState) {
     m_currentState = startState;
     this.setDefaultCommand(new RunCommand(() -> runStateMachine(), this));
   }
 
+  /**
+   * The function that must be called every loop to run the state machine.
+   */
   protected abstract void runStateMachine();
 
-  public void changeState(TState newState) {
+  /**
+   * Changes the current state of the state machine.
+   *
+   * @param newState the new state
+   */
+  public void changeState(T newState) {
     m_currentState = newState;
   }
 }

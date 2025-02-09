@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 
-/** Add your docs here. */
+/**
+ * A TalonFX wrapper with automatic simulation support and helper functions.
+ */
 public class ChaosTalonFx extends TalonFX {
   private final double m_gearRatio;
   private final DCMotorSim m_motorSimModel;
@@ -22,8 +24,11 @@ public class ChaosTalonFx extends TalonFX {
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0);
   public final TalonFXConfiguration Configuration = new TalonFXConfiguration();
 
-  public ChaosTalonFx(int canID, double gearRatio, DCMotorSim dcMotorSim, boolean isMainSimMotor) {
-    super(canID, CanIdentifiers.CTRECANBus);
+  /**
+   * Creates the new TalonFX wrapper.
+   */
+  public ChaosTalonFx(int canId, double gearRatio, DCMotorSim dcMotorSim, boolean isMainSimMotor) {
+    super(canId, CanIdentifiers.CTRECANBus);
     this.m_gearRatio = gearRatio;
     m_motorSimModel = dcMotorSim;
     m_isMainSimMotor = isMainSimMotor;
@@ -34,14 +39,14 @@ public class ChaosTalonFx extends TalonFX {
    * https://v6.docs.ctr-electronics.com/en/2024/docs/api-reference/simulation/simulation-intro.html
    */
   public void simUpdate() {
-    var talonFXSim = getSimState();
+    var talonFxSim = getSimState();
 
     // set the supply voltage of the TalonFX
-    talonFXSim.setSupplyVoltage(RobotController.getBatteryVoltage());
+    talonFxSim.setSupplyVoltage(RobotController.getBatteryVoltage());
 
     if (m_isMainSimMotor) {
       // get the motor voltage of the TalonFX
-      var motorVoltage = talonFXSim.getMotorVoltage();
+      var motorVoltage = talonFxSim.getMotorVoltage();
 
       // use the motor voltage to calculate new position and velocity
       // using WPILib's DCMotorSim class for physics simulation
@@ -52,26 +57,32 @@ public class ChaosTalonFx extends TalonFX {
     // apply the new rotor position and velocity to the TalonFX;
     // note that this is rotor position/velocity (before gear ratio), but
     // DCMotorSim returns mechanism position/velocity (after gear ratio)
-    talonFXSim.setRawRotorPosition(m_gearRatio * m_motorSimModel.getAngularPositionRotations());
-    talonFXSim.setRotorVelocity(
+    talonFxSim.setRawRotorPosition(m_gearRatio * m_motorSimModel.getAngularPositionRotations());
+    talonFxSim.setRotorVelocity(
         m_gearRatio * Units.radiansToRotations(m_motorSimModel.getAngularVelocityRadPerSec()));
   }
 
+  /**
+   * Applies/burns the configuration to the motor.
+   */
   public void applyConfig() {
     getConfigurator().apply(Configuration);
   }
 
-  public void tunePID(PIDFValue pidValue, double kG) {
+  /**
+   * Tunes the PID default slot (0) PID of the motor.
+   */
+  public void tunePid(PIDFValue pidValue, double kg) {
     var slot0 = new Slot0Configs();
     slot0.kP = pidValue.P;
     slot0.kI = pidValue.I;
     slot0.kD = pidValue.D;
-    slot0.kG = kG;
+    slot0.kG = kg;
     Configuration.Slot0 = slot0;
     applyConfig();
   }
 
-  /** Tells the motor controller to move to the target position */
+  /** Tells the motor controller to move to the target position. */
   public void moveToPosition(double position) {
     m_positionVoltage.Slot = 0;
     setControl(m_positionVoltage.withPosition(position));
