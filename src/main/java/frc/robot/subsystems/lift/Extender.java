@@ -85,6 +85,10 @@ public class Extender extends AbstractLiftPart {
     return Math.abs(getCurrentLength() - m_targetLength) < 0.2;
   }
 
+  public boolean atTarget() {
+    return Math.abs(getCurrentLength() - m_targetLength) < 0.01;
+  }
+
   @Override
   public void periodic() {
     m_pidTuner.tune();

@@ -63,6 +63,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_operator = operator;
   }
 
+  private boolean isPoseReady() {
+    return m_extender.atTarget() && m_basePivot.atTarget() && m_gripperPivot.atTarget();
+  }
+
   @Override
   protected void runStateMachine() {
     // System.out.println(m_currentState);
@@ -134,7 +138,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(BasePivotConstants.hpIntakeAngle);
     m_extender.setTargetLength(ExtenderConstants.hpIntakeLengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.hpIntakeAngle);
-    m_gripper.setTargetSpeed(0.5);
+    m_gripper.setTargetSpeed(-0.5);
   }
 
   private void scoreL1State() {
@@ -145,7 +149,11 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(BasePivotConstants.ScoreL1Angle);
     m_extender.setTargetLength(ExtenderConstants.ScoreL1LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL1Angle);
-    m_gripper.setTargetSpeed(0.5);
+    if (isPoseReady()) {
+      m_gripper.setTargetSpeed(0.5);
+    } else {
+      m_gripper.setTargetSpeed(0);
+    }
   }
 
   private void scoreL2State() {
@@ -156,7 +164,11 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(BasePivotConstants.ScoreL2Angle);
     m_extender.setTargetLength(ExtenderConstants.ScoreL2LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL2Angle);
-    m_gripper.setTargetSpeed(0.5);
+    if (isPoseReady()) {
+      m_gripper.setTargetSpeed(0.5);
+    } else {
+      m_gripper.setTargetSpeed(0);
+    }
   }
 
   private void scoreL3State() {
@@ -167,7 +179,11 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(BasePivotConstants.ScoreL3Angle);
     m_extender.setTargetLength(ExtenderConstants.ScoreL3LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL3Angle);
-    m_gripper.setTargetSpeed(0.5);
+    if (isPoseReady()) {
+      m_gripper.setTargetSpeed(0.5);
+    } else {
+      m_gripper.setTargetSpeed(0);
+    }
   }
 
   private void scoreL4State() {
@@ -178,7 +194,11 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(BasePivotConstants.ScoreL4Angle);
     m_extender.setTargetLength(ExtenderConstants.ScoreL4LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL4Angle);
-    m_gripper.setTargetSpeed(-0.5);
+    if (isPoseReady()) {
+      m_gripper.setTargetSpeed(-0.5);
+    } else {
+      m_gripper.setTargetSpeed(0);
+    }
   }
 }
 // RIP m_oldLift & m_oldGripper 2025-2025

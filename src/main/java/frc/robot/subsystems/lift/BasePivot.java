@@ -71,6 +71,10 @@ public class BasePivot extends AbstractLiftPart {
     return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 10;
   }
 
+  public boolean atTarget() {
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.1;
+  }
+
   @Override
   public void periodic() {
     m_pidTuner.tune();

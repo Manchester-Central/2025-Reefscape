@@ -71,6 +71,10 @@ public class GripperPivot extends AbstractLiftPart {
         m_motor.getPosition().getValueAsDouble()); // TODO get actual motor angle
   }
 
+  public boolean atTarget() {
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.1;
+  }
+
   @Override
   public void periodic() {
     m_pidTuner.tune();
