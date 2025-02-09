@@ -59,7 +59,7 @@ public class Extender extends AbstractLiftPart {
     // m_motor2.applyConfig();
   }
 
-  public void tunePIDs(PIDFValue pidfValue) {
+  public void tunePIDs(PIDFValue pidfValue){
     m_motor1.tunePID(pidfValue, 0.0);
     // m_motor2.tunePID(pidfValue, 0.0);
   }

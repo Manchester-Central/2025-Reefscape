@@ -54,8 +54,6 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
-   *
-   * @throws Exception
    */
   public RobotContainer() throws Exception {
     super();
@@ -97,7 +95,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    * joysticks}.
    */
   private void configureBindings() {
-    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive));
+    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
@@ -132,11 +130,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
                       .addGamePiece(
                           new ReefscapeCoralOnField(new Pose2d(2, 1, Rotation2d.fromDegrees(90))));
                 }));
-    m_simKeyboard
-        .a() // z on keyboard 0
-        .onTrue(
-            new InstantCommand(
-                () -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim));
+    // z on keyboard 0
+    m_simKeyboard.a().onTrue(new InstantCommand(() -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim));
 
     m_simKeyboard
         .b() // x on keyboard 0

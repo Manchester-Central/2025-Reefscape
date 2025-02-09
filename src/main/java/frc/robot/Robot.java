@@ -63,6 +63,6 @@ public class Robot extends ChaosRobot {
   public void robotInit() {
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathfindingCommand.warmupCommand().schedule();
-    super.robotInit();
+    super.robotInit(); 
   }
 }
