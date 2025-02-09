@@ -8,10 +8,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import java.util.function.Supplier;
 
-/** Add your docs here. */
+/** A class that stores values/functions that any lift part should have. */
 public abstract class AbstractLiftPart extends SubsystemBase {
   private Supplier<IdLiftValues> m_idLiftValuesSupplier;
 
+  /**
+   * The base constructor for any lift part.
+   *
+   * @param idLiftValuesSupplier the supplier of lift values
+   */
   protected AbstractLiftPart(Supplier<IdLiftValues> idLiftValuesSupplier) {
     m_idLiftValuesSupplier = idLiftValuesSupplier;
   }

@@ -21,22 +21,27 @@ import java.util.function.Supplier;
 
 /** Add your docs here. */
 public class BasePivot extends AbstractLiftPart {
-  private double kGearRatio = 10.0;
-  private double kJkgMetersSquared = 1.0;
+  private double m_gearRatio = 10.0;
+  private double m_jkgMetersSquared = 1.0;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
-          LinearSystemId.createDCMotorSystem(m_dcMotor, kJkgMetersSquared, kGearRatio),
+          LinearSystemId.createDCMotorSystem(m_dcMotor, m_jkgMetersSquared, m_gearRatio),
           m_dcMotor,
           0.001,
           0.001);
   private ChaosTalonFx m_motor =
-      new ChaosTalonFx(CanIdentifiers.BasePivotMotorCANID, kGearRatio, m_motorSim, true);
+      new ChaosTalonFx(CanIdentifiers.BasePivotMotorCANID, m_gearRatio, m_motorSim, true);
   private CANcoder m_canCoder =
       new CANcoder(CanIdentifiers.BasePivotCANcoderCANID, CanIdentifiers.CTRECANBus);
-  private PIDTuner m_pidTuner = new PIDTuner("BasePivot", true, 1.0, 0.001, 0.0, this::tunePIDs);
+  private PIDTuner m_pidTuner = new PIDTuner("BasePivot", true, 1.0, 0.001, 0.0, this::tunePids);
 
+  /**
+   * Creates a new BasePivot.
+   *
+   * @param idLiftValuesSupplier the supplier of lift values
+   */
   public BasePivot(Supplier<IdLiftValues> idLiftValuesSupplier) {
     super(idLiftValuesSupplier);
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -49,14 +54,20 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.applyConfig();
   }
 
-  public void tunePIDs(PIDFValue pidfValue) {
-    m_motor.tunePID(pidfValue, 0.0);
+  private void tunePids(PIDFValue pidfValue) {
+    m_motor.tunePid(pidfValue, 0.0);
   }
 
+  /**
+   * Sets the direct speed [-1.0, 1.0] of the motors.
+   */
   public void setSpeed(double speed) {
     m_motor.set(speed);
   }
 
+  /**
+   * Sets the target angle and tries to drive there.
+   */
   public void setTargetAngle(Rotation2d newAngle) {
     m_targetAngle = newAngle;
     m_motor.moveToPosition(newAngle.getDegrees());
@@ -67,10 +78,16 @@ public class BasePivot extends AbstractLiftPart {
         m_motor.getPosition().getValueAsDouble()); // TODO get actual motor angle
   }
 
+  /**
+   * Checks if the angle is safe enough for other parts to move.
+   */
   public boolean isSafeAngle() {
     return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 10;
   }
 
+  /**
+   * Checks if the current angle is at the goal angle.
+   */
   public boolean atTarget() {
     return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.1;
   }

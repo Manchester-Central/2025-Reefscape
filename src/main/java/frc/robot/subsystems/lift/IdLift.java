@@ -10,11 +10,15 @@ import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.Robot;
-import frc.robot.subsystems.shared.ISubsystemState;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
+import frc.robot.subsystems.shared.SubsystemState;
 
 /** Add your docs here. */
 public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
+  /**
+   * Possible values from the lift that can be used in lift parts and other areas of the code 
+   * (without having to know about the base parts).
+   */
   public class IdLiftValues {
     public Rotation2d basePivotAngle;
     public Rotation2d gripperPivotAngle;
@@ -26,6 +30,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     public boolean hasCoralFrontGripped;
   }
 
+  /**
+   * Gets the latest lift values.
+   */
   public IdLiftValues getLiftValues() {
     IdLiftValues values = new IdLiftValues();
     values.basePivotAngle = m_basePivot.getCurrentAngle();
@@ -45,7 +52,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
   private Gamepad m_operator;
 
-  public enum LiftState implements ISubsystemState {
+  /**
+   * The possible states of the Lift's state machine.
+   */
+  public enum LiftState implements SubsystemState {
     MANUAL,
     START,
     STOW,
@@ -69,7 +79,6 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   @Override
   protected void runStateMachine() {
-    // System.out.println(m_currentState);
     switch (m_currentState) {
       case MANUAL:
         manualState();
@@ -77,6 +86,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       case START:
         startState();
         break;
+      default:
       case STOW:
         stowState();
         break;
@@ -84,7 +94,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
         intakeFromFloorState();
         break;
       case INTAKE_FROM_HP:
-        intakeFromHPState();
+        intakeFromHpState();
         break;
       case SCORE_L1:
         scoreL1State();
@@ -130,7 +140,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_gripper.setTargetSpeed(0.5);
   }
 
-  private void intakeFromHPState() {
+  private void intakeFromHpState() {
     if (m_gripper.hasCoralBack() || m_gripper.hasCoralFront()) {
       m_currentState = LiftState.STOW;
       return;

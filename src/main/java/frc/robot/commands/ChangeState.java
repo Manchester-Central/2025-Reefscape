@@ -10,7 +10,9 @@ import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import java.util.Optional;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ * A command for changing ANY state on the robot.
+ */
 public class ChangeState extends Command {
   Optional<LiftState> m_idLiftState = Optional.empty();
   Optional<IntakeState> m_intakeState = Optional.empty();
@@ -20,11 +22,17 @@ public class ChangeState extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
+  /**
+   * Sets the state of the lift.
+   */
   public ChangeState setLift(LiftState newLiftState) {
     m_idLiftState = Optional.of(newLiftState);
     return this;
   }
 
+  /**
+   * Sets the state of the intake.
+   */
   public ChangeState setIntake(IntakeState newIntakeState) {
     m_intakeState = Optional.of(newIntakeState);
     return this;

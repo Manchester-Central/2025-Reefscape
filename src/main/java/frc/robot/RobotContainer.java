@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
@@ -23,7 +24,7 @@ import frc.robot.commands.UpdateHeading;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeState;
-import frc.robot.subsystems.Mech2DManager;
+import frc.robot.subsystems.MechManager2D;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.Gripper;
 import frc.robot.subsystems.lift.IdLift;
@@ -49,21 +50,19 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public static Intake m_intake;
   public static Camera m_rightCamera;
   public static Camera m_leftCamera;
-  public static Mech2DManager m_mech2dManager;
+  public static MechManager2D m_mech2dManager;
   public static SwerveDriveSimulation m_driveSim;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
-   *
-   * @throws Exception
    */
   public RobotContainer() throws Exception {
     super();
     m_gyro = new Pigeon2(CanIdentifiers.GyroCANID, CanIdentifiers.CTRECANBus);
-    m_swerveDrive = SwerveDrive.SeparateConstructor(m_gyro);
+    m_swerveDrive = SwerveDrive.createSwerveDrive(m_gyro);
     m_idLift = new IdLift(m_operator);
     m_intake = new Intake();
-    m_mech2dManager = new Mech2DManager(m_idLift, m_intake);
+    m_mech2dManager = new MechManager2D(m_idLift, m_intake);
     m_rightCamera =
         new Camera(
             "limelight-right",
@@ -97,84 +96,48 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    * joysticks}.
    */
   private void configureBindings() {
-    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive));
+    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
-    m_driver
-        .y()
-        .whileTrue(
-            PathUtil.driveToClosestPointCommand(FieldPoint.getHPDrivePoses(), m_swerveDrive));
-    m_driver
-        .x()
-        .whileTrue(
-            PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
-    m_driver
-        .povUp()
-        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
-    m_driver
-        .povDown()
-        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
-    m_driver
-        .povLeft()
-        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
-    m_driver
-        .povRight()
-        .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
+    m_driver.y().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive));
+    m_driver.x().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    m_driver.povUp().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
+    m_driver.povDown().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
+    m_driver.povLeft().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
+    m_driver.povRight().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
 
-    m_simKeyboard
-        .y() // v on keyboard 0
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  System.out.println("Adding Game Piece");
-                  SimulatedArena.getInstance()
-                      .addGamePiece(
-                          new ReefscapeCoralOnField(new Pose2d(2, 1, Rotation2d.fromDegrees(90))));
-                }));
-    m_simKeyboard
-        .a() // z on keyboard 0
-        .onTrue(
-            new InstantCommand(
-                () -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim));
+    // v on keyboard 0
+    m_simKeyboard.y().onTrue(
+      new InstantCommand(() -> {
+        System.out.println("Adding Game Piece");
+        SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(new Pose2d(2, 1, Rotation2d.fromDegrees(90))));
+      })
+    );
+    // z on keyboard 0
+    m_simKeyboard.a().onTrue(new InstantCommand(() -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim));
+    // x on keyboard 0
+    m_simKeyboard.b().onTrue(new InstantCommand(() -> Gripper.hasCoralBackGrippedSim = !Gripper.hasCoralBackGrippedSim));
+    // c on keyboard 0
+    m_simKeyboard.x().onTrue(new InstantCommand(() -> Gripper.hasAlgaeGrippedSim = !Gripper.hasAlgaeGrippedSim));
 
-    m_simKeyboard
-        .b() // x on keyboard 0
-        .onTrue(
-            new InstantCommand(
-                () -> Gripper.hasCoralBackGrippedSim = !Gripper.hasCoralBackGrippedSim));
-    m_operator
-        .start()
-        .whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
-    m_operator
-        .leftBumper()
-        .whileTrue(
-            new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
-    m_operator
-        .rightBumper()
-        .whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
-    m_operator
-        .a()
-        .whileTrue(new ChangeState().setLift(LiftState.SCORE_L1).setIntake(IntakeState.STOW));
-    m_operator
-        .x()
-        .whileTrue(new ChangeState().setLift(LiftState.SCORE_L2).setIntake(IntakeState.STOW));
-    m_operator
-        .b()
-        .whileTrue(new ChangeState().setLift(LiftState.SCORE_L3).setIntake(IntakeState.STOW));
-    m_operator
-        .y()
-        .whileTrue(new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
+    m_operator.start().whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
+    m_operator.leftBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
+    m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
+    m_operator.a().whileTrue(new ChangeState().setLift(LiftState.SCORE_L1).setIntake(IntakeState.STOW));
+    m_operator.x().whileTrue(new ChangeState().setLift(LiftState.SCORE_L2).setIntake(IntakeState.STOW));
+    m_operator.b().whileTrue(new ChangeState().setLift(LiftState.SCORE_L3).setIntake(IntakeState.STOW));
+    m_operator.y().whileTrue(new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
   }
 
   @Override
   public void configureDriverController() {
-    m_driver = new Gamepad(0);
+    m_driver = new Gamepad(OperatorConstants.DriverControllerPort);
   }
 
   @Override
   public void configureOperatorController() {
-    m_operator = new Gamepad(1);
+    m_operator = new Gamepad(OperatorConstants.OperatorControllerPort);
   }
 
   @Override
@@ -185,7 +148,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   @Override
   public void configureSimKeyboard() {
-    m_simKeyboard = new Gamepad(2);
+    m_simKeyboard = new Gamepad(OperatorConstants.SimulationControllerPort);
     // TODO Auto-generated method stub
 
   }

@@ -8,13 +8,18 @@ import com.chaos131.gamepads.Gamepad;
 import com.chaos131.swerve.BaseSwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ * A class to drive the robot in driver relative mode.
+ */
 public class DriverRelativeDrive extends Command {
   /** Creates a new DriverRelativeDrive. */
   Gamepad m_driver;
 
   BaseSwerveDrive m_swerveDrive;
 
+  /**
+   * Creates a new DriverRelativeDrive.
+   */
   public DriverRelativeDrive(Gamepad driver, BaseSwerveDrive swerve) {
     m_driver = driver;
     m_swerveDrive = swerve;

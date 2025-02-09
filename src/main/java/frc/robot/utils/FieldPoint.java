@@ -13,21 +13,24 @@ import frc.robot.Constants.RobotDimensions;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * A class to help managing positions on the field (for either alliance color).
+ */
 public class FieldPoint {
-  /** The pre-calculated red pose */
+  /** The pre-calculated red pose. */
   protected final Pose2d m_redPose;
 
-  /** The pre-calculated blue pose */
+  /** The pre-calculated blue pose. */
   protected final Pose2d m_bluePose;
 
-  /** A potentially null name for the pose */
+  /** A potentially null name for the pose. */
   protected final String m_name;
 
-  /** The corresponding alliance the original pose was built for */
+  /** The corresponding alliance the original pose was built for. */
   protected final Alliance m_defaultAlliance;
 
-  protected final double fieldLength = FieldDimensions.FieldLength;
-  protected final double fieldWidth = FieldDimensions.FieldWidth;
+  protected final double m_fieldLength = FieldDimensions.FieldLength;
+  protected final double m_fieldWidth = FieldDimensions.FieldWidth;
 
   // List of named points on the field
   public static final FieldPoint processor =
@@ -42,6 +45,9 @@ public class FieldPoint {
   public static HashMap<Integer, AprilTag> aprilTagMap =
       FieldData.GetAprilTagMap("assets/frc2025.fmap");
 
+  /**
+   * Gets the april tabs for the blue reef.
+   */
   public static ArrayList<AprilTag> blueReefAprilTags() {
     ArrayList<AprilTag> blueTagArrayList = new ArrayList<AprilTag>();
     blueTagArrayList.add(aprilTagMap.get(17));
@@ -53,13 +59,19 @@ public class FieldPoint {
     return blueTagArrayList;
   }
 
-  public static ArrayList<AprilTag> blueHPAprilTags() {
+  /**
+   * Gets the april tags for the blue HP positions.
+   */
+  public static ArrayList<AprilTag> blueHpAprilTags() {
     ArrayList<AprilTag> blueTagArrayList = new ArrayList<AprilTag>();
     blueTagArrayList.add(aprilTagMap.get(12));
     blueTagArrayList.add(aprilTagMap.get(13));
     return blueTagArrayList;
   }
 
+  /**
+   * Gets all the drive positions we can consider for scoring on the reef (left and right of each april tag).
+   */
   public static ArrayList<FieldPoint> getReefDrivePoses() {
     ArrayList<FieldPoint> reefDrivePoses = new ArrayList<FieldPoint>();
     for (AprilTag aprilTag : blueReefAprilTags()) {
@@ -81,9 +93,12 @@ public class FieldPoint {
     return reefDrivePoses;
   }
 
-  public static ArrayList<FieldPoint> getHPDrivePoses() {
+  /**
+   * Gets our positions for picking up coral from the HP stations.
+   */
+  public static ArrayList<FieldPoint> getHpDrivePoses() {
     ArrayList<FieldPoint> hpDrivePoses = new ArrayList<FieldPoint>();
-    for (AprilTag aprilTag : blueHPAprilTags()) {
+    for (AprilTag aprilTag : blueHpAprilTags()) {
       Pose2d leftPose =
           aprilTag.pose2d.transformBy(
               new Transform2d(
@@ -102,15 +117,21 @@ public class FieldPoint {
     return hpDrivePoses;
   }
 
+  /**
+   * Creates a new FieldPoint.
+   *
+   * @param name the name of the field point
+   * @param pose the blue alliance pose on the field
+   */
   public FieldPoint(String name, Pose2d pose) {
     m_name = name;
     m_bluePose = pose;
     m_defaultAlliance = Alliance.Blue;
-    Translation2d pTranslation2d =
-        pose.getTranslation().minus(new Translation2d(fieldLength, fieldWidth).div(2));
-    pTranslation2d = pTranslation2d.rotateBy(Rotation2d.fromDegrees(180));
-    pTranslation2d = pTranslation2d.plus(new Translation2d(fieldLength, fieldWidth).div(2));
-    m_redPose = new Pose2d(pTranslation2d, pose.getRotation().plus(Rotation2d.fromDegrees(180)));
+    Translation2d poseTranslation =
+        pose.getTranslation().minus(new Translation2d(m_fieldLength, m_fieldWidth).div(2));
+    poseTranslation = poseTranslation.rotateBy(Rotation2d.fromDegrees(180));
+    poseTranslation = poseTranslation.plus(new Translation2d(m_fieldLength, m_fieldWidth).div(2));
+    m_redPose = new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180)));
   }
 
   public Pose2d getBluePose() {

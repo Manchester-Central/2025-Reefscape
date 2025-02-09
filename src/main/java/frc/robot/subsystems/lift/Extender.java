@@ -21,20 +21,25 @@ import java.util.function.Supplier;
 /** Add your docs here. */
 public class Extender extends AbstractLiftPart {
   private double m_targetLength = 1;
-  private double kGearRatio = 10.0;
-  private double kJkgMetersSquared = 1.0;
+  private double m_gearRatio = 10.0;
+  private double m_jkgMetersSquared = 1.0;
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
-          LinearSystemId.createDCMotorSystem(m_dcMotor, kJkgMetersSquared, kGearRatio),
+          LinearSystemId.createDCMotorSystem(m_dcMotor, m_jkgMetersSquared, m_gearRatio),
           m_dcMotor,
           0.001,
           0.001);
   private ChaosTalonFx m_motor1 =
-      new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID, kGearRatio, m_motorSim, true);
+      new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID, m_gearRatio, m_motorSim, true);
   // private ChaosTalonFx m_motor2 = new ChaosTalonFx(5, kGearRatio, m_motorSim, false);
-  private PIDTuner m_pidTuner = new PIDTuner("Extender", true, 1.0, 0.001, 0.0, this::tunePIDs);
+  private PIDTuner m_pidTuner = new PIDTuner("Extender", true, 1.0, 0.001, 0.0, this::tunePids);
 
+  /**
+   * Creates a new Extender.
+   *
+   * @param idLiftValuesSupplier the supplier of lift values
+   */
   public Extender(Supplier<IdLiftValues> idLiftValuesSupplier) {
     super(idLiftValuesSupplier);
 
@@ -59,11 +64,14 @@ public class Extender extends AbstractLiftPart {
     // m_motor2.applyConfig();
   }
 
-  public void tunePIDs(PIDFValue pidfValue) {
-    m_motor1.tunePID(pidfValue, 0.0);
+  private void tunePids(PIDFValue pidfValue) {
+    m_motor1.tunePid(pidfValue, 0.0);
     // m_motor2.tunePID(pidfValue, 0.0);
   }
 
+  /**
+   * Sets the target length for extension and tries to drive there.
+   */
   public void setTargetLength(double newLength) {
     if (!getLiftValues().isBasePivotAtSafeAngle) {
       newLength = ExtenderConstants.StowLengthMeter;
@@ -73,6 +81,9 @@ public class Extender extends AbstractLiftPart {
     // m_motor2.moveToPosition(newLength);
   }
 
+  /**
+   * Sets the direct speed [-1.0, 1.0] of the system.
+   */
   public void setSpeed(double speed) {
     m_motor1.set(speed);
   }
@@ -81,10 +92,16 @@ public class Extender extends AbstractLiftPart {
     return m_motor1.getPosition().getValueAsDouble();
   }
 
+  /**
+   * Checks if the current length is safe for other parts to move.
+   */
   public boolean isSafeLength() {
     return Math.abs(getCurrentLength() - m_targetLength) < 0.2;
   }
 
+  /**
+   * Checks if the extender length is at the target length.
+   */
   public boolean atTarget() {
     return Math.abs(getCurrentLength() - m_targetLength) < 0.01;
   }

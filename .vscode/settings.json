@@ -62,4 +62,6 @@
     "spotlessGradle.diagnostics.enable": true,
     "editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"
   },
+  "java.checkstyle.version": "10.21.2",
+  "java.checkstyle.configuration": "config/checkstyle/checkstyle.xml"
 }

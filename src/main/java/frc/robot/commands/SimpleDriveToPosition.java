@@ -8,7 +8,9 @@ import com.chaos131.swerve.BaseSwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.utils.FieldPoint;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ * A simple command to go to a position on the field using basic PID translation control.
+ */
 public class SimpleDriveToPosition extends Command {
   BaseSwerveDrive m_swerveDrive;
   FieldPoint m_fieldPoint;

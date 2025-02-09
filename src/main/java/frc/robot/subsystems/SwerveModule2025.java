@@ -16,31 +16,37 @@ import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
   private SwerveModuleSimulation m_simulation;
 
+  /**
+   * Creates a swerve module for the 2025 bot.
+   */
   public SwerveModule2025(
       String nameString,
       Translation2d wheelPosition,
-      int speedCANID,
-      int angleCANID,
-      int absoEncoCANID,
-      InvertedValue invertedSpeed,
+      int speedCanId,
+      int angleCanId,
+      int canCoderCanId,
+      InvertedValue speedDirection,
       Rotation2d angleEncoderOffset) {
     super(
         nameString,
         CanIdentifiers.CTRECANBus,
         wheelPosition,
         new SpeedControllerConfig(
-            speedCANID,
-            invertedSpeed,
+            speedCanId,
+            speedDirection,
             SwerveConstants.SpeedGearRatio,
             SwerveConstants.SpeedCircumference),
         new AngleControllerConfig(
-            angleCANID, SwerveConstants.InvertedAngle, SwerveConstants.AngleGearRatio),
+            angleCanId, SwerveConstants.InvertedAngle, SwerveConstants.AngleGearRatio),
         new AbsoluteEncoderConfig(
-            absoEncoCANID, SwerveConstants.InvertedEncoder, angleEncoderOffset),
+            canCoderCanId, SwerveConstants.InvertedEncoder, angleEncoderOffset),
         new DriveConfig(
             SwerveConstants.DriverRampRatePeriod, SwerveConstants.AutonomousRampRatePeriod));
   }
 
+  /**
+   * Inits the sim in the module (after the swerve drive has been instantiated).
+   */
   public void initSim(SwerveModuleSimulation simDrive) {
     m_simulation = simDrive;
   }

@@ -11,11 +11,25 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
+/** This class holds all of our 2025 constants. */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+
+  /** This has contants that can be used throughout the robot. */
+  public static class GeneralConstants {
+    public static final double RobotMassKg = 54.43;
+    public static final Mode RobotMode = Mode.REAL;
+    public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
   }
 
+  /** This contains constants needed for setting up our controllers. */
+  public static class OperatorConstants {
+    public static final int DriverControllerPort = 0;
+    public static final int OperatorControllerPort = 1;
+    public static final int SimulationControllerPort = 2;
+    public static final int TesterControllerPort = 3;
+  }
+
+  /** This contains all of our constants for CAN IDs and Can Bus Names. */
   public static class CanIdentifiers {
     public static final String CTRECANBus = "CTRE bus";
 
@@ -40,13 +54,14 @@ public final class Constants {
     public static final int ExtenderMotorCANID = 51;
   }
 
-  public static class IOPortsConstants {
-
+  /** This contains constants for all our IO ports on the RIO. */
+  public static class IoPortsConstants {
     public static final int AlgaeChannelID = 0;
     public static final int CoralOneChannelID = 1;
     public static final int CoralTwoChannelID = 2;
   }
 
+  /** This contains constants for setting up our swerve drive. */
   public static class SwerveConstants {
 
     public static final InvertedValue InvertedAngle = InvertedValue.CounterClockwise_Positive;
@@ -63,48 +78,55 @@ public final class Constants {
     public static final PIDFValue DefaultModuleVelocityPIDFValues =
         new PIDFValue(5.0, 0.0, 0.0, 2.19);
 
-    public static class SwerveFLConstants {
+    /** This stores our constants for the front left swerve module. */
+    public static class SwerveFrontLeftConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, 0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
       public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(-28.92);
     }
 
-    public static class SwerveFRConstants {
+    /** This stores our constants for the front right swerve module. */
+    public static class SwerveFrontRightConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, -0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
       public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(111.71);
     }
 
-    public static class SwerveBLConstants {
+    /** This stores our constants for the back left swerve module. */
+    public static class SwerveBackLeftConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, 0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
       public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(129.56);
     }
 
-    public static class SwerveBRConstants {
+    /** This stores our constants for the back right swerve module. */
+    public static class SwerveBackRightConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, -0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
       public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(96.33);
     }
   }
 
+  /** This contains constants for our vision system. */
   public static class VisionConstants {
     private static CameraSpecs initializeLimelight3G() {
-      CameraSpecs LimeLight3G = new CameraSpecs();
-      LimeLight3G.minimum_error = 0.02;
-      LimeLight3G.error_exponent = 2.2;
-      LimeLight3G.distance_scalar = 1 / 3.15;
-      LimeLight3G.error_multiplier = 1.0;
-      LimeLight3G.tag_count_scalar = 1.0;
-      LimeLight3G.VFOV = 56.0;
-      LimeLight3G.HFOV = 80.0;
-      return LimeLight3G;
+      CameraSpecs limeLight3G = new CameraSpecs();
+      limeLight3G.minimum_error = 0.02;
+      limeLight3G.error_exponent = 2.2;
+      limeLight3G.distance_scalar = 1 / 3.15;
+      limeLight3G.error_multiplier = 1.0;
+      limeLight3G.tag_count_scalar = 1.0;
+      limeLight3G.VFOV = 56.0;
+      limeLight3G.HFOV = 80.0;
+      return limeLight3G;
     }
 
     public static final CameraSpecs limeLight3GSpecs = initializeLimelight3G();
   }
 
+  /** This contains constants for our entire lift system. */
   public static class MidLiftConstants {
+    /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(30);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
@@ -117,6 +139,7 @@ public final class Constants {
       public static final Rotation2d hpIntakeAngle = Rotation2d.fromDegrees(50);
     }
 
+    /** This contains constants for our Gripper Pivot. */
     public static class GripperPivotConstants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-45);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(45);
@@ -129,6 +152,7 @@ public final class Constants {
       public static final Rotation2d hpIntakeAngle = Rotation2d.fromDegrees(-10);
     }
 
+    /** This contains constants for our Extender. */
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.1;
       public static final double MaxLengthMeter = 1.6;
@@ -141,9 +165,11 @@ public final class Constants {
       public static final double hpIntakeLengthMeter = 0.8;
     }
 
+    /** This contains constants for our Gripper. */
     public static class GripperConstants {}
   }
 
+  /** This contains constants for our Intake. */
   public static class IntakeConstants {
     public static final Rotation2d StowAngle = Rotation2d.fromDegrees(100.0);
     public static final Rotation2d DeployAngle = Rotation2d.fromDegrees(10.0);
@@ -155,12 +181,7 @@ public final class Constants {
     public static final double HandoffSpeed = -1.0;
   }
 
-  public static class GeneralConstants {
-    public static final double RobotMassKg = 54.43;
-    public static final Mode RobotMode = Mode.REAL;
-    public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
-  }
-
+  /** This contains constants for the field. */
   public static class FieldDimensions {
     // Value taken from Limelight fmap
     public static final double FieldLength = 17.5482504;
@@ -184,6 +205,7 @@ public final class Constants {
     public static final double BargeMeters = 1.0;
   }
 
+  /** This contains constants for our robot dimensions. */
   public static class RobotDimensions {
     // Includes the Bumpers
     public static final double FrontBackLengthMeters = 0.85;
@@ -195,20 +217,15 @@ public final class Constants {
     public static final Transform2d BasePivotOffset =
         new Transform2d(-0.1973, 0.1762, Rotation2d.fromDegrees(0));
 
-    /**
-     * Distance from the dynamic lift position to the wrist on the gripper mechanism. If the lift
-     * were all the way day, then this would be the distance from the center of the axle of the Base
-     * Pivot to the center of the axle of the wrist pivot. This must be rotated by the angle of the
-     * Base Pivot at some point in the Forward Kinematics.
-     */
+    /** Distance from the dynamic lift position to the wrist on the gripper mechanism.
+     * If the lift were all the way down, then this would be the distance from the center of the axle of 
+     * the Base Pivot to the center of the axle of the wrist pivot. 
+     * This must be rotated by the angle of the Base Pivot at some point in the Forward Kinematics. */
     public static final Transform2d LiftToWristOffset =
         new Transform2d(0.1784, 0.4259, Rotation2d.fromDegrees(0));
 
-    /**
-     * Distance from the center of the wrist's axle to the point used for the EndEffector
-     * calculations Presumably this is just beyond the end of the wheels but should be just past
-     * where the Coral is.
-     */
+    /** Distance from the center of the wrist's axle to the point used for the EndEffector calculations 
+     * Presumably this is just beyond the end of the wheels but should be just past where the Coral is. */
     public static final Transform2d WristToEndEffector =
         new Transform2d(0, 0, Rotation2d.fromDegrees(0));
   }
