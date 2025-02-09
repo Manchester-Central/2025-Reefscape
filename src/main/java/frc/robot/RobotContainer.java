@@ -104,13 +104,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver
         .y()
         .whileTrue(
-            PathUtil.toCreateFindAPathToClosestPointCommand(
-                FieldPoint.getHPDrivePoses(), m_swerveDrive));
+            PathUtil.driveToClosestPointCommand(FieldPoint.getHPDrivePoses(), m_swerveDrive));
     m_driver
         .x()
         .whileTrue(
-            PathUtil.toCreateFindAPathToClosestPointCommand(
-                FieldPoint.getReefDrivePoses(), m_swerveDrive));
+            PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
     m_driver
         .povUp()
         .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
