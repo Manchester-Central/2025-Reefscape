@@ -50,7 +50,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     START,
     STOW,
     INTAKE_FROM_FLOOR,
-    INTAKE_FROM_HP, // Probably won't implement -Josh
+    INTAKE_FROM_HP, // Probably won't implement -Josh // nevermind -Josh
     SCORE_L1,
     SCORE_L2,
     SCORE_L3,
@@ -127,10 +127,21 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void intakeFromHPState() {
-    stowState(); // TODO: THINK ABOUT HP PICKUP
+    if (m_gripper.hasCoralBack() || m_gripper.hasCoralFront()) {
+      m_currentState = LiftState.STOW;
+      return;
+    }
+    m_basePivot.setTargetAngle(BasePivotConstants.hpIntakeAngle);
+    m_extender.setTargetLength(ExtenderConstants.hpIntakeLengthMeter);
+    m_gripperPivot.setTargetAngle(GripperPivotConstants.hpIntakeAngle);
+    m_gripper.setTargetSpeed(0.5);
   }
 
   private void scoreL1State() {
+    if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
+      m_currentState = LiftState.STOW;
+      return;
+    }
     m_basePivot.setTargetAngle(BasePivotConstants.ScoreL1Angle);
     m_extender.setTargetLength(ExtenderConstants.ScoreL1LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL1Angle);
@@ -138,6 +149,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void scoreL2State() {
+    if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
+      m_currentState = LiftState.STOW;
+      return;
+    }
     m_basePivot.setTargetAngle(BasePivotConstants.ScoreL2Angle);
     m_extender.setTargetLength(ExtenderConstants.ScoreL2LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL2Angle);
@@ -145,6 +160,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void scoreL3State() {
+    if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
+      m_currentState = LiftState.STOW;
+      return;
+    }
     m_basePivot.setTargetAngle(BasePivotConstants.ScoreL3Angle);
     m_extender.setTargetLength(ExtenderConstants.ScoreL3LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL3Angle);
@@ -152,6 +171,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void scoreL4State() {
+    if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
+      m_currentState = LiftState.STOW;
+      return;
+    }
     m_basePivot.setTargetAngle(BasePivotConstants.ScoreL4Angle);
     m_extender.setTargetLength(ExtenderConstants.ScoreL4LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL4Angle);

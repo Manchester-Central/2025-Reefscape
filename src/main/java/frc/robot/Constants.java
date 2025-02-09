@@ -114,6 +114,7 @@ public final class Constants {
       public static final Rotation2d ScoreL2Angle = Rotation2d.fromDegrees(61);
       public static final Rotation2d ScoreL3Angle = Rotation2d.fromDegrees(70);
       public static final Rotation2d ScoreL4Angle = Rotation2d.fromDegrees(70);
+      public static final Rotation2d hpIntakeAngle = Rotation2d.fromDegrees(50);
     }
 
     public static class GripperPivotConstants {
@@ -125,6 +126,7 @@ public final class Constants {
       public static final Rotation2d ScoreL2Angle = Rotation2d.fromDegrees(-117);
       public static final Rotation2d ScoreL3Angle = Rotation2d.fromDegrees(-126);
       public static final Rotation2d ScoreL4Angle = Rotation2d.fromDegrees(51);
+      public static final Rotation2d hpIntakeAngle = Rotation2d.fromDegrees(-10);
     }
 
     public static class ExtenderConstants {
@@ -136,6 +138,7 @@ public final class Constants {
       public static final double ScoreL2LengthMeter = 1.0;
       public static final double ScoreL3LengthMeter = 1.31;
       public static final double ScoreL4LengthMeter = 1.8;
+      public static final double hpIntakeLengthMeter = 0.8;
     }
 
     public static class GripperConstants {}

@@ -150,7 +150,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         .leftBumper()
         .whileTrue(
             new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
-    // m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP));
+    m_operator
+        .rightBumper()
+        .whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
     m_operator
         .a()
         .whileTrue(new ChangeState().setLift(LiftState.SCORE_L1).setIntake(IntakeState.STOW));
