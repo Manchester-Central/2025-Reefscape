@@ -101,12 +101,14 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
-    m_driver.y().whileTrue(PathUtil.toCreateFindAPathCommand(FieldPoint.testPoint, m_swerveDrive));
+    m_driver
+        .y()
+        .whileTrue(
+            PathUtil.driveToClosestPointCommand(FieldPoint.getHPDrivePoses(), m_swerveDrive));
     m_driver
         .x()
         .whileTrue(
-            PathUtil.toCreateFindAPathToClosestPointCommand(
-                FieldPoint.getReefDrivePoses(), m_swerveDrive));
+            PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
     m_driver
         .povUp()
         .onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
@@ -148,7 +150,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         .leftBumper()
         .whileTrue(
             new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
-    // m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP));
+    m_operator
+        .rightBumper()
+        .whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
     m_operator
         .a()
         .whileTrue(new ChangeState().setLift(LiftState.SCORE_L1).setIntake(IntakeState.STOW));

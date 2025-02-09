@@ -21,14 +21,13 @@ public class PathUtil {
   static PathConstraints constraints =
       new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
 
-  public static Command toCreateFindAPathCommand(
-      FieldPoint targetPostion, SwerveDrive swerveDrive) {
+  public static Command driveToPoseCommand(FieldPoint targetPostion, SwerveDrive swerveDrive) {
     return new DeferredCommand(
         () -> AutoBuilder.pathfindToPose(targetPostion.getCurrentAlliancePose(), constraints, 0.0),
         Set.of(swerveDrive));
   }
 
-  public static Command toCreateFindAPathToClosestPointCommand(
+  public static Command driveToClosestPointCommand(
       ArrayList<FieldPoint> possibleTargets, SwerveDrive swerveDrive) {
     return new DeferredCommand(
         () -> {
