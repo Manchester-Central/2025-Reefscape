@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
+import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
@@ -131,9 +132,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void stowState() {
-    m_basePivot.setTargetAngle(BasePivotConstants.StowAngle);
-    m_extender.setTargetLength(ExtenderConstants.StowLengthMeter);
-    m_gripperPivot.setTargetAngle(GripperPivotConstants.StowAngle);
+    m_basePivot.setTargetAngle(LiftPoses.Stow.getBasePivotAngle());
+    m_extender.setTargetLength(LiftPoses.Stow.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(LiftPoses.Stow.getGripperPivotAngle());
     m_gripper.setCoralGripSpeed(0.0);
   }
 

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.chaos131.robot.ChaosRobot;
+import com.chaos131.util.DashboardNumber;
 import com.chaos131.util.FieldData;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
@@ -59,6 +60,12 @@ public class Robot extends ChaosRobot {
     }
     Logger.recordOutput("Field/ReefPositions", reefPositions);
     // System.out.println(coralPose.length);
+  }
+
+  @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    DashboardNumber.checkAll();
   }
 
   @Override

@@ -13,7 +13,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
-import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
+import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import java.util.function.Supplier;
@@ -74,7 +74,7 @@ public class Extender extends AbstractLiftPart {
    */
   public void setTargetLength(double newLength) {
     if (!getLiftValues().isBasePivotAtSafeAngle) {
-      newLength = ExtenderConstants.StowLengthMeter;
+      newLength = LiftPoses.Stow.getExtensionMeters();
     }
     m_targetLength = newLength;
     m_motor1.moveToPosition(newLength);

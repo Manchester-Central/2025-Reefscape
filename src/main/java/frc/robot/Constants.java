@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.subsystems.lift.LiftPose;
 
 /** This class holds all of our 2025 constants. */
 public final class Constants {
@@ -140,11 +141,14 @@ public final class Constants {
 
   /** This contains constants for our entire lift system. */
   public static class MidLiftConstants {
+    public static class LiftPoses {
+      public static final LiftPose Stow = new LiftPose("Stow", 80, 0.3, 0);
+    }
+
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(30);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
-      public static final Rotation2d StowAngle = Rotation2d.fromDegrees(80);
       public static final Rotation2d HandoffAngle = Rotation2d.fromDegrees(30);
       public static final Rotation2d ScoreL1Angle = Rotation2d.fromDegrees(54);
       public static final Rotation2d ScoreL2Angle = Rotation2d.fromDegrees(61);
@@ -157,7 +161,6 @@ public final class Constants {
     public static class GripperPivotConstants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-45);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(45);
-      public static final Rotation2d StowAngle = Rotation2d.fromDegrees(0);
       public static final Rotation2d HandoffAngle = Rotation2d.fromDegrees(-45);
       public static final Rotation2d ScoreL1Angle = Rotation2d.fromDegrees(-110);
       public static final Rotation2d ScoreL2Angle = Rotation2d.fromDegrees(-117);
@@ -170,7 +173,6 @@ public final class Constants {
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.1;
       public static final double MaxLengthMeter = 1.6;
-      public static final double StowLengthMeter = 0.3;
       public static final double HandoffLengthMeter = 0.4;
       public static final double ScoreL1LengthMeter = 0.97;
       public static final double ScoreL2LengthMeter = 1.0;
