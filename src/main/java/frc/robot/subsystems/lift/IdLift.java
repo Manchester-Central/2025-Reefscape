@@ -6,9 +6,6 @@ package frc.robot.subsystems.lift;
 
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
-import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
-import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
@@ -139,9 +136,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void intakeFromFloorState() {
-    m_basePivot.setTargetAngle(BasePivotConstants.HandoffAngle);
-    m_extender.setTargetLength(ExtenderConstants.HandoffLengthMeter);
-    m_gripperPivot.setTargetAngle(GripperPivotConstants.HandoffAngle);
+    m_basePivot.setTargetAngle(LiftPoses.Handoff.getBasePivotAngle());
+    m_extender.setTargetLength(LiftPoses.Handoff.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(LiftPoses.Handoff.getGripperPivotAngle());
     m_gripper.setCoralGripSpeed(0.5);
   }
 
@@ -150,67 +147,38 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       m_currentState = LiftState.STOW;
       return;
     }
-    m_basePivot.setTargetAngle(BasePivotConstants.hpIntakeAngle);
-    m_extender.setTargetLength(ExtenderConstants.hpIntakeLengthMeter);
-    m_gripperPivot.setTargetAngle(GripperPivotConstants.hpIntakeAngle);
+    m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
+    m_extender.setTargetLength(LiftPoses.HpIntake.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(LiftPoses.HpIntake.getGripperPivotAngle());
     m_gripper.setCoralGripSpeed(-0.5);
   }
 
   private void scoreL1State() {
-    if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
-      m_currentState = LiftState.STOW;
-      return;
-    }
-    m_basePivot.setTargetAngle(BasePivotConstants.ScoreL1Angle);
-    m_extender.setTargetLength(ExtenderConstants.ScoreL1LengthMeter);
-    m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL1Angle);
-    if (isPoseReady()) {
-      m_gripper.setCoralGripSpeed(0.5);
-    } else {
-      m_gripper.setCoralGripSpeed(0);
-    }
+    scoreHelper(LiftPoses.ScoreL1, true);
   }
 
   private void scoreL2State() {
-    if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
-      m_currentState = LiftState.STOW;
-      return;
-    }
-    m_basePivot.setTargetAngle(BasePivotConstants.ScoreL2Angle);
-    m_extender.setTargetLength(ExtenderConstants.ScoreL2LengthMeter);
-    m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL2Angle);
-    if (isPoseReady()) {
-      m_gripper.setCoralGripSpeed(0.5);
-    } else {
-      m_gripper.setCoralGripSpeed(0);
-    }
+    scoreHelper(LiftPoses.ScoreL2, true);
   }
 
   private void scoreL3State() {
-    if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
-      m_currentState = LiftState.STOW;
-      return;
-    }
-    m_basePivot.setTargetAngle(BasePivotConstants.ScoreL3Angle);
-    m_extender.setTargetLength(ExtenderConstants.ScoreL3LengthMeter);
-    m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL3Angle);
-    if (isPoseReady()) {
-      m_gripper.setCoralGripSpeed(0.5);
-    } else {
-      m_gripper.setCoralGripSpeed(0);
-    }
+    scoreHelper(LiftPoses.ScoreL3, true);
   }
 
   private void scoreL4State() {
+    scoreHelper(LiftPoses.ScoreL4, false);
+  }
+
+  private void scoreHelper(LiftPose liftPose, boolean isGripperReleaseForward) {
     if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
       m_currentState = LiftState.STOW;
       return;
     }
-    m_basePivot.setTargetAngle(BasePivotConstants.ScoreL4Angle);
-    m_extender.setTargetLength(ExtenderConstants.ScoreL4LengthMeter);
-    m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL4Angle);
+    m_basePivot.setTargetAngle(liftPose.getBasePivotAngle());
+    m_extender.setTargetLength(liftPose.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(liftPose.getGripperPivotAngle());
     if (isPoseReady()) {
-      m_gripper.setCoralGripSpeed(-0.5);
+      m_gripper.setCoralGripSpeed(isGripperReleaseForward ? 0.5 : -0.5);
     } else {
       m_gripper.setCoralGripSpeed(0);
     }
