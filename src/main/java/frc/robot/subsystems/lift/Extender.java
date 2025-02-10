@@ -14,6 +14,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
+import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import java.util.function.Supplier;
@@ -73,8 +74,14 @@ public class Extender extends AbstractLiftPart {
    * Sets the target length for extension and tries to drive there.
    */
   public void setTargetLength(double newLength) {
+    if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {
+      newLength = ExtenderConstants.MaxLengthMeter;
+    } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
+      newLength = ExtenderConstants.MinLengthMeter;
+    }
+
     if (!getLiftValues().isBasePivotAtSafeAngle) {
-      newLength = ExtenderConstants.StowLengthMeter;
+      newLength = LiftPoses.Stow.getExtensionMeters();
     }
     m_targetLength = newLength;
     m_motor1.moveToPosition(newLength);
@@ -85,6 +92,11 @@ public class Extender extends AbstractLiftPart {
    * Sets the direct speed [-1.0, 1.0] of the system.
    */
   public void setSpeed(double speed) {
+    if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {
+      speed = Math.min(speed, 0.0);
+    } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
+      speed = Math.max(speed, 0.0);
+    }
     m_motor1.set(speed);
   }
 
