@@ -4,10 +4,7 @@
 
 package frc.robot.subsystems.lift;
 
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
 import frc.robot.Robot;
@@ -17,22 +14,12 @@ import java.util.function.Supplier;
 
 /** Add your docs here. */
 public class Gripper extends AbstractLiftPart {
-  private double m_targetSpeed = 0;
-  private double m_gearRation = 40.0;
-  private double m_jkgMetersSquared = 0.1;
   public static boolean hasCoralFrontGrippedSim = false;
   public static boolean hasCoralBackGrippedSim = false;
   public static boolean hasAlgaeGrippedSim = false;
-  private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
-  private DCMotorSim m_motorSim =
-      new DCMotorSim(
-          LinearSystemId.createDCMotorSystem(m_dcMotor, m_jkgMetersSquared, m_gearRation),
-          m_dcMotor,
-          0.001,
-          0.001);
 
-  private ChaosTalonFx m_motor =
-      new ChaosTalonFx(CanIdentifiers.GripperMotorCANID, m_gearRation, m_motorSim, true);
+  private ChaosTalonFx m_coralMotor = new ChaosTalonFx(CanIdentifiers.GripperCoralMotorCANID);
+  private ChaosTalonFx m_algaeMotor = new ChaosTalonFx(CanIdentifiers.GripperAlgaeMotorCANID);
 
   private DigitalInput m_algaeSensor = new DigitalInput(IoPortsConstants.AlgaeChannelID);
   private DigitalInput m_coralSensor1 = new DigitalInput(IoPortsConstants.CoralOneChannelID);
@@ -47,12 +34,26 @@ public class Gripper extends AbstractLiftPart {
     super(idLiftValuesSupplier);
   }
 
-  public void setTargetSpeed(double newSpeed) {
-    m_targetSpeed = newSpeed;
+  /**
+   * Sets the speed [-1.0, 1.0] of the coral gripper.
+   */
+  public void setCoralGripSpeed(double newSpeed) {
+    m_coralMotor.set(newSpeed);
   }
 
-  public double getCurrentSpeed() {
-    return m_targetSpeed;
+  /**
+   * Sets the speed [-1.0, 1.0] of the algae gripper.
+   */
+  public void setAlgaeGripSpeed(double newSpeed) {
+    m_algaeMotor.set(newSpeed);
+  }
+
+  public double getCoralGripSpeed() {
+    return m_coralMotor.get();
+  }
+
+  public double getAlgaeGripSpeed() {
+    return m_algaeMotor.get();
   }
 
   /**

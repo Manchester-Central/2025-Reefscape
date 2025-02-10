@@ -33,6 +33,7 @@ public final class Constants {
   public static class CanIdentifiers {
     public static final String CTRECANBus = "CTRE bus";
 
+    // Swerve (30s & 40s)
     public static final int FLSpeedCANID = 30;
     public static final int FLAngleCANID = 31;
     public static final int FLAbsoEncoCANID = 32;
@@ -46,12 +47,25 @@ public final class Constants {
     public static final int BRAngleCANID = 37;
     public static final int BRAbsoEncoCANID = 38;
     public static final int GyroCANID = 45;
-    public static final int BasePivotMotorCANID = 46;
-    public static final int BasePivotCANcoderCANID = 47;
-    public static final int GripperPivotMotorCANID = 48;
-    public static final int GripperPivotCANCoderCANID = 49;
-    public static final int GripperMotorCANID = 50;
+
+    // Base Pivot (20s)
+    public static final int BasePivotMotorCANID = 20; // TODO: set on robot
+    public static final int BasePivotCANcoderCANID = 21; // TODO: set on robot
+
+    // Extender (50s)
     public static final int ExtenderMotorCANID = 51;
+
+    // Gripper Pivot (60s)
+    public static final int GripperPivotMotorCANID = 60; // TODO: set on robot
+    public static final int GripperPivotCANCoderCANID = 61; // TODO: set on robot
+
+    // Gripper (70s)
+    public static final int GripperCoralMotorCANID = 70; // TODO: set on robot
+    public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
+
+    // Intake (80s)
+    public static final int IntakeMotor1CANID = 80; // TODO: set on robot
+    public static final int IntakeMotorBCANID = 81; // TODO: set on robot
   }
 
   /** This contains constants for all our IO ports on the RIO. */
@@ -130,7 +144,7 @@ public final class Constants {
     public static class BasePivotConstants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(30);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
-      public static final Rotation2d StowAngle = Rotation2d.fromDegrees(40);
+      public static final Rotation2d StowAngle = Rotation2d.fromDegrees(80);
       public static final Rotation2d HandoffAngle = Rotation2d.fromDegrees(30);
       public static final Rotation2d ScoreL1Angle = Rotation2d.fromDegrees(54);
       public static final Rotation2d ScoreL2Angle = Rotation2d.fromDegrees(61);
