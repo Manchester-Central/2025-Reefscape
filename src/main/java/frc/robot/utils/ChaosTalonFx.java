@@ -13,6 +13,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Robot;
 
 /**
  * A TalonFX wrapper with automatic simulation support and helper functions.
@@ -23,6 +24,17 @@ public class ChaosTalonFx extends TalonFX {
   private final boolean m_isMainSimMotor;
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0);
   public final TalonFXConfiguration Configuration = new TalonFXConfiguration();
+  private double m_lastUserSetSpeed = 0.0;
+
+  /**
+   * Creates the new TalonFX wrapper WITHOUT simulation support.
+   */
+  public ChaosTalonFx(int canId) {
+    super(canId, CanIdentifiers.CTRECANBus);
+    this.m_gearRatio = 0.0;
+    m_motorSimModel = null;
+    m_isMainSimMotor = false;
+  }
 
   /**
    * Creates the new TalonFX wrapper.
@@ -34,11 +46,30 @@ public class ChaosTalonFx extends TalonFX {
     m_isMainSimMotor = isMainSimMotor;
   }
 
+  @Override
+  public void set(double speed) {
+    m_lastUserSetSpeed = speed;
+    super.set(speed);
+  }
+
+  @Override
+  public double get() {
+    if (Robot.isSimulation()) {
+      return m_lastUserSetSpeed;
+    }
+    return super.get();
+  }
+
   /**
    * Tells the motor to handle updating the sim state. Copied/inspired from:
    * https://v6.docs.ctr-electronics.com/en/2024/docs/api-reference/simulation/simulation-intro.html
    */
   public void simUpdate() {
+    if (m_motorSimModel == null) {
+      // Skip sim updates for motors without models
+      return;
+    }
+
     var talonFxSim = getSimState();
 
     // set the supply voltage of the TalonFX

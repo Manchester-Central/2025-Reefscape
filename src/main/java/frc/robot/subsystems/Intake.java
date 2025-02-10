@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
@@ -45,8 +46,8 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
           m_pivotDcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_pivotMotor1 = new ChaosTalonFx(10, m_gearRatio, m_pivotMotorSim, true);
-  private ChaosTalonFx m_pivotMotor2 = new ChaosTalonFx(11, m_gearRatio, m_pivotMotorSim, false);
+  private ChaosTalonFx m_pivotMotor1 = new ChaosTalonFx(CanIdentifiers.IntakeMotor1CANID, m_gearRatio, m_pivotMotorSim, true);
+  private ChaosTalonFx m_pivotMotor2 = new ChaosTalonFx(CanIdentifiers.IntakeMotorBCANID, m_gearRatio, m_pivotMotorSim, false);
   private PIDTuner m_pidTuner = new PIDTuner("IntakePivot", true, 0.1, 0.001, 0.0, this::tunePids);
 
   /** Creates a new Intake. */

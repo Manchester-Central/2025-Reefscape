@@ -22,10 +22,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   public class IdLiftValues {
     public Rotation2d basePivotAngle;
     public Rotation2d gripperPivotAngle;
-    public double gripperSpeed;
+    public double coralGripSpeed;
+    public double algaeGripSpeed;
     public double extenderLength;
     public boolean isBasePivotAtSafeAngle;
     public boolean isExtenderAtSafeLength;
+    public boolean hasAlgaeGripped;
     public boolean hasCoralBackGripped;
     public boolean hasCoralFrontGripped;
   }
@@ -37,10 +39,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     IdLiftValues values = new IdLiftValues();
     values.basePivotAngle = m_basePivot.getCurrentAngle();
     values.gripperPivotAngle = m_gripperPivot.getCurrentAngle();
-    values.gripperSpeed = m_gripper.getCurrentSpeed();
+    values.coralGripSpeed = m_gripper.getCoralGripSpeed();
+    values.algaeGripSpeed = m_gripper.getAlgaeGripSpeed();
     values.extenderLength = m_extender.getCurrentLength();
     values.isBasePivotAtSafeAngle = m_basePivot.isSafeAngle();
     values.isExtenderAtSafeLength = m_extender.isSafeLength();
+    values.hasAlgaeGripped = m_gripper.hasAlgae();
     values.hasCoralBackGripped = m_gripper.hasCoralBack();
     values.hasCoralFrontGripped = m_gripper.hasCoralFront();
     return values;
@@ -121,7 +125,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private void manualState() {
     m_basePivot.setSpeed(0.0);
-    m_gripper.setTargetSpeed(0.0);
+    m_gripper.setCoralGripSpeed(0.0);
     m_gripperPivot.setSpeed(0.0);
     m_extender.setSpeed(m_operator.getRightY() * 0.3);
   }
@@ -130,14 +134,14 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(BasePivotConstants.StowAngle);
     m_extender.setTargetLength(ExtenderConstants.StowLengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.StowAngle);
-    m_gripper.setTargetSpeed(0.0);
+    m_gripper.setCoralGripSpeed(0.0);
   }
 
   private void intakeFromFloorState() {
     m_basePivot.setTargetAngle(BasePivotConstants.HandoffAngle);
     m_extender.setTargetLength(ExtenderConstants.HandoffLengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.HandoffAngle);
-    m_gripper.setTargetSpeed(0.5);
+    m_gripper.setCoralGripSpeed(0.5);
   }
 
   private void intakeFromHpState() {
@@ -148,7 +152,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(BasePivotConstants.hpIntakeAngle);
     m_extender.setTargetLength(ExtenderConstants.hpIntakeLengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.hpIntakeAngle);
-    m_gripper.setTargetSpeed(-0.5);
+    m_gripper.setCoralGripSpeed(-0.5);
   }
 
   private void scoreL1State() {
@@ -160,9 +164,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_extender.setTargetLength(ExtenderConstants.ScoreL1LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL1Angle);
     if (isPoseReady()) {
-      m_gripper.setTargetSpeed(0.5);
+      m_gripper.setCoralGripSpeed(0.5);
     } else {
-      m_gripper.setTargetSpeed(0);
+      m_gripper.setCoralGripSpeed(0);
     }
   }
 
@@ -175,9 +179,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_extender.setTargetLength(ExtenderConstants.ScoreL2LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL2Angle);
     if (isPoseReady()) {
-      m_gripper.setTargetSpeed(0.5);
+      m_gripper.setCoralGripSpeed(0.5);
     } else {
-      m_gripper.setTargetSpeed(0);
+      m_gripper.setCoralGripSpeed(0);
     }
   }
 
@@ -190,9 +194,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_extender.setTargetLength(ExtenderConstants.ScoreL3LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL3Angle);
     if (isPoseReady()) {
-      m_gripper.setTargetSpeed(0.5);
+      m_gripper.setCoralGripSpeed(0.5);
     } else {
-      m_gripper.setTargetSpeed(0);
+      m_gripper.setCoralGripSpeed(0);
     }
   }
 
@@ -205,9 +209,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_extender.setTargetLength(ExtenderConstants.ScoreL4LengthMeter);
     m_gripperPivot.setTargetAngle(GripperPivotConstants.ScoreL4Angle);
     if (isPoseReady()) {
-      m_gripper.setTargetSpeed(-0.5);
+      m_gripper.setCoralGripSpeed(-0.5);
     } else {
-      m_gripper.setTargetSpeed(0);
+      m_gripper.setCoralGripSpeed(0);
     }
   }
 }
