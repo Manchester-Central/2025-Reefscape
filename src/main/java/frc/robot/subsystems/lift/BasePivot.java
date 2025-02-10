@@ -15,6 +15,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import java.util.function.Supplier;
@@ -62,6 +63,11 @@ public class BasePivot extends AbstractLiftPart {
    * Sets the direct speed [-1.0, 1.0] of the motors.
    */
   public void setSpeed(double speed) {
+    if (getCurrentAngle().getDegrees() > BasePivotConstants.MaxAngle.getDegrees()) {
+      speed = Math.min(speed, 0.0);
+    } else if (getCurrentAngle().getDegrees() < BasePivotConstants.MinAngle.getDegrees()) {
+      speed = Math.max(speed, 0.0);
+    }
     m_motor.set(speed);
   }
 
@@ -69,6 +75,11 @@ public class BasePivot extends AbstractLiftPart {
    * Sets the target angle and tries to drive there.
    */
   public void setTargetAngle(Rotation2d newAngle) {
+    if (newAngle.getDegrees() > BasePivotConstants.MaxAngle.getDegrees()) {
+      newAngle = BasePivotConstants.MaxAngle;
+    } else if (newAngle.getDegrees() < BasePivotConstants.MinAngle.getDegrees()) {
+      newAngle = BasePivotConstants.MinAngle;
+    }
     m_targetAngle = newAngle;
     m_motor.moveToPosition(newAngle.getDegrees());
   }

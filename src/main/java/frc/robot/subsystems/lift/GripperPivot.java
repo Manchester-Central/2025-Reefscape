@@ -15,6 +15,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
@@ -63,6 +64,12 @@ public class GripperPivot extends AbstractLiftPart {
    * Sets the target angle and tries to drive there.
    */
   public void setTargetAngle(Rotation2d newAngle) {
+    if (newAngle.getDegrees() > GripperPivotConstants.MaxAngle.getDegrees()) {
+      newAngle = GripperPivotConstants.MaxAngle;
+    } else if (newAngle.getDegrees() < GripperPivotConstants.MinAngle.getDegrees()) {
+      newAngle = GripperPivotConstants.MinAngle;
+    }
+
     if (!getLiftValues().isBasePivotAtSafeAngle || !getLiftValues().isExtenderAtSafeLength) {
       newAngle = LiftPoses.Stow.getGripperPivotAngle();
     }
@@ -74,6 +81,11 @@ public class GripperPivot extends AbstractLiftPart {
    * Sets the direct speed [-1.0, 1.0] of the motors.
    */
   public void setSpeed(double speed) {
+    if (getCurrentAngle().getDegrees() > GripperPivotConstants.MaxAngle.getDegrees()) {
+      speed = Math.min(speed, 0.0);
+    } else if (getCurrentAngle().getDegrees() < GripperPivotConstants.MinAngle.getDegrees()) {
+      speed = Math.max(speed, 0.0);
+    }
     m_motor.set(speed);
   }
 
