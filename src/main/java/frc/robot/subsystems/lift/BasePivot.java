@@ -4,15 +4,20 @@
 
 package frc.robot.subsystems.lift;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDTuner;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
@@ -45,17 +50,26 @@ public class BasePivot extends AbstractLiftPart {
    */
   public BasePivot(Supplier<IdLiftValues> idLiftValuesSupplier) {
     super(idLiftValuesSupplier);
+    CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
+    canCoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
+    canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    canCoderConfig.MagnetSensor.withMagnetOffset(Angle.ofBaseUnits(0, Degrees));
+    m_canCoder.getConfigurator().apply(canCoderConfig);
+
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
-    m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    m_motor.Configuration.Feedback.FeedbackRemoteSensorID = CanIdentifiers.BasePivotCANcoderCANID;
+    m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     m_motor.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
-    m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
-    m_motor.Configuration.MotionMagic.MotionMagicCruiseVelocity = 80;
-    m_motor.Configuration.MotionMagic.MotionMagicAcceleration = 160;
-    m_motor.Configuration.MotionMagic.MotionMagicJerk = 1600;
+    m_motor.Configuration.Feedback.RotorToSensorRatio = 12.8; // TODO: get real value
+    m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1; // TODO: get real value
+    m_motor.Configuration.MotionMagic.MotionMagicCruiseVelocity = 80; // TODO: get real value
+    m_motor.Configuration.MotionMagic.MotionMagicAcceleration = 160; // TODO: get real value
+    m_motor.Configuration.MotionMagic.MotionMagicJerk = 1600; // TODO: get real value
     m_motor.applyConfig();
+
   }
 
   private void tunePids(PIDFValue pidfValue) {
