@@ -52,11 +52,15 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     m_motor.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
     m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+    m_motor.Configuration.MotionMagic.MotionMagicCruiseVelocity = 80;
+    m_motor.Configuration.MotionMagic.MotionMagicAcceleration = 160;
+    m_motor.Configuration.MotionMagic.MotionMagicJerk = 1600;
     m_motor.applyConfig();
   }
 
   private void tunePids(PIDFValue pidfValue) {
-    m_motor.tunePid(pidfValue, 0.0);
+    m_motor.tuneMotionMagic(pidfValue, 0.0, 0.25, 0.12, 0.01);
+    
   }
 
   /**
@@ -81,7 +85,7 @@ public class BasePivot extends AbstractLiftPart {
       newAngle = BasePivotConstants.MinAngle;
     }
     m_targetAngle = newAngle;
-    m_motor.moveToPosition(newAngle.getDegrees());
+    m_motor.moveToPositionMotionMagic(newAngle.getDegrees());
   }
 
   public Rotation2d getCurrentAngle() {

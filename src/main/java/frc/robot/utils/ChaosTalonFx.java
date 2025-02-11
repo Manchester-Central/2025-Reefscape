@@ -7,6 +7,7 @@ package frc.robot.utils;
 import com.chaos131.pid.PIDFValue;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.util.Units;
@@ -23,6 +24,7 @@ public class ChaosTalonFx extends TalonFX {
   private final DCMotorSim m_motorSimModel;
   private final boolean m_isMainSimMotor;
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0);
+  private final MotionMagicVoltage m_positionMotionMagicVoltage = new MotionMagicVoltage(0);
   public final TalonFXConfiguration Configuration = new TalonFXConfiguration();
   private double m_lastUserSetSpeed = 0.0;
 
@@ -113,9 +115,31 @@ public class ChaosTalonFx extends TalonFX {
     applyConfig();
   }
 
+  /**
+   * Tunes the PID & MotionMagic default slot (0).
+   */
+  public void tuneMotionMagic(PIDFValue pidValue, double kg, double ks, double kv, double ka) {
+    var slot0 = new Slot0Configs();
+    slot0.kP = pidValue.P;
+    slot0.kI = pidValue.I;
+    slot0.kD = pidValue.D;
+    slot0.kG = kg;
+    slot0.kS = ks;
+    slot0.kV = kv;
+    slot0.kA = ka;
+    Configuration.Slot0 = slot0;
+    applyConfig();
+  }
+
   /** Tells the motor controller to move to the target position. */
   public void moveToPosition(double position) {
     m_positionVoltage.Slot = 0;
     setControl(m_positionVoltage.withPosition(position));
+  }
+
+  /** Tells the motor controller to move to the target position using MotionMagic. */
+  public void moveToPositionMotionMagic(double position) {
+    m_positionMotionMagicVoltage.Slot = 0;
+    setControl(m_positionMotionMagicVoltage.withPosition(position));
   }
 }
