@@ -6,18 +6,31 @@ package frc.robot.subsystems;
 
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDTuner;
+import com.chaos131.robot.ChaosRobot.Mode;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
 import frc.robot.utils.ChaosTalonFx;
+import org.ironmaple.simulation.IntakeSimulation;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.gamepieces.GamePieceOnFieldSimulation.GamePieceInfo;
+import org.ironmaple.simulation.gamepieces.GamePieceProjectile;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 
 /**
  * The Intake subsystem for grabbing coral off the ground.
@@ -50,9 +63,13 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
   private ChaosTalonFx m_pivotMotor2 = new ChaosTalonFx(CanIdentifiers.IntakeMotorBCANID, m_gearRatio, m_pivotMotorSim, false);
   private PIDTuner m_pidTuner = new PIDTuner("IntakePivot", true, 0.1, 0.001, 0.0, this::tunePids);
 
+  private IntakeSimulation m_physicSimIntake;
+  private SwerveDriveSimulation m_simDriveTrain;
+
   /** Creates a new Intake. */
-  public Intake() {
+  public Intake(SwerveDriveSimulation simdrivetrain) {
     super(IntakeState.START);
+    m_simDriveTrain = simdrivetrain;
     m_pivotMotor1.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_pivotMotor1.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_pivotMotor1.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -72,6 +89,20 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
     m_pivotMotor2.Configuration.Feedback.SensorToMechanismRatio = 0.5; // TODO: get real value
     m_pivotMotor2.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
     m_pivotMotor2.applyConfig();
+
+    m_physicSimIntake = IntakeSimulation.OverTheBumperIntake(
+        // Specify the type of game pieces that the intake can collect
+        "Note",
+        // Specify the drivetrain to which this intake is attached
+        m_simDriveTrain,
+        // Width of the intake
+        Units.Meters.of(RobotDimensions.IntakeWidth),
+        // The extension length of the intake beyond the robot's frame (when activated)
+        Units.Meters.of(RobotDimensions.SimIntakeDistance),
+        // The intake is mounted on the back side of the chassis
+        IntakeSimulation.IntakeSide.FRONT,
+        // The intake can hold up to 1 note
+        1);
   }
 
   @Override
@@ -103,23 +134,37 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
   }
 
   private void stowState() {
+    m_physicSimIntake.stopIntake();
     setTargetAngle(IntakeConstants.StowAngle);
     setTargetSpeed(IntakeConstants.StowSpeed);
   }
 
   private void deployState() {
+    m_physicSimIntake.startIntake();
     setTargetAngle(IntakeConstants.DeployAngle);
     setTargetSpeed(IntakeConstants.DeploySpeed);
   }
 
   private void handoffPrepState() {
+    m_physicSimIntake.stopIntake();
     setTargetAngle(IntakeConstants.HandoffAngle);
     setTargetSpeed(IntakeConstants.HandoffPrepSpeed);
   }
 
   private void handoffState() {
+    m_physicSimIntake.stopIntake();
     setTargetAngle(IntakeConstants.HandoffAngle);
     setTargetSpeed(IntakeConstants.HandoffSpeed);
+    m_physicSimIntake.obtainGamePieceFromIntake();
+    var piece = new ReefscapeCoralOnFly(
+      m_simDriveTrain.getSimulatedDriveTrainPose(),
+      null,
+      null,
+      m_targetAngle,
+      null,
+      null,
+      null);
+    SimulatedArena.getInstance().addGamePieceProjectile(piece);
   }
 
   private void tunePids(PIDFValue pidfValue) {
@@ -158,5 +203,18 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
   public void simulationPeriodic() {
     m_pivotMotor1.simUpdate();
     m_pivotMotor2.simUpdate();
+  }
+
+  /**
+   * Function that works for both real and simulated intakes.
+
+   * @return true if the intake currently has a game piece in it
+   */
+  protected boolean hasGamePiece() {
+    if (GeneralConstants.RobotMode == Mode.SIM) {
+      return m_physicSimIntake.getGamePiecesAmount() > 0;
+    } else {
+      return false;
+    }
   }
 }

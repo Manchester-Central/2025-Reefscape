@@ -104,7 +104,7 @@ public class MechManager2D extends SubsystemBase {
       m_gripperBottomMotorIndicatorFrontLigament.setColor(m_gripperReverseColor);
       m_gripperBottomMotorIndicatorBackLigament.setColor(m_gripperReverseColor);
     }
-    
+
     // Change algae gripper color
     if (values.algaeGripSpeed == 0) {
       m_gripperAlgaeHolderLigament.setColor(m_gripperNeutralColor);

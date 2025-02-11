@@ -225,6 +225,11 @@ public final class Constants {
     public static final double FrontBackLengthMeters = 0.85;
     // Includes the Bumpers
     public static final double SideSideLengthMeters = 0.85;
+    // Width of the Intake's ability to pick up pieces
+    public static final double IntakeWidth = 0.7;
+    // Distance that the simulated intake will read for
+    public static final double SimIntakeDistance = 0.2;
+
     // Buffer space to use between the end effector and an interaction point
     public static final double CoralPlacementMargin = 0.03;
     // Distance from the robot origin to the axle for the Base Pivot

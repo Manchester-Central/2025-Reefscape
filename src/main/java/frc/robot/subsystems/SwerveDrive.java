@@ -102,6 +102,15 @@ public class SwerveDrive extends BaseSwerveDrive {
   }
 
   /**
+   * Used for the simulated drive train.
+
+   * @return the maple sim drive train
+   */
+  public SwerveDriveSimulation getSimulatedDriveTrain() {
+    return m_driveSim;
+  }
+
+  /**
    * Creates a new swerve drive with all the values for 2025's robot.
    */
   public static SwerveDrive createSwerveDrive(Pigeon2 gyrPigeon2) throws Exception {
