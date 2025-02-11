@@ -8,6 +8,7 @@ import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
 
@@ -28,6 +29,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     public boolean hasAlgaeGripped;
     public boolean hasCoralBackGripped;
     public boolean hasCoralFrontGripped;
+    public boolean m_intakeHasCoral;
+    public boolean m_intakeInPosition;
   }
 
   /**
@@ -45,6 +48,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     values.hasAlgaeGripped = m_gripper.hasAlgae();
     values.hasCoralBackGripped = m_gripper.hasCoralBack();
     values.hasCoralFrontGripped = m_gripper.hasCoralFront();
+    values.m_intakeHasCoral = m_intake.hasCoral();
+    values.m_intakeInPosition = m_intake.isInHandOff();
     return values;
   }
 
@@ -52,6 +57,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private Extender m_extender = new Extender(this::getLiftValues);
   private Gripper m_gripper = new Gripper(this::getLiftValues);
   private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
+  private Intake m_intake = new Intake();
   private Gamepad m_operator;
 
   /**

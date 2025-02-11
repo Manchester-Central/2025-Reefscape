@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.subsystems.lift.LiftPose;
 
 /** This class holds all of our 2025 constants. */
@@ -184,6 +185,8 @@ public final class Constants {
     public static final double DeploySpeed = 1.0;
     public static final double HandoffPrepSpeed = 0.0;
     public static final double HandoffSpeed = -1.0;
+
+    public static final DigitalInput IoChannel = new DigitalInput(3);
   }
 
   /** This contains constants for the field. */

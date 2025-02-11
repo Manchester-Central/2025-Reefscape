@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDTuner;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -12,9 +14,15 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.MidLiftConstants.GripperConstants;
+import frc.robot.subsystems.lift.Gripper;
+import frc.robot.subsystems.lift.IdLift;
+import frc.robot.subsystems.lift.IdLift.IdLiftValues;
+import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
 import frc.robot.utils.ChaosTalonFx;
@@ -49,6 +57,9 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
   private ChaosTalonFx m_pivotMotor1 = new ChaosTalonFx(CanIdentifiers.IntakeMotor1CANID, m_gearRatio, m_pivotMotorSim, true);
   private ChaosTalonFx m_pivotMotor2 = new ChaosTalonFx(CanIdentifiers.IntakeMotorBCANID, m_gearRatio, m_pivotMotorSim, false);
   private PIDTuner m_pidTuner = new PIDTuner("IntakePivot", true, 0.1, 0.001, 0.0, this::tunePids);
+  private DigitalInput m_intakeHasCoral = IntakeConstants.IoChannel;
+  private Supplier<IdLiftValues> m_idLiftValues;
+
 
   /** Creates a new Intake. */
   public Intake() {
@@ -101,6 +112,19 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
         break;
     }
   }
+
+  public boolean hasCoral(){
+    return m_intakeHasCoral.get();
+  }
+  
+  public boolean isInHandOff(){
+    if(m_currentState == IntakeState.HANDOFF_PREP){
+      return true;
+    }
+    return false;
+  }
+
+
 
   private void stowState() {
     setTargetAngle(IntakeConstants.StowAngle);
