@@ -9,6 +9,7 @@ import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
 import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -81,6 +82,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             (data) -> updatePoseEstimator(data),
             () -> m_swerveDrive.getRobotSpeedMps(),
             () -> m_swerveDrive.getRobotRotationSpeedRadsPerSec());
+    
+    NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
     buildPathplannerAutoChooser();
     // Configure the trigger bindings
     configureBindings();
