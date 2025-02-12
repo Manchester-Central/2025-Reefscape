@@ -50,14 +50,18 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
-    m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    m_motor.Configuration.Feedback.FeedbackRemoteSensorID = CanIdentifiers.GripperPivotCANCoderCANID;
+    m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
     m_motor.Configuration.Feedback.SensorToMechanismRatio = 1; // TODO: get real value
     m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+    m_motor.Configuration.MotionMagic.MotionMagicCruiseVelocity = 80; // TODO: get real value
+    m_motor.Configuration.MotionMagic.MotionMagicAcceleration = 160; // TODO: get real value
+    m_motor.Configuration.MotionMagic.MotionMagicJerk = 1600; // TODO: get real value
     m_motor.applyConfig();
   }
 
   private void tunePid(PIDFValue pidfValue) {
-    m_motor.tunePid(pidfValue, 0.0);
+    m_motor.tuneMotionMagic(pidfValue, 0.0, 0.25, 0.12, 0.01);
   }
 
   /**
@@ -74,7 +78,7 @@ public class GripperPivot extends AbstractLiftPart {
       newAngle = LiftPoses.Stow.getGripperPivotAngle();
     }
     m_targetAngle = newAngle;
-    m_motor.moveToPosition(newAngle.getDegrees());
+    m_motor.moveToPositionMotionMagic(newAngle.getDegrees());
   }
 
   /**

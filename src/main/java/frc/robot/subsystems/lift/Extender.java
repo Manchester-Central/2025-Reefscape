@@ -53,6 +53,9 @@ public class Extender extends AbstractLiftPart {
     m_motor1.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     m_motor1.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
     m_motor1.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
+    m_motor1.Configuration.MotionMagic.MotionMagicCruiseVelocity = 80; // TODO: get real value
+    m_motor1.Configuration.MotionMagic.MotionMagicAcceleration = 160; // TODO: get real value
+    m_motor1.Configuration.MotionMagic.MotionMagicJerk = 1600; // TODO: get real value
     m_motor1.applyConfig();
 
     // m_motor2.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -66,7 +69,7 @@ public class Extender extends AbstractLiftPart {
   }
 
   private void tunePids(PIDFValue pidfValue) {
-    m_motor1.tunePid(pidfValue, 0.0);
+    m_motor1.tuneMotionMagic(pidfValue, 0.0, 0.25, 0.12, 0.01);
     // m_motor2.tunePID(pidfValue, 0.0);
   }
 
@@ -84,7 +87,7 @@ public class Extender extends AbstractLiftPart {
       newLength = LiftPoses.Stow.getExtensionMeters();
     }
     m_targetLength = newLength;
-    m_motor1.moveToPosition(newLength);
+    m_motor1.moveToPositionMotionMagic(newLength);
     // m_motor2.moveToPosition(newLength);
   }
 
