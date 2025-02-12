@@ -12,8 +12,6 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
@@ -37,10 +35,7 @@ import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
+ * fml.
  */
 public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
@@ -86,15 +81,6 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
 
@@ -106,6 +92,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.povDown().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
     m_driver.povLeft().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
     m_driver.povRight().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
+
+    m_driver.leftBumper().whileTrue(new InstantCommand(() -> m_intake.startPiecePickup(), m_intake));
 
     // v on keyboard 0
     m_simKeyboard.y().onTrue(
@@ -142,23 +130,16 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   }
 
   @Override
-  public void configureTesterController() {
-    // TODO Auto-generated method stub
-
-  }
+  public void configureTesterController() {}
 
   @Override
   public void configureSimKeyboard() {
     m_simKeyboard = new Gamepad(OperatorConstants.SimulationControllerPort);
-    // TODO Auto-generated method stub
-
   }
 
   @Override
   public void periodic() {
     // Enables Dashboard Numbers to be updated each loop
     DashboardNumber.checkAll();
-    // TODO Auto-generated method stub
-
   }
 }

@@ -10,12 +10,12 @@ import com.chaos131.robot.ChaosRobot.Mode;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.GeneralConstants;
@@ -27,9 +27,6 @@ import frc.robot.utils.ChaosTalonFx;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.gamepieces.GamePieceOnFieldSimulation.GamePieceInfo;
-import org.ironmaple.simulation.gamepieces.GamePieceProjectile;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 
 /**
@@ -65,6 +62,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
 
   private IntakeSimulation m_physicSimIntake;
   private SwerveDriveSimulation m_simDriveTrain;
+  private double m_simTimer;
 
   /** Creates a new Intake. */
   public Intake(SwerveDriveSimulation simdrivetrain) {
@@ -92,7 +90,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
 
     m_physicSimIntake = IntakeSimulation.OverTheBumperIntake(
         // Specify the type of game pieces that the intake can collect
-        "Note",
+        "Coral",
         // Specify the drivetrain to which this intake is attached
         m_simDriveTrain,
         // Width of the intake
@@ -107,6 +105,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
 
   @Override
   protected void runStateMachine() {
+    System.out.println("Intake state: " + m_currentState);
     switch (m_currentState) {
       case START:
         m_currentState = IntakeState.STOW;
@@ -143,28 +142,44 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
     m_physicSimIntake.startIntake();
     setTargetAngle(IntakeConstants.DeployAngle);
     setTargetSpeed(IntakeConstants.DeploySpeed);
+    if (hasGamePiece()) {
+      m_currentState = IntakeState.HANDOFF_PREP;
+      m_simTimer = Timer.getFPGATimestamp();
+    }
   }
 
   private void handoffPrepState() {
     m_physicSimIntake.stopIntake();
     setTargetAngle(IntakeConstants.HandoffAngle);
     setTargetSpeed(IntakeConstants.HandoffPrepSpeed);
+    var currTime = Timer.getFPGATimestamp();
+    if (5 < (currTime - m_simTimer)) {
+      m_currentState = IntakeState.HANDOFF;
+    }
   }
 
   private void handoffState() {
     m_physicSimIntake.stopIntake();
     setTargetAngle(IntakeConstants.HandoffAngle);
     setTargetSpeed(IntakeConstants.HandoffSpeed);
-    m_physicSimIntake.obtainGamePieceFromIntake();
-    var piece = new ReefscapeCoralOnFly(
-      m_simDriveTrain.getSimulatedDriveTrainPose(),
-      null,
-      null,
-      m_targetAngle,
-      null,
-      null,
-      null);
-    SimulatedArena.getInstance().addGamePieceProjectile(piece);
+    if (m_physicSimIntake.obtainGamePieceFromIntake()) {
+      var piece = new ReefscapeCoralOnFly(
+          m_simDriveTrain.getSimulatedDriveTrainPose().getTranslation(),
+          new Translation2d(),
+          m_simDriveTrain.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+          m_simDriveTrain.getSimulatedDriveTrainPose().getRotation(),
+          Units.Meters.of(2.0),
+          Units.MetersPerSecond.of(0),
+          Units.Degrees.of(0));
+      SimulatedArena.getInstance().addGamePieceProjectile(piece);
+    }
+  }
+
+  /**
+   * fml.
+   */
+  public void startPiecePickup() {
+    m_currentState = IntakeState.DEPLOY;
   }
 
   private void tunePids(PIDFValue pidfValue) {
