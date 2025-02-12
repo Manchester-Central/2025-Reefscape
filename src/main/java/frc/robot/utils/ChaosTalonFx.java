@@ -104,6 +104,8 @@ public class ChaosTalonFx extends TalonFX {
 
   /**
    * Tunes the PID default slot (0) PID of the motor.
+   *
+   * @deprecated this will be removed in favor of ChaosTalonFxTuner
    */
   public void tunePid(PIDFValue pidValue, double kg) {
     var slot0 = new Slot0Configs();
@@ -117,6 +119,8 @@ public class ChaosTalonFx extends TalonFX {
 
   /**
    * Tunes the PID & MotionMagic default slot (0).
+   *
+   * @deprecated this will be removed in favor of ChaosTalonFxTuner
    */
   public void tuneMotionMagic(PIDFValue pidValue, double kg, double ks, double kv, double ka) {
     var slot0 = new Slot0Configs();

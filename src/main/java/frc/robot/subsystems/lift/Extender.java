@@ -4,8 +4,8 @@
 
 package frc.robot.subsystems.lift;
 
-import com.chaos131.pid.PIDFValue;
-import com.chaos131.pid.PIDTuner;
+import com.chaos131.util.DashboardNumber;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -17,6 +17,7 @@ import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
+import frc.robot.utils.ChaosTalonFxTuner;
 import java.util.function.Supplier;
 
 /** Add your docs here. */
@@ -31,10 +32,38 @@ public class Extender extends AbstractLiftPart {
           m_dcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_motor1 =
-      new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID, m_gearRatio, m_motorSim, true);
-  // private ChaosTalonFx m_motor2 = new ChaosTalonFx(5, kGearRatio, m_motorSim, false);
-  private PIDTuner m_pidTuner = new PIDTuner("Extender", true, 1.0, 0.001, 0.0, this::tunePids);
+  private ChaosTalonFx m_motor1 = new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID, m_gearRatio, m_motorSim, true);
+
+  private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("Extender", m_motor1);
+
+  // Motion Magic Slot 0 Configs
+  private DashboardNumber m_kp = m_tuner.tunable("kP", ExtenderConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
+  private DashboardNumber m_ki = m_tuner.tunable("kI", ExtenderConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
+  private DashboardNumber m_kd = m_tuner.tunable("kD", ExtenderConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
+  private DashboardNumber m_kg = m_tuner.tunable("kG", ExtenderConstants.kG, (config, newValue) -> config.Slot0.kG = newValue);
+  private DashboardNumber m_ks = m_tuner.tunable("kS", ExtenderConstants.kS, (config, newValue) -> config.Slot0.kS = newValue);
+  private DashboardNumber m_kv = m_tuner.tunable("kV", ExtenderConstants.kV, (config, newValue) -> config.Slot0.kV = newValue);
+  private DashboardNumber m_ka = m_tuner.tunable("kA", ExtenderConstants.kA, (config, newValue) -> config.Slot0.kA = newValue);
+
+  // Motion Magic Constraints
+  private DashboardNumber m_mmCruiseVelocity = m_tuner.tunable("MM_CruiseVelocity", ExtenderConstants.MMCruiseVelocity, (config, newValue) -> config.MotionMagic.MotionMagicCruiseVelocity = newValue);
+  private DashboardNumber m_mmAcceleration = m_tuner.tunable("MM_Acceleration", ExtenderConstants.MMAcceleration, (config, newValue) -> config.MotionMagic.MotionMagicAcceleration = newValue);
+  private DashboardNumber m_mmJerk = m_tuner.tunable("MM_Jerk", ExtenderConstants.MMJerk, (config, newValue) -> config.MotionMagic.MotionMagicJerk = newValue);
+
+  // Current limits
+  private DashboardNumber m_supplyCurrentLimit = m_tuner.tunable("SupplyCurrentLimit", ExtenderConstants.SupplyCurrentLimit, (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
+  private DashboardNumber m_statorCurrentLimit = m_tuner.tunable("StatorCurrentLimit", ExtenderConstants.StatorCurrentLimit, (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
+
+  // Sensor Feedback
+  private DashboardNumber m_rotorToSensorRatio = m_tuner.tunable("RotorToSensorRatio", ExtenderConstants.RotorToSensorRatio,
+      (config, newValue) -> config.Feedback.RotorToSensorRatio = newValue);
+  private DashboardNumber m_sensorToMechRatio = m_tuner.tunable("SensorToMechanismRatio", ExtenderConstants.SensorToMechanismRatio,
+      (config, newValue) -> config.Feedback.SensorToMechanismRatio = newValue);
+
+  // Ramp rates
+  private DashboardNumber m_rampPeriod = m_tuner.tunable("VoltageClosedLoopRampPeriod", ExtenderConstants.VoltageClosedLoopRampPeriod,
+      (config, newValue) -> config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = newValue);
+
 
   /**
    * Creates a new Extender.
@@ -47,30 +76,28 @@ public class Extender extends AbstractLiftPart {
     m_motor1.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor1.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor1.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    m_motor1.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
+    m_motor1.Configuration.CurrentLimits.SupplyCurrentLimit = m_supplyCurrentLimit.get();
     m_motor1.Configuration.CurrentLimits.StatorCurrentLimitEnable = true;
-    m_motor1.Configuration.CurrentLimits.StatorCurrentLimit = 40;
+    m_motor1.Configuration.CurrentLimits.StatorCurrentLimit = m_statorCurrentLimit.get();
     m_motor1.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    m_motor1.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
-    m_motor1.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
-    m_motor1.Configuration.MotionMagic.MotionMagicCruiseVelocity = 80; // TODO: get real value
-    m_motor1.Configuration.MotionMagic.MotionMagicAcceleration = 160; // TODO: get real value
-    m_motor1.Configuration.MotionMagic.MotionMagicJerk = 1600; // TODO: get real value
+    m_motor1.Configuration.Feedback.RotorToSensorRatio = m_rotorToSensorRatio.get();
+    m_motor1.Configuration.Feedback.SensorToMechanismRatio = m_sensorToMechRatio.get();
+    m_motor1.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = m_rampPeriod.get();
+    m_motor1.Configuration.MotionMagic.MotionMagicCruiseVelocity = m_mmCruiseVelocity.get();
+    m_motor1.Configuration.MotionMagic.MotionMagicAcceleration = m_mmAcceleration.get();
+    m_motor1.Configuration.MotionMagic.MotionMagicJerk = m_mmJerk.get();
+
+    var slot0 = new Slot0Configs();
+    slot0.kP = m_kp.get();
+    slot0.kI = m_ki.get();
+    slot0.kD = m_kd.get();
+    slot0.kG = m_kg.get();
+    slot0.kS = m_ks.get();
+    slot0.kV = m_kv.get();
+    slot0.kA = m_ka.get();
+    m_motor1.Configuration.Slot0 = slot0;
+
     m_motor1.applyConfig();
-
-    // m_motor2.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    // m_motor2.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    // m_motor2.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    // m_motor2.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
-    // m_motor2.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-    // m_motor2.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
-    // m_motor2.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
-    // m_motor2.applyConfig();
-  }
-
-  private void tunePids(PIDFValue pidfValue) {
-    m_motor1.tuneMotionMagic(pidfValue, 0.0, 0.25, 0.12, 0.01);
-    // m_motor2.tunePID(pidfValue, 0.0);
   }
 
   /**
@@ -88,7 +115,6 @@ public class Extender extends AbstractLiftPart {
     }
     m_targetLength = newLength;
     m_motor1.moveToPositionMotionMagic(newLength);
-    // m_motor2.moveToPosition(newLength);
   }
 
   /**
@@ -119,11 +145,6 @@ public class Extender extends AbstractLiftPart {
    */
   public boolean atTarget() {
     return Math.abs(getCurrentLength() - m_targetLength) < 0.01;
-  }
-
-  @Override
-  public void periodic() {
-    m_pidTuner.tune();
   }
 
   @Override
