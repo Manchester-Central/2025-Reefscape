@@ -69,7 +69,6 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.Configuration.MotionMagic.MotionMagicAcceleration = 160; // TODO: get real value
     m_motor.Configuration.MotionMagic.MotionMagicJerk = 1600; // TODO: get real value
     m_motor.applyConfig();
-
   }
 
   private void tunePids(PIDFValue pidfValue) {
