@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue1-Reef11"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue1-HPIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeFromHP"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": null,
+  "choreoAuto": false
+}
