@@ -7,9 +7,7 @@ package frc.robot.subsystems.lift;
 import static edu.wpi.first.units.Units.Degrees;
 
 import com.chaos131.util.DashboardNumber;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -22,10 +20,12 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
+import frc.robot.utils.ChaosCanCoder;
+import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
-
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class BasePivot extends AbstractLiftPart {
@@ -40,34 +40,39 @@ public class BasePivot extends AbstractLiftPart {
           0.001,
           0.001);
   private ChaosTalonFx m_motor = new ChaosTalonFx(CanIdentifiers.BasePivotMotorCANID, m_gearRatio, m_motorSim, true);
-  private CANcoder m_canCoder =
-      new CANcoder(CanIdentifiers.BasePivotCANcoderCANID, CanIdentifiers.CTRECANBus);
-  private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("Base Pivot", m_motor);
+  private ChaosCanCoder m_canCoder =
+      new ChaosCanCoder(CanIdentifiers.BasePivotCANcoderCANID);
+  private ChaosTalonFxTuner m_talonTuner = new ChaosTalonFxTuner("Base Pivot", m_motor);
+  private ChaosCanCoderTuner m_canCoderTuner = new ChaosCanCoderTuner("Base Pivot", m_canCoder);
 
-  private DashboardNumber m_kp = m_tuner.tunable("kP", BasePivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
-  private DashboardNumber m_ki = m_tuner.tunable("kI", BasePivotConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
-  private DashboardNumber m_kd = m_tuner.tunable("kD", BasePivotConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
-  private DashboardNumber m_kg = m_tuner.tunable("kG", BasePivotConstants.kG, (config, newValue) -> config.Slot0.kG = newValue);
-  private DashboardNumber m_ks = m_tuner.tunable("kS", BasePivotConstants.kS, (config, newValue) -> config.Slot0.kS = newValue);
-  private DashboardNumber m_kv = m_tuner.tunable("kV", BasePivotConstants.kV, (config, newValue) -> config.Slot0.kV = newValue);
-  private DashboardNumber m_ka = m_tuner.tunable("kA", BasePivotConstants.kA, (config, newValue) -> config.Slot0.kA = newValue);
+  private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tunner",
+      BasePivotConstants.canCoderOffsetDegrees, (config, newValue) -> config.MagnetSensor.MagnetOffset = newValue);
 
-  private DashboardNumber m_mmCruiseVelocity = m_tuner.tunable("MM_CruiseVelocity", BasePivotConstants.MMCruiseVelocity, (config, newValue) -> config.MotionMagic.MotionMagicCruiseVelocity = newValue);
-  private DashboardNumber m_mmAcceleration = m_tuner.tunable("MM_Acceleration", BasePivotConstants.MMAcceleration, (config, newValue) -> config.MotionMagic.MotionMagicAcceleration = newValue);
-  private DashboardNumber m_mmJerk = m_tuner.tunable("MM_Jerk", BasePivotConstants.MMJerk, (config, newValue) -> config.MotionMagic.MotionMagicJerk = newValue);
-
-  private DashboardNumber m_supplyCurrentLimit = m_tuner.tunable("SupplyCurrentLimit", BasePivotConstants.SupplyCurrentLimit, (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
-  private DashboardNumber m_statorCurrentLimit = m_tuner.tunable("StatorCurrentLimit", BasePivotConstants.StatorCurrentLimit, (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
-
-   // Sensor Feedback
-  private DashboardNumber m_rotorToSensorRatio = m_tuner.tunable("RotorToSensorRatio", BasePivotConstants.RotorToSensorRatio,
+  private DashboardNumber m_kp = m_talonTuner.tunable("kP", BasePivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
+  private DashboardNumber m_ki = m_talonTuner.tunable("kI", BasePivotConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
+  private DashboardNumber m_kd = m_talonTuner.tunable("kD", BasePivotConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
+  private DashboardNumber m_kg = m_talonTuner.tunable("kG", BasePivotConstants.kG, (config, newValue) -> config.Slot0.kG = newValue);
+  private DashboardNumber m_ks = m_talonTuner.tunable("kS", BasePivotConstants.kS, (config, newValue) -> config.Slot0.kS = newValue);
+  private DashboardNumber m_kv = m_talonTuner.tunable("kV", BasePivotConstants.kV, (config, newValue) -> config.Slot0.kV = newValue);
+  private DashboardNumber m_ka = m_talonTuner.tunable("kA", BasePivotConstants.kA, (config, newValue) -> config.Slot0.kA = newValue);
+  private DashboardNumber m_mmCruiseVelocity = m_talonTuner.tunable(
+      "MM_CruiseVelocity", BasePivotConstants.MMCruiseVelocity, (config, newValue) -> config.MotionMagic.MotionMagicCruiseVelocity = newValue);
+  private DashboardNumber m_mmAcceleration = m_talonTuner.tunable("MM_Acceleration", BasePivotConstants.MMAcceleration, (config, newValue) -> config.MotionMagic.MotionMagicAcceleration = newValue);
+  private DashboardNumber m_mmJerk = m_talonTuner.tunable("MM_Jerk", BasePivotConstants.MMJerk, (config, newValue) -> config.MotionMagic.MotionMagicJerk = newValue);
+  private DashboardNumber m_supplyCurrentLimit = m_talonTuner.tunable(
+      "SupplyCurrentLimit", BasePivotConstants.SupplyCurrentLimit, (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
+  private DashboardNumber m_statorCurrentLimit = m_talonTuner.tunable(
+      "StatorCurrentLimit", BasePivotConstants.StatorCurrentLimit, (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
+  // Sensor Feedback
+  private DashboardNumber m_rotorToSensorRatio = m_talonTuner.tunable("RotorToSensorRatio", BasePivotConstants.RotorToSensorRatio,
       (config, newValue) -> config.Feedback.RotorToSensorRatio = newValue);
-  private DashboardNumber m_sensorToMechRatio = m_tuner.tunable("SensorToMechanismRatio", BasePivotConstants.SensorToMechanismRatio,
+  private DashboardNumber m_sensorToMechRatio = m_talonTuner.tunable("SensorToMechanismRatio", BasePivotConstants.SensorToMechanismRatio,
       (config, newValue) -> config.Feedback.SensorToMechanismRatio = newValue);
 
   // Ramp rates
-  private DashboardNumber m_rampPeriod = m_tuner.tunable("VoltageClosedLoopRampPeriod", BasePivotConstants.VoltageClosedLoopRampPeriod,
+  private DashboardNumber m_rampPeriod = m_talonTuner.tunable("VoltageClosedLoopRampPeriod", BasePivotConstants.VoltageClosedLoopRampPeriod,
       (config, newValue) -> config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = newValue);
+
   /**
    * Creates a new BasePivot.
    *
@@ -75,11 +80,11 @@ public class BasePivot extends AbstractLiftPart {
    */
   public BasePivot(Supplier<IdLiftValues> idLiftValuesSupplier) {
     super(idLiftValuesSupplier);
-    CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
-    canCoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
-    canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    canCoderConfig.MagnetSensor.withMagnetOffset(Angle.ofBaseUnits(0, Degrees));
-    m_canCoder.getConfigurator().apply(canCoderConfig);
+
+    m_canCoder.Configuration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
+    m_canCoder.Configuration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    m_canCoder.Configuration.MagnetSensor.withMagnetOffset(Angle.ofBaseUnits(m_canCoderOffsetDegrees.get(), Degrees));
+    m_canCoder.applyConfig();
 
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -135,8 +140,8 @@ public class BasePivot extends AbstractLiftPart {
   }
 
   public Rotation2d getCurrentAngle() {
-    return Rotation2d.fromDegrees(
-        m_motor.getPosition().getValueAsDouble()); // TODO get actual motor angle
+    return Rotation2d.fromRotations(
+        m_canCoder.getAbsolutePosition().getValueAsDouble()); // TODO get actual motor angle
   }
 
   /**
@@ -157,5 +162,18 @@ public class BasePivot extends AbstractLiftPart {
   @Override
   public void simulationPeriodic() {
     m_motor.simUpdate();
+  }
+
+  @Override
+  public void periodic() {
+    // TODO Auto-generated method stub
+    super.periodic();
+    Logger.recordOutput("BasePivot/Setpoint", m_targetAngle);
+    Logger.recordOutput("BasePivot/CurrentAngle", getCurrentAngle());
+    Logger.recordOutput("BasePivot/AtTarget", atTarget());
+    Logger.recordOutput("BasePivot/AngleError", getCurrentAngle().minus(m_targetAngle));
+    Logger.recordOutput("BasePivot/Voltage", m_motor.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput("BasePivot/StatorCurrent", m_motor.getStatorCurrent().getValueAsDouble());
+    Logger.recordOutput("BasePivot/SupplyCurrent", m_motor.getSupplyCurrent().getValueAsDouble());
   }
 }
