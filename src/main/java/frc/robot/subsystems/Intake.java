@@ -46,8 +46,8 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
           m_pivotDcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_pivotMotor1 = new ChaosTalonFx(CanIdentifiers.IntakeMotor1CANID, m_gearRatio, m_pivotMotorSim, true);
-  private ChaosTalonFx m_pivotMotor2 = new ChaosTalonFx(CanIdentifiers.IntakeMotorBCANID, m_gearRatio, m_pivotMotorSim, false);
+  private ChaosTalonFx m_pivotMotor1 = new ChaosTalonFx(CanIdentifiers.IntakeMotor1CANID);
+  private ChaosTalonFx m_pivotMotor2 = new ChaosTalonFx(CanIdentifiers.IntakeMotorBCANID);
   private PIDTuner m_pidTuner = new PIDTuner("IntakePivot", true, 0.1, 0.001, 0.0, this::tunePids);
 
   /** Creates a new Intake. */
@@ -72,6 +72,9 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
     m_pivotMotor2.Configuration.Feedback.SensorToMechanismRatio = 0.5; // TODO: get real value
     m_pivotMotor2.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1;
     m_pivotMotor2.applyConfig();
+
+    m_pivotMotor1.attachMotorSim(m_pivotMotorSim, m_gearRatio, true);
+    m_pivotMotor2.attachMotorSim(m_pivotMotorSim, m_gearRatio, false);
   }
 
   @Override

@@ -20,9 +20,10 @@ import frc.robot.Robot;
  * A TalonFX wrapper with automatic simulation support and helper functions.
  */
 public class ChaosTalonFx extends TalonFX {
-  private final double m_gearRatio;
-  private final DCMotorSim m_motorSimModel;
-  private final boolean m_isMainSimMotor;
+  private double m_gearRatio;
+  private DCMotorSim m_motorSimModel;
+  private boolean m_isMainSimMotor;
+  private ChaosCanCoder m_attachedCanCoder;
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0);
   private final MotionMagicVoltage m_positionMotionMagicVoltage = new MotionMagicVoltage(0);
   public final TalonFXConfiguration Configuration = new TalonFXConfiguration();
@@ -39,13 +40,19 @@ public class ChaosTalonFx extends TalonFX {
   }
 
   /**
-   * Creates the new TalonFX wrapper.
+   * Adds physical simulation support. 
    */
-  public ChaosTalonFx(int canId, double gearRatio, DCMotorSim dcMotorSim, boolean isMainSimMotor) {
-    super(canId, CanIdentifiers.CTRECANBus);
+  public void attachMotorSim(DCMotorSim dcMotorSim, double gearRatio, boolean isMainSimMotor) {
     this.m_gearRatio = gearRatio;
     m_motorSimModel = dcMotorSim;
     m_isMainSimMotor = isMainSimMotor;
+  }
+
+  /**
+   * Adds a CanCoder for syncing simulation values.
+   */
+  public void attachCanCoderSim(ChaosCanCoder canCoder) {
+    m_attachedCanCoder = canCoder;
   }
 
   @Override
@@ -85,14 +92,19 @@ public class ChaosTalonFx extends TalonFX {
       // using WPILib's DCMotorSim class for physics simulation
       m_motorSimModel.setInputVoltage(motorVoltage);
       m_motorSimModel.update(0.020); // assume 20 ms loop time
+      
+      if (m_attachedCanCoder != null) {
+        var canCoderSimState = m_attachedCanCoder.getSimState();
+        canCoderSimState.setRawPosition(m_motorSimModel.getAngularPositionRotations());
+        canCoderSimState.setVelocity(Units.radiansToRotations(m_motorSimModel.getAngularVelocityRadPerSec()));
+      }
     }
 
     // apply the new rotor position and velocity to the TalonFX;
     // note that this is rotor position/velocity (before gear ratio), but
     // DCMotorSim returns mechanism position/velocity (after gear ratio)
     talonFxSim.setRawRotorPosition(m_gearRatio * m_motorSimModel.getAngularPositionRotations());
-    talonFxSim.setRotorVelocity(
-        m_gearRatio * Units.radiansToRotations(m_motorSimModel.getAngularVelocityRadPerSec()));
+    talonFxSim.setRotorVelocity(m_gearRatio * Units.radiansToRotations(m_motorSimModel.getAngularVelocityRadPerSec()));
   }
 
   /**

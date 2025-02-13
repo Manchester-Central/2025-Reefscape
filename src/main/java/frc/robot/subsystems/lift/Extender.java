@@ -33,7 +33,7 @@ public class Extender extends AbstractLiftPart {
           m_dcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_motor1 = new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID, m_gearRatio, m_motorSim, true);
+  private ChaosTalonFx m_motor1 = new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID);
 
   private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("Extender", m_motor1);
 
@@ -99,6 +99,8 @@ public class Extender extends AbstractLiftPart {
     m_motor1.Configuration.Slot0 = slot0;
 
     m_motor1.applyConfig();
+
+    m_motor1.attachMotorSim(m_motorSim, m_gearRatio, true);
   }
 
   /**
@@ -156,7 +158,6 @@ public class Extender extends AbstractLiftPart {
 
   @Override
   public void periodic() {
-    // TODO Auto-generated method stub
     super.periodic();
 
     Logger.recordOutput("Extender/Setpoint", m_targetLength);

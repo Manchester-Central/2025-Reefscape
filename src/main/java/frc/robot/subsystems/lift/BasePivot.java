@@ -39,7 +39,7 @@ public class BasePivot extends AbstractLiftPart {
           m_dcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_motor = new ChaosTalonFx(CanIdentifiers.BasePivotMotorCANID, m_gearRatio, m_motorSim, true);
+  private ChaosTalonFx m_motor = new ChaosTalonFx(CanIdentifiers.BasePivotMotorCANID);
   private ChaosCanCoder m_canCoder =
       new ChaosCanCoder(CanIdentifiers.BasePivotCANcoderCANID);
   private ChaosTalonFxTuner m_talonTuner = new ChaosTalonFxTuner("Base Pivot", m_motor);
@@ -112,6 +112,9 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.Configuration.Slot0 = slot0;
 
     m_motor.applyConfig();
+
+    m_motor.attachMotorSim(m_motorSim, m_gearRatio, true);
+    m_motor.attachCanCoderSim(m_canCoder);
   }
 
   /**
@@ -136,7 +139,7 @@ public class BasePivot extends AbstractLiftPart {
       newAngle = BasePivotConstants.MinAngle;
     }
     m_targetAngle = newAngle;
-    m_motor.moveToPositionMotionMagic(newAngle.getDegrees());
+    m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // Rotation to match the cancoder units
   }
 
   public Rotation2d getCurrentAngle() {

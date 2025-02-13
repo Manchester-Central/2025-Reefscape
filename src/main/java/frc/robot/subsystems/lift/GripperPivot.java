@@ -42,7 +42,7 @@ public class GripperPivot extends AbstractLiftPart {
           0.001,
           0.001);
   private ChaosTalonFx m_motor =
-      new ChaosTalonFx(CanIdentifiers.GripperPivotMotorCANID, m_gearRatio, m_motorSim, true);
+      new ChaosTalonFx(CanIdentifiers.GripperPivotMotorCANID);
   private ChaosCanCoder m_canCoder =
       new ChaosCanCoder(CanIdentifiers.GripperPivotCANCoderCANID);
 
@@ -112,7 +112,6 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.Configuration.MotionMagic.MotionMagicCruiseVelocity = m_mmCruiseVelocity.get();
     m_motor.Configuration.MotionMagic.MotionMagicAcceleration = m_mmAcceleration.get();
     m_motor.Configuration.MotionMagic.MotionMagicJerk = m_mmJerk.get();
-    m_motor.applyConfig();
 
     var slot0 = new Slot0Configs();
     slot0.kP = m_kp.get();
@@ -123,6 +122,11 @@ public class GripperPivot extends AbstractLiftPart {
     slot0.kV = m_kv.get();
     slot0.kA = m_ka.get();
     m_motor.Configuration.Slot0 = slot0;
+
+    m_motor.applyConfig();
+
+    m_motor.attachMotorSim(m_motorSim, m_gearRatio, true);
+    m_motor.attachCanCoderSim(m_canCoder);
   }
 
   /**
@@ -139,7 +143,7 @@ public class GripperPivot extends AbstractLiftPart {
       newAngle = LiftPoses.Stow.getGripperPivotAngle();
     }
     m_targetAngle = newAngle;
-    m_motor.moveToPositionMotionMagic(newAngle.getDegrees());
+    m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // TODO get actual motor angle
   }
 
   /**
@@ -156,7 +160,7 @@ public class GripperPivot extends AbstractLiftPart {
 
   public Rotation2d getCurrentAngle() {
     return Rotation2d.fromDegrees(
-        m_motor.getPosition().getValueAsDouble()); // TODO get actual motor angle
+        m_canCoder.getAbsolutePosition().getValueAsDouble()); // TODO get actual motor angle
   }
 
   /**
