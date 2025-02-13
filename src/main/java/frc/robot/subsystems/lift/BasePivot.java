@@ -6,9 +6,9 @@ package frc.robot.subsystems.lift;
 
 import static edu.wpi.first.units.Units.Degrees;
 
-import com.chaos131.pid.PIDFValue;
-import com.chaos131.pid.PIDTuner;
+import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -23,6 +23,8 @@ import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
+import frc.robot.utils.ChaosTalonFxTuner;
+
 import java.util.function.Supplier;
 
 /** Add your docs here. */
@@ -37,12 +39,35 @@ public class BasePivot extends AbstractLiftPart {
           m_dcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_motor =
-      new ChaosTalonFx(CanIdentifiers.BasePivotMotorCANID, m_gearRatio, m_motorSim, true);
+  private ChaosTalonFx m_motor = new ChaosTalonFx(CanIdentifiers.BasePivotMotorCANID, m_gearRatio, m_motorSim, true);
   private CANcoder m_canCoder =
       new CANcoder(CanIdentifiers.BasePivotCANcoderCANID, CanIdentifiers.CTRECANBus);
-  private PIDTuner m_pidTuner = new PIDTuner("BasePivot", true, 1.0, 0.001, 0.0, this::tunePids);
+  private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("Base Pivot", m_motor);
 
+  private DashboardNumber m_kp = m_tuner.tunable("kP", BasePivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
+  private DashboardNumber m_ki = m_tuner.tunable("kI", BasePivotConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
+  private DashboardNumber m_kd = m_tuner.tunable("kD", BasePivotConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
+  private DashboardNumber m_kg = m_tuner.tunable("kG", BasePivotConstants.kG, (config, newValue) -> config.Slot0.kG = newValue);
+  private DashboardNumber m_ks = m_tuner.tunable("kS", BasePivotConstants.kS, (config, newValue) -> config.Slot0.kS = newValue);
+  private DashboardNumber m_kv = m_tuner.tunable("kV", BasePivotConstants.kV, (config, newValue) -> config.Slot0.kV = newValue);
+  private DashboardNumber m_ka = m_tuner.tunable("kA", BasePivotConstants.kA, (config, newValue) -> config.Slot0.kA = newValue);
+
+  private DashboardNumber m_mmCruiseVelocity = m_tuner.tunable("MM_CruiseVelocity", BasePivotConstants.MMCruiseVelocity, (config, newValue) -> config.MotionMagic.MotionMagicCruiseVelocity = newValue);
+  private DashboardNumber m_mmAcceleration = m_tuner.tunable("MM_Acceleration", BasePivotConstants.MMAcceleration, (config, newValue) -> config.MotionMagic.MotionMagicAcceleration = newValue);
+  private DashboardNumber m_mmJerk = m_tuner.tunable("MM_Jerk", BasePivotConstants.MMJerk, (config, newValue) -> config.MotionMagic.MotionMagicJerk = newValue);
+
+  private DashboardNumber m_supplyCurrentLimit = m_tuner.tunable("SupplyCurrentLimit", BasePivotConstants.SupplyCurrentLimit, (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
+  private DashboardNumber m_statorCurrentLimit = m_tuner.tunable("StatorCurrentLimit", BasePivotConstants.StatorCurrentLimit, (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
+
+   // Sensor Feedback
+  private DashboardNumber m_rotorToSensorRatio = m_tuner.tunable("RotorToSensorRatio", BasePivotConstants.RotorToSensorRatio,
+      (config, newValue) -> config.Feedback.RotorToSensorRatio = newValue);
+  private DashboardNumber m_sensorToMechRatio = m_tuner.tunable("SensorToMechanismRatio", BasePivotConstants.SensorToMechanismRatio,
+      (config, newValue) -> config.Feedback.SensorToMechanismRatio = newValue);
+
+  // Ramp rates
+  private DashboardNumber m_rampPeriod = m_tuner.tunable("VoltageClosedLoopRampPeriod", BasePivotConstants.VoltageClosedLoopRampPeriod,
+      (config, newValue) -> config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = newValue);
   /**
    * Creates a new BasePivot.
    *
@@ -59,21 +84,29 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
-    m_motor.Configuration.CurrentLimits.SupplyCurrentLimit = 40;
+    m_motor.Configuration.CurrentLimits.SupplyCurrentLimit = m_supplyCurrentLimit.get();
+    m_motor.Configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+    m_motor.Configuration.CurrentLimits.StatorCurrentLimit = m_statorCurrentLimit.get();
     m_motor.Configuration.Feedback.FeedbackRemoteSensorID = CanIdentifiers.BasePivotCANcoderCANID;
     m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-    m_motor.Configuration.Feedback.SensorToMechanismRatio = 10; // TODO: get real value
-    m_motor.Configuration.Feedback.RotorToSensorRatio = 12.8; // TODO: get real value
-    m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = 0.1; // TODO: get real value
-    m_motor.Configuration.MotionMagic.MotionMagicCruiseVelocity = 80; // TODO: get real value
-    m_motor.Configuration.MotionMagic.MotionMagicAcceleration = 160; // TODO: get real value
-    m_motor.Configuration.MotionMagic.MotionMagicJerk = 1600; // TODO: get real value
-    m_motor.applyConfig();
-  }
+    m_motor.Configuration.Feedback.RotorToSensorRatio = m_rotorToSensorRatio.get();
+    m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = m_rampPeriod.get();
+    m_motor.Configuration.Feedback.SensorToMechanismRatio = m_sensorToMechRatio.get();
+    m_motor.Configuration.MotionMagic.MotionMagicCruiseVelocity = m_mmCruiseVelocity.get();
+    m_motor.Configuration.MotionMagic.MotionMagicAcceleration = m_mmAcceleration.get();
+    m_motor.Configuration.MotionMagic.MotionMagicJerk = m_mmJerk.get();
 
-  private void tunePids(PIDFValue pidfValue) {
-    m_motor.tuneMotionMagic(pidfValue, 0.0, 0.25, 0.12, 0.01);
-    
+    var slot0 = new Slot0Configs();
+    slot0.kP = m_kp.get();
+    slot0.kI = m_ki.get();
+    slot0.kD = m_kd.get();
+    slot0.kG = m_kg.get();
+    slot0.kS = m_ks.get();
+    slot0.kV = m_kv.get();
+    slot0.kA = m_ka.get();
+    m_motor.Configuration.Slot0 = slot0;
+
+    m_motor.applyConfig();
   }
 
   /**
@@ -120,10 +153,6 @@ public class BasePivot extends AbstractLiftPart {
     return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.1;
   }
 
-  @Override
-  public void periodic() {
-    m_pidTuner.tune();
-  }
 
   @Override
   public void simulationPeriodic() {
