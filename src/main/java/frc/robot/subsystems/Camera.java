@@ -32,6 +32,9 @@ public class Camera extends LimelightCamera {
         poseConsumer,
         robotSpeedSupplier,
         robotRotationSpeedSupplier);
+    
+    m_botpose.readQueue();
+    m_botposeMT2.readQueue();
   }
 
   @Override
