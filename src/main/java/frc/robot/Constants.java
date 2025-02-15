@@ -241,7 +241,7 @@ public final class Constants {
       public static final double StatorCurrentLimit = 40;
 
       // Sensor Feedback // TODO: get real values
-      public static final double RotorToSensorRatio = 1.0;
+      public static final double RotorToSensorRatio = 0.12;
       public static final double SensorToMechanismRatio = 1.0;
 
       // Ramp Rates // TODO: get real values
