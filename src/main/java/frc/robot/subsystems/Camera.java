@@ -37,6 +37,6 @@ public class Camera extends LimelightCamera {
   @Override
   public void periodic() {
     // We may want to do more in the future, but for now lets keep the same functionality.
-    // super.periodic();
+    super.periodic();
   }
 }
