@@ -162,4 +162,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // TODO Auto-generated method stub
 
   }
+
+  /**
+  * Sets motor to cleanup when disabled.
+  */
+  public void setMotorCleanup() {
+    m_idLift.setMotorCleanup();
+  }
 }
