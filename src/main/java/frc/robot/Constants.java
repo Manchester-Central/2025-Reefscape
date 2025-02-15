@@ -251,7 +251,9 @@ public final class Constants {
     }
 
     /** This contains constants for our Gripper. */
-    public static class GripperConstants {}
+    public static class GripperConstants {
+      public static final double CoralDropDebounceSeconds = 0.5;
+    }
   }
 
   /** This contains constants for our Intake. */

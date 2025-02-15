@@ -9,6 +9,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
+import frc.robot.Constants.MidLiftConstants.GripperConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
@@ -30,7 +31,7 @@ public class Gripper extends AbstractLiftPart {
   private DigitalInput m_coralSensorFront = new DigitalInput(IoPortsConstants.CoralFrontChannelID);
   // private DigitalInput m_coralSensorBack = new DigitalInput(IoPortsConstants.CoralBackChannelID);
 
-  private Debouncer m_coralSensorFrontDebouncer = new Debouncer(2.0, DebounceType.kFalling);
+  private Debouncer m_coralSensorFrontDebouncer = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
   // private Debouncer m_coralSensorBackDebouncer = new Debouncer(2.0, DebounceType.kFalling);
 
   /**
@@ -75,7 +76,7 @@ public class Gripper extends AbstractLiftPart {
    * Checks if there is a coral at the back sensor.
    */
   public boolean hasCoralBack() {
-    return false;
+    return false; // TODO use debounced value
     // if (Robot.isSimulation()) {
     //   return hasCoralBackGrippedSim;
     // }
