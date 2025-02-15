@@ -13,11 +13,11 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.Robot;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
+import frc.robot.Robot;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
@@ -112,7 +112,7 @@ public class Extender extends AbstractLiftPart {
    * Sets the target length for extension and tries to drive there.
    */
   public void setTargetLength(double newLength) {
-    if (m_hasReachedMinimum) {
+    if (hasReachedMinimum()) {
       if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {
         newLength = ExtenderConstants.MaxLengthMeter;
       } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
@@ -131,7 +131,7 @@ public class Extender extends AbstractLiftPart {
    * Sets the direct speed [-1.0, 1.0] of the system.
    */
   public void setSpeed(double speed) {
-    if (getCurrentLength() > ExtenderConstants.MaxLengthMeter || !m_hasReachedMinimum) {
+    if (getCurrentLength() > ExtenderConstants.MaxLengthMeter || !hasReachedMinimum()) {
       speed = Math.min(speed, 0.0);
     } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
       speed = Math.max(speed, 0.0);
@@ -169,7 +169,7 @@ public class Extender extends AbstractLiftPart {
    */
   public boolean hasReachedMinimum() {
     if (Robot.isSimulation()) {
-      m_hasReachedMinimum = true;
+      return true;
     }
     return m_hasReachedMinimum;
   }
@@ -197,5 +197,6 @@ public class Extender extends AbstractLiftPart {
     Logger.recordOutput("Extender/StatorCurrent", m_motor1.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("Extender/SupplyCurrent", m_motor1.getSupplyCurrent().getValueAsDouble());
     Logger.recordOutput("Extender/IsAtMinimum", isAtMinimum());
+    Logger.recordOutput("Extender/hasReachedMin", hasReachedMinimum());
   }
 }
