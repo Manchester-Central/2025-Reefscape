@@ -19,6 +19,7 @@ import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class Extender extends AbstractLiftPart {
@@ -32,7 +33,7 @@ public class Extender extends AbstractLiftPart {
           m_dcMotor,
           0.001,
           0.001);
-  private ChaosTalonFx m_motor1 = new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID, m_gearRatio, m_motorSim, true);
+  private ChaosTalonFx m_motor1 = new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID);
 
   private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("Extender", m_motor1);
 
@@ -98,6 +99,8 @@ public class Extender extends AbstractLiftPart {
     m_motor1.Configuration.Slot0 = slot0;
 
     m_motor1.applyConfig();
+
+    m_motor1.attachMotorSim(m_motorSim, m_gearRatio, true);
   }
 
   /**
@@ -151,5 +154,18 @@ public class Extender extends AbstractLiftPart {
   public void simulationPeriodic() {
     m_motor1.simUpdate();
     // m_motor2.simUpdate();
+  }
+
+  @Override
+  public void periodic() {
+    super.periodic();
+
+    Logger.recordOutput("Extender/Setpoint", m_targetLength);
+    Logger.recordOutput("Extender/CurrentLength", getCurrentLength());
+    Logger.recordOutput("Extender/AtTarget", atTarget());
+    Logger.recordOutput("Extender/LengthError", getCurrentLength() - m_targetLength);
+    Logger.recordOutput("Extender/Voltage", m_motor1.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput("Extender/StatorCurrent", m_motor1.getStatorCurrent().getValueAsDouble());
+    Logger.recordOutput("Extender/SupplyCurrent", m_motor1.getSupplyCurrent().getValueAsDouble());
   }
 }
