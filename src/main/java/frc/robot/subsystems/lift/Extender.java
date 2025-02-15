@@ -112,7 +112,7 @@ public class Extender extends AbstractLiftPart {
    * Sets the target length for extension and tries to drive there.
    */
   public void setTargetLength(double newLength) {
-    if (m_hasReachedMinimum) {
+    if (hasReachedMinimum()) {
       if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {
         newLength = ExtenderConstants.MaxLengthMeter;
       } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
@@ -131,7 +131,7 @@ public class Extender extends AbstractLiftPart {
    * Sets the direct speed [-1.0, 1.0] of the system.
    */
   public void setSpeed(double speed) {
-    if (getCurrentLength() > ExtenderConstants.MaxLengthMeter || !m_hasReachedMinimum) {
+    if (getCurrentLength() > ExtenderConstants.MaxLengthMeter || !hasReachedMinimum()) {
       speed = Math.min(speed, 0.0);
     } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
       speed = Math.max(speed, 0.0);
@@ -169,7 +169,7 @@ public class Extender extends AbstractLiftPart {
    */
   public boolean hasReachedMinimum() {
     if (Robot.isSimulation()) {
-      m_hasReachedMinimum = true;
+      return true;
     }
     return m_hasReachedMinimum;
   }
@@ -197,5 +197,6 @@ public class Extender extends AbstractLiftPart {
     Logger.recordOutput("Extender/StatorCurrent", m_motor1.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("Extender/SupplyCurrent", m_motor1.getSupplyCurrent().getValueAsDouble());
     Logger.recordOutput("Extender/IsAtMinimum", isAtMinimum());
+    Logger.recordOutput("Extender/hasReachedMin", hasReachedMinimum());
   }
 }
