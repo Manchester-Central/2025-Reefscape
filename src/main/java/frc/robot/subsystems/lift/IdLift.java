@@ -156,6 +156,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_extender.setTargetLength(LiftPoses.HpIntake.getExtensionMeters());
     m_gripperPivot.setTargetAngle(LiftPoses.HpIntake.getGripperPivotAngle());
     m_gripper.setCoralGripSpeed(-0.5);
+
+    if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
+      Gripper.hasCoralFrontGrippedSim = true;
+    }
   }
 
   private void scoreL1State() {

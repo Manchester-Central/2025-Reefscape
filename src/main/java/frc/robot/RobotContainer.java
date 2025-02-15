@@ -85,7 +85,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             () -> m_swerveDrive.getRobotRotationSpeedRadsPerSec());
     
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW).andThen(new WaitForState().setLift(LiftState.STOW)));
-    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
+    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW).andThen(new WaitForState().setLift(LiftState.STOW)));
     buildPathplannerAutoChooser();
 
 
