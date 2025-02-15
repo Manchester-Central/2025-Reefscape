@@ -117,6 +117,14 @@ public class Extender extends AbstractLiftPart {
   }
 
   /**
+   * Set extender motor to Brake. :3
+   */ 
+  public void setMotorBrake() {
+    m_motor1.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    m_motor1.applyConfig();
+  }
+
+  /**
    * Sets the target length for extension and tries to drive there.
    */
   public void setTargetLength(double newLength) {
