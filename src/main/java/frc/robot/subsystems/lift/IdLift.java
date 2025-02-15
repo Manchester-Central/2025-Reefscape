@@ -114,6 +114,11 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void startState() {
+    // if (!m_extender.hasReachedMinimum()) {
+    //   m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
+    //   return;
+    // }
+
     if (Robot.isSimulation()) {
       m_currentState = LiftState.STOW;
     } else {
@@ -182,6 +187,20 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     } else {
       m_gripper.setCoralGripSpeed(0);
     }
+  }
+
+  /**
+   * Set Motor to clean up. :3
+   */
+  public void setMotorCleanUp() {
+    m_extender.setMotorCoast();
+  }
+
+  /**
+   * Set Motor to start up. :3
+   */
+  public void setMotorStartUp() {
+    m_extender.setMotorBrake();
   }
 }
 // RIP m_oldLift & m_oldGripper 2025-2025

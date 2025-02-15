@@ -7,6 +7,7 @@ package frc.robot.utils;
 import com.chaos131.pid.PIDFValue;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.util.Units;
@@ -19,10 +20,12 @@ import frc.robot.Robot;
  * A TalonFX wrapper with automatic simulation support and helper functions.
  */
 public class ChaosTalonFx extends TalonFX {
-  private final double m_gearRatio;
-  private final DCMotorSim m_motorSimModel;
-  private final boolean m_isMainSimMotor;
+  private double m_gearRatio;
+  private DCMotorSim m_motorSimModel;
+  private boolean m_isMainSimMotor;
+  private ChaosCanCoder m_attachedCanCoder;
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0);
+  private final MotionMagicVoltage m_positionMotionMagicVoltage = new MotionMagicVoltage(0);
   public final TalonFXConfiguration Configuration = new TalonFXConfiguration();
   private double m_lastUserSetSpeed = 0.0;
 
@@ -37,13 +40,19 @@ public class ChaosTalonFx extends TalonFX {
   }
 
   /**
-   * Creates the new TalonFX wrapper.
+   * Adds physical simulation support. 
    */
-  public ChaosTalonFx(int canId, double gearRatio, DCMotorSim dcMotorSim, boolean isMainSimMotor) {
-    super(canId, CanIdentifiers.CTRECANBus);
+  public void attachMotorSim(DCMotorSim dcMotorSim, double gearRatio, boolean isMainSimMotor) {
     this.m_gearRatio = gearRatio;
     m_motorSimModel = dcMotorSim;
     m_isMainSimMotor = isMainSimMotor;
+  }
+
+  /**
+   * Adds a CanCoder for syncing simulation values.
+   */
+  public void attachCanCoderSim(ChaosCanCoder canCoder) {
+    m_attachedCanCoder = canCoder;
   }
 
   @Override
@@ -83,14 +92,19 @@ public class ChaosTalonFx extends TalonFX {
       // using WPILib's DCMotorSim class for physics simulation
       m_motorSimModel.setInputVoltage(motorVoltage);
       m_motorSimModel.update(0.020); // assume 20 ms loop time
+      
+      if (m_attachedCanCoder != null) {
+        var canCoderSimState = m_attachedCanCoder.getSimState();
+        canCoderSimState.setRawPosition(m_motorSimModel.getAngularPositionRotations());
+        canCoderSimState.setVelocity(Units.radiansToRotations(m_motorSimModel.getAngularVelocityRadPerSec()));
+      }
     }
 
     // apply the new rotor position and velocity to the TalonFX;
     // note that this is rotor position/velocity (before gear ratio), but
     // DCMotorSim returns mechanism position/velocity (after gear ratio)
     talonFxSim.setRawRotorPosition(m_gearRatio * m_motorSimModel.getAngularPositionRotations());
-    talonFxSim.setRotorVelocity(
-        m_gearRatio * Units.radiansToRotations(m_motorSimModel.getAngularVelocityRadPerSec()));
+    talonFxSim.setRotorVelocity(m_gearRatio * Units.radiansToRotations(m_motorSimModel.getAngularVelocityRadPerSec()));
   }
 
   /**
@@ -102,6 +116,8 @@ public class ChaosTalonFx extends TalonFX {
 
   /**
    * Tunes the PID default slot (0) PID of the motor.
+   *
+   * @deprecated this will be removed in favor of ChaosTalonFxTuner
    */
   public void tunePid(PIDFValue pidValue, double kg) {
     var slot0 = new Slot0Configs();
@@ -113,9 +129,33 @@ public class ChaosTalonFx extends TalonFX {
     applyConfig();
   }
 
+  /**
+   * Tunes the PID & MotionMagic default slot (0).
+   *
+   * @deprecated this will be removed in favor of ChaosTalonFxTuner
+   */
+  public void tuneMotionMagic(PIDFValue pidValue, double kg, double ks, double kv, double ka) {
+    var slot0 = new Slot0Configs();
+    slot0.kP = pidValue.P;
+    slot0.kI = pidValue.I;
+    slot0.kD = pidValue.D;
+    slot0.kG = kg;
+    slot0.kS = ks;
+    slot0.kV = kv;
+    slot0.kA = ka;
+    Configuration.Slot0 = slot0;
+    applyConfig();
+  }
+
   /** Tells the motor controller to move to the target position. */
   public void moveToPosition(double position) {
     m_positionVoltage.Slot = 0;
     setControl(m_positionVoltage.withPosition(position));
+  }
+
+  /** Tells the motor controller to move to the target position using MotionMagic. */
+  public void moveToPositionMotionMagic(double position) {
+    m_positionMotionMagicVoltage.Slot = 0;
+    setControl(m_positionMotionMagicVoltage.withPosition(position));
   }
 }
