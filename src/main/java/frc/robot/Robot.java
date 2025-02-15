@@ -74,4 +74,9 @@ public class Robot extends ChaosRobot {
     PathfindingCommand.warmupCommand().schedule();
     super.robotInit(); 
   }
+
+  @Override
+  public void disabledCleanup() {
+    ((RobotContainer) m_robotContainer).setMotorCleanup();
+  }
 }

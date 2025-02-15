@@ -13,11 +13,11 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.Robot;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
+import frc.robot.Robot;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
@@ -106,6 +106,14 @@ public class Extender extends AbstractLiftPart {
     m_motor1.applyConfig();
 
     m_motor1.attachMotorSim(m_motorSim, m_gearRatio, true);
+  }
+
+  /**
+   * Set extender motor to Coast. :3
+   */ 
+  public void setMotorCoast() {
+    m_motor1.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    m_motor1.applyConfig();
   }
 
   /**

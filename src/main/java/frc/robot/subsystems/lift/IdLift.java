@@ -188,5 +188,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       m_gripper.setCoralGripSpeed(0);
     }
   }
+
+  /**
+   * Set Motor to clean up. :3
+   */
+  public void setMotorCleanup() {
+    m_extender.setMotorCoast();
+  }
 }
 // RIP m_oldLift & m_oldGripper 2025-2025
