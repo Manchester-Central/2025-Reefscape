@@ -81,7 +81,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   @Override
   protected void runStateMachine() {
-    switch (m_currentState) {
+    switch (getCurrentState()) {
       case MANUAL:
         manualState();
         break;
@@ -120,9 +120,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     // }
 
     if (Robot.isSimulation()) {
-      m_currentState = LiftState.STOW;
+      changeState(LiftState.STOW);
     } else {
-      m_currentState = LiftState.MANUAL;
+      changeState(LiftState.MANUAL);
     }
   }
 
@@ -149,13 +149,17 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private void intakeFromHpState() {
     if (m_gripper.hasCoralBack() || m_gripper.hasCoralFront()) {
-      m_currentState = LiftState.STOW;
+      changeState(LiftState.STOW);
       return;
     }
     m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
     m_extender.setTargetLength(LiftPoses.HpIntake.getExtensionMeters());
     m_gripperPivot.setTargetAngle(LiftPoses.HpIntake.getGripperPivotAngle());
     m_gripper.setCoralGripSpeed(-0.5);
+
+    if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
+      Gripper.hasCoralFrontGrippedSim = true;
+    }
   }
 
   private void scoreL1State() {
@@ -176,7 +180,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private void scoreHelper(LiftPose liftPose, boolean isGripperReleaseForward) {
     if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
-      m_currentState = LiftState.STOW;
+      changeState(LiftState.STOW);
       return;
     }
     m_basePivot.setTargetAngle(liftPose.getBasePivotAngle());
@@ -186,6 +190,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       m_gripper.setCoralGripSpeed(isGripperReleaseForward ? 0.5 : -0.5);
     } else {
       m_gripper.setCoralGripSpeed(0);
+    }
+
+    if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
+      Gripper.hasCoralFrontGrippedSim = false;
     }
   }
 

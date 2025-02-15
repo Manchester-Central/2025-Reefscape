@@ -72,8 +72,8 @@ public final class Constants {
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
     public static final int AlgaeChannelID = 0;
-    public static final int CoralOneChannelID = 1;
-    public static final int CoralTwoChannelID = 2;
+    public static final int CoralFrontChannelID = 1;
+    public static final int CoralBackChannelID = 2;
     public static final int ExtenderMinimumChannelID = 3;
   }
 
@@ -251,7 +251,9 @@ public final class Constants {
     }
 
     /** This contains constants for our Gripper. */
-    public static class GripperConstants {}
+    public static class GripperConstants {
+      public static final double CoralDropDebounceSeconds = 0.5;
+    }
   }
 
   /** This contains constants for our Intake. */
