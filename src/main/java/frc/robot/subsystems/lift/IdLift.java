@@ -192,8 +192,15 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   /**
    * Set Motor to clean up. :3
    */
-  public void setMotorCleanup() {
+  public void setMotorCleanUp() {
     m_extender.setMotorCoast();
+  }
+
+  /**
+   * Set Motor to start up. :3
+   */
+  public void setMotorStartUp() {
+    m_extender.setMotorBrake();
   }
 }
 // RIP m_oldLift & m_oldGripper 2025-2025

@@ -77,6 +77,18 @@ public class Robot extends ChaosRobot {
 
   @Override
   public void disabledCleanup() {
-    ((RobotContainer) m_robotContainer).setMotorCleanup();
+    ((RobotContainer) m_robotContainer).setMotorCleanUp();
+  }
+
+  @Override
+  public void teleopInit() {
+    ((RobotContainer) m_robotContainer).setMotorStartUp();
+    super.teleopInit();
+  }
+
+  @Override
+  public void autonomousInit() {
+    ((RobotContainer) m_robotContainer).setMotorStartUp();
+    super.autonomousInit();
   }
 }

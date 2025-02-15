@@ -166,7 +166,14 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   /**
   * Sets motor to cleanup when disabled.
   */
-  public void setMotorCleanup() {
-    m_idLift.setMotorCleanup();
+  public void setMotorCleanUp() {
+    m_idLift.setMotorCleanUp();
+  }
+
+  /**
+  * Sets motor to Start when enabled.
+  */
+  public void setMotorStartUp() {
+    m_idLift.setMotorStartUp();
   }
 }
