@@ -13,6 +13,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Robot;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
@@ -28,7 +29,7 @@ public class Extender extends AbstractLiftPart {
   private double m_targetLength = 1;
   private double m_gearRatio = 10.0;
   private double m_jkgMetersSquared = 1.0;
-  private boolean m_hasTouchedBottom = false;
+  private boolean m_hasReachedMinimum = false;
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
@@ -39,7 +40,7 @@ public class Extender extends AbstractLiftPart {
   private ChaosTalonFx m_motor1 = new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID);
 
   private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("Extender", m_motor1);
-  private DigitalInput m_bottomSensor = new DigitalInput(IoPortsConstants.ExtenderBottomChannelID);
+  private DigitalInput m_minimumSensor = new DigitalInput(IoPortsConstants.ExtenderMinimumChannelID);
 
   // Motion Magic Slot 0 Configs
   private DashboardNumber m_kp = m_tuner.tunable("kP", ExtenderConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
@@ -111,7 +112,7 @@ public class Extender extends AbstractLiftPart {
    * Sets the target length for extension and tries to drive there.
    */
   public void setTargetLength(double newLength) {
-    if (m_hasTouchedBottom) {
+    if (m_hasReachedMinimum) {
       if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {
         newLength = ExtenderConstants.MaxLengthMeter;
       } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
@@ -130,7 +131,7 @@ public class Extender extends AbstractLiftPart {
    * Sets the direct speed [-1.0, 1.0] of the system.
    */
   public void setSpeed(double speed) {
-    if (getCurrentLength() > ExtenderConstants.MaxLengthMeter || !m_hasTouchedBottom) {
+    if (getCurrentLength() > ExtenderConstants.MaxLengthMeter || !m_hasReachedMinimum) {
       speed = Math.min(speed, 0.0);
     } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
       speed = Math.max(speed, 0.0);
@@ -157,10 +158,20 @@ public class Extender extends AbstractLiftPart {
   }
   
   /**
-   * Checks if the extender is at the bottom of the lift.
+   * Checks if the extender is at the minimum value of the lift.
    */
-  public boolean isAtBottom() {
-    return !m_bottomSensor.get();
+  public boolean isAtMinimum() {
+    return !m_minimumSensor.get();
+  }
+
+  /**
+   * Checks if the extender has reached the minimum value at some point.
+   */
+  public boolean hasReachedMinimum() {
+    if (Robot.isSimulation()) {
+      m_hasReachedMinimum = true;
+    }
+    return m_hasReachedMinimum;
   }
 
   @Override
@@ -173,8 +184,8 @@ public class Extender extends AbstractLiftPart {
   public void periodic() {
     super.periodic();
 
-    if (isAtBottom() && !m_hasTouchedBottom) {
-      m_hasTouchedBottom = true;
+    if (isAtMinimum() && !m_hasReachedMinimum) {
+      m_hasReachedMinimum = true;
       m_motor1.setPosition(ExtenderConstants.MinLengthMeter);
     }
 
@@ -185,6 +196,6 @@ public class Extender extends AbstractLiftPart {
     Logger.recordOutput("Extender/Voltage", m_motor1.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput("Extender/StatorCurrent", m_motor1.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("Extender/SupplyCurrent", m_motor1.getSupplyCurrent().getValueAsDouble());
-    Logger.recordOutput("Extender/IsAtBottom", isAtBottom());
+    Logger.recordOutput("Extender/IsAtMinimum", isAtMinimum());
   }
 }

@@ -74,7 +74,7 @@ public final class Constants {
     public static final int AlgaeChannelID = 0;
     public static final int CoralOneChannelID = 1;
     public static final int CoralTwoChannelID = 2;
-    public static final int ExtenderBottomChannelID = 3;
+    public static final int ExtenderMinimumChannelID = 3;
   }
 
   /** This contains constants for setting up our swerve drive. */
