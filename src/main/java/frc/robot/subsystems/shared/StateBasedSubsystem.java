@@ -45,4 +45,9 @@ public abstract class StateBasedSubsystem<T extends SubsystemState> extends Subs
   public T getCurrentState() {
     return m_currentState;
   }
+
+  public double getElapsedStateSeconds() {
+    return m_stateTimer.get();
+  }
+
 }

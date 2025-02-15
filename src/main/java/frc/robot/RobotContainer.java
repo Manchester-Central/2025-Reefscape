@@ -22,6 +22,7 @@ import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.commands.UpdateHeading;
+import frc.robot.commands.WaitForState;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeState;
@@ -83,7 +84,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             () -> m_swerveDrive.getRobotSpeedMps(),
             () -> m_swerveDrive.getRobotRotationSpeedRadsPerSec());
     
-    NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
+    NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW).andThen(new WaitForState().setLift(LiftState.STOW)));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
     buildPathplannerAutoChooser();
 

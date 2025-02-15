@@ -13,19 +13,19 @@ import java.util.Optional;
 /**
  * A command for changing ANY state on the robot.
  */
-public class ChangeState extends Command {
+public class WaitForState extends Command {
   Optional<LiftState> m_idLiftState = Optional.empty();
   Optional<IntakeState> m_intakeState = Optional.empty();
 
   /** Creates a new uhhh. */
-  public ChangeState() {
+  public WaitForState() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   /**
    * Sets the state of the lift.
    */
-  public ChangeState setLift(LiftState newLiftState) {
+  public WaitForState setLift(LiftState newLiftState) {
     m_idLiftState = Optional.of(newLiftState);
     return this;
   }
@@ -33,34 +33,16 @@ public class ChangeState extends Command {
   /**
    * Sets the state of the intake.
    */
-  public ChangeState setIntake(IntakeState newIntakeState) {
+  public WaitForState setIntake(IntakeState newIntakeState) {
     m_intakeState = Optional.of(newIntakeState);
     return this;
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    if (m_idLiftState.isPresent()) {
-      RobotContainer.m_idLift.changeState(m_idLiftState.get());
-    }
-
-    if (m_intakeState.isPresent()) {
-      RobotContainer.m_intake.changeState(m_intakeState.get());
-    }
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    boolean isLiftStateGood = m_idLiftState.isPresent() ? RobotContainer.m_idLift.getCurrentState() == m_idLiftState.get() : true;
+    boolean isIntakeStateGood = m_intakeState.isPresent() ? RobotContainer.m_intake.getCurrentState() == m_intakeState.get() : true;
+    return isLiftStateGood && isIntakeStateGood;
   }
 }

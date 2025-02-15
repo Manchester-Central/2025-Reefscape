@@ -79,9 +79,9 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
 
   @Override
   protected void runStateMachine() {
-    switch (m_currentState) {
+    switch (getCurrentState()) {
       case START:
-        m_currentState = IntakeState.STOW;
+        changeState(IntakeState.STOW);
         break;
 
       case STOW:
