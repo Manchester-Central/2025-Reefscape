@@ -17,34 +17,9 @@ import java.util.HashMap;
  * A class to help managing positions on the field (for either alliance color).
  */
 public class FieldPoint {
-  /** The pre-calculated red pose. */
-  protected final Pose2d m_redPose;
-
-  /** The pre-calculated blue pose. */
-  protected final Pose2d m_bluePose;
-
-  /** A potentially null name for the pose. */
-  protected final String m_name;
-
-  /** The corresponding alliance the original pose was built for. */
-  protected final Alliance m_defaultAlliance;
-
-  protected final double m_fieldLength = FieldDimensions.FieldLength;
-  protected final double m_fieldWidth = FieldDimensions.FieldWidth;
-
-  // List of named points on the field
-  public static final FieldPoint processor =
-      new FieldPoint("processor", new Pose2d(5.988, 0, Rotation2d.fromDegrees(90)));
-  public static final FieldPoint leftSource =
-      new FieldPoint("leftSource", new Pose2d(0.8512, 7.396, Rotation2d.fromDegrees(90)));
-  public static final FieldPoint rightSource =
-      new FieldPoint("rightSource", new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(90)));
-  public static final FieldPoint testPoint =
-      new FieldPoint("testPoint", new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
-
   public static HashMap<Integer, AprilTag> aprilTagMap =
       FieldData.GetAprilTagMap("assets/frc2025.fmap");
-
+  
   /**
    * Gets the april tabs for the blue reef.
    */
@@ -68,6 +43,31 @@ public class FieldPoint {
     blueTagArrayList.add(aprilTagMap.get(13));
     return blueTagArrayList;
   }
+
+  /** The pre-calculated red pose. */
+  protected final Pose2d m_redPose;
+
+  /** The pre-calculated blue pose. */
+  protected final Pose2d m_bluePose;
+
+  /** A potentially null name for the pose. */
+  protected final String m_name;
+
+  /** The corresponding alliance the original pose was built for. */
+  protected final Alliance m_defaultAlliance;
+
+  protected final double m_fieldLength = FieldDimensions.FieldLength;
+  protected final double m_fieldWidth = FieldDimensions.FieldWidth;
+
+  // List of named points on the field
+  public static final FieldPoint processor =
+      new FieldPoint("processor", aprilTagMap.get(16).pose2d);
+  public static final FieldPoint leftSource =
+      new FieldPoint("leftSource", aprilTagMap.get(13).pose2d);
+  public static final FieldPoint rightSource =
+      new FieldPoint("rightSource", aprilTagMap.get(12).pose2d);
+  public static final FieldPoint testPoint =
+      new FieldPoint("testPoint", new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
 
   /**
    * Gets all the drive positions we can consider for scoring on the reef (left and right of each april tag).

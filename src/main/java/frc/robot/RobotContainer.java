@@ -11,6 +11,9 @@ import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.OperatorConstants;
@@ -33,6 +36,7 @@ import frc.robot.utils.PathUtil;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 
 /**
  * fml.
@@ -99,7 +103,15 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_simKeyboard.y().onTrue(
       new InstantCommand(() -> {
         System.out.println("Adding Game Piece");
-        SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(new Pose2d(2, 1, Rotation2d.fromDegrees(90))));
+        SimulatedArena.getInstance().addGamePieceProjectile(
+          new ReefscapeCoralOnFly(
+            FieldPoint.rightSource.getCurrentAlliancePose().transformBy(new Transform2d(0.2, 0, Rotation2d.fromDegrees(0))).getTranslation(),
+            new Translation2d(),
+            m_driveSim.getDriveTrainSimulatedChassisSpeedsFieldRelative(),
+            m_driveSim.getSimulatedDriveTrainPose().getRotation(),
+            Units.Meters.of(1.5),
+            Units.MetersPerSecond.of(0),
+            Units.Degrees.of(0)));
       })
     );
     // z on keyboard 0
