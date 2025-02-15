@@ -176,7 +176,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private void scoreHelper(LiftPose liftPose, boolean isGripperReleaseForward) {
     if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
-      m_currentState = LiftState.STOW;
+      changeState(LiftState.STOW);
       return;
     }
     m_basePivot.setTargetAngle(liftPose.getBasePivotAngle());
