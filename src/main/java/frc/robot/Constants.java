@@ -2,7 +2,6 @@ package frc.robot;
 
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDValue;
-import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.vision.CameraSpecs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -18,7 +17,7 @@ public final class Constants {
   /** This has contants that can be used throughout the robot. */
   public static class GeneralConstants {
     public static final double RobotMassKg = 54.43;
-    public static final Mode RobotMode = Mode.REAL;
+    public static final boolean ReplayMode = false;
     public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
   }
 

@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
 import com.chaos131.swerve.SwerveConfigs;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -23,6 +22,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Robot;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -58,7 +58,7 @@ public class SwerveDrive extends BaseSwerveDrive {
     // Creating the SelfControlledSwerveDriveSimulation instance
     m_simulatedDrive = new SelfControlledSwerveDriveSimulation(m_driveSim);
     // Register the drivetrain simulation to the simulation world
-    if (GeneralConstants.RobotMode == Mode.SIM) {
+    if (Robot.isSimulation()) {
       SimulatedArena.getInstance()
           .addDriveTrainSimulation(m_simulatedDrive.getDriveTrainSimulation());
     }
@@ -181,7 +181,7 @@ public class SwerveDrive extends BaseSwerveDrive {
             * RotationSpeedModifier;
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed_mps());
-    if (GeneralConstants.RobotMode == Mode.SIM) {
+    if (Robot.isSimulation()) {
       m_simulatedDrive.runSwerveStates(states);
     }
     Logger.recordOutput("Swerve/TargetSpeeds", states);
@@ -248,7 +248,7 @@ public class SwerveDrive extends BaseSwerveDrive {
 
   @Override
   public Rotation2d getGyroRotation() {
-    if (GeneralConstants.RobotMode == Mode.SIM) {
+    if (Robot.isSimulation()) {
       return m_simulatedDrive != null
           ? m_simulatedDrive.getActualPoseInSimulationWorld().getRotation()
           : GeneralConstants.InitialRobotPose.getRotation();
@@ -258,7 +258,7 @@ public class SwerveDrive extends BaseSwerveDrive {
 
   @Override
   public void periodic() {
-    if (GeneralConstants.RobotMode == Mode.SIM) {
+    if (Robot.isSimulation()) {
       m_simulatedDrive.periodic();
       Logger.recordOutput("Swerve/SimPose", m_simulatedDrive.getActualPoseInSimulationWorld());
     }

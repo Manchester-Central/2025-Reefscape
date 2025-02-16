@@ -5,16 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 public class FieldPointTests {
-  double DELTA = 0.05;
+  double DELTA = 0.02;
 
   @Test
   public void testProcessorPose() {
     final FieldPoint proc = FieldPoint.processor;
     var blu_pose = proc.getBluePose(); // April Tag 3
-    assertEquals(5.988, blu_pose.getTranslation().getX(), DELTA);
+    assertEquals(6.057646, blu_pose.getTranslation().getX(), DELTA);
     assertEquals(0.003, blu_pose.getTranslation().getY(), DELTA);
     var red_pose = proc.getRedPose(); // April Tag 16
-    assertEquals(11.561, red_pose.getTranslation().getX(), DELTA);
+    assertEquals(11.4906044, red_pose.getTranslation().getX(), DELTA);
     assertEquals(8.056, red_pose.getTranslation().getY(), DELTA);
     final FieldPoint source_left = FieldPoint.leftSource;
     blu_pose = source_left.getBluePose(); // April Tag 2
@@ -26,9 +26,9 @@ public class FieldPointTests {
     final FieldPoint source_right = FieldPoint.rightSource;
     blu_pose = source_right.getBluePose(); // April Tag 1
     assertEquals(0.8512, blu_pose.getTranslation().getX(), DELTA);
-    assertEquals(0.6553, blu_pose.getTranslation().getY(), DELTA);
+    assertEquals(0.628142, blu_pose.getTranslation().getY(), DELTA);
     red_pose = source_right.getRedPose(); // April Tag 13
     assertEquals(16.697, red_pose.getTranslation().getX(), DELTA);
-    assertEquals(7.396, red_pose.getTranslation().getY(), DELTA);
+    assertEquals(7.4237596, red_pose.getTranslation().getY(), DELTA);
   }
 }

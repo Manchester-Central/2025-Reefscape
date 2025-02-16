@@ -4,12 +4,11 @@
 
 package frc.robot.subsystems;
 
-import com.chaos131.robot.ChaosRobot.Mode;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Constants.GeneralConstants;
+import frc.robot.Robot;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
@@ -80,6 +79,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
     // m_pivotMotor1.attachMotorSim(m_pivotMotorSim, m_gearRatio, true);
     // m_pivotMotor2.attachMotorSim(m_pivotMotorSim, m_gearRatio, false);
 
+    m_simDriveTrain = simdrivetrain;
     m_physicSimIntake = IntakeSimulation.OverTheBumperIntake(
       // Specify the type of game pieces that the intake can collect
       "Coral",
@@ -218,7 +218,7 @@ public class Intake extends StateBasedSubsystem<Intake.IntakeState> {
    * @return true if the intake currently has a game piece in it
    */
   protected boolean hasGamePiece() {
-    if (GeneralConstants.RobotMode == Mode.SIM) {
+    if (Robot.isSimulation()) {
       return m_physicSimIntake.getGamePiecesAmount() > 0;
     } else {
       return false;
