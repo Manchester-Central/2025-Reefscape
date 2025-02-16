@@ -9,6 +9,7 @@ import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
 import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -22,6 +23,7 @@ import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.commands.UpdateHeading;
+import frc.robot.commands.WaitForState;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Intake.IntakeState;
@@ -80,7 +82,13 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             (data) -> updatePoseEstimator(data),
             () -> m_swerveDrive.getRobotSpeedMps(),
             () -> m_swerveDrive.getRobotRotationSpeedRadsPerSec());
+    
+    NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.STOW)));
+    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     buildPathplannerAutoChooser();
+
+
+    
     // Configure the trigger bindings
     configureBindings();
   }
@@ -129,6 +137,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.b().whileTrue(new ChangeState().setLift(LiftState.SCORE_L3).setIntake(IntakeState.STOW));
     m_operator.y().whileTrue(new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
     m_operator.back().onTrue(new InstantCommand(() -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim)); // TODO: delete if back button needed for competition
+    m_operator.povLeft().whileTrue(new ChangeState().setLift(LiftState.MANUAL).setIntake(IntakeState.STOW));
   }
 
   @Override
@@ -153,5 +162,19 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public void periodic() {
     // Enables Dashboard Numbers to be updated each loop
     DashboardNumber.checkAll();
+  }
+
+  /**
+  * Sets motor to cleanup when disabled.
+  */
+  public void setMotorCleanUp() {
+    m_idLift.setMotorCleanUp();
+  }
+
+  /**
+  * Sets motor to Start when enabled.
+  */
+  public void setMotorStartUp() {
+    m_idLift.setMotorStartUp();
   }
 }

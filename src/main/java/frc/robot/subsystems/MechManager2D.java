@@ -72,10 +72,10 @@ public class MechManager2D extends SubsystemBase {
     m_gripperBottomMotorBaseLigament = m_gripperBottomLigament.append(new LoggedMechanismLigament2d("GripperBottomMotorBase", 0.02, 0, 2, m_gripperNeutralColor));
     m_gripperBottomMotorIndicatorFrontLigament = m_gripperBottomMotorBaseLigament.append(new LoggedMechanismLigament2d("GripperBottomIndicatorFront", 0.1, 90, 4, m_gripperNeutralColor));
     m_gripperBottomMotorIndicatorBackLigament = m_gripperBottomMotorBaseLigament.append(new LoggedMechanismLigament2d("GripperBottomIndicatorBack", 0.1, -90, 4, m_gripperNeutralColor));
-    m_gripperBackLigament = m_gripperBottomLigament.append(new LoggedMechanismLigament2d("GripperBack", 0.0, -90, 6, m_gripperHasCoralColor));
-    m_gripperFrontLigament = m_gripperBottomLigament.append(new LoggedMechanismLigament2d("GripperFront", 0.0, 90, 6, m_gripperHasCoralColor));
+    m_gripperBackLigament = m_gripperBottomLigament.append(new LoggedMechanismLigament2d("GripperBack", 0.0001, -90, 6, m_gripperHasCoralColor));
+    m_gripperFrontLigament = m_gripperBottomLigament.append(new LoggedMechanismLigament2d("GripperFront", 0.0001, 90, 6, m_gripperHasCoralColor));
     m_gripperAlgaeHolderLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgaeHolder", 0.42, 90, 2, m_gripperNeutralColor));
-    m_gripperAlgaePreviewLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgaePreview", 0.0, 90, 10, m_gripperHasAlgaeColor));
+    m_gripperAlgaePreviewLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgaePreview", 0.0001, 90, 10, m_gripperHasAlgaeColor));
 
     m_intakeBase = new LoggedMechanism2d(2, 3);
     m_intakeRoot = m_intakeBase.getRoot("Intake", 1.2, 0.2);
@@ -88,7 +88,7 @@ public class MechManager2D extends SubsystemBase {
     IdLiftValues values = m_idLift.getLiftValues();
 
     // Set angles and length of IdLift parts
-    m_extenderLigament.setLength(values.extenderLength);
+    m_extenderLigament.setLength(values.extenderLength == 0 ? 0.0001 : values.extenderLength);
     m_extenderLigament.setAngle(values.basePivotAngle);
     m_extenderBaseLigament.setAngle(values.basePivotAngle);
     m_gripperCenterLigament.setAngle(values.gripperPivotAngle);

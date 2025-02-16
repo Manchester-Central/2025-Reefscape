@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.subsystems.lift.LiftPose;
 
 /** This class holds all of our 2025 constants. */
 public final class Constants {
@@ -71,8 +72,9 @@ public final class Constants {
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
     public static final int AlgaeChannelID = 0;
-    public static final int CoralOneChannelID = 1;
-    public static final int CoralTwoChannelID = 2;
+    public static final int CoralFrontChannelID = 1;
+    public static final int CoralBackChannelID = 2;
+    public static final int ExtenderMinimumChannelID = 3;
   }
 
   /** This contains constants for setting up our swerve drive. */
@@ -140,47 +142,118 @@ public final class Constants {
 
   /** This contains constants for our entire lift system. */
   public static class MidLiftConstants {
+    /** Contains values for different known lift poses. */
+    public static class LiftPoses {
+      public static final LiftPose Stow = new LiftPose("Stow", 80, 0.3, 0);
+      public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, -45.0);
+      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 54.0, 0.97, -110.0);
+      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, -117.0);
+      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, -126.0);
+      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 51.0);
+      public static final LiftPose HpIntake = new LiftPose("HpIntake", 50.0, 0.8, -10.0);
+    }
+
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(30);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
-      public static final Rotation2d StowAngle = Rotation2d.fromDegrees(80);
-      public static final Rotation2d HandoffAngle = Rotation2d.fromDegrees(30);
-      public static final Rotation2d ScoreL1Angle = Rotation2d.fromDegrees(54);
-      public static final Rotation2d ScoreL2Angle = Rotation2d.fromDegrees(61);
-      public static final Rotation2d ScoreL3Angle = Rotation2d.fromDegrees(70);
-      public static final Rotation2d ScoreL4Angle = Rotation2d.fromDegrees(70);
-      public static final Rotation2d hpIntakeAngle = Rotation2d.fromDegrees(50);
+
+      public static final double kP = 1.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kG = 0.0;
+      public static final double kS = 0.25;
+      public static final double kV = 0.12;
+      public static final double kA = 0.01;
+
+      // Motion Magic // TODO: get real values
+      public static final double MMCruiseVelocity = 80;
+      public static final double MMAcceleration = 160;
+      public static final double MMJerk = 1600;
+
+      public static final double SupplyCurrentLimit = 40;
+      public static final double StatorCurrentLimit = 40;
+
+      // Sensor Feedback // TODO: get real values
+      public static final double RotorToSensorRatio = 1.0;
+      public static final double SensorToMechanismRatio = 1.0;
+      
+      // Ramp Rates // TODO: get real values
+      public static final double VoltageClosedLoopRampPeriod = 0.1;
+      //Offset // TODO: Get Real
+      public static final double canCoderOffsetDegrees = 0.0;
     }
 
     /** This contains constants for our Gripper Pivot. */
     public static class GripperPivotConstants {
+
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-45);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(45);
-      public static final Rotation2d StowAngle = Rotation2d.fromDegrees(0);
-      public static final Rotation2d HandoffAngle = Rotation2d.fromDegrees(-45);
-      public static final Rotation2d ScoreL1Angle = Rotation2d.fromDegrees(-110);
-      public static final Rotation2d ScoreL2Angle = Rotation2d.fromDegrees(-117);
-      public static final Rotation2d ScoreL3Angle = Rotation2d.fromDegrees(-126);
-      public static final Rotation2d ScoreL4Angle = Rotation2d.fromDegrees(51);
-      public static final Rotation2d hpIntakeAngle = Rotation2d.fromDegrees(-10);
+
+      public static final double kP = 1.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.3;
+      public static final double kG = 0.0;
+      public static final double kS = 0.25;
+      public static final double kV = 0.12;
+      public static final double kA = 0.01;
+
+      // Motion Magic // TODO: get real values
+      public static final double MMCruiseVelocity = 80;
+      public static final double MMAcceleration = 160;
+      public static final double MMJerk = 1600;
+
+      public static final double SupplyCurrentLimit = 40;
+      public static final double StatorCurrentLimit = 40;
+
+      // Sensor Feedback // TODO: get real values
+      public static final double RotorToSensorRatio = 1.0;
+      public static final double SensorToMechanismRatio = 1.0;
+      
+      // Ramp Rates // TODO: get real values
+      public static final double VoltageClosedLoopRampPeriod = 0.1;
+
+      //Offset // TODO: Get Real
+      public static final double canCoderOffsetDegrees = 0.0;
     }
 
     /** This contains constants for our Extender. */
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.1;
       public static final double MaxLengthMeter = 1.6;
-      public static final double StowLengthMeter = 0.3;
-      public static final double HandoffLengthMeter = 0.4;
-      public static final double ScoreL1LengthMeter = 0.97;
-      public static final double ScoreL2LengthMeter = 1.0;
-      public static final double ScoreL3LengthMeter = 1.31;
-      public static final double ScoreL4LengthMeter = 1.8;
-      public static final double hpIntakeLengthMeter = 0.8;
+
+      // Slot 0 Configs // TODO: get real values
+      public static final double kP = 1.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kG = 0.0;
+      public static final double kS = 0.25;
+      public static final double kV = 0.12;
+      public static final double kA = 0.01;
+
+      // Motion Magic // TODO: get real values
+      public static final double MMCruiseVelocity = 80;
+      public static final double MMAcceleration = 160;
+      public static final double MMJerk = 1600;
+
+      // Current limits // TODO: get real values
+      public static final double SupplyCurrentLimit = 40;
+      public static final double StatorCurrentLimit = 40;
+
+      // Sensor Feedback // TODO: get real values
+      public static final double RotorToSensorRatio = 1.0;
+      public static final double SensorToMechanismRatio = 1.0;
+
+      // Ramp Rates // TODO: get real values
+      public static final double VoltageClosedLoopRampPeriod = 0.1;
+
+      
     }
 
     /** This contains constants for our Gripper. */
-    public static class GripperConstants {}
+    public static class GripperConstants {
+      public static final double CoralDropDebounceSeconds = 0.5;
+    }
   }
 
   /** This contains constants for our Intake. */

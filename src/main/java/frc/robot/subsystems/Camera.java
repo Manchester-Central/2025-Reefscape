@@ -32,10 +32,14 @@ public class Camera extends LimelightCamera {
         poseConsumer,
         robotSpeedSupplier,
         robotRotationSpeedSupplier);
+    
+    m_botpose.readQueue();
+    m_botposeMT2.readQueue();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // We may want to do more in the future, but for now lets keep the same functionality.
+    super.periodic();
   }
 }

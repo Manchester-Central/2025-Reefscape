@@ -4,12 +4,14 @@
 
 package frc.robot.subsystems.shared;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
 public abstract class StateBasedSubsystem<T extends SubsystemState> extends SubsystemBase {
-  protected T m_currentState;
+  private T m_currentState;
+  protected Timer m_stateTimer = new Timer();
 
   /**
    * The base contrusctor for all state based subsystems.
@@ -18,6 +20,7 @@ public abstract class StateBasedSubsystem<T extends SubsystemState> extends Subs
    */
   protected StateBasedSubsystem(T startState) {
     m_currentState = startState;
+    m_stateTimer.start();
     this.setDefaultCommand(new RunCommand(() -> runStateMachine(), this));
   }
 
@@ -32,6 +35,19 @@ public abstract class StateBasedSubsystem<T extends SubsystemState> extends Subs
    * @param newState the new state
    */
   public void changeState(T newState) {
+    if (newState != m_currentState) {
+      m_stateTimer.restart();
+    }
+
     m_currentState = newState;
   }
+
+  public T getCurrentState() {
+    return m_currentState;
+  }
+
+  public double getElapsedStateSeconds() {
+    return m_stateTimer.get();
+  }
+
 }

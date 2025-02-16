@@ -5,11 +5,13 @@
 package frc.robot;
 
 import com.chaos131.robot.ChaosRobot;
+import com.chaos131.util.DashboardNumber;
 import com.chaos131.util.FieldData;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import frc.robot.subsystems.lift.Gripper;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.LocalADStarAK;
 import java.util.ArrayList;
@@ -62,9 +64,34 @@ public class Robot extends ChaosRobot {
   }
 
   @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    DashboardNumber.checkAll();
+  }
+
+  @Override
   public void robotInit() {
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathfindingCommand.warmupCommand().schedule();
+    Gripper.hasCoralFrontGrippedSim = true;
     super.robotInit(); 
+  }
+
+  @Override
+  public void disabledCleanup() {
+    ((RobotContainer) m_robotContainer).setMotorCleanUp();
+  }
+
+  @Override
+  public void teleopInit() {
+    ((RobotContainer) m_robotContainer).setMotorStartUp();
+    super.teleopInit();
+  }
+
+  @Override
+  public void autonomousInit() {
+    ((RobotContainer) m_robotContainer).setMotorStartUp();
+    Gripper.hasCoralFrontGrippedSim = true;
+    super.autonomousInit();
   }
 }
