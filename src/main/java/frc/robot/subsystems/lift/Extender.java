@@ -139,7 +139,7 @@ public class Extender extends AbstractLiftPart {
         newLength = LiftPoses.Stow.getExtensionMeters();
       }
       m_targetLength = newLength;
-      m_motor1.moveToPositionMotionMagic(newLength);
+      // m_motor1.moveToPositionMotionMagic(newLength);
     }
   }
 
@@ -152,7 +152,7 @@ public class Extender extends AbstractLiftPart {
     } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
       speed = Math.max(speed, 0.0);
     }
-    m_motor1.set(speed);
+    // m_motor1.set(speed);
   }
 
   public double getCurrentLength() {

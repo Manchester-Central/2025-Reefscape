@@ -64,7 +64,7 @@ public final class Constants {
     public static final int GripperCoralMotorCANID = 70; // TODO: set on robot
     public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
 
-    // Intake (80s)
+    // Intake (80s) RIP 2025-2025 for now for now
     public static final int IntakeMotor1CANID = 80; // TODO: set on robot
     public static final int IntakeMotorBCANID = 81; // TODO: set on robot
   }
@@ -175,13 +175,13 @@ public final class Constants {
       public static final double StatorCurrentLimit = 40;
 
       // Sensor Feedback // TODO: get real values
-      public static final double RotorToSensorRatio = 1.0;
+      public static final double RotorToSensorRatio = 302.4;
       public static final double SensorToMechanismRatio = 1.0;
       
       // Ramp Rates // TODO: get real values
       public static final double VoltageClosedLoopRampPeriod = 0.1;
       //Offset // TODO: Get Real
-      public static final double canCoderOffsetDegrees = 0.0;
+      public static final double canCoderOffsetDegrees = -107.5;
     }
 
     /** This contains constants for our Gripper Pivot. */

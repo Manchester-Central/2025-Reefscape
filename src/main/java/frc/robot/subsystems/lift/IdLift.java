@@ -202,6 +202,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorCleanUp() {
     m_extender.setMotorCoast();
+    m_basePivot.setMotorCoast();
+    m_gripperPivot.setMotorCoast();
   }
 
   /**
@@ -209,6 +211,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorStartUp() {
     m_extender.setMotorBrake();
+    m_basePivot.setMotorBrake();
+    m_gripperPivot.setMotorBrake();
   }
 }
 // RIP m_oldLift & m_oldGripper 2025-2025

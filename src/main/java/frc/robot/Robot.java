@@ -74,6 +74,7 @@ public class Robot extends ChaosRobot {
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathfindingCommand.warmupCommand().schedule();
     Gripper.hasCoralFrontGrippedSim = true;
+    ((RobotContainer) m_robotContainer).setMotorCleanUp();
     super.robotInit(); 
   }
 
