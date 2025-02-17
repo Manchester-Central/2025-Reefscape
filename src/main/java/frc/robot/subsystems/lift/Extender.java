@@ -152,7 +152,7 @@ public class Extender extends AbstractLiftPart {
     } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
       speed = Math.max(speed, 0.0);
     }
-    // m_motor1.set(speed);
+    m_motor1.set(speed);
   }
 
   public double getCurrentLength() {
@@ -200,7 +200,7 @@ public class Extender extends AbstractLiftPart {
   public void periodic() {
     super.periodic();
 
-    if (isAtMinimum() && !m_hasReachedMinimum) {
+    if ((isAtMinimum() || !ExtenderConstants.HasMagnetSensor) && !m_hasReachedMinimum) {
       m_hasReachedMinimum = true;
       m_motor1.setPosition(ExtenderConstants.MinLengthMeter);
     }

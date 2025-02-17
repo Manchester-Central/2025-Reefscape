@@ -130,7 +130,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
     m_gripper.setCoralGripSpeed(0.0);
     m_gripperPivot.setSpeed(0.0);
-    m_extender.setSpeed(m_operator.getRightY() * 0.3);
+    m_extender.setSpeed(m_operator.getRightY() * 0.5);
   }
 
   private void stowState() {

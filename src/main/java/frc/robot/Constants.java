@@ -219,22 +219,23 @@ public final class Constants {
 
     /** This contains constants for our Extender. */
     public static class ExtenderConstants {
-      public static final double MinLengthMeter = 0.1;
-      public static final double MaxLengthMeter = 1.6;
+      public static final double MinLengthMeter = 0.0;
+      public static final double MaxLengthMeter = 1.5;
+      public static final boolean HasMagnetSensor = false; // hasMagneto
 
       // Slot 0 Configs // TODO: get real values
-      public static final double kP = 0.2;
+      public static final double kP = 0.0;
       public static final double kI = 0.0;
-      public static final double kD = 0.2;
+      public static final double kD = 0.0;
       public static final double kG = 0.0;
-      public static final double kS = 0.05;
-      public static final double kV = 0.05;
-      public static final double kA = 0.01;
+      public static final double kS = 0.0;
+      public static final double kV = 0.0;
+      public static final double kA = 0.0;
 
       // Motion Magic // TODO: get real values
-      public static final double MMCruiseVelocity = 80;
-      public static final double MMAcceleration = 160;
-      public static final double MMJerk = 1600;
+      public static final double MMCruiseVelocity = 10;
+      public static final double MMAcceleration = 10;
+      public static final double MMJerk = 100;
 
       // Current limits // TODO: get real values
       public static final double SupplyCurrentLimit = 40;
@@ -242,7 +243,7 @@ public final class Constants {
 
       // Sensor Feedback // TODO: get real values
       public static final double RotorToSensorRatio = 1.0;
-      public static final double SensorToMechanismRatio = 0.12;
+      public static final double SensorToMechanismRatio = 41.33915313;
 
       // Ramp Rates // TODO: get real values
       public static final double VoltageClosedLoopRampPeriod = 0.1;
