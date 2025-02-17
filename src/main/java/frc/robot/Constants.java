@@ -223,12 +223,12 @@ public final class Constants {
       public static final double MaxLengthMeter = 1.6;
 
       // Slot 0 Configs // TODO: get real values
-      public static final double kP = 1.0;
+      public static final double kP = 0.2;
       public static final double kI = 0.0;
-      public static final double kD = 0.0;
+      public static final double kD = 0.2;
       public static final double kG = 0.0;
-      public static final double kS = 0.25;
-      public static final double kV = 0.12;
+      public static final double kS = 0.05;
+      public static final double kV = 0.05;
       public static final double kA = 0.01;
 
       // Motion Magic // TODO: get real values
@@ -242,7 +242,7 @@ public final class Constants {
 
       // Sensor Feedback // TODO: get real values
       public static final double RotorToSensorRatio = 1.0;
-      public static final double SensorToMechanismRatio = 1.0;
+      public static final double SensorToMechanismRatio = 0.12;
 
       // Ramp Rates // TODO: get real values
       public static final double VoltageClosedLoopRampPeriod = 0.1;
