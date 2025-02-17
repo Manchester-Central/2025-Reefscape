@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -111,6 +112,7 @@ public class BasePivot extends AbstractLiftPart {
     slot0.kS = m_ks.get();
     slot0.kV = m_kv.get();
     slot0.kA = m_ka.get();
+    slot0.GravityType = GravityTypeValue.Arm_Cosine;
     m_motor.Configuration.Slot0 = slot0;
 
     m_motor.applyConfig();
@@ -130,7 +132,7 @@ public class BasePivot extends AbstractLiftPart {
     } else if (getCurrentAngle().getDegrees() < BasePivotConstants.MinAngle.getDegrees()) {
       speed = Math.max(speed, 0.0);
     }
-    //m_motor.set(speed);
+    m_motor.set(speed);
   }
 
   /**
@@ -143,7 +145,7 @@ public class BasePivot extends AbstractLiftPart {
       newAngle = BasePivotConstants.MinAngle;
     }
     m_targetAngle = newAngle;
-    // m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // Rotation to match the cancoder units
+    m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // Rotation to match the cancoder units
   }
 
   public Rotation2d getCurrentAngle() {

@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
@@ -138,6 +139,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.y().whileTrue(new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
     m_operator.back().onTrue(new InstantCommand(() -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim)); // TODO: delete if back button needed for competition
     m_operator.povLeft().whileTrue(new ChangeState().setLift(LiftState.MANUAL).setIntake(IntakeState.STOW));
+
+    m_operator.leftTrigger().whileTrue(new RunCommand(() -> m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(45)),
+        m_idLift));
+    m_operator.rightTrigger().whileTrue(new RunCommand(() -> m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(80)),
+        m_idLift));
   }
 
   @Override

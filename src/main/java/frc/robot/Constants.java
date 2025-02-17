@@ -158,18 +158,18 @@ public final class Constants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(30);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
-      public static final double kP = 1.0;
+      public static final double kP = 150.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.0;
+      public static final double kG = 0.4;
       public static final double kS = 0.25;
       public static final double kV = 0.12;
       public static final double kA = 0.01;
 
       // Motion Magic // TODO: get real values
-      public static final double MMCruiseVelocity = 80;
-      public static final double MMAcceleration = 160;
-      public static final double MMJerk = 1600;
+      public static final double MMCruiseVelocity = 10;
+      public static final double MMAcceleration = 10;
+      public static final double MMJerk = 100;
 
       public static final double SupplyCurrentLimit = 40;
       public static final double StatorCurrentLimit = 40;

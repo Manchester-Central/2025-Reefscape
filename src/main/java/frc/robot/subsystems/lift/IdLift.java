@@ -48,7 +48,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     return values;
   }
 
-  private BasePivot m_basePivot = new BasePivot(this::getLiftValues);
+  public BasePivot m_basePivot = new BasePivot(this::getLiftValues); // TODO: UNDO public
   private Extender m_extender = new Extender(this::getLiftValues);
   private Gripper m_gripper = new Gripper(this::getLiftValues);
   private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
@@ -127,7 +127,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void manualState() {
-    m_basePivot.setSpeed(0.0);
+    m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
     m_gripper.setCoralGripSpeed(0.0);
     m_gripperPivot.setSpeed(0.0);
     m_extender.setSpeed(m_operator.getRightY() * 0.3);
