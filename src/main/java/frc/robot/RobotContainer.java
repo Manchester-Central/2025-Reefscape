@@ -146,6 +146,14 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         m_idLift));
     m_operator.a().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(0.5), m_idLift));
     m_operator.b().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(1.2), m_idLift));
+    m_operator.x().whileTrue(new RunCommand(() -> {
+        m_idLift.m_extender.setTargetLength(0.7);
+        m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(60));
+      }, m_idLift));
+    m_operator.y().whileTrue(new RunCommand(() -> {
+        m_idLift.m_extender.setTargetLength(1.3);
+        m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(80));
+      }, m_idLift));
   }
 
   @Override
