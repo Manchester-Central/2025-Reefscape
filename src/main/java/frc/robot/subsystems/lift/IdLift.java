@@ -49,7 +49,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   public BasePivot m_basePivot = new BasePivot(this::getLiftValues); // TODO: UNDO public
-  private Extender m_extender = new Extender(this::getLiftValues);
+  public Extender m_extender = new Extender(this::getLiftValues); // TODO: UNDO public
   private Gripper m_gripper = new Gripper(this::getLiftValues);
   private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
   private Gamepad m_operator;

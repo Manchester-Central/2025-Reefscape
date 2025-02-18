@@ -224,13 +224,13 @@ public final class Constants {
       public static final boolean HasMagnetSensor = false; // hasMagneto
 
       // Slot 0 Configs // TODO: get real values
-      public static final double kP = 0.0;
+      public static final double kP = 50.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.0;
-      public static final double kS = 0.0;
-      public static final double kV = 0.0;
-      public static final double kA = 0.0;
+      public static final double kG = 0.35;
+      public static final double kS = 0.5;
+      public static final double kV = 0.12;
+      public static final double kA = 0.01;
 
       // Motion Magic // TODO: get real values
       public static final double MMCruiseVelocity = 10;
