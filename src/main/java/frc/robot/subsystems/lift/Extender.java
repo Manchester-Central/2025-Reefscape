@@ -7,6 +7,7 @@ package frc.robot.subsystems.lift;
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -101,6 +102,7 @@ public class Extender extends AbstractLiftPart {
     slot0.kS = m_ks.get();
     slot0.kV = m_kv.get();
     slot0.kA = m_ka.get();
+    slot0.GravityType = GravityTypeValue.Elevator_Static;
     m_motor1.Configuration.Slot0 = slot0;
 
     m_motor1.applyConfig();
@@ -135,9 +137,9 @@ public class Extender extends AbstractLiftPart {
         newLength = ExtenderConstants.MinLengthMeter;
       }
 
-      if (!getLiftValues().isBasePivotAtSafeAngle) {
-        newLength = LiftPoses.Stow.getExtensionMeters();
-      }
+      // if (!getLiftValues().isBasePivotAtSafeAngle) {
+      //   newLength = LiftPoses.Stow.getExtensionMeters();
+      // }
       m_targetLength = newLength;
       m_motor1.moveToPositionMotionMagic(newLength);
     }
@@ -200,7 +202,7 @@ public class Extender extends AbstractLiftPart {
   public void periodic() {
     super.periodic();
 
-    if (isAtMinimum() && !m_hasReachedMinimum) {
+    if ((isAtMinimum() || !ExtenderConstants.HasMagnetSensor) && !m_hasReachedMinimum) {
       m_hasReachedMinimum = true;
       m_motor1.setPosition(ExtenderConstants.MinLengthMeter);
     }

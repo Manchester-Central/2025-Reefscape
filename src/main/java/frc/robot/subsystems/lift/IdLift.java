@@ -48,8 +48,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     return values;
   }
 
-  private BasePivot m_basePivot = new BasePivot(this::getLiftValues);
-  private Extender m_extender = new Extender(this::getLiftValues);
+  public BasePivot m_basePivot = new BasePivot(this::getLiftValues); // TODO: UNDO public
+  public Extender m_extender = new Extender(this::getLiftValues); // TODO: UNDO public
   private Gripper m_gripper = new Gripper(this::getLiftValues);
   private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
   private Gamepad m_operator;
@@ -127,10 +127,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void manualState() {
-    m_basePivot.setSpeed(0.0);
+    m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
     m_gripper.setCoralGripSpeed(0.0);
     m_gripperPivot.setSpeed(0.0);
-    m_extender.setSpeed(m_operator.getRightY() * 0.3);
+    m_extender.setSpeed(m_operator.getRightY() * 0.5);
   }
 
   private void stowState() {
@@ -202,6 +202,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorCleanUp() {
     m_extender.setMotorCoast();
+    m_basePivot.setMotorCoast();
+    m_gripperPivot.setMotorCoast();
   }
 
   /**
@@ -209,6 +211,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorStartUp() {
     m_extender.setMotorBrake();
+    m_basePivot.setMotorBrake();
+    m_gripperPivot.setMotorBrake();
   }
 }
 // RIP m_oldLift & m_oldGripper 2025-2025

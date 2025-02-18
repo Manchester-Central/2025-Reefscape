@@ -13,6 +13,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
@@ -86,6 +87,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.STOW)));
+    NamedCommands.registerCommand("XMode", new RunCommand(() -> m_swerveDrive.setXMode()).withTimeout(0.1));
     buildPathplannerAutoChooser();
 
 
@@ -129,15 +131,30 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // c on keyboard 0
     m_simKeyboard.x().onTrue(new InstantCommand(() -> Gripper.hasAlgaeGrippedSim = !Gripper.hasAlgaeGrippedSim));
 
-    m_operator.start().whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
-    m_operator.leftBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
-    m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
-    m_operator.a().whileTrue(new ChangeState().setLift(LiftState.SCORE_L1).setIntake(IntakeState.STOW));
-    m_operator.x().whileTrue(new ChangeState().setLift(LiftState.SCORE_L2).setIntake(IntakeState.STOW));
-    m_operator.b().whileTrue(new ChangeState().setLift(LiftState.SCORE_L3).setIntake(IntakeState.STOW));
-    m_operator.y().whileTrue(new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
-    m_operator.back().onTrue(new InstantCommand(() -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim)); // TODO: delete if back button needed for competition
-    m_operator.povLeft().whileTrue(new ChangeState().setLift(LiftState.MANUAL).setIntake(IntakeState.STOW));
+    // m_operator.start().whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
+    // m_operator.leftBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
+    // m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
+    // m_operator.a().whileTrue(new ChangeState().setLift(LiftState.SCORE_L1).setIntake(IntakeState.STOW));
+    // m_operator.x().whileTrue(new ChangeState().setLift(LiftState.SCORE_L2).setIntake(IntakeState.STOW));
+    // m_operator.b().whileTrue(new ChangeState().setLift(LiftState.SCORE_L3).setIntake(IntakeState.STOW));
+    // m_operator.y().whileTrue(new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
+    // m_operator.back().onTrue(new InstantCommand(() -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim)); // TODO: delete if back button needed for competition
+    // m_operator.povLeft().whileTrue(new ChangeState().setLift(LiftState.MANUAL).setIntake(IntakeState.STOW));
+
+    m_operator.leftTrigger().whileTrue(new RunCommand(() -> m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(45)),
+        m_idLift));
+    m_operator.rightTrigger().whileTrue(new RunCommand(() -> m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(80)),
+        m_idLift));
+    m_operator.a().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(0.5), m_idLift));
+    m_operator.b().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(1.2), m_idLift));
+    m_operator.x().whileTrue(new RunCommand(() -> {
+        m_idLift.m_extender.setTargetLength(0.7);
+        m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(60));
+      }, m_idLift));
+    m_operator.y().whileTrue(new RunCommand(() -> {
+        m_idLift.m_extender.setTargetLength(1.3);
+        m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(80));
+      }, m_idLift));
   }
 
   @Override

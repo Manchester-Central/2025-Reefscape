@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -45,8 +46,9 @@ public class BasePivot extends AbstractLiftPart {
   private ChaosTalonFxTuner m_talonTuner = new ChaosTalonFxTuner("Base Pivot", m_motor);
   private ChaosCanCoderTuner m_canCoderTuner = new ChaosCanCoderTuner("Base Pivot", m_canCoder);
 
-  private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tunner",
-      BasePivotConstants.canCoderOffsetDegrees, (config, newValue) -> config.MagnetSensor.MagnetOffset = newValue);
+  private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tuner",
+      BasePivotConstants.canCoderOffsetDegrees, (config, newValue) -> 
+      config.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(newValue).getRotations());
 
   private DashboardNumber m_kp = m_talonTuner.tunable("kP", BasePivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
   private DashboardNumber m_ki = m_talonTuner.tunable("kI", BasePivotConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
@@ -83,17 +85,18 @@ public class BasePivot extends AbstractLiftPart {
 
     m_canCoder.Configuration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
     m_canCoder.Configuration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    m_canCoder.Configuration.MagnetSensor.withMagnetOffset(Angle.ofBaseUnits(m_canCoderOffsetDegrees.get(), Degrees));
+    m_canCoder.Configuration.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(m_canCoderOffsetDegrees.get()).getRotations();
     m_canCoder.applyConfig();
 
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    m_motor.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    m_motor.Configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimit = m_supplyCurrentLimit.get();
     m_motor.Configuration.CurrentLimits.StatorCurrentLimitEnable = true;
     m_motor.Configuration.CurrentLimits.StatorCurrentLimit = m_statorCurrentLimit.get();
     m_motor.Configuration.Feedback.FeedbackRemoteSensorID = CanIdentifiers.BasePivotCANcoderCANID;
     m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    // m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     m_motor.Configuration.Feedback.RotorToSensorRatio = m_rotorToSensorRatio.get();
     m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = m_rampPeriod.get();
     m_motor.Configuration.Feedback.SensorToMechanismRatio = m_sensorToMechRatio.get();
@@ -109,12 +112,15 @@ public class BasePivot extends AbstractLiftPart {
     slot0.kS = m_ks.get();
     slot0.kV = m_kv.get();
     slot0.kA = m_ka.get();
+    slot0.GravityType = GravityTypeValue.Arm_Cosine;
     m_motor.Configuration.Slot0 = slot0;
 
     m_motor.applyConfig();
 
     m_motor.attachMotorSim(m_motorSim, m_gearRatio, true);
     m_motor.attachCanCoderSim(m_canCoder);
+    
+    // m_motor.setPosition(getCurrentAngle().getRotations());
   }
 
   /**
@@ -167,16 +173,33 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.simUpdate();
   }
 
+    /**
+   * Set extender motor to Coast. :3
+   */ 
+  public void setMotorCoast() {
+    m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    m_motor.applyConfig();
+  }
+
+  /**
+   * Set extender motor to Brake. :3
+   */ 
+  public void setMotorBrake() {
+    m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    m_motor.applyConfig();
+  }
+
   @Override
   public void periodic() {
     // TODO Auto-generated method stub
     super.periodic();
     Logger.recordOutput("BasePivot/Setpoint", m_targetAngle);
-    Logger.recordOutput("BasePivot/CurrentAngle", getCurrentAngle());
+    Logger.recordOutput("BasePivot/CurrentAngle", getCurrentAngle().getDegrees());
     Logger.recordOutput("BasePivot/AtTarget", atTarget());
     Logger.recordOutput("BasePivot/AngleError", getCurrentAngle().minus(m_targetAngle));
     Logger.recordOutput("BasePivot/Voltage", m_motor.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput("BasePivot/StatorCurrent", m_motor.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("BasePivot/SupplyCurrent", m_motor.getSupplyCurrent().getValueAsDouble());
+    Logger.recordOutput("BasePivot/MotorAngle", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).getDegrees());
   }
 }

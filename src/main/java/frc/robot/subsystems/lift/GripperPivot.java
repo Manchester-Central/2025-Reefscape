@@ -19,6 +19,7 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
 import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
@@ -49,8 +50,9 @@ public class GripperPivot extends AbstractLiftPart {
   private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("GriperPivot", m_motor);
   private ChaosCanCoderTuner m_canCoderTuner = new ChaosCanCoderTuner("Gripper Pivot", m_canCoder);
 
-  private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tunner", 
-      GripperPivotConstants.canCoderOffsetDegrees, (config, newValue) -> config.MagnetSensor.MagnetOffset = newValue);
+  private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tuner",
+      GripperPivotConstants.canCoderOffsetDegrees, (config, newValue) -> 
+      config.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(newValue).getRotations());
 
   // Motion Magic Slot 0 Configs
   private DashboardNumber m_kp = m_tuner.tunable("kP", GripperPivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
@@ -95,7 +97,7 @@ public class GripperPivot extends AbstractLiftPart {
     CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
     canCoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
     canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    canCoderConfig.MagnetSensor.withMagnetOffset(Angle.ofBaseUnits(m_canCoderOffsetDegrees.get(), Degrees));
+    canCoderConfig.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(m_canCoderOffsetDegrees.get()).getRotations();
     m_canCoder.getConfigurator().apply(canCoderConfig);
 
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -143,7 +145,7 @@ public class GripperPivot extends AbstractLiftPart {
       newAngle = LiftPoses.Stow.getGripperPivotAngle();
     }
     m_targetAngle = newAngle;
-    m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // TODO get actual motor angle
+    // m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // TODO get actual motor angle
   }
 
   /**
@@ -155,7 +157,7 @@ public class GripperPivot extends AbstractLiftPart {
     } else if (getCurrentAngle().getDegrees() < GripperPivotConstants.MinAngle.getDegrees()) {
       speed = Math.max(speed, 0.0);
     }
-    m_motor.set(speed);
+    // m_motor.set(speed);
   }
 
   public Rotation2d getCurrentAngle() {
@@ -173,6 +175,22 @@ public class GripperPivot extends AbstractLiftPart {
   @Override
   public void simulationPeriodic() {
     m_motor.simUpdate();
+  }
+
+    /**
+   * Set extender motor to Coast. :3
+   */ 
+  public void setMotorCoast() {
+    m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    m_motor.applyConfig();
+  }
+
+  /**
+   * Set extender motor to Brake. :3
+   */ 
+  public void setMotorBrake() {
+    m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    m_motor.applyConfig();
   }
 
   @Override
