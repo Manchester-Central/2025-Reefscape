@@ -7,6 +7,7 @@ package frc.robot.commands;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.swerve.BaseSwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.SwerveConstants;
 
 /**
  * A class to drive the robot in driver relative mode.
@@ -37,7 +38,9 @@ public class DriverRelativeDrive extends Command {
   @Override
   public void execute() {
     m_swerveDrive.moveFieldRelative(
-        m_driver.getSlewLeftY(), -m_driver.getSlewLeftX(), -m_driver.getSlewRightX());
+        m_driver.getSlewLeftY() * SwerveConstants.MaxFreeSpeedMPS, 
+        -m_driver.getSlewLeftX() * SwerveConstants.MaxFreeSpeedMPS, 
+        -m_driver.getSlewRightX() * SwerveConstants.MaxRotationSpeedRadPS);
   }
 
   // Called once the command ends or is interrupted.
