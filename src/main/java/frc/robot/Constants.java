@@ -157,6 +157,8 @@ public final class Constants {
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, -126.0);
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 51.0);
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 50.0, 0.8, -10.0);
+      public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 90.0, 0.1, 0.0);
+      public static final LiftPose Climb = new LiftPose("Climb", 30.0, 0.1, 0.0);
     }
 
     /** This contains constants for our Base Pivot. */
