@@ -1,5 +1,8 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDValue;
 import com.chaos131.robot.ChaosRobot.Mode;
@@ -10,6 +13,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.subsystems.lift.LiftPose;
 
 /** This class holds all of our 2025 constants. */
@@ -88,8 +94,8 @@ public final class Constants {
     public static final double SpeedCircumference = 0.1016 * Math.PI;
     public static final double DriverRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
-    public static final double MaxFreeSpeedMPS = 4.1605;
-    public static final double MaxRotationSpeedRadPS = 12.0; // TODO: GET REAL
+    public static final LinearVelocity MaxFreeSpeed = MetersPerSecond.of(4.1605);
+    public static final AngularVelocity MaxRotationSpeed = RadiansPerSecond.of(12.0); // TODO: GET REAL
     public static final PIDValue DefaultModuleAnglePIDValue = new PIDValue(60.0, 12.0, 0.0);
     public static final PIDFValue DefaultModuleVelocityPIDFValues =
         new PIDFValue(5.0, 0.0, 0.0, 2.19);

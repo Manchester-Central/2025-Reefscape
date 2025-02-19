@@ -38,9 +38,9 @@ public class DriverRelativeDrive extends Command {
   @Override
   public void execute() {
     m_swerveDrive.moveFieldRelative(
-        m_driver.getSlewLeftY() * SwerveConstants.MaxFreeSpeedMPS, 
-        -m_driver.getSlewLeftX() * SwerveConstants.MaxFreeSpeedMPS, 
-        -m_driver.getSlewRightX() * SwerveConstants.MaxRotationSpeedRadPS);
+        SwerveConstants.MaxFreeSpeed.times(m_driver.getSlewLeftY()), 
+        SwerveConstants.MaxFreeSpeed.times(-m_driver.getSlewLeftX()), 
+        SwerveConstants.MaxRotationSpeed.times(-m_driver.getSlewRightX()));
   }
 
   // Called once the command ends or is interrupted.

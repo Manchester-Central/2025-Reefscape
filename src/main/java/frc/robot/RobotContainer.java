@@ -35,6 +35,10 @@ import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
@@ -73,8 +77,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             VisionConstants.limeLight3GSpecs,
             () -> m_swerveDrive.getPose(),
             (data) -> updatePoseEstimator(data),
-            () -> m_swerveDrive.getRobotSpeedMps(),
-            () -> m_swerveDrive.getRobotRotationSpeedRadsPerSec());
+            () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
+            () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
     m_leftCamera =
         new Camera(
             "limelight-left",
@@ -82,8 +86,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             VisionConstants.limeLight3GSpecs,
             () -> m_swerveDrive.getPose(),
             (data) -> updatePoseEstimator(data),
-            () -> m_swerveDrive.getRobotSpeedMps(),
-            () -> m_swerveDrive.getRobotRotationSpeedRadsPerSec());
+            () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
+            () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
     
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.STOW)));

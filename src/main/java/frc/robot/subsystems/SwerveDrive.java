@@ -106,8 +106,8 @@ public class SwerveDrive extends BaseSwerveDrive {
   public static SwerveDrive createSwerveDrive(Pigeon2 gyrPigeon2) throws Exception {
     SwerveConfigs swerveConfigs =
         new SwerveConfigs()
-            .setMaxRobotSpeed_mps(SwerveConstants.MaxFreeSpeedMPS)
-            .setMaxRobotRotation_radps(SwerveConstants.MaxRotationSpeedRadPS)
+            .setMaxRobotSpeed(SwerveConstants.MaxFreeSpeed)
+            .setMaxRobotRotation(SwerveConstants.MaxRotationSpeed)
             .setDefaultModuleVelocityPIDFValues(SwerveConstants.DefaultModuleVelocityPIDFValues)
             .setDefaultModuleAnglePIDValues(SwerveConstants.DefaultModuleAnglePIDValue)
             .setDebugMode(true);
@@ -158,7 +158,7 @@ public class SwerveDrive extends BaseSwerveDrive {
   @Override
   public void move(ChassisSpeeds chassisSpeeds) {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed_mps());
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed());
     if (GeneralConstants.RobotMode == Mode.SIM) {
       m_simulatedDrive.runSwerveStates(states);
     }
