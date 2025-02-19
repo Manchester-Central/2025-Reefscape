@@ -15,7 +15,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -44,6 +43,9 @@ public class SwerveDrive extends BaseSwerveDrive {
   private DriveTrainSimulationConfig m_simDriveTrain;
   private SwerveDriveSimulation m_driveSim;
   private SelfControlledSwerveDriveSimulation m_simulatedDrive;
+  private PPHolonomicDriveController m_holonomicDriveController = new PPHolonomicDriveController(
+      new PIDConstants(1.0, 0.0, 0.0),
+      new PIDConstants(2.0, 0.0, 0.0));
 
   private SwerveDrive(
       SwerveModule2025[] swerveModules,
@@ -79,11 +81,8 @@ public class SwerveDrive extends BaseSwerveDrive {
         (speeds, feedforwards) -> move(speeds), // Method that will drive the robot given ROBOT
         // RELATIVE ChassisSpeeds. Also optionally
         // outputs individual module feedforwards
-        new PPHolonomicDriveController(// PPHolonomicController is the built in path following
-            // controller for holonomic drive trains
-            new PIDConstants(1.0, 0.0, 0.0), // Translation PID constants
-            new PIDConstants(2.0, 0.0, 0.0) // Rotation PID constants
-            ),
+       
+        m_holonomicDriveController,
         m_pathPlannerConfig, // The robot configuration
         () -> {
           // Boolean supplier that controls when the path will be mirrored for the red
@@ -107,8 +106,8 @@ public class SwerveDrive extends BaseSwerveDrive {
   public static SwerveDrive createSwerveDrive(Pigeon2 gyrPigeon2) throws Exception {
     SwerveConfigs swerveConfigs =
         new SwerveConfigs()
-            .setMaxRobotSpeed_mps(SwerveConstants.MaxFreeSpeedMPS)
-            .setMaxRobotRotation_radps(SwerveConstants.MaxRotationSpeedRadPS)
+            .setMaxRobotSpeed(SwerveConstants.MaxFreeSpeed)
+            .setMaxRobotRotation(SwerveConstants.MaxRotationSpeed)
             .setDefaultModuleVelocityPIDFValues(SwerveConstants.DefaultModuleVelocityPIDFValues)
             .setDefaultModuleAnglePIDValues(SwerveConstants.DefaultModuleAnglePIDValue)
             .setDebugMode(true);
@@ -158,20 +157,8 @@ public class SwerveDrive extends BaseSwerveDrive {
 
   @Override
   public void move(ChassisSpeeds chassisSpeeds) {
-    chassisSpeeds.vxMetersPerSecond =
-        MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1)
-            * m_swerveConfigs.maxRobotSpeed_mps()
-            * TranslationSpeedModifier;
-    chassisSpeeds.vyMetersPerSecond =
-        MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)
-            * m_swerveConfigs.maxRobotSpeed_mps()
-            * TranslationSpeedModifier;
-    chassisSpeeds.omegaRadiansPerSecond =
-        MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1)
-            * m_swerveConfigs.maxRobotRotation_radps()
-            * RotationSpeedModifier;
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed_mps());
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed());
     if (GeneralConstants.RobotMode == Mode.SIM) {
       m_simulatedDrive.runSwerveStates(states);
     }
@@ -210,12 +197,8 @@ public class SwerveDrive extends BaseSwerveDrive {
           this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
           this::pathPlannerRobotRelative, // Method that will drive the robot given ROBOT RELATIVE
           // ChassisSpeeds, AND feedforwards
-          new PPHolonomicDriveController(// PPHolonomicController is the built in path
-              // following controller for holonomic drive
-              // trains
-              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-              ),
+          // 
+          m_holonomicDriveController,
           m_pathPlannerConfig, // The robot configuration
           () -> {
             // Boolean supplier that controls when the path will be mirrored for the
