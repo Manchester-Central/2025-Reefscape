@@ -129,15 +129,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       })
     );
     // z on keyboard 0
-    m_simKeyboard.a().onTrue(new InstantCommand(() -> Gripper.hasCoralFrontGrippedSim = !Gripper.hasCoralFrontGrippedSim));
-    // x on keyboard 0
-    m_simKeyboard.b().onTrue(new InstantCommand(() -> Gripper.hasCoralBackGrippedSim = !Gripper.hasCoralBackGrippedSim));
-    // c on keyboard 0
-    m_simKeyboard.x().onTrue(new InstantCommand(() -> Gripper.hasAlgaeGrippedSim = !Gripper.hasAlgaeGrippedSim));
+    m_simKeyboard.a().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim));
 
     // m_operator.start().whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
     // m_operator.leftBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
-    // m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
+    m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
     // m_operator.a().whileTrue(new ChangeState().setLift(LiftState.SCORE_L1).setIntake(IntakeState.STOW));
     // m_operator.x().whileTrue(new ChangeState().setLift(LiftState.SCORE_L2).setIntake(IntakeState.STOW));
     // m_operator.b().whileTrue(new ChangeState().setLift(LiftState.SCORE_L3).setIntake(IntakeState.STOW));

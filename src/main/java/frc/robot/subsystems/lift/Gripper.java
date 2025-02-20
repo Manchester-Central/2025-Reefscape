@@ -17,22 +17,15 @@ import java.util.function.Supplier;
 
 /** Add your docs here. */
 public class Gripper extends AbstractLiftPart {
-  public static boolean hasCoralFrontGrippedSim = false;
-  public static boolean hasCoralBackGrippedSim = false;
-  public static boolean hasAlgaeGrippedSim = false;
+  public static boolean hasCoralGrippedSim = false;
 
-  // public static boolean hasCoralBackGripped = false;
-  private static boolean m_hasCoralFrontGripped = false;
+  private static boolean m_hasCoralGripped = false;
 
   private ChaosTalonFx m_coralMotor = new ChaosTalonFx(CanIdentifiers.GripperCoralMotorCANID);
-  private ChaosTalonFx m_algaeMotor = new ChaosTalonFx(CanIdentifiers.GripperAlgaeMotorCANID);
 
-  private DigitalInput m_algaeSensor = new DigitalInput(IoPortsConstants.AlgaeChannelID);
-  private DigitalInput m_coralSensorFront = new DigitalInput(IoPortsConstants.CoralFrontChannelID);
-  // private DigitalInput m_coralSensorBack = new DigitalInput(IoPortsConstants.CoralBackChannelID);
+  private DigitalInput m_coralSensor = new DigitalInput(IoPortsConstants.CoralChannelID);
 
-  private Debouncer m_coralSensorFrontDebouncer = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
-  // private Debouncer m_coralSensorBackDebouncer = new Debouncer(2.0, DebounceType.kFalling);
+  private Debouncer m_coralSensorDebouncer = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
 
   /**
    * Creates a new Gripper.
@@ -50,52 +43,21 @@ public class Gripper extends AbstractLiftPart {
     m_coralMotor.set(newSpeed);
   }
 
-  /**
-   * Sets the speed [-1.0, 1.0] of the algae gripper.
-   */
-  public void setAlgaeGripSpeed(double newSpeed) {
-    m_algaeMotor.set(newSpeed);
-  }
-
   public double getCoralGripSpeed() {
     return m_coralMotor.get();
   }
 
-  public double getAlgaeGripSpeed() {
-    return m_algaeMotor.get();
+  /**
+   * Checks if there is a coral at the sensor.
+   */
+  public boolean hasCoral() {
+    return m_hasCoralGripped;
   }
 
-  /**
-   * Checks if there is a coral at the front sensor.
-   */
-  public boolean hasCoralFront() {
-    return m_hasCoralFrontGripped;
-  }
-
-  /**
-   * Checks if there is a coral at the back sensor.
-   */
-  public boolean hasCoralBack() {
-    return false; // TODO use debounced value
-    // if (Robot.isSimulation()) {
-    //   return hasCoralBackGrippedSim;
-    // }
-    // return m_coralSensor2.get();
-  }
-
-  /**
-   * Checks if there is an alage at the sensor.
-   */
-  public boolean hasAlgae() {
-    if (Robot.isSimulation()) {
-      return hasAlgaeGrippedSim;
-    }
-    return m_algaeSensor.get();
-  }
 
   @Override
   public void periodic() {
     super.periodic();
-    m_hasCoralFrontGripped = m_coralSensorFrontDebouncer.calculate(Robot.isSimulation() ? hasCoralFrontGrippedSim : m_coralSensorFront.get());
+    m_hasCoralGripped = m_coralSensorDebouncer.calculate(Robot.isSimulation() ? hasCoralGrippedSim : m_coralSensor.get());
   }
 }

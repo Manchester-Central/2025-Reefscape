@@ -76,9 +76,7 @@ public final class Constants {
 
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
-    public static final int AlgaeChannelID = 0;
-    public static final int CoralFrontChannelID = 1;
-    public static final int CoralBackChannelID = 2;
+    public static final int CoralChannelID = 1;
     public static final int ExtenderMinimumChannelID = 3;
   }
 
@@ -149,13 +147,13 @@ public final class Constants {
   public static class MidLiftConstants {
     /** Contains values for different known lift poses. */
     public static class LiftPoses {
-      public static final LiftPose Stow = new LiftPose("Stow", 80, 0.3, 0.0);
+      public static final LiftPose Stow = new LiftPose("Stow", 80, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
       public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 54.0, 0.97, 0.0);
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, 0.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, 0.0);
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 0.0);
-      public static final LiftPose HpIntake = new LiftPose("HpIntake", 50.0, 0.8, 30.0);
+      public static final LiftPose HpIntake = new LiftPose("HpIntake", 50.0, 0.01, -30.0);
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 90.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
     }

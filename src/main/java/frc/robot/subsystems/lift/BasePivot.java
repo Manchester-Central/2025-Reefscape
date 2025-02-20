@@ -94,7 +94,6 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.Configuration.CurrentLimits.StatorCurrentLimit = m_statorCurrentLimit.get();
     m_motor.Configuration.Feedback.FeedbackRemoteSensorID = CanIdentifiers.BasePivotCANcoderCANID;
     m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-    // m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     m_motor.Configuration.Feedback.RotorToSensorRatio = m_rotorToSensorRatio.get();
     m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = m_rampPeriod.get();
     m_motor.Configuration.Feedback.SensorToMechanismRatio = m_sensorToMechRatio.get();

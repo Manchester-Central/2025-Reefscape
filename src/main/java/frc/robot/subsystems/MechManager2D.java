@@ -28,15 +28,10 @@ public class MechManager2D extends SubsystemBase {
 
   // Gripper
   private LoggedMechanismLigament2d m_gripperBaseLigament;
-  private LoggedMechanismLigament2d m_gripperCenterLigament;
-  private LoggedMechanismLigament2d m_gripperBottomLigament;
-  private LoggedMechanismLigament2d m_gripperBottomMotorBaseLigament;
-  private LoggedMechanismLigament2d m_gripperBottomMotorIndicatorFrontLigament;
-  private LoggedMechanismLigament2d m_gripperBottomMotorIndicatorBackLigament;
-  private LoggedMechanismLigament2d m_gripperFrontLigament;
-  private LoggedMechanismLigament2d m_gripperBackLigament;
-  private LoggedMechanismLigament2d m_gripperAlgaeHolderLigament;
-  private LoggedMechanismLigament2d m_gripperAlgaePreviewLigament;
+  private LoggedMechanismLigament2d m_gripperBaseVericalLigament;
+  private LoggedMechanismLigament2d m_gripperPivotLigament;
+  private LoggedMechanismLigament2d m_gripperWheelsLigament;
+  private LoggedMechanismLigament2d m_gripperCoralLigament;
 
   // Bucket
   private LoggedMechanismLigament2d m_bucketBaseLigament;
@@ -80,16 +75,11 @@ public class MechManager2D extends SubsystemBase {
     m_extenderLigament = m_liftRoot.append(new LoggedMechanismLigament2d("Extender", 0.001, 0, 8, m_extenderColor));
 
     // Gripper
-    m_gripperBaseLigament = m_extenderLigament.append(new LoggedMechanismLigament2d("GripperBase", 0.31, -51, 4, m_gripperNeutralColor));
-    m_gripperCenterLigament = m_gripperBaseLigament.append(new LoggedMechanismLigament2d("GripperCenter", 0.005, 0, 2, m_gripperNeutralColor));
-    m_gripperBottomLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperBottom", 0.1, -90, 2, m_gripperNeutralColor));
-    m_gripperBottomMotorBaseLigament = m_gripperBottomLigament.append(new LoggedMechanismLigament2d("GripperBottomMotorBase", 0.02, 0, 2, m_gripperNeutralColor));
-    m_gripperBottomMotorIndicatorFrontLigament = m_gripperBottomMotorBaseLigament.append(new LoggedMechanismLigament2d("GripperBottomIndicatorFront", 0.1, 90, 4, m_gripperNeutralColor));
-    m_gripperBottomMotorIndicatorBackLigament = m_gripperBottomMotorBaseLigament.append(new LoggedMechanismLigament2d("GripperBottomIndicatorBack", 0.1, -90, 4, m_gripperNeutralColor));
-    m_gripperBackLigament = m_gripperBottomLigament.append(new LoggedMechanismLigament2d("GripperBack", 0.0001, -90, 6, m_gripperHasCoralColor));
-    m_gripperFrontLigament = m_gripperBottomLigament.append(new LoggedMechanismLigament2d("GripperFront", 0.0001, 90, 6, m_gripperHasCoralColor));
-    m_gripperAlgaeHolderLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgaeHolder", 0.42, 90, 2, m_gripperNeutralColor));
-    m_gripperAlgaePreviewLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgaePreview", 0.0001, 90, 10, m_gripperHasAlgaeColor));
+    m_gripperBaseLigament = m_extenderLigament.append(new LoggedMechanismLigament2d("GripperBase", 0.1, -90, 4, m_gripperNeutralColor));
+    m_gripperBaseVericalLigament = m_gripperBaseLigament.append(new LoggedMechanismLigament2d("GripperBaseVertical", 0.284828, 90, 2, m_gripperNeutralColor));
+    m_gripperPivotLigament = m_gripperBaseVericalLigament.append(new LoggedMechanismLigament2d("GripperPivot", 0.058165, 0, 2, m_gripperNeutralColor));
+    m_gripperWheelsLigament = m_gripperPivotLigament.append(new LoggedMechanismLigament2d("GripperWheels", 0.058165, 0, 5, m_gripperNeutralColor));
+    m_gripperCoralLigament = m_gripperPivotLigament.append(new LoggedMechanismLigament2d("GripperCoral", 0.0001, 0, 10, m_gripperHasCoralColor));
 
     // Bucket
     m_bucketBaseLigament = m_liftRoot.append(new LoggedMechanismLigament2d("BucketBase", 0.40, 0, 2, m_bucketColor));
@@ -115,48 +105,22 @@ public class MechManager2D extends SubsystemBase {
     m_extenderLigament.setAngle(values.basePivotAngle);
     m_extenderBaseLigament.setAngle(values.basePivotAngle);
     m_bucketBaseLigament.setAngle(values.basePivotAngle);
-    m_gripperCenterLigament.setAngle(values.gripperPivotAngle);
+    m_gripperPivotLigament.setAngle(values.gripperPivotAngle);
 
     // Change coral gripper color
     if (values.coralGripSpeed == 0) {
-      m_gripperBottomMotorIndicatorFrontLigament.setColor(m_gripperNeutralColor);
-      m_gripperBottomMotorIndicatorBackLigament.setColor(m_gripperNeutralColor);
+      m_gripperWheelsLigament.setColor(m_gripperNeutralColor);
     } else if (values.coralGripSpeed > 0) {
-      m_gripperBottomMotorIndicatorFrontLigament.setColor(m_gripperForwardColor);
-      m_gripperBottomMotorIndicatorBackLigament.setColor(m_gripperForwardColor);
+      m_gripperWheelsLigament.setColor(m_gripperForwardColor);
     } else {
-      m_gripperBottomMotorIndicatorFrontLigament.setColor(m_gripperReverseColor);
-      m_gripperBottomMotorIndicatorBackLigament.setColor(m_gripperReverseColor);
-    }
-    
-    // Change algae gripper color
-    if (values.algaeGripSpeed == 0) {
-      m_gripperAlgaeHolderLigament.setColor(m_gripperNeutralColor);
-    } else if (values.algaeGripSpeed > 0) {
-      m_gripperAlgaeHolderLigament.setColor(m_gripperForwardColor);
-    } else {
-      m_gripperAlgaeHolderLigament.setColor(m_gripperReverseColor);
+      m_gripperWheelsLigament.setColor(m_gripperReverseColor);
     }
 
-    // Show algae preview if holding an algae
-    if (values.hasAlgaeGripped) {
-      m_gripperAlgaePreviewLigament.setLength(0.3);
+    // Change color if holding a coral
+    if (values.hasCoral) {
+      m_gripperCoralLigament.setLength(0.301625);
     } else {
-      m_gripperAlgaePreviewLigament.setLength(0.001);
-    }
-
-    // Change color if holding a coral in front
-    if (values.hasCoralBackGripped) {
-      m_gripperBackLigament.setLength(0.09);
-    } else {
-      m_gripperBackLigament.setLength(0.001);
-    }
-
-    // Change color if holding a coral in back
-    if (values.hasCoralFrontGripped) {
-      m_gripperFrontLigament.setLength(0.09);
-    } else {
-      m_gripperFrontLigament.setLength(0.001);
+      m_gripperCoralLigament.setLength(0.001);
     }
 
     // Control angle and color of intake
