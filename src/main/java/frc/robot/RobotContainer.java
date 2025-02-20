@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
@@ -17,11 +20,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
-import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
-import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.SimpleDriveToPosition;
@@ -34,15 +35,10 @@ import frc.robot.subsystems.MechManager2D;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.Gripper;
 import frc.robot.subsystems.lift.IdLift;
-import frc.robot.subsystems.lift.LiftPose;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
-
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
@@ -156,13 +152,13 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.a().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(0.5), m_idLift));
     m_operator.b().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(1.2), m_idLift));
     m_operator.povUp().whileTrue(new RunCommand(() -> {
-        m_idLift.m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
-        m_idLift.m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
-      }, m_idLift));
+      m_idLift.m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
+      m_idLift.m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
+    }, m_idLift));
     m_operator.povDown().whileTrue(new RunCommand(() -> {
-        m_idLift.m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
-        m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
-      }, m_idLift));
+      m_idLift.m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
+      m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
+    }, m_idLift));
   }
 
   @Override
@@ -176,24 +172,17 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   }
 
   @Override
-  public void configureTesterController() {
-    // TODO Auto-generated method stub
-
-  }
+  public void configureTesterController() {}
 
   @Override
   public void configureSimKeyboard() {
     m_simKeyboard = new Gamepad(OperatorConstants.SimulationControllerPort);
-    // TODO Auto-generated method stub
-
   }
 
   @Override
   public void periodic() {
     // Enables Dashboard Numbers to be updated each loop
     DashboardNumber.checkAll();
-    // TODO Auto-generated method stub
-
   }
 
   /**

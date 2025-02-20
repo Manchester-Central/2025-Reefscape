@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.lift;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -16,7 +14,6 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
@@ -150,7 +147,7 @@ public class BasePivot extends AbstractLiftPart {
 
   public Rotation2d getCurrentAngle() {
     return Rotation2d.fromRotations(
-        m_canCoder.getAbsolutePosition().getValueAsDouble()); // TODO get actual motor angle
+        m_canCoder.getAbsolutePosition().getValueAsDouble());
   }
 
   /**
@@ -173,7 +170,7 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.simUpdate();
   }
 
-    /**
+  /**
    * Set extender motor to Coast. :3
    */ 
   public void setMotorCoast() {
@@ -191,7 +188,6 @@ public class BasePivot extends AbstractLiftPart {
 
   @Override
   public void periodic() {
-    // TODO Auto-generated method stub
     super.periodic();
     Logger.recordOutput("BasePivot/Setpoint", m_targetAngle);
     Logger.recordOutput("BasePivot/CurrentAngle", getCurrentAngle().getDegrees());

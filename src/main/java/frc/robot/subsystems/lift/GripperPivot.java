@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.lift;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -16,10 +14,8 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
-import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
 import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
@@ -177,7 +173,7 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.simUpdate();
   }
 
-    /**
+  /**
    * Set extender motor to Coast. :3
    */ 
   public void setMotorCoast() {
