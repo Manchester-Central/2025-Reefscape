@@ -148,7 +148,7 @@ public final class Constants {
   public static class MidLiftConstants {
     /** Contains values for different known lift poses. */
     public static class LiftPoses {
-      public static final LiftPose Stow = new LiftPose("Stow", 80, 0.01, 0.0);
+      public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
       public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 54.0, 0.97, 0.0);
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, 0.0);
@@ -157,6 +157,7 @@ public final class Constants {
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 50.0, 0.01, -30.0);
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 90.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
+      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 0.6, -90.0);
     }
 
     /** This contains constants for our Base Pivot. */
