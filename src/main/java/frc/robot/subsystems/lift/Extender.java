@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -17,7 +18,6 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
-import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
@@ -28,7 +28,7 @@ import org.littletonrobotics.junction.Logger;
 /** Add your docs here. */
 public class Extender extends AbstractLiftPart {
   private double m_targetLength = 1;
-  private double m_gearRatio = 5.1;
+  private double m_gearRatio = ExtenderConstants.SensorToMechanismRatio;
   private double m_jkgMetersSquared = 1;
   private boolean m_hasReachedMinimum = false;
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
@@ -107,7 +107,7 @@ public class Extender extends AbstractLiftPart {
 
     m_motor1.applyConfig();
 
-    m_motor1.attachMotorSim(m_motorSim, m_gearRatio, true);
+    m_motor1.attachMotorSim(m_motorSim, m_gearRatio, ChassisReference.CounterClockwise_Positive, true);
   }
 
   /**

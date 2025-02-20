@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -28,7 +29,7 @@ import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class GripperPivot extends AbstractLiftPart {
-  private double m_gearRatio = 40.0;
+  private double m_gearRatio = GripperPivotConstants.RotorToSensorRatio;
   private double m_jkgMetersSquared = 0.1;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
@@ -123,7 +124,7 @@ public class GripperPivot extends AbstractLiftPart {
 
     m_motor.applyConfig();
 
-    m_motor.attachMotorSim(m_motorSim, m_gearRatio, true);
+    m_motor.attachMotorSim(m_motorSim, m_gearRatio, ChassisReference.CounterClockwise_Positive, true);
     m_motor.attachCanCoderSim(m_canCoder);
   }
 
