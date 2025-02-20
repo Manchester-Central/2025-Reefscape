@@ -91,7 +91,7 @@ public final class Constants {
         SensorDirectionValue.CounterClockwise_Positive;
     public static final double SpeedGearRatio = 7.674;
     public static final double AngleGearRatio = 12.1;
-    public static final double SpeedCircumference = 0.1016 * Math.PI;
+    public static final double SpeedCircumference = 0.1016 * Math.PI * 2.6 / 2.32; /// TODO: reCalabrate
     public static final double DriverRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
     public static final LinearVelocity MaxFreeSpeed = MetersPerSecond.of(4.1605);
@@ -158,12 +158,12 @@ public final class Constants {
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 51.0);
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 50.0, 0.8, -10.0);
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 90.0, 0.1, 0.0);
-      public static final LiftPose Climb = new LiftPose("Climb", 30.0, 0.1, 0.0);
+      public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
     }
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(30);
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(20);
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
       public static final double kP = 150.0;
