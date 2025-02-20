@@ -10,6 +10,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
@@ -22,6 +23,7 @@ import frc.robot.Robot;
 public class ChaosTalonFx extends TalonFX {
   private double m_gearRatio;
   private DCMotorSim m_motorSimModel;
+  private ChassisReference m_simDirection;
   private boolean m_isMainSimMotor;
   private ChaosCanCoder m_attachedCanCoder;
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0);
@@ -42,9 +44,10 @@ public class ChaosTalonFx extends TalonFX {
   /**
    * Adds physical simulation support. 
    */
-  public void attachMotorSim(DCMotorSim dcMotorSim, double gearRatio, boolean isMainSimMotor) {
+  public void attachMotorSim(DCMotorSim dcMotorSim, double gearRatio, ChassisReference simDirection, boolean isMainSimMotor) {
     this.m_gearRatio = gearRatio;
     m_motorSimModel = dcMotorSim;
+    m_simDirection = simDirection;
     m_isMainSimMotor = isMainSimMotor;
   }
 
@@ -80,6 +83,7 @@ public class ChaosTalonFx extends TalonFX {
     }
 
     var talonFxSim = getSimState();
+    talonFxSim.Orientation = m_simDirection;
 
     // set the supply voltage of the TalonFX
     talonFxSim.setSupplyVoltage(RobotController.getBatteryVoltage());

@@ -73,7 +73,7 @@ public class Robot extends ChaosRobot {
   public void robotInit() {
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathfindingCommand.warmupCommand().schedule();
-    Gripper.hasCoralFrontGrippedSim = true;
+    Gripper.hasCoralGrippedSim = true;
     ((RobotContainer) m_robotContainer).setMotorCleanUp();
     super.robotInit(); 
   }
@@ -92,7 +92,7 @@ public class Robot extends ChaosRobot {
   @Override
   public void autonomousInit() {
     ((RobotContainer) m_robotContainer).setMotorStartUp();
-    Gripper.hasCoralFrontGrippedSim = true;
+    Gripper.hasCoralGrippedSim = true;
     super.autonomousInit();
   }
 }

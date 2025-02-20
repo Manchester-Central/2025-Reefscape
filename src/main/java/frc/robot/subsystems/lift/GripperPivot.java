@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.lift;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -13,13 +11,12 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
-import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
 import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
@@ -32,7 +29,7 @@ import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class GripperPivot extends AbstractLiftPart {
-  private double m_gearRatio = 40.0;
+  private double m_gearRatio = GripperPivotConstants.RotorToSensorRatio;
   private double m_jkgMetersSquared = 0.1;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
@@ -127,7 +124,7 @@ public class GripperPivot extends AbstractLiftPart {
 
     m_motor.applyConfig();
 
-    m_motor.attachMotorSim(m_motorSim, m_gearRatio, true);
+    m_motor.attachMotorSim(m_motorSim, m_gearRatio, ChassisReference.CounterClockwise_Positive, true);
     m_motor.attachCanCoderSim(m_canCoder);
   }
 
@@ -145,7 +142,7 @@ public class GripperPivot extends AbstractLiftPart {
       newAngle = LiftPoses.Stow.getGripperPivotAngle();
     }
     m_targetAngle = newAngle;
-    // m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // TODO get actual motor angle
+    m_motor.moveToPositionMotionMagic(newAngle.getRotations());
   }
 
   /**
@@ -157,12 +154,12 @@ public class GripperPivot extends AbstractLiftPart {
     } else if (getCurrentAngle().getDegrees() < GripperPivotConstants.MinAngle.getDegrees()) {
       speed = Math.max(speed, 0.0);
     }
-    // m_motor.set(speed);
+    m_motor.set(speed);
   }
 
   public Rotation2d getCurrentAngle() {
-    return Rotation2d.fromDegrees(
-        m_canCoder.getAbsolutePosition().getValueAsDouble()); // TODO get actual motor angle
+    return Rotation2d.fromRotations(
+        m_canCoder.getAbsolutePosition().getValueAsDouble());
   }
 
   /**
@@ -177,7 +174,7 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.simUpdate();
   }
 
-    /**
+  /**
    * Set extender motor to Coast. :3
    */ 
   public void setMotorCoast() {
@@ -198,11 +195,12 @@ public class GripperPivot extends AbstractLiftPart {
     // TODO Auto-generated method stub
     super.periodic();
     Logger.recordOutput("GripperPivot/Setpoint", m_targetAngle);
-    Logger.recordOutput("GripperPivot/CurrentAngle", getCurrentAngle());
+    Logger.recordOutput("GripperPivot/CurrentAngle", getCurrentAngle().getDegrees());
     Logger.recordOutput("GripperPivot/AtTarget", atTarget());
     Logger.recordOutput("GripperPivot/AngleError", getCurrentAngle().minus(m_targetAngle));
     Logger.recordOutput("GripperPivot/Voltage", m_motor.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput("GripperPivot/StatorCurrent", m_motor.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("GripperPivot/SupplyCurrent", m_motor.getSupplyCurrent().getValueAsDouble());
+    Logger.recordOutput("GripperPivot/MotorAngle", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).getDegrees());
   }
 }

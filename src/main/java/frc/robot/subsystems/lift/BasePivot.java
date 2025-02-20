@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.lift;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -13,10 +11,10 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
@@ -30,7 +28,7 @@ import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class BasePivot extends AbstractLiftPart {
-  private double m_gearRatio = 10.0;
+  private double m_gearRatio = BasePivotConstants.RotorToSensorRatio;
   private double m_jkgMetersSquared = 1.0;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
@@ -96,7 +94,6 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.Configuration.CurrentLimits.StatorCurrentLimit = m_statorCurrentLimit.get();
     m_motor.Configuration.Feedback.FeedbackRemoteSensorID = CanIdentifiers.BasePivotCANcoderCANID;
     m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-    // m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     m_motor.Configuration.Feedback.RotorToSensorRatio = m_rotorToSensorRatio.get();
     m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = m_rampPeriod.get();
     m_motor.Configuration.Feedback.SensorToMechanismRatio = m_sensorToMechRatio.get();
@@ -117,7 +114,7 @@ public class BasePivot extends AbstractLiftPart {
 
     m_motor.applyConfig();
 
-    m_motor.attachMotorSim(m_motorSim, m_gearRatio, true);
+    m_motor.attachMotorSim(m_motorSim, m_gearRatio, ChassisReference.Clockwise_Positive, true);
     m_motor.attachCanCoderSim(m_canCoder);
     
     // m_motor.setPosition(getCurrentAngle().getRotations());
@@ -150,7 +147,7 @@ public class BasePivot extends AbstractLiftPart {
 
   public Rotation2d getCurrentAngle() {
     return Rotation2d.fromRotations(
-        m_canCoder.getAbsolutePosition().getValueAsDouble()); // TODO get actual motor angle
+        m_canCoder.getAbsolutePosition().getValueAsDouble());
   }
 
   /**
@@ -173,7 +170,7 @@ public class BasePivot extends AbstractLiftPart {
     m_motor.simUpdate();
   }
 
-    /**
+  /**
    * Set extender motor to Coast. :3
    */ 
   public void setMotorCoast() {
@@ -191,7 +188,6 @@ public class BasePivot extends AbstractLiftPart {
 
   @Override
   public void periodic() {
-    // TODO Auto-generated method stub
     super.periodic();
     Logger.recordOutput("BasePivot/Setpoint", m_targetAngle);
     Logger.recordOutput("BasePivot/CurrentAngle", getCurrentAngle().getDegrees());

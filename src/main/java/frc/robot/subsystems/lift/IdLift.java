@@ -21,13 +21,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     public Rotation2d basePivotAngle;
     public Rotation2d gripperPivotAngle;
     public double coralGripSpeed;
-    public double algaeGripSpeed;
     public double extenderLength;
     public boolean isBasePivotAtSafeAngle;
     public boolean isExtenderAtSafeLength;
-    public boolean hasAlgaeGripped;
-    public boolean hasCoralBackGripped;
-    public boolean hasCoralFrontGripped;
+    public boolean hasCoral;
   }
 
   /**
@@ -38,13 +35,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     values.basePivotAngle = m_basePivot.getCurrentAngle();
     values.gripperPivotAngle = m_gripperPivot.getCurrentAngle();
     values.coralGripSpeed = m_gripper.getCoralGripSpeed();
-    values.algaeGripSpeed = m_gripper.getAlgaeGripSpeed();
     values.extenderLength = m_extender.getCurrentLength();
     values.isBasePivotAtSafeAngle = m_basePivot.isSafeAngle();
     values.isExtenderAtSafeLength = m_extender.isSafeLength();
-    values.hasAlgaeGripped = m_gripper.hasAlgae();
-    values.hasCoralBackGripped = m_gripper.hasCoralBack();
-    values.hasCoralFrontGripped = m_gripper.hasCoralFront();
+    values.hasCoral = m_gripper.hasCoral();
     return values;
   }
 
@@ -148,7 +142,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void intakeFromHpState() {
-    if (m_gripper.hasCoralBack() || m_gripper.hasCoralFront()) {
+    if (m_gripper.hasCoral()) {
       changeState(LiftState.STOW);
       return;
     }
@@ -158,7 +152,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_gripper.setCoralGripSpeed(-0.5);
 
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
-      Gripper.hasCoralFrontGrippedSim = true;
+      Gripper.hasCoralGrippedSim = true;
     }
   }
 
@@ -179,7 +173,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void scoreHelper(LiftPose liftPose, boolean isGripperReleaseForward) {
-    if (!(m_gripper.hasCoralBack() || m_gripper.hasCoralFront())) {
+    if (!(m_gripper.hasCoral())) {
       changeState(LiftState.STOW);
       return;
     }
@@ -193,7 +187,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
 
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
-      Gripper.hasCoralFrontGrippedSim = false;
+      Gripper.hasCoralGrippedSim = false;
     }
   }
 
