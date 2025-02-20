@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -86,12 +87,12 @@ public final class Constants {
     public static final InvertedValue InvertedAngle = InvertedValue.CounterClockwise_Positive;
     public static final SensorDirectionValue InvertedEncoder =
         SensorDirectionValue.CounterClockwise_Positive;
-    public static final double SpeedGearRatio = 7.674;
+    public static final double SpeedGearRatio = 6.98;
     public static final double AngleGearRatio = 12.1;
-    public static final double SpeedCircumference = 0.1016 * Math.PI * 2.6 / 2.32; /// TODO: reCalabrate
+    public static final double SpeedCircumference = 0.1016 * Math.PI;
     public static final double DriverRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
-    public static final LinearVelocity MaxFreeSpeed = MetersPerSecond.of(4.1605);
+    public static final LinearVelocity MaxFreeSpeed = FeetPerSecond.of(15.01);
     public static final AngularVelocity MaxRotationSpeed = RadiansPerSecond.of(12.0); // TODO: GET REAL
     public static final PIDValue DefaultModuleAnglePIDValue = new PIDValue(60.0, 12.0, 0.0);
     public static final PIDFValue DefaultModuleVelocityPIDFValues =
