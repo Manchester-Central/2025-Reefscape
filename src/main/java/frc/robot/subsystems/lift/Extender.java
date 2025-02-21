@@ -131,6 +131,15 @@ public class Extender extends AbstractLiftPart {
    */
   public void setTargetLength(double newLength) {
     if (hasReachedMinimum()) {
+      if (!getLiftValues().isGripperPivotAtSafeAngle) {
+        if (getCurrentLength() < ExtenderConstants.BucketBottomClearanceMeter && newLength > ExtenderConstants.BucketBottomClearanceMeter) {
+          newLength = ExtenderConstants.BucketBottomClearanceMeter;
+        }
+        if (getCurrentLength() > ExtenderConstants.BucketTopClearanceMeter && newLength < ExtenderConstants.BucketTopClearanceMeter) {
+          newLength = ExtenderConstants.BucketTopClearanceMeter;
+        } 
+      }
+      
       if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {
         newLength = ExtenderConstants.MaxLengthMeter;
       } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {

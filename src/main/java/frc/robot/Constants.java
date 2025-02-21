@@ -151,7 +151,7 @@ public final class Constants {
       public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
       public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 54.0, 0.97, 0.0);
-      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, 0.0);
+      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, -90.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, 0.0);
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 0.0);
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 50.0, 0.01, -30.0);
@@ -196,6 +196,8 @@ public final class Constants {
 
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-140); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(0);
+      public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
+      public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
 
       public static final double kP = 1.0;
       public static final double kI = 0.0;
@@ -228,6 +230,8 @@ public final class Constants {
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
       public static final double MaxLengthMeter = 1.5;
+      public static final double BucketTopClearanceMeter = 0.59;
+      public static final double BucketBottomClearanceMeter = 0.1;
       public static final boolean HasMagnetSensor = false; // TODO: enable hasMagneto 
 
       // Slot 0 Configs

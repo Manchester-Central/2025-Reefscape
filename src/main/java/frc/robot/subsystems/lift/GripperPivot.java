@@ -145,6 +145,10 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.moveToPositionMotionMagic(newAngle.getRotations());
   }
 
+  public boolean isSafeAngle() {
+    return Math.abs(getCurrentAngle().minus(GripperPivotConstants.SafeAngle).getDegrees()) < GripperPivotConstants.SafeAngleTolerance.getDegrees();
+  }
+
   /**
    * Sets the direct speed [-1.0, 1.0] of the motors.
    */

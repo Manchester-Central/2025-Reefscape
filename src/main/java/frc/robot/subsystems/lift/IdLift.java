@@ -25,6 +25,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     public boolean isBasePivotAtSafeAngle;
     public boolean isExtenderAtSafeLength;
     public boolean hasCoral;
+    public boolean isGripperPivotAtSafeAngle;
   }
 
   /**
@@ -39,6 +40,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     values.isBasePivotAtSafeAngle = m_basePivot.isSafeAngle();
     values.isExtenderAtSafeLength = m_extender.isSafeLength();
     values.hasCoral = m_gripper.hasCoral();
+    values.isGripperPivotAtSafeAngle = m_gripperPivot.isSafeAngle();
     return values;
   }
 
