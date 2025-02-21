@@ -29,7 +29,7 @@ import org.littletonrobotics.junction.Logger;
 public class Extender extends AbstractLiftPart {
   private double m_targetLength = 1;
   private double m_gearRatio = ExtenderConstants.SensorToMechanismRatio;
-  private double m_jkgMetersSquared = 5;
+  private double m_jkgMetersSquared = 0.1;
   private boolean m_hasReachedMinimum = false;
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
