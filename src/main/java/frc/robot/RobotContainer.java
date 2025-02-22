@@ -25,6 +25,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForState;
@@ -110,6 +111,13 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    * joysticks}.
    */
   private void configureBindings() {
+    // Everything after this is for competition
+    m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
+      FieldPoint Pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(),FieldPoint.getHpDrivePoses());
+      return Pose.getCurrentAlliancePose().minus(m_swerveDrive.getPose()).getTranslation().getAngle();
+    }, 1.0));
+
+    // Everything after this is for demos and testing
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
 
     m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
