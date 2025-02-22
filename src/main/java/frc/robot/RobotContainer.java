@@ -141,7 +141,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.back().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim)); // TODO: delete if back button needed for competition
     m_operator.povLeft().whileTrue(new ChangeState().setLift(LiftState.MANUAL).setIntake(IntakeState.STOW));
 
-    // m_operator.leftTrigger().whileTrue(new RunCommand(() -> m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(45)),
+    // m_operator.leftTrigger().whileTrue(new RunCommand(() -> m_idLift.m_basePivot.fsetTargetAngle(Rotation2d.fromDegrees(45)),
     //     m_idLift));
     // m_operator.rightTrigger().whileTrue(new RunCommand(() -> m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(80)),
     //     m_idLift));

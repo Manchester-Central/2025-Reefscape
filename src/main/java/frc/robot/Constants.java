@@ -158,6 +158,8 @@ public final class Constants {
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 90.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
       public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 0.6, -90.0);
+      public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
+      public static final LiftPose TopBucket = new LiftPose("TopBucket", 90.0, 0.6, 0);
     }
 
     /** This contains constants for our Base Pivot. */
