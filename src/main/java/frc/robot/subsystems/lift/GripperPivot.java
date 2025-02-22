@@ -29,13 +29,13 @@ import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class GripperPivot extends AbstractLiftPart {
-  private double m_gearRatio = GripperPivotConstants.RotorToSensorRatio;
+  private double m_simGearRatio = GripperPivotConstants.RotorToSensorRatio * 5;
   private double m_jkgMetersSquared = 0.1;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
-          LinearSystemId.createDCMotorSystem(m_dcMotor, m_jkgMetersSquared, m_gearRatio),
+          LinearSystemId.createDCMotorSystem(m_dcMotor, m_jkgMetersSquared, m_simGearRatio),
           m_dcMotor,
           0.001,
           0.001);
@@ -124,7 +124,7 @@ public class GripperPivot extends AbstractLiftPart {
 
     m_motor.applyConfig();
 
-    m_motor.attachMotorSim(m_motorSim, m_gearRatio, ChassisReference.CounterClockwise_Positive, true);
+    m_motor.attachMotorSim(m_motorSim, m_simGearRatio, ChassisReference.CounterClockwise_Positive, true);
     m_motor.attachCanCoderSim(m_canCoder);
   }
 
@@ -143,6 +143,10 @@ public class GripperPivot extends AbstractLiftPart {
     }
     m_targetAngle = newAngle;
     m_motor.moveToPositionMotionMagic(newAngle.getRotations());
+  }
+
+  public boolean isSafeAngle() {
+    return Math.abs(getCurrentAngle().minus(GripperPivotConstants.SafeAngle).getDegrees()) < GripperPivotConstants.SafeAngleTolerance.getDegrees();
   }
 
   /**

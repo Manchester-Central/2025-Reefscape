@@ -25,6 +25,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     public boolean isBasePivotAtSafeAngle;
     public boolean isExtenderAtSafeLength;
     public boolean hasCoral;
+    public boolean isGripperPivotAtSafeAngle;
   }
 
   /**
@@ -39,6 +40,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     values.isBasePivotAtSafeAngle = m_basePivot.isSafeAngle();
     values.isExtenderAtSafeLength = m_extender.isSafeLength();
     values.hasCoral = m_gripper.hasCoral();
+    values.isGripperPivotAtSafeAngle = m_gripperPivot.isSafeAngle();
     return values;
   }
 
@@ -60,7 +62,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     SCORE_L1,
     SCORE_L2,
     SCORE_L3,
-    SCORE_L4; // Might need many prep states
+    SCORE_L4, // Might need many prep states
+    HOLD_CORAL;
   }
 
   /** Creates a new Lift. */
@@ -104,6 +107,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       case SCORE_L4:
         scoreL4State();
         break;
+      case HOLD_CORAL:
+        holdCoralState();
+        break;
     }
   }
 
@@ -128,6 +134,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void stowState() {
+    if (m_gripper.hasCoral()) {
+      changeState(LiftState.HOLD_CORAL);
+      return;
+    }
     m_basePivot.setTargetAngle(LiftPoses.Stow.getBasePivotAngle());
     m_extender.setTargetLength(LiftPoses.Stow.getExtensionMeters());
     m_gripperPivot.setTargetAngle(LiftPoses.Stow.getGripperPivotAngle());
@@ -143,7 +153,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private void intakeFromHpState() {
     if (m_gripper.hasCoral()) {
-      changeState(LiftState.STOW);
+      changeState(LiftState.HOLD_CORAL);
       return;
     }
     m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
@@ -170,6 +180,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private void scoreL4State() {
     scoreHelper(LiftPoses.ScoreL4, false);
+  }
+
+  private void holdCoralState() {
+    m_basePivot.setTargetAngle(LiftPoses.HoldCoral.getBasePivotAngle());
+    m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(LiftPoses.HoldCoral.getGripperPivotAngle());
   }
 
   private void scoreHelper(LiftPose liftPose, boolean isGripperReleaseForward) {
