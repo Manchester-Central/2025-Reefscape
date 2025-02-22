@@ -48,8 +48,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   public BasePivot m_basePivot = new BasePivot(this::getLiftValues); // TODO: UNDO public
   public Extender m_extender = new Extender(this::getLiftValues); // TODO: UNDO public
-  private Gripper m_gripper = new Gripper(this::getLiftValues);
-  private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
+  public Gripper m_gripper = new Gripper(this::getLiftValues);
+  public GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
   private Gamepad m_operator;
 
   /**
@@ -147,12 +147,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(Rotation2d.fromDegrees(90));
     if (m_extender.getCurrentLength() >= LiftPoses.HoldCoral.getExtensionMeters()) {
       // for operator controls
-      m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.131);
-      if (!m_gripper.hasCoral()) {
-        m_gripper.setCoralGripSpeed(m_operator.getRightY() * 0.131);
-      } else {
-        m_gripper.setCoralGripSpeed(m_operator.getRightY() < 0 ? 0 : m_operator.getRightY() * 0.131);
+      m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.4);
+      double yValue = m_operator.getRightY();
+      if (m_gripper.hasCoral()) {
+        yValue = yValue < 0 ? 0 : yValue;
       }
+      m_gripper.setCoralGripSpeed(yValue * 0.131);
     } else {
       m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(0));
       if (m_gripperPivot.atTarget()) {

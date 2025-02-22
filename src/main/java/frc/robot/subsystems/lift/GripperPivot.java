@@ -8,6 +8,7 @@ import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -29,7 +30,7 @@ import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class GripperPivot extends AbstractLiftPart {
-  private double m_simGearRatio = GripperPivotConstants.RotorToSensorRatio * 5;
+  private double m_simGearRatio = GripperPivotConstants.RotorToSensorRatio;
   private double m_jkgMetersSquared = 0.1;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
@@ -104,7 +105,8 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.Configuration.CurrentLimits.StatorCurrentLimitEnable = true;
     m_motor.Configuration.CurrentLimits.StatorCurrentLimit = m_statorCurrentLimit.get();
     m_motor.Configuration.Feedback.FeedbackRemoteSensorID = CanIdentifiers.GripperPivotCANCoderCANID;
-    m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    // m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     m_motor.Configuration.Feedback.RotorToSensorRatio = m_rotorToSensorRatio.get();
     m_motor.Configuration.Feedback.SensorToMechanismRatio = m_sensorToMechRatio.get();
     m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = m_rampPeriod.get();
@@ -159,6 +161,10 @@ public class GripperPivot extends AbstractLiftPart {
       speed = Math.max(speed, 0.0);
     }
     m_motor.set(speed);
+  }
+
+  public double getSpeed() {
+    return m_motor.getVelocity().getValueAsDouble();
   }
 
   public Rotation2d getCurrentAngle() {
