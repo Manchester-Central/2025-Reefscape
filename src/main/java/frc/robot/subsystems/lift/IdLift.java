@@ -130,17 +130,36 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     // }
 
     if (Robot.isSimulation()) {
-      changeState(LiftState.STOW);
+      // changeState(LiftState.STOW);
+      changeState(LiftState.MANUAL);
     } else {
       changeState(LiftState.MANUAL);
     }
   }
 
   private void manualState() {
-    m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
+    /* m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
     m_gripper.setCoralGripSpeed(0.0);
     m_gripperPivot.setSpeed(0.0);
     m_extender.setSpeed(m_operator.getRightY() * 0.5);
+    */
+    // setMotorStartUp();
+    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(90));
+    if (m_extender.getCurrentLength() >= LiftPoses.HoldCoral.getExtensionMeters()) {
+      // for operator controls
+      m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.131);
+      if (!m_gripper.hasCoral()) {
+        m_gripper.setCoralGripSpeed(m_operator.getRightY() * 0.131);
+      } else {
+        m_gripper.setCoralGripSpeed(m_operator.getRightY() < 0 ? 0 : m_operator.getRightY() * 0.131);
+      }
+    } else {
+      m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(0));
+      if (m_gripperPivot.atTarget()) {
+        setMotorCleanUp(); // TODO Command Scheduler Loop overun
+        m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
+      }
+    }
   }
 
   private void stowState() {
