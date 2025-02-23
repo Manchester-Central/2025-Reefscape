@@ -16,7 +16,8 @@ import frc.robot.subsystems.shared.SubsystemState;
 /** Add your docs here. */
 public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   /**
-   * Possible values from the lift that can be used in lift parts and other areas of the code 
+   * Possible values from the lift that can be used in lift parts and other areas
+   * of the code
    * (without having to know about the base parts).
    */
   public class IdLiftValues {
@@ -115,34 +116,35 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
         holdCoralState();
         break;
       case BOTTOM_BUCKET:
-        bottombucketState();
+        bottomBucketState();
         break;
       case TOP_BUCKET:
-        topbucketState();
+        topBucketState();
         break;
     }
   }
 
   private void startState() {
     // if (!m_extender.hasReachedMinimum()) {
-    //   m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
-    //   return;
+    // m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
+    // return;
     // }
 
     if (Robot.isSimulation()) {
       // changeState(LiftState.STOW);
-      changeState(LiftState.MANUAL);
+      changeState(LiftState.STOW);
     } else {
       changeState(LiftState.MANUAL);
     }
   }
 
   private void manualState() {
-    /* m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
-    m_gripper.setCoralGripSpeed(0.0);
-    m_gripperPivot.setSpeed(0.0);
-    m_extender.setSpeed(m_operator.getRightY() * 0.5);
-    */
+    /*
+     * m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
+     * m_gripper.setCoralGripSpeed(0.0);
+     * m_gripperPivot.setSpeed(0.0);
+     * m_extender.setSpeed(m_operator.getRightY() * 0.5);
+     */
     // setMotorStartUp();
     m_basePivot.setTargetAngle(Rotation2d.fromDegrees(90));
     if (m_extender.getCurrentLength() >= LiftPoses.HoldCoral.getExtensionMeters()) {
@@ -221,7 +223,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void bottombucketState() {
+  private void bottomBucketState() {
     m_basePivot.setTargetAngle(LiftPoses.BottomBucket.getBasePivotAngle());
     m_extender.setTargetLength(LiftPoses.BottomBucket.getExtensionMeters());
     m_gripperPivot.setTargetAngle(LiftPoses.BottomBucket.getGripperPivotAngle());
@@ -234,7 +236,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void topbucketState() {
+  private void topBucketState() {
     m_basePivot.setTargetAngle(LiftPoses.TopBucket.getBasePivotAngle());
     m_extender.setTargetLength(LiftPoses.TopBucket.getExtensionMeters());
     m_gripperPivot.setTargetAngle(LiftPoses.TopBucket.getGripperPivotAngle());
