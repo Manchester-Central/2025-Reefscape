@@ -196,7 +196,7 @@ public final class Constants {
     /** This contains constants for our Gripper Pivot. */
     public static class GripperPivotConstants {
 
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-140); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(0);
       public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
       public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);

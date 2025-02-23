@@ -160,7 +160,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     //     m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
     //   }
     // }
-    m_gripperPivot.setSpeed(m_operator.getRightY() * 0.4);
+    m_gripperPivot.setSpeed(m_operator.getRightY() * 0.2);
     // double yValue = m_operator.getRightY();
     //   if (m_gripper.hasCoral()) {
     //     yValue = yValue < 0 ? 0 : yValue;
