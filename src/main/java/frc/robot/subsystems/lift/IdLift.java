@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.lift;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -55,8 +57,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   public BasePivot m_basePivot = new BasePivot(this::getLiftValues); // TODO: UNDO public
   public Extender m_extender = new Extender(this::getLiftValues); // TODO: UNDO public
-  public Gripper m_gripper = new Gripper(this::getLiftValues);
-  public GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
+  private Gripper m_gripper = new Gripper(this::getLiftValues);
+  private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
   private Gamepad m_operator;
   private Pose3d m_ikTargetPose = new Pose3d(0, 0, FieldDimensions.Reef3Meters, new Rotation3d());
   private Supplier<Pose2d> m_robotPoseSupplier;
@@ -75,7 +77,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     SCORE_L2,
     SCORE_L3,
     SCORE_L4, // Might need many prep states
-    HOLD_CORAL;
+    HOLD_CORAL,
+    BOTTOM_BUCKET,
+    TOP_BUCKET;
   }
 
   /** Creates a new Lift. */
@@ -126,6 +130,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       case HOLD_CORAL:
         holdCoralState();
         break;
+      case BOTTOM_BUCKET:
+        bottombucketState();
+        break;
+      case TOP_BUCKET:
+        topbucketState();
+        break;
     }
   }
 
@@ -157,16 +167,35 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     if (Robot.isSimulation()) {
       // changeState(LiftState.STOW);
       changeState(LiftState.IKSOLVER);
+      // changeState(LiftState.MANUAL);
     } else {
       changeState(LiftState.MANUAL);
     }
   }
 
   private void manualState() {
-    m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
+    /* m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
     m_gripper.setCoralGripSpeed(0.0);
     m_gripperPivot.setSpeed(0.0);
     m_extender.setSpeed(m_operator.getRightY() * 0.5);
+    */
+    // setMotorStartUp();
+    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(90));
+    if (m_extender.getCurrentLength() >= LiftPoses.HoldCoral.getExtensionMeters()) {
+      // for operator controls
+      m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.4);
+      double yValue = m_operator.getRightY();
+      if (m_gripper.hasCoral()) {
+        yValue = yValue < 0 ? 0 : yValue;
+      }
+      m_gripper.setCoralGripSpeed(yValue * 0.131);
+    } else {
+      m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(0));
+      if (m_gripperPivot.atTarget()) {
+        setMotorCleanUp(); // TODO Command Scheduler Loop overun
+        m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
+      }
+    }
   }
 
   private void stowState() {
@@ -189,7 +218,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private void intakeFromHpState() {
     if (m_gripper.hasCoral()) {
-      changeState(LiftState.HOLD_CORAL);
+      changeState(LiftState.BOTTOM_BUCKET);
       return;
     }
     m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
@@ -222,6 +251,36 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(LiftPoses.HoldCoral.getBasePivotAngle());
     m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
     m_gripperPivot.setTargetAngle(LiftPoses.HoldCoral.getGripperPivotAngle());
+    if (!m_gripper.hasCoral()) {
+      changeState(LiftState.TOP_BUCKET);
+      return;
+    }
+  }
+
+  private void bottombucketState() {
+    m_basePivot.setTargetAngle(LiftPoses.BottomBucket.getBasePivotAngle());
+    m_extender.setTargetLength(LiftPoses.BottomBucket.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(LiftPoses.BottomBucket.getGripperPivotAngle());
+    if (m_gripper.hasCoral() && m_gripperPivot.atTarget()) {
+      changeState(LiftState.TOP_BUCKET);
+      return;
+    } else if (!m_gripper.hasCoral()) {
+      changeState(LiftState.INTAKE_FROM_HP);
+      return;
+    }
+  }
+
+  private void topbucketState() {
+    m_basePivot.setTargetAngle(LiftPoses.TopBucket.getBasePivotAngle());
+    m_extender.setTargetLength(LiftPoses.TopBucket.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(LiftPoses.TopBucket.getGripperPivotAngle());
+    if (m_gripper.hasCoral() && m_extender.atTarget()) {
+      changeState(LiftState.HOLD_CORAL);
+      return;
+    } else if (!m_gripper.hasCoral() && m_gripperPivot.atTarget()) {
+      changeState(LiftState.BOTTOM_BUCKET);
+      return;
+    }
   }
 
   private void scoreHelper(LiftPose liftPose, boolean isGripperReleaseForward) {
@@ -259,6 +318,13 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_extender.setMotorBrake();
     m_basePivot.setMotorBrake();
     m_gripperPivot.setMotorBrake();
+  }
+
+  @Override
+  public void periodic() {
+    // TODO Auto-generated method stub
+    super.periodic();
+    Logger.recordOutput("CurrentState", getCurrentState().name());
   }
 }
 // RIP m_oldLift & m_oldGripper 2025-2025
