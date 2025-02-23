@@ -1,7 +1,6 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.FeetPerSecond;
-import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.chaos131.pid.PIDFValue;
@@ -14,7 +13,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.subsystems.lift.LiftPose;
 
@@ -306,12 +307,15 @@ public final class Constants {
 
   /** This contains constants for our robot dimensions. */
   public static class RobotDimensions {
-    // Includes the Bumpers
+    // Includes the Bumpers, robot origin assumed to be in the center
     public static final double FrontBackLengthMeters = 0.85;
-    // Includes the Bumpers
+    // Includes the Bumpers, robot origin assumed to be in the center
     public static final double SideSideLengthMeters = 0.85;
     // Buffer space to use between the end effector and an interaction point
     public static final double CoralPlacementMargin = 0.03;
+
+    // Max range beyond the end of the bumpers
+    public static final Distance MechanismExtensionMargin = Units.Inches.of(18);
 
     // Angle between the Lift and the Gripped Pivot
     public static final Rotation2d WristMountAngle = Rotation2d.fromDegrees(140); // TODO: Fix me

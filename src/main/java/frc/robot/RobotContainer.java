@@ -14,17 +14,22 @@ import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.commands.IkScoring;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForState;
@@ -100,15 +105,6 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     configureBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
   private void configureBindings() {
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
 
@@ -155,6 +151,14 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       m_idLift.m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
       m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
     }, m_idLift));
+
+
+    Transform3d branchLeftR4Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
+                                                     FieldDimensions.ReefBranchLeft.getY(),
+                                                     FieldDimensions.Reef3Meters,
+                                                     new Rotation3d(0, -Math.PI / 2, 0));
+    Pose3d branchLeftR4 = FieldPoint.aprilTagMap.get(17).pose3d.transformBy(branchLeftR4Offset);
+    m_driver.rightTrigger().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR4));
   }
 
   @Override

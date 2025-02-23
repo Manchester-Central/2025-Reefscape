@@ -9,17 +9,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants.FieldDimensions;
-import frc.robot.Constants.RobotDimensions;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
 import frc.robot.utils.FieldPoint;
-
+import frc.robot.utils.IkEquations;
 import java.util.function.Supplier;
 
 /** Add your docs here. */
@@ -58,8 +55,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   public BasePivot m_basePivot = new BasePivot(this::getLiftValues); // TODO: UNDO public
   public Extender m_extender = new Extender(this::getLiftValues); // TODO: UNDO public
-  private Gripper m_gripper = new Gripper(this::getLiftValues);
-  private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
+  public Gripper m_gripper = new Gripper(this::getLiftValues);
+  public GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
   private Gamepad m_operator;
   private Pose3d m_ikTargetPose = new Pose3d(0, 0, FieldDimensions.Reef3Meters, new Rotation3d());
   private Supplier<Pose2d> m_robotPoseSupplier;
@@ -132,6 +129,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
+  public void setIkSolverTarget(Pose3d ikTarget) {
+    m_ikTargetPose = ikTarget;
+  }
+
   /**
    * See The drawio diagram 'IKMath' in documents for details on the math.
    */
@@ -143,53 +144,19 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
                                                FieldDimensions.Reef3Meters,
                                                new Rotation3d(0, -Math.PI / 2, 0));
     var reefBranch = FieldPoint.aprilTagMap.get(17).pose3d.transformBy(branchLeftR4);
-    // Robot Origin to Reef Branch
-    var robotOriginToReefBranch = reefBranch.getTranslation().minus(robotPose.getTranslation());
-    var floorDistance = robotOriginToReefBranch.toTranslation2d().getNorm();
-
-    // Calculate Mechanism Root in 2d 
-    var basePivotPoint = new Translation2d().plus(RobotDimensions.BasePivotOffset.getTranslation());  // new Translation2d(floorDistance, reefBranch.getZ());
-    // Calculate EndEffector pivot point
-    var gripperPivotPoint = new Pose2d(floorDistance, FieldDimensions.Reef3Meters, Rotation2d.fromDegrees(-90));
-    // Adjust the position upwards above the target point
-    gripperPivotPoint.transformBy(new Transform2d(-(RobotDimensions.CoralPlacementMargin + RobotDimensions.WristToEndEffector.getTranslation().getNorm()),
-                                                  0,
-                                                  new Rotation2d()));
-    // Get core problem dimensions
-    var hvector = gripperPivotPoint.getTranslation().minus(basePivotPoint);
-    var hlength = hvector.getNorm();
-    var hangle = hvector.getAngle();
-    var clength = RobotDimensions.LiftToWristOffset.getTranslation().getNorm();
-
-    var angleB = Rotation2d.fromDegrees(180.0 - RobotDimensions.WristMountAngle.getDegrees());
-    var alength = clength * Math.sin(angleB.getRadians());
-    var blength = clength * Math.cos(angleB.getRadians());
-    var omegaRadians = Rotation2d.fromRadians(Math.asin(alength / hlength));
-    var blLength = hlength * Math.cos(omegaRadians.getRadians());
-
-    // Finally, the 2 values we care about:
-    // - The Base Pivot angle (alpha)
-    // - Extender Length (lLength)
-    var alpha = hangle.plus(omegaRadians);
-    var lLength = blLength - blength;
-    var gripperPivotAngle = Rotation2d.fromDegrees(90.0)
-                                      .minus(alpha)
-                                      .plus(Rotation2d.fromRadians(branchLeftR4.getRotation().getY()));
-    // Examples:
-    // Lift Angle (alpha) degrees, desired gripper angle -> effective gripper angle relative to lift
-    // Lift 45d, gripper pivot 0d -> gripper 90-(45)+(0) = 45d
-    // Lift 0d, gripper pivot 0d -> gripper 90-(0)+(0) = 90d
-    // Lift 60d, gripper pivot -60d -> gripper 90-(60)+(-60) = -30d
+    
+    LiftPose mechanismPose = IkEquations.getPivotLiftPivot(robotPose, reefBranch);
 
     // Now apply them!
-    m_extender.setTargetLength(lLength);
-    m_basePivot.setTargetAngle(alpha);
-    m_gripperPivot.setTargetAngle(gripperPivotAngle);
+    m_extender.setTargetLength(mechanismPose.getExtensionMeters());
+    m_basePivot.setTargetAngle(mechanismPose.getBasePivotAngle());
+    m_gripperPivot.setTargetAngle(mechanismPose.getGripperPivotAngle());
   }
 
   private void startState() {
     if (Robot.isSimulation()) {
-      changeState(LiftState.STOW);
+      // changeState(LiftState.STOW);
+      changeState(LiftState.IKSOLVER);
     } else {
       changeState(LiftState.MANUAL);
     }
