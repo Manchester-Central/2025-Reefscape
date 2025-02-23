@@ -154,10 +154,12 @@ public final class Constants {
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, -90.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, 0.0);
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 0.0);
-      public static final LiftPose HpIntake = new LiftPose("HpIntake", 50.0, 0.01, -30.0);
+      public static final LiftPose HpIntake = new LiftPose("HpIntake", 25.0, 0.057, -33.5); // Last updated 2/22/25
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 90.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
-      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 0.6, -90.0);
+      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 1.0, -90.0);
+      public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
+      public static final LiftPose TopBucket = new LiftPose("TopBucket", 90.0, 0.6, 0);
     }
 
     /** This contains constants for our Base Pivot. */
@@ -199,7 +201,7 @@ public final class Constants {
       public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
       public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
 
-      public static final double kP = 1.0;
+      public static final double kP = 15.0;
       public static final double kI = 0.0;
       public static final double kD = 0.3;
       public static final double kG = 0.0;
@@ -216,7 +218,7 @@ public final class Constants {
       public static final double StatorCurrentLimit = 40;
 
       // Sensor Feedback // TODO: get real values
-      public static final double RotorToSensorRatio = 1.0;
+      public static final double RotorToSensorRatio = 302.4;
       public static final double SensorToMechanismRatio = 1.0;
       
       // Ramp Rates // TODO: get real values
