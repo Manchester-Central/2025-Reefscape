@@ -145,22 +145,27 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
      * m_extender.setSpeed(m_operator.getRightY() * 0.5);
      */
     // setMotorStartUp();
-    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(90));
-    if (m_extender.getCurrentLength() >= LiftPoses.HoldCoral.getExtensionMeters()) {
-      // for operator controls
-      m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.4);
-      double yValue = m_operator.getRightY();
-      if (m_gripper.hasCoral()) {
-        yValue = yValue < 0 ? 0 : yValue;
-      }
-      m_gripper.setCoralGripSpeed(yValue * 0.131);
-    } else {
-      m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(0));
-      if (m_gripperPivot.atTarget()) {
-        setMotorCleanUp(); // TODO Command Scheduler Loop overun
-        m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
-      }
-    }
+    // m_basePivot.setTargetAngle(Rotation2d.fromDegrees(90));
+    // if (m_extender.getCurrentLength() >= LiftPoses.HoldCoral.getExtensionMeters()) {
+    //   // for operator controls
+    //   m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.4);
+    //   double yValue = m_operator.getRightY();
+    //   if (m_gripper.hasCoral()) {
+    //     yValue = yValue < 0 ? 0 : yValue;
+    //   }
+    //   m_gripper.setCoralGripSpeed(yValue * 0.131);
+    // } else {
+    //   m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(0));
+    //   if (m_gripperPivot.atTarget()) {
+    //     m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
+    //   }
+    // }
+    m_gripperPivot.setSpeed(m_operator.getRightY() * 0.4);
+    // double yValue = m_operator.getRightY();
+    //   if (m_gripper.hasCoral()) {
+    //     yValue = yValue < 0 ? 0 : yValue;
+    //   }
+    //   m_gripper.setCoralGripSpeed(yValue * 0.131);
   }
 
   private void stowState() {
