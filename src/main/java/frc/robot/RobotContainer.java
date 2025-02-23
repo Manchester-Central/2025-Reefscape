@@ -113,8 +113,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   private void configureBindings() {
     // Everything after this is for competition
     m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
-      FieldPoint Pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(),FieldPoint.getHpDrivePoses());
-      return Pose.getCurrentAlliancePose().minus(m_swerveDrive.getPose()).getTranslation().getAngle();
+      FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
+      return pose.getCurrentAlliancePose().minus(m_swerveDrive.getPose()).getTranslation().getAngle();
     }, 1.0));
 
     // Everything after this is for demos and testing

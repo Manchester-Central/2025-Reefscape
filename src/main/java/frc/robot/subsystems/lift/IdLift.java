@@ -4,14 +4,13 @@
 
 package frc.robot.subsystems.lift;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
+import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
