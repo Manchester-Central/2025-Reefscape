@@ -37,12 +37,14 @@ public class IkScoring extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_lift.setIkSolverTarget(m_endEffectorPose);
+    m_lift.changeState(LiftState.IKSOLVER);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_lift.changeState(LiftState.IKSOLVER);
     var angle = m_endEffectorPose.toPose2d().relativeTo(m_swerveDrive.getPose()).getTranslation().getAngle();
     m_swerveDrive.moveFieldRelativeAngle(
         SwerveConstants.MaxFreeSpeed.times(m_driver.getSlewLeftY()), 

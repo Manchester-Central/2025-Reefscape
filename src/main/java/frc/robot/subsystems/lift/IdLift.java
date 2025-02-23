@@ -57,8 +57,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   public BasePivot m_basePivot = new BasePivot(this::getLiftValues); // TODO: UNDO public
   public Extender m_extender = new Extender(this::getLiftValues); // TODO: UNDO public
-  private Gripper m_gripper = new Gripper(this::getLiftValues);
-  private GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
+  public Gripper m_gripper = new Gripper(this::getLiftValues);
+  public GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
   private Gamepad m_operator;
   private Pose3d m_ikTargetPose = new Pose3d(0, 0, FieldDimensions.Reef3Meters, new Rotation3d());
   private Supplier<Pose2d> m_robotPoseSupplier;
