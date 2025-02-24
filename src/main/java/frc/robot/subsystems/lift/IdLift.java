@@ -161,11 +161,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     //   }
     // }
     m_gripperPivot.setSpeed(m_operator.getRightY() * 0.2);
-    // double yValue = m_operator.getRightY();
-    //   if (m_gripper.hasCoral()) {
-    //     yValue = yValue < 0 ? 0 : yValue;
-    //   }
-    //   m_gripper.setCoralGripSpeed(yValue * 0.131);
+    
+    double yValue = m_operator.getLeftY();
+      if (m_gripper.hasCoral()) {
+        yValue = yValue < 0 ? 0 : yValue;
+      }
+      m_gripper.setCoralGripSpeed(yValue * 1.0);
   }
 
   private void stowState() {

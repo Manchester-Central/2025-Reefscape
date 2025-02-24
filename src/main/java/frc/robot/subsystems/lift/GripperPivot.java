@@ -141,9 +141,9 @@ public class GripperPivot extends AbstractLiftPart {
       newAngle = GripperPivotConstants.MinAngle;
     }
 
-    if (!getLiftValues().isBasePivotAtSafeAngle || !getLiftValues().isExtenderAtSafeLength) {
-      newAngle = LiftPoses.Stow.getGripperPivotAngle();
-    }
+    // if (!getLiftValues().isBasePivotAtSafeAngle || !getLiftValues().isExtenderAtSafeLength) {
+    //   newAngle = LiftPoses.Stow.getGripperPivotAngle();
+    // }
     m_targetAngle = newAngle;
     m_motor.moveToPositionMotionMagic(newAngle.getRotations());
   }
@@ -213,6 +213,7 @@ public class GripperPivot extends AbstractLiftPart {
     Logger.recordOutput("GripperPivot/StatorCurrent", m_motor.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("GripperPivot/SupplyCurrent", m_motor.getSupplyCurrent().getValueAsDouble());
     Logger.recordOutput("GripperPivot/MotorAngle", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).getDegrees());
-    Logger.recordOutput("GripperPivot/Erro", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).minus(getCurrentAngle()).getDegrees());
+    Logger.recordOutput("GripperPivot/Erro", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).minus(getCurrentAngle()).getDegrees());  
+    Logger.recordOutput("GripperPivot/MotorVelocityRPS", m_motor.getVelocity().getValueAsDouble());
   }
 }

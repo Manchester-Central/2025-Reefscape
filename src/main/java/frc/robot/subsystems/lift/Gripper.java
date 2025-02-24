@@ -15,6 +15,8 @@ import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 /** Add your docs here. */
 public class Gripper extends AbstractLiftPart {
   public static boolean hasCoralGrippedSim = false;
@@ -58,6 +60,7 @@ public class Gripper extends AbstractLiftPart {
   @Override
   public void periodic() {
     super.periodic();
-    m_hasCoralGripped = m_coralSensorDebouncer.calculate(Robot.isSimulation() ? hasCoralGrippedSim : m_coralSensor.get());
+    m_hasCoralGripped = m_coralSensorDebouncer.calculate(Robot.isSimulation() ? hasCoralGrippedSim : !m_coralSensor.get());
+    Logger.recordOutput("Gripper/HasCoral", hasCoral());
   }
 }

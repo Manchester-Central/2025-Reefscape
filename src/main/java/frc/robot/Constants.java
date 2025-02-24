@@ -201,13 +201,13 @@ public final class Constants {
       public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
       public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
 
-      public static final double kP = 15.0;
+      public static final double kP = 30.0;
       public static final double kI = 0.0;
-      public static final double kD = 0.3;
+      public static final double kD = 0.0;
       public static final double kG = 0.13;
       public static final double kS = 0.25;
-      public static final double kV = 0.12;
-      public static final double kA = 0.01;
+      public static final double kV = 0.0;
+      public static final double kA = 0.00;
 
       // Motion Magic // TODO: get real values
       public static final double MMCruiseVelocity = 80;
