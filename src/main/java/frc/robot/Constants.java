@@ -154,8 +154,8 @@ public final class Constants {
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, -90.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, 0.0);
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 0.0);
-      public static final LiftPose HpIntake = new LiftPose("HpIntake", 25.0, 0.057, -33.5); // Last updated 2/22/25
-      public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 90.0, 0.1, 0.0);
+      public static final LiftPose HpIntake = new LiftPose("HpIntake", 70.0, 0.057, -33.5); // Last updated 2/22/25
+      public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
       public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 1.0, -90.0);
       public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
@@ -164,7 +164,7 @@ public final class Constants {
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(20);
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(20); // TODO: go back to 20
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
       public static final double kP = 150.0;
@@ -180,8 +180,8 @@ public final class Constants {
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
 
-      public static final double SupplyCurrentLimit = 40;
-      public static final double StatorCurrentLimit = 40;
+      public static final double SupplyCurrentLimit = 70;
+      public static final double StatorCurrentLimit = 70;
 
       // Sensor Feedback
       public static final double RotorToSensorRatio = 302.4;

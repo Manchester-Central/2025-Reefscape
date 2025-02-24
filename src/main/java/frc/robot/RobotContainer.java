@@ -36,6 +36,7 @@ import frc.robot.subsystems.MechManager2D;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.Gripper;
 import frc.robot.subsystems.lift.IdLift;
+import frc.robot.subsystems.lift.LiftPose;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
@@ -56,8 +57,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   public static IdLift m_idLift;
   public static Intake m_intake;
-  public static Camera m_rightCamera;
-  public static Camera m_leftCamera;
+  //public static Camera m_rightCamera;
+  //public static Camera m_leftCamera;
   public static MechManager2D m_mech2dManager;
   public static SwerveDriveSimulation m_driveSim;
 
@@ -71,24 +72,24 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_idLift = new IdLift(m_operator);
     m_intake = new Intake();
     m_mech2dManager = new MechManager2D(m_idLift, m_intake);
-    m_rightCamera =
-        new Camera(
-            "limelight-right",
-            LimelightVersion.LL3G,
-            VisionConstants.limeLight3GSpecs,
-            () -> m_swerveDrive.getPose(),
-            (data) -> updatePoseEstimator(data),
-            () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
-            () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
-    m_leftCamera =
-        new Camera(
-            "limelight-left",
-            LimelightVersion.LL3G,
-            VisionConstants.limeLight3GSpecs,
-            () -> m_swerveDrive.getPose(),
-            (data) -> updatePoseEstimator(data),
-            () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
-            () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
+    // m_rightCamera =
+    //     new Camera(
+    //         "limelight-right",
+    //         LimelightVersion.LL3G,
+    //         VisionConstants.limeLight3GSpecs,
+    //         () -> m_swerveDrive.getPose(),
+    //         (data) -> updatePoseEstimator(data),
+    //         () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
+    //         () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
+    // m_leftCamera =
+    //     new Camera(
+    //         "limelight-left",
+    //         LimelightVersion.LL3G,
+    //         VisionConstants.limeLight3GSpecs,
+    //         () -> m_swerveDrive.getPose(),
+    //         (data) -> updatePoseEstimator(data),
+    //         () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
+    //         () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
     
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.STOW)));
@@ -155,14 +156,22 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         m_idLift));
     // m_operator.a().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(0.5), m_idLift));
     // m_operator.b().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(1.2), m_idLift));
-    // m_operator.povUp().whileTrue(new RunCommand(() -> {
-    //   m_idLift.m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
-    //   m_idLift.m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
-    // }, m_idLift));
-    // m_operator.povDown().whileTrue(new RunCommand(() -> {
-    //   m_idLift.m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
-    //   m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
-    // }, m_idLift));
+    m_operator.povUp().whileTrue(new RunCommand(() -> {
+      // m_idLift.m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
+      m_idLift.m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
+    }, m_idLift));
+    m_operator.povDown().whileTrue(new RunCommand(() -> {
+      // m_idLift.m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
+      m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
+    }, m_idLift));
+    m_operator.a().whileTrue(new RunCommand(() -> {
+      m_idLift.m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
+      double yValue = -0.5;
+      if (m_idLift.m_gripper.hasCoral()) {
+        yValue = yValue < 0 ? 0 : yValue;
+      }
+      m_idLift.m_gripper.setCoralGripSpeed(yValue);
+    }, m_idLift));
   }
 
   @Override

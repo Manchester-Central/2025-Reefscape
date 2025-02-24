@@ -160,13 +160,14 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     //     m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
     //   }
     // }
-    m_gripperPivot.setSpeed(m_operator.getRightY() * 0.2);
+    m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
+   // m_gripperPivot.setSpeed(m_operator.getRightY() * 0.2);
     
-    double yValue = m_operator.getLeftY();
-      if (m_gripper.hasCoral()) {
-        yValue = yValue < 0 ? 0 : yValue;
-      }
-      m_gripper.setCoralGripSpeed(yValue * 1.0);
+    // double yValue = m_operator.getLeftY();
+    //   if (m_gripper.hasCoral()) {
+    //     yValue = yValue < 0 ? 0 : yValue;
+    //   }
+    //   m_gripper.setCoralGripSpeed(yValue * 1.0);
   }
 
   private void stowState() {
@@ -278,7 +279,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorCleanUp() {
     m_extender.setMotorCoast();
-    m_basePivot.setMotorCoast();
+    // m_basePivot.setMotorCoast();
     m_gripperPivot.setMotorCoast();
   }
 
@@ -287,7 +288,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorStartUp() {
     m_extender.setMotorBrake();
-    m_basePivot.setMotorBrake();
+    // m_basePivot.setMotorBrake();
     m_gripperPivot.setMotorBrake();
   }
 
