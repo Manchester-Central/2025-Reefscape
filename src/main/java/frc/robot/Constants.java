@@ -67,8 +67,8 @@ public final class Constants {
     public static final int GripperPivotCANCoderCANID = 61; // TODO: set on robot
 
     // Gripper (70s)
-    public static final int GripperCoralMotorCANID = 70; // TODO: set on robot
-    public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
+    public static final int GripperCoralMotorCANID = 13; // TODO: set on robot
+    // public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
 
     // Intake (80s) RIP 2025-2025 for now for now
     public static final int IntakeMotor1CANID = 80; // TODO: set on robot
@@ -154,8 +154,8 @@ public final class Constants {
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, -90.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, 0.0);
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 0.0);
-      public static final LiftPose HpIntake = new LiftPose("HpIntake", 25.0, 0.057, -33.5); // Last updated 2/22/25
-      public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 90.0, 0.1, 0.0);
+      public static final LiftPose HpIntake = new LiftPose("HpIntake", 70.0, 0.057, -33.5); // Last updated 2/22/25
+      public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
       public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 1.0, -90.0);
       public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
@@ -164,7 +164,7 @@ public final class Constants {
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(20);
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(20); // TODO: go back to 20
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
       public static final double kP = 150.0;
@@ -180,8 +180,8 @@ public final class Constants {
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
 
-      public static final double SupplyCurrentLimit = 40;
-      public static final double StatorCurrentLimit = 40;
+      public static final double SupplyCurrentLimit = 70;
+      public static final double StatorCurrentLimit = 70;
 
       // Sensor Feedback
       public static final double RotorToSensorRatio = 302.4;
@@ -196,18 +196,18 @@ public final class Constants {
     /** This contains constants for our Gripper Pivot. */
     public static class GripperPivotConstants {
 
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-140); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(0);
       public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
       public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
 
-      public static final double kP = 15.0;
+      public static final double kP = 30.0;
       public static final double kI = 0.0;
-      public static final double kD = 0.3;
-      public static final double kG = 0.0;
+      public static final double kD = 0.0;
+      public static final double kG = 0.13;
       public static final double kS = 0.25;
-      public static final double kV = 0.12;
-      public static final double kA = 0.01;
+      public static final double kV = 0.0;
+      public static final double kA = 0.00;
 
       // Motion Magic // TODO: get real values
       public static final double MMCruiseVelocity = 80;
@@ -218,14 +218,14 @@ public final class Constants {
       public static final double StatorCurrentLimit = 40;
 
       // Sensor Feedback // TODO: get real values
-      public static final double RotorToSensorRatio = 302.4;
-      public static final double SensorToMechanismRatio = 1.0;
+      public static final double RotorToSensorRatio = 51.04;
+      public static final double SensorToMechanismRatio = 1;
       
       // Ramp Rates // TODO: get real values
       public static final double VoltageClosedLoopRampPeriod = 0.1;
 
       //Offset // TODO: Get Real
-      public static final double canCoderOffsetDegrees = 0.0;
+      public static final double canCoderOffsetDegrees = -74;
     }
 
     /** This contains constants for our Extender. */
