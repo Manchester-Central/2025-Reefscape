@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue1-Reef10R"
+            "pathName": "Blue2-10L"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "10R-RHPC"
+            "pathName": "10L-LHPF"
           }
         },
         {
@@ -31,7 +31,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RHPC-4R"
+            "pathName": "LHPF-8L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "8L-LHPF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeFromHP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LHPF-8R"
           }
         },
         {
@@ -43,7 +67,7 @@
       ]
     }
   },
-  "resetOdom": false,
-  "folder": null,
+  "resetOdom": true,
+  "folder": "Blue2",
   "choreoAuto": false
 }
