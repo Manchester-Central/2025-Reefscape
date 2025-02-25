@@ -61,10 +61,14 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     STOW,
     INTAKE_FROM_FLOOR,
     INTAKE_FROM_HP, // Probably won't implement -Josh // nevermind -Josh
+    PREP_L1,
+    PREP_L2,
+    PREP_L3,
+    PREP_L4, // Might need many prep states
     SCORE_L1,
     SCORE_L2,
     SCORE_L3,
-    SCORE_L4, // Might need many prep states
+    SCORE_L4,
     HOLD_CORAL,
     BOTTOM_BUCKET,
     TOP_BUCKET;
@@ -98,6 +102,18 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
         break;
       case INTAKE_FROM_HP:
         intakeFromHpState();
+        break;
+      case PREP_L1:
+        prepL1State();
+        break;
+      case PREP_L2:
+        prepL2State();
+        break;
+      case PREP_L3:
+        prepL3State();
+        break;
+      case PREP_L4:
+        prepL4State();
         break;
       case SCORE_L1:
         scoreL1State();
@@ -203,16 +219,32 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void scoreL1State() {
+  private void prepL1State() {
     scoreHelper(LiftPoses.ScoreL1, true);
   }
 
-  private void scoreL2State() {
+  private void prepL2State() {
     scoreHelper(LiftPoses.ScoreL2, true);
   }
 
-  private void scoreL3State() {
+  private void prepL3State() {
     scoreHelper(LiftPoses.ScoreL3, true);
+  }
+
+  private void prepL4State() {
+    scoreHelper(LiftPoses.ScoreL4, true);
+  }
+
+  private void scoreL1State() {
+    scoreHelper(LiftPoses.ScoreL1, false);
+  }
+
+  private void scoreL2State() {
+    scoreHelper(LiftPoses.ScoreL2, false);
+  }
+
+  private void scoreL3State() {
+    scoreHelper(LiftPoses.ScoreL3, false);
   }
 
   private void scoreL4State() {
@@ -255,7 +287,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void scoreHelper(LiftPose liftPose, boolean isGripperReleaseForward) {
+  private void scoreHelper(LiftPose liftPose, boolean isPrep) {
     if (!(m_gripper.hasCoral())) {
       changeState(LiftState.STOW);
       return;
@@ -263,13 +295,13 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(liftPose.getBasePivotAngle());
     m_extender.setTargetLength(liftPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(liftPose.getGripperPivotAngle());
-    if (isPoseReady()) {
-      m_gripper.setCoralGripSpeed(isGripperReleaseForward ? 0.5 : -0.5);
+    if (!isPrep && isPoseReady()) {
+      m_gripper.setCoralGripSpeed(0.5);
     } else {
       m_gripper.setCoralGripSpeed(0);
     }
 
-    if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
+    if (!isPrep && Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Gripper.hasCoralGrippedSim = false;
     }
   }
