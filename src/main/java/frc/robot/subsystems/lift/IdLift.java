@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.lift;
 
-import org.littletonrobotics.junction.Logger;
-
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -20,6 +18,7 @@ import frc.robot.subsystems.shared.SubsystemState;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.IkEquations;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
@@ -73,10 +72,14 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     IKSOLVER,
     INTAKE_FROM_FLOOR,
     INTAKE_FROM_HP, // Probably won't implement -Josh // nevermind -Josh
+    PREP_L1,
+    PREP_L2,
+    PREP_L3,
+    PREP_L4, // Might need many prep states
     SCORE_L1,
     SCORE_L2,
     SCORE_L3,
-    SCORE_L4, // Might need many prep states
+    SCORE_L4,
     HOLD_CORAL,
     BOTTOM_BUCKET,
     TOP_BUCKET;
@@ -115,6 +118,18 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       case INTAKE_FROM_HP:
         intakeFromHpState();
         break;
+      case PREP_L1:
+        prepL1State();
+        break;
+      case PREP_L2:
+        prepL2State();
+        break;
+      case PREP_L3:
+        prepL3State();
+        break;
+      case PREP_L4:
+        prepL4State();
+        break;
       case SCORE_L1:
         scoreL1State();
         break;
@@ -131,10 +146,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
         holdCoralState();
         break;
       case BOTTOM_BUCKET:
-        bottombucketState();
+        bottomBucketState();
         break;
       case TOP_BUCKET:
-        topbucketState();
+        topBucketState();
         break;
     }
   }
@@ -165,6 +180,11 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void startState() {
+    // if (!m_extender.hasReachedMinimum()) {
+    // m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
+    // return;
+    // }
+
     if (Robot.isSimulation()) {
       // changeState(LiftState.STOW);
       changeState(LiftState.IKSOLVER);
@@ -175,28 +195,36 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void manualState() {
-    /* m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
-    m_gripper.setCoralGripSpeed(0.0);
-    m_gripperPivot.setSpeed(0.0);
-    m_extender.setSpeed(m_operator.getRightY() * 0.5);
-    */
+    /*
+     * m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
+     * m_gripper.setCoralGripSpeed(0.0);
+     * m_gripperPivot.setSpeed(0.0);
+     * m_extender.setSpeed(m_operator.getRightY() * 0.5);
+     */
     // setMotorStartUp();
-    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(90));
-    if (m_extender.getCurrentLength() >= LiftPoses.HoldCoral.getExtensionMeters()) {
-      // for operator controls
-      m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.4);
-      double yValue = m_operator.getRightY();
-      if (m_gripper.hasCoral()) {
-        yValue = yValue < 0 ? 0 : yValue;
-      }
-      m_gripper.setCoralGripSpeed(yValue * 0.131);
-    } else {
-      m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(0));
-      if (m_gripperPivot.atTarget()) {
-        setMotorCleanUp(); // TODO Command Scheduler Loop overun
-        m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
-      }
-    }
+    // m_basePivot.setTargetAngle(Rotation2d.fromDegrees(90));
+    // if (m_extender.getCurrentLength() >= LiftPoses.HoldCoral.getExtensionMeters()) {
+    //   // for operator controls
+    //   m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.4);
+    //   double yValue = m_operator.getRightY();
+    //   if (m_gripper.hasCoral()) {
+    //     yValue = yValue < 0 ? 0 : yValue;
+    //   }
+    //   m_gripper.setCoralGripSpeed(yValue * 0.131);
+    // } else {
+    //   m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(0));
+    //   if (m_gripperPivot.atTarget()) {
+    //     m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
+    //   }
+    // }
+    m_basePivot.setSpeed(m_operator.getLeftY() * 0.131);
+   // m_gripperPivot.setSpeed(m_operator.getRightY() * 0.2);
+    
+    // double yValue = m_operator.getLeftY();
+    //   if (m_gripper.hasCoral()) {
+    //     yValue = yValue < 0 ? 0 : yValue;
+    //   }
+    //   m_gripper.setCoralGripSpeed(yValue * 1.0);
   }
 
   private void stowState() {
@@ -232,16 +260,32 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void scoreL1State() {
+  private void prepL1State() {
     scoreHelper(LiftPoses.ScoreL1, true);
   }
 
-  private void scoreL2State() {
+  private void prepL2State() {
     scoreHelper(LiftPoses.ScoreL2, true);
   }
 
-  private void scoreL3State() {
+  private void prepL3State() {
     scoreHelper(LiftPoses.ScoreL3, true);
+  }
+
+  private void prepL4State() {
+    scoreHelper(LiftPoses.ScoreL4, true);
+  }
+
+  private void scoreL1State() {
+    scoreHelper(LiftPoses.ScoreL1, false);
+  }
+
+  private void scoreL2State() {
+    scoreHelper(LiftPoses.ScoreL2, false);
+  }
+
+  private void scoreL3State() {
+    scoreHelper(LiftPoses.ScoreL3, false);
   }
 
   private void scoreL4State() {
@@ -258,7 +302,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void bottombucketState() {
+  private void bottomBucketState() {
     m_basePivot.setTargetAngle(LiftPoses.BottomBucket.getBasePivotAngle());
     m_extender.setTargetLength(LiftPoses.BottomBucket.getExtensionMeters());
     m_gripperPivot.setTargetAngle(LiftPoses.BottomBucket.getGripperPivotAngle());
@@ -271,7 +315,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void topbucketState() {
+  private void topBucketState() {
     m_basePivot.setTargetAngle(LiftPoses.TopBucket.getBasePivotAngle());
     m_extender.setTargetLength(LiftPoses.TopBucket.getExtensionMeters());
     m_gripperPivot.setTargetAngle(LiftPoses.TopBucket.getGripperPivotAngle());
@@ -284,7 +328,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void scoreHelper(LiftPose liftPose, boolean isGripperReleaseForward) {
+  private void scoreHelper(LiftPose liftPose, boolean isPrep) {
     if (!(m_gripper.hasCoral())) {
       changeState(LiftState.STOW);
       return;
@@ -292,13 +336,13 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(liftPose.getBasePivotAngle());
     m_extender.setTargetLength(liftPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(liftPose.getGripperPivotAngle());
-    if (isPoseReady()) {
-      m_gripper.setCoralGripSpeed(isGripperReleaseForward ? 0.5 : -0.5);
+    if (!isPrep && isPoseReady()) {
+      m_gripper.setCoralGripSpeed(0.5);
     } else {
       m_gripper.setCoralGripSpeed(0);
     }
 
-    if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
+    if (!isPrep && Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Gripper.hasCoralGrippedSim = false;
     }
   }
@@ -308,7 +352,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorCleanUp() {
     m_extender.setMotorCoast();
-    m_basePivot.setMotorCoast();
+    // m_basePivot.setMotorCoast();
     m_gripperPivot.setMotorCoast();
   }
 
@@ -317,7 +361,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorStartUp() {
     m_extender.setMotorBrake();
-    m_basePivot.setMotorBrake();
+    // m_basePivot.setMotorBrake();
     m_gripperPivot.setMotorBrake();
   }
 

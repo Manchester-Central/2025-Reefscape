@@ -9,12 +9,13 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * A command for changing ANY state on the robot.
  */
 public class ChangeState extends Command {
-  Optional<LiftState> m_idLiftState = Optional.empty();
+  Optional<Supplier<LiftState>> m_idLiftStateSupplier = Optional.empty();
   Optional<IntakeState> m_intakeState = Optional.empty();
 
   /** Creates a new uhhh. */
@@ -26,7 +27,15 @@ public class ChangeState extends Command {
    * Sets the state of the lift.
    */
   public ChangeState setLift(LiftState newLiftState) {
-    m_idLiftState = Optional.of(newLiftState);
+    m_idLiftStateSupplier = Optional.of(() -> newLiftState);
+    return this;
+  }
+
+    /**
+   * Sets the state of the lift.
+   */
+  public ChangeState setLift(Supplier<LiftState> newLiftStateSupplier) {
+    m_idLiftStateSupplier = Optional.of(newLiftStateSupplier);
     return this;
   }
 
@@ -41,8 +50,8 @@ public class ChangeState extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (m_idLiftState.isPresent()) {
-      RobotContainer.m_idLift.changeState(m_idLiftState.get());
+    if (m_idLiftStateSupplier.isPresent()) {
+      RobotContainer.m_idLift.changeState(m_idLiftStateSupplier.get().get());
     }
 
     if (m_intakeState.isPresent()) {
