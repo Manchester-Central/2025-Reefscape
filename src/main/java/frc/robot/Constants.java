@@ -98,6 +98,7 @@ public final class Constants {
     public static final PIDValue DefaultModuleAnglePIDValue = new PIDValue(60.0, 12.0, 0.0);
     public static final PIDFValue DefaultModuleVelocityPIDFValues =
         new PIDFValue(5.0, 0.0, 0.0, 2.19);
+    public static final PIDValue DefaultRotationPidValue = new PIDValue(0.5, 0, 0);
 
     /** This stores our constants for the front left swerve module. */
     public static class SwerveFrontLeftConstants {
@@ -336,6 +337,6 @@ public final class Constants {
     /** Distance from the center of the wrist's axle to the point used for the EndEffector calculations 
      * Presumably this is just beyond the end of the wheels but should be just past where the Coral is. */
     public static final Transform2d WristToEndEffector =
-        new Transform2d(0.356067, 0, Rotation2d.fromDegrees(0));
+        new Transform2d(0.6, 0, Rotation2d.fromDegrees(0)); // TODO: Check Gripper Length
   }
 }

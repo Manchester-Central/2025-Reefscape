@@ -75,7 +75,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_swerveDrive = SwerveDrive.createSwerveDrive(m_gyro);
     m_idLift = new IdLift(m_operator, () -> m_swerveDrive.getPose());
     m_intake = new Intake();
-    m_mech2dManager = new MechManager2D(m_idLift, m_intake);
+    m_mech2dManager = new MechManager2D(m_idLift);
     m_rightCamera =
         new Camera(
             "limelight-right",

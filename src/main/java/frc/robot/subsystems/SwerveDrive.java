@@ -110,6 +110,7 @@ public class SwerveDrive extends BaseSwerveDrive {
             .setMaxRobotRotation(SwerveConstants.MaxRotationSpeed)
             .setDefaultModuleVelocityPIDFValues(SwerveConstants.DefaultModuleVelocityPIDFValues)
             .setDefaultModuleAnglePIDValues(SwerveConstants.DefaultModuleAnglePIDValue)
+            .setDefaultRotationPIDValues(SwerveConstants.DefaultRotationPidValue)
             .setDebugMode(true);
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(

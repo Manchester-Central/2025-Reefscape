@@ -32,7 +32,7 @@ public class IkScoring extends Command {
     m_lift = lift;
     m_endEffectorPose = endEffectorPose;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerve, m_lift);
+    addRequirements(swerve);
   }
 
   // Called when the command is initially scheduled.
@@ -45,7 +45,7 @@ public class IkScoring extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var angle = m_endEffectorPose.toPose2d().relativeTo(m_swerveDrive.getPose()).getTranslation().getAngle();
+    var angle = m_endEffectorPose.toPose2d().getTranslation().minus(m_swerveDrive.getPose().getTranslation()).getAngle();
     m_swerveDrive.moveFieldRelativeAngle(
         SwerveConstants.MaxFreeSpeed.times(m_driver.getSlewLeftY()), 
         SwerveConstants.MaxFreeSpeed.times(-m_driver.getSlewLeftX()),

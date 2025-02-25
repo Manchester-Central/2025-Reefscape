@@ -151,7 +151,7 @@ def browse(path) {
 task browseCheckstyleReport {
    doLast {
         def file = project.file('build/reports/checkstyle/main.html')
-        browse file
+        // browse file
    }
 }
 

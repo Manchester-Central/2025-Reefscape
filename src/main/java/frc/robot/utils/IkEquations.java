@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,6 +31,7 @@ public class IkEquations {
     double mechanismExtensionRange = (RobotDimensions.FrontBackLengthMeters / 2) + RobotDimensions.MechanismExtensionMargin.in(Units.Meters);
     // Now take the min of the 2 distances
     floorDistance = mechanismExtensionRange < floorDistance ? mechanismExtensionRange : floorDistance;
+    Logger.recordOutput("IkSolver/FloorDistance", floorDistance);
 
     // Calculate Mechanism Root in 2d 
     var basePivotPoint = /* (0,0).plus */RobotDimensions.BasePivotOffset.getTranslation();

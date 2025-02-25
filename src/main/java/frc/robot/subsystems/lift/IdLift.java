@@ -153,9 +153,14 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
                                                FieldDimensions.ReefBranchLeft.getY(),
                                                FieldDimensions.Reef3Meters,
                                                new Rotation3d(0, -Math.PI / 2, 0));
-    var reefBranch = FieldPoint.aprilTagMap.get(17).pose3d.transformBy(branchLeftR4);
+    var reefBranch = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR4);
     
     LiftPose mechanismPose = IkEquations.getPivotLiftPivot(robotPose, reefBranch);
+
+    // Logging
+    Logger.recordOutput("IkSolver/Extension", mechanismPose.getExtensionMeters());
+    Logger.recordOutput("IkSolver/BasePivot", mechanismPose.getBasePivotAngle());
+    Logger.recordOutput("IkSolver/GripperPivot", mechanismPose.getGripperPivotAngle());
 
     // Now apply them!
     m_extender.setTargetLength(mechanismPose.getExtensionMeters());
