@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.units.Units;
-import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.lift.LiftPose;
 
@@ -36,8 +35,8 @@ public class IkEquations {
     // Calculate Mechanism Root in 2d 
     var basePivotPoint = /* (0,0).plus */RobotDimensions.BasePivotOffset.getTranslation();
     // Calculate EndEffector pivot point
-    var gripperPivotPoint = new Pose2d(floorDistance, FieldDimensions.Reef3Meters, Rotation2d.fromDegrees(-90));
-    // Adjust the position upwards above the target point
+    var gripperPivotPoint = new Pose2d(floorDistance, robotOriginToReefBranch.getY(), Rotation2d.fromRadians(-endEffectorPose.getRotation().getX()));
+    // Adjust the position backwards from the target point
     gripperPivotPoint.transformBy(new Transform2d(-(RobotDimensions.CoralPlacementMargin + RobotDimensions.WristToEndEffector.getTranslation().getNorm()),
                                                   0,
                                                   new Rotation2d()));

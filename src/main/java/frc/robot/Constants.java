@@ -220,7 +220,7 @@ public final class Constants {
       public static final double StatorCurrentLimit = 40;
 
       // Sensor Feedback // TODO: get real values
-      public static final double RotorToSensorRatio = 302.4;
+      public static final double RotorToSensorRatio = 1.0;
       public static final double SensorToMechanismRatio = 1.0;
       
       // Ramp Rates // TODO: get real values
@@ -337,6 +337,6 @@ public final class Constants {
     /** Distance from the center of the wrist's axle to the point used for the EndEffector calculations 
      * Presumably this is just beyond the end of the wheels but should be just past where the Coral is. */
     public static final Transform2d WristToEndEffector =
-        new Transform2d(0.6, 0, Rotation2d.fromDegrees(0)); // TODO: Check Gripper Length
+        new Transform2d(0.0, 0, Rotation2d.fromDegrees(0)); // TODO: Check Gripper Length
   }
 }

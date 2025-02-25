@@ -163,7 +163,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     Transform3d branchLeftR4Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
                                                      FieldDimensions.ReefBranchLeft.getY(),
-                                                     FieldDimensions.Reef3Meters,
+                                                     FieldDimensions.Reef2Meters,
                                                      new Rotation3d(0, -Math.PI / 2, 0));
     Pose3d branchLeftR4 = FieldPoint.aprilTagMap.get(17).pose3d.transformBy(branchLeftR4Offset);
     m_driver.rightTrigger().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR4));

@@ -149,15 +149,11 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private void ikSolverState() {
     // Calculate IK root
     Pose3d robotPose = new Pose3d(m_robotPoseSupplier.get()); // This becomes 0,0 very soon
-    Transform3d branchLeftR4 = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
-                                               FieldDimensions.ReefBranchLeft.getY(),
-                                               FieldDimensions.Reef3Meters,
-                                               new Rotation3d(0, -Math.PI / 2, 0));
-    var reefBranch = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR4);
     
-    LiftPose mechanismPose = IkEquations.getPivotLiftPivot(robotPose, reefBranch);
+    LiftPose mechanismPose = IkEquations.getPivotLiftPivot(robotPose, m_ikTargetPose);
 
     // Logging
+    Logger.recordOutput("IkSolver/targetEndEffector", m_ikTargetPose);
     Logger.recordOutput("IkSolver/Extension", mechanismPose.getExtensionMeters());
     Logger.recordOutput("IkSolver/BasePivot", mechanismPose.getBasePivotAngle());
     Logger.recordOutput("IkSolver/GripperPivot", mechanismPose.getGripperPivotAngle());
