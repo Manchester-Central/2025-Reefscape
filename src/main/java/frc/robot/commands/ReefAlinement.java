@@ -9,7 +9,7 @@ import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.utils.FieldPoint;
 
-public class ReefAlignment extends Command{
+public class ReefAlinement extends Command{
 
   private FieldPoint m_aprilTag;
   private boolean m_isInvert;
@@ -17,7 +17,7 @@ public class ReefAlignment extends Command{
 
   private Pose2d branchPostion;
 
-  public ReefAlignment(FieldPoint aprilTag, boolean isInvert, SwerveDrive swerveDrive){
+  public ReefAlinement(FieldPoint aprilTag, boolean isInvert, SwerveDrive swerveDrive){
     m_aprilTag = aprilTag;
     m_isInvert = isInvert;
     m_swerveDrive = swerveDrive;

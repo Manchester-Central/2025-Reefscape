@@ -21,7 +21,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
-import frc.robot.commands.ReefAlignment;
+import frc.robot.commands.ReefAlinement;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForState;
@@ -84,7 +84,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //         () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
     //         () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
     
-    NamedCommands.registerCommand("GoToReef8L", new ReefAlignment(FieldPoint.ReefPose8, true, m_swerveDrive));
+    NamedCommands.registerCommand("GoToReef8L", new ReefAlinement(FieldPoint.ReefPose8, true, m_swerveDrive));
     NamedCommands.registerCommand("ScoreL1",  new ChangeState().setLift(LiftState.SCORE_L1).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("ScoreL2",  new ChangeState().setLift(LiftState.SCORE_L2).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("ScoreL3",  new ChangeState().setLift(LiftState.SCORE_L3).andThen(new WaitForState().forLiftState(LiftState.STOW)));
