@@ -309,11 +309,13 @@ public final class Constants {
   /** This contains constants for our robot dimensions. */
   public static class RobotDimensions {
     // Includes the Bumpers
-    public static final double FrontBackLengthMeters = 0.85;
+    public static final double FrontBackLengthMeters = 0.9157;
     // Includes the Bumpers
-    public static final double SideSideLengthMeters = 0.85;
+    public static final double SideSideLengthMeters = 0.9157;
     // Buffer space to use between the end effector and an interaction point
     public static final double CoralPlacementMargin = 0.03;
+    // Robot length buffer
+    public static final double RobotToReefMargin = 0.10; // This is in meters
     // Distance from the robot origin to the axle for the Base Pivot
     public static final Transform2d BasePivotOffset =
         new Transform2d(-0.1973, 0.1762, Rotation2d.fromDegrees(0));
