@@ -78,7 +78,7 @@ public final class Constants {
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
     public static final int CoralChannelID = 1;
-    public static final int ExtenderMinimumChannelID = 3;
+    public static final int ExtenderMinimumChannelID = 4;
   }
 
   /** This contains constants for setting up our swerve drive. */
@@ -153,7 +153,7 @@ public final class Constants {
       public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 54.0, 0.97, 0.0);
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, -90.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, 0.0);
-      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 0.0);
+      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.6, 0.0);
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 70.0, 0.057, -33.5); // Last updated 2/22/25
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
@@ -231,10 +231,10 @@ public final class Constants {
     /** This contains constants for our Extender. */
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
-      public static final double MaxLengthMeter = 1.5;
-      public static final double BucketTopClearanceMeter = 0.59;
-      public static final double BucketBottomClearanceMeter = 0.1;
-      public static final boolean HasMagnetSensor = false; // TODO: enable hasMagneto 
+      public static final double MaxLengthMeter = 1.6;
+      public static final double BucketTopClearanceMeter = 0.567;
+      public static final double BucketBottomClearanceMeter = 0.013;
+      public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto 
 
       // Slot 0 Configs
       public static final double kP = 50.0;
