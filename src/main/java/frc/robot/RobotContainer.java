@@ -95,7 +95,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("XMode", new RunCommand(() -> m_swerveDrive.setXMode()).withTimeout(0.1));
     buildPathplannerAutoChooser();
 
-
+    System.out.println(LiftPoses.ScoreL4);
     
     // Configure the trigger bindings
     configureBindings();
@@ -126,6 +126,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_driver.rightBumper().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.PrepState));
     m_driver.rightTrigger().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState));
+    m_driver.leftTrigger().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP));
 
     m_operator.a().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L1));
     m_operator.x().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L2));
@@ -203,6 +204,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public void periodic() {
     // Enables Dashboard Numbers to be updated each loop
     DashboardNumber.checkAll();
+  }
+
+  public void autoAndTeleInit(){
+    m_idLift.changeState(LiftState.START);
   }
 
   /**

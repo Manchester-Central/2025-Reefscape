@@ -37,10 +37,11 @@ public class DriverRelativeDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double speedMod = m_driver.leftStick().getAsBoolean() ? 0.5 : 1.0;
     m_swerveDrive.moveFieldRelative(
-        SwerveConstants.MaxFreeSpeed.times(m_driver.getSlewLeftY()), 
-        SwerveConstants.MaxFreeSpeed.times(-m_driver.getSlewLeftX()), 
-        SwerveConstants.MaxRotationSpeed.times(-m_driver.getSlewRightX()));
+        SwerveConstants.MaxFreeSpeed.times(m_driver.getSlewLeftY() * speedMod), 
+        SwerveConstants.MaxFreeSpeed.times(-m_driver.getSlewLeftX() * speedMod), 
+        SwerveConstants.MaxRotationSpeed.times(-m_driver.getSlewRightX() * speedMod));
   }
 
   // Called once the command ends or is interrupted.

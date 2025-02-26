@@ -151,7 +151,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       // changeState(LiftState.STOW);
       changeState(LiftState.STOW);
     } else {
-      changeState(LiftState.MANUAL);
+      // changeState(LiftState.MANUAL);
+      changeState(LiftState.STOW);
     }
   }
 
@@ -191,7 +192,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private void stowState() {
     if (m_gripper.hasCoral()) {
-      changeState(LiftState.HOLD_CORAL);
+      changeState(m_extender.getCurrentLength() <= ExtenderConstants.BucketTopClearanceMeter 
+      ? LiftState.BOTTOM_BUCKET 
+      : LiftState.HOLD_CORAL);
       return;
     }
     m_basePivot.setTargetAngle(LiftPoses.Stow.getBasePivotAngle());
@@ -210,6 +213,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private void intakeFromHpState() {
     if (m_gripper.hasCoral()) {
       changeState(LiftState.BOTTOM_BUCKET);
+      m_gripper.setCoralGripSpeed(0.0);
       return;
     }
     m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
