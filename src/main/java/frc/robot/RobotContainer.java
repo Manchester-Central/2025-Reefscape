@@ -178,13 +178,34 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //   m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
     // }, m_idLift));
 
-
+    // We flatten the april tag onto the ground, so we can use the Reef3Meters height while keeping the floor angle
     Transform3d branchLeftR4Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
-                                                     FieldDimensions.ReefBranchLeft.getY(),
-                                                     FieldDimensions.Reef2Meters,
-                                                     new Rotation3d(0, -Math.PI / 2, 0));
-    Pose3d branchLeftR4 = FieldPoint.aprilTagMap.get(17).pose3d.transformBy(branchLeftR4Offset);
+                                                      FieldDimensions.ReefBranchLeft.getY(),
+                                                      FieldDimensions.Reef4Meters,
+                                                      new Rotation3d(0, Math.PI / 2, 0));
+    Pose3d branchLeftR4 = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR4Offset);
     m_driver.rightTrigger().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR4));
+
+    Transform3d branchLeftR3Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
+                                                      FieldDimensions.ReefBranchLeft.getY(),
+                                                      FieldDimensions.Reef3Meters,
+                                                      new Rotation3d(0, Math.PI / 2, 0));
+    Pose3d branchLeftR3 = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR3Offset);
+    m_driver.rightBumper().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR3));
+    
+    Transform3d branchLeftR2Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
+                                                      FieldDimensions.ReefBranchLeft.getY(),
+                                                      FieldDimensions.Reef2Meters,
+                                                      new Rotation3d(0, Math.PI / 2, 0));
+    Pose3d branchLeftR2 = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR2Offset);
+    m_driver.leftBumper().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR2));
+                                                     
+    Transform3d branchLeftR1Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
+                                                      FieldDimensions.ReefBranchLeft.getY(),
+                                                      FieldDimensions.Reef1Meters,
+                                                      new Rotation3d(0, Math.PI / 2, 0));
+    Pose3d branchLeftR1 = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR1Offset);
+    m_driver.leftTrigger().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR1));
   }
 
   @Override

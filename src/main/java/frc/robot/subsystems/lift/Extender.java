@@ -137,7 +137,7 @@ public class Extender extends AbstractLiftPart {
         }
         if (getCurrentLength() > ExtenderConstants.BucketTopClearanceMeter && newLength < ExtenderConstants.BucketTopClearanceMeter) {
           newLength = ExtenderConstants.BucketTopClearanceMeter;
-        } 
+        }
       }
       
       if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {

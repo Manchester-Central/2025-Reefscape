@@ -297,21 +297,22 @@ public final class Constants {
     public static final Transform2d ReefBranchRight =
         new Transform2d(-0.0536, 0.1643, Rotation2d.fromDegrees(0));
     // Value taken from field cad
-    public static final double TroughHeightMeters = 0.5175;
+    public static final double Reef1Meters = 0.514350;
     // Value taken from field cad
-    public static final double Reef1Meters = 0.7763;
+    public static final double Reef2Meters = 0.789778;
     // Value taken from field cad
-    public static final double Reef2Meters = 1.1794;
+    public static final double Reef3Meters = 1.192878;
     // Value taken from field cad
-    public static final double Reef3Meters = 1.8287;
+    public static final double Reef4Meters = 1.825488;
     // Value taken from field cad
-    public static final double BargeMeters = 1.0;
+    public static final double BargeMeters = 2.1;
   }
 
   /** This contains constants for our robot dimensions. */
   public static class RobotDimensions {
     // Includes the Bumpers, robot origin assumed to be in the center
-    public static final double FrontBackLengthMeters = 0.85;
+    public static final double FrontBackLengthMetersBumpers = 0.91;
+    public static final double FrontBackLengthMetersFrame = 0.85;
     // Includes the Bumpers, robot origin assumed to be in the center
     public static final double SideSideLengthMeters = 0.85;
     // Buffer space to use between the end effector and an interaction point
@@ -337,6 +338,6 @@ public final class Constants {
     /** Distance from the center of the wrist's axle to the point used for the EndEffector calculations 
      * Presumably this is just beyond the end of the wheels but should be just past where the Coral is. */
     public static final Transform2d WristToEndEffector =
-        new Transform2d(0.0, 0, Rotation2d.fromDegrees(0)); // TODO: Check Gripper Length
+        new Transform2d(0.2, 0, Rotation2d.fromDegrees(0)); // TODO: Check Gripper Length
   }
 }
