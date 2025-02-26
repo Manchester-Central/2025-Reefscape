@@ -6,6 +6,7 @@ package frc.robot.subsystems.lift;
 
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
@@ -140,16 +141,18 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void startState() {
-    // if (!m_extender.hasReachedMinimum()) {
-    // m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
-    // return;
-    // }
+    if (ExtenderConstants.HasMagnetSensor && !m_extender.hasReachedMinimum()) {
+      m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
+      m_gripperPivot.setTargetAngle(LiftPoses.Stow.getGripperPivotAngle());
+      return;
+    }
 
     if (Robot.isSimulation()) {
       // changeState(LiftState.STOW);
       changeState(LiftState.STOW);
     } else {
-      changeState(LiftState.MANUAL);
+      // changeState(LiftState.MANUAL);
+      changeState(LiftState.STOW);
     }
   }
 
@@ -184,11 +187,14 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     //     yValue = yValue < 0 ? 0 : yValue;
     //   }
     //   m_gripper.setCoralGripSpeed(yValue * 1.0);
+    m_extender.setSpeed(m_operator.getRightY() * 0.5);
   }
 
   private void stowState() {
     if (m_gripper.hasCoral()) {
-      changeState(LiftState.HOLD_CORAL);
+      changeState(m_extender.getCurrentLength() <= ExtenderConstants.BucketTopClearanceMeter 
+      ? LiftState.BOTTOM_BUCKET 
+      : LiftState.HOLD_CORAL);
       return;
     }
     m_basePivot.setTargetAngle(LiftPoses.Stow.getBasePivotAngle());
@@ -207,6 +213,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private void intakeFromHpState() {
     if (m_gripper.hasCoral()) {
       changeState(LiftState.BOTTOM_BUCKET);
+      m_gripper.setCoralGripSpeed(0.0);
       return;
     }
     m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());

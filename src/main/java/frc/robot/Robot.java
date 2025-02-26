@@ -86,12 +86,14 @@ public class Robot extends ChaosRobot {
   @Override
   public void teleopInit() {
     ((RobotContainer) m_robotContainer).setMotorStartUp();
+    ((RobotContainer) m_robotContainer).autoAndTeleInit();
     super.teleopInit();
   }
 
   @Override
   public void autonomousInit() {
     ((RobotContainer) m_robotContainer).setMotorStartUp();
+    ((RobotContainer) m_robotContainer).autoAndTeleInit();
     Gripper.hasCoralGrippedSim = true;
     super.autonomousInit();
   }

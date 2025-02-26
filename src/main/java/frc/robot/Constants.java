@@ -78,7 +78,7 @@ public final class Constants {
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
     public static final int CoralChannelID = 1;
-    public static final int ExtenderMinimumChannelID = 3;
+    public static final int ExtenderMinimumChannelID = 4;
   }
 
   /** This contains constants for setting up our swerve drive. */
@@ -153,11 +153,11 @@ public final class Constants {
       public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 54.0, 0.97, 0.0);
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, -90.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, 0.0);
-      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 0.0);
-      public static final LiftPose HpIntake = new LiftPose("HpIntake", 70.0, 0.057, -33.5); // Last updated 2/22/25
+      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 80.0, 1.55, -120.0);
+      public static final LiftPose HpIntake = new LiftPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
-      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 1.0, -90.0);
+      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 0.567, -90.0);
       public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
       public static final LiftPose TopBucket = new LiftPose("TopBucket", 90.0, 0.6, 0);
     }
@@ -167,8 +167,8 @@ public final class Constants {
       public static final Rotation2d MinAngle = Rotation2d.fromDegrees(20); // TODO: go back to 20
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
-      public static final double kP = 150.0;
-      public static final double kI = 0.0;
+      public static final double kP = 400.0;
+      public static final double kI = 0.005;
       public static final double kD = 0.0;
       public static final double kG = 0.4;
       public static final double kS = 0.25;
@@ -180,8 +180,8 @@ public final class Constants {
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
 
-      public static final double SupplyCurrentLimit = 70;
-      public static final double StatorCurrentLimit = 70;
+      public static final double SupplyCurrentLimit = 30;
+      public static final double StatorCurrentLimit = 30; // TODO: up when climbing
 
       // Sensor Feedback
       public static final double RotorToSensorRatio = 302.4;
@@ -214,8 +214,8 @@ public final class Constants {
       public static final double MMAcceleration = 160;
       public static final double MMJerk = 1600;
 
-      public static final double SupplyCurrentLimit = 40;
-      public static final double StatorCurrentLimit = 40;
+      public static final double SupplyCurrentLimit = 10;
+      public static final double StatorCurrentLimit = 10;
 
       // Sensor Feedback // TODO: get real values
       public static final double RotorToSensorRatio = 51.04;
@@ -231,13 +231,13 @@ public final class Constants {
     /** This contains constants for our Extender. */
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
-      public static final double MaxLengthMeter = 1.5;
-      public static final double BucketTopClearanceMeter = 0.59;
-      public static final double BucketBottomClearanceMeter = 0.1;
-      public static final boolean HasMagnetSensor = false; // TODO: enable hasMagneto 
+      public static final double MaxLengthMeter = 1.6;
+      public static final double BucketTopClearanceMeter = 0.567;
+      public static final double BucketBottomClearanceMeter = 0.013;
+      public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto 
 
       // Slot 0 Configs
-      public static final double kP = 50.0;
+      public static final double kP = 150.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
       public static final double kG = 0.35;
@@ -246,13 +246,13 @@ public final class Constants {
       public static final double kA = 0.01;
 
       // Motion Magic
-      public static final double MMCruiseVelocity = 10;
+      public static final double MMCruiseVelocity = 2;
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
 
       // Current limits
-      public static final double SupplyCurrentLimit = 40;
-      public static final double StatorCurrentLimit = 40;
+      public static final double SupplyCurrentLimit = 50;
+      public static final double StatorCurrentLimit = 50;
 
       // Sensor Feedback
       public static final double RotorToSensorRatio = 1.0;

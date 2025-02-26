@@ -161,7 +161,7 @@ public class BasePivot extends AbstractLiftPart {
    * Checks if the current angle is at the goal angle.
    */
   public boolean atTarget() {
-    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.1;
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.3;
   }
 
 
