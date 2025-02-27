@@ -249,7 +249,7 @@ public final class Constants {
       public static final double kA = 0.01;
 
       // Motion Magic
-      public static final double MMCruiseVelocity = 2;
+      public static final double MMCruiseVelocity = 3;
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
 
