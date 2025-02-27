@@ -63,18 +63,6 @@
           "data": {
             "name": "ScoreL4"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4R-RHPF"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeFromHP"
-          }
         }
       ]
     }

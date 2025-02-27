@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left3-10R"
+            "pathName": "Center-12R"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "10R-LHPF"
+            "pathName": "12R-RHPF"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LHPF-10L"
+            "pathName": "RHPF-2L"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "10L-LHPF"
+            "pathName": "2L-RHPF"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LHPF-8L"
+            "pathName": "RHPF-2R"
           }
         },
         {
@@ -68,6 +68,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Left3",
+  "folder": "center",
   "choreoAuto": false
 }
