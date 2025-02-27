@@ -8,6 +8,7 @@ import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
 import com.chaos131.vision.LimelightCamera.LimelightVersion;
+import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -75,15 +76,15 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_idLift = new IdLift(m_operator);
     m_intake = new Intake();
     m_mech2dManager = new MechManager2D(m_idLift, m_intake);
-    //  m_rightCamera =
-    //     new Camera(
-    //         "limelight-right",
-    //         LimelightVersion.LL3G,
-    //         VisionConstants.limeLight3GSpecs,
-    //         () -> m_swerveDrive.getPose(),
-    //         (data) -> updatePoseEstimator(data),
-    //         () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
-    //         () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
+     m_rightCamera =
+        new Camera(
+            "limelight-right",
+            LimelightVersion.LL3G,
+            VisionConstants.limeLight3GSpecs,
+            () -> m_swerveDrive.getPose(),
+            (data) -> updatePoseEstimator(data),
+            () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
+            () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
     m_leftCamera =
         new Camera(
             "limelight-left",
@@ -236,5 +237,26 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   */
   public void setMotorStartUp() {
     m_idLift.setMotorStartUp();
+  }
+
+  @Override
+   /**
+   * Attempts to update the pose estimator within the swerve drive object. Note that the SwerveDrive
+   * may disregard pose updates as well.
+   *
+   * @param data VisionData structure containing the required parts
+   */
+  public synchronized void updatePoseEstimator(VisionData data) {
+    var pose = data.getPose2d();
+    if (pose == null
+        || !Double.isFinite(pose.getX())
+        || !Double.isFinite(pose.getY())
+        || !Double.isFinite(pose.getRotation().getDegrees())) {
+      return;
+    }
+    if (pose.getX() == 0.0 || pose.getY() == 0.0) {
+      return;
+    }
+    m_swerveDrive.addVisionMeasurement(data);
   }
 }
