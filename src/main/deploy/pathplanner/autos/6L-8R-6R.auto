@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue2-10L"
+            "pathName": "Left2-6L"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "10L-LHPF"
+            "pathName": "6L-LHPN"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LHPF-8L"
+            "pathName": "LHPN-8R"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "8L-LHPF"
+            "pathName": "8R-LHPN"
           }
         },
         {
@@ -55,7 +55,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LHPF-8R"
+            "pathName": "LHPN-6R"
           }
         },
         {
@@ -68,6 +68,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Blue2",
+  "folder": "Left2",
   "choreoAuto": false
 }

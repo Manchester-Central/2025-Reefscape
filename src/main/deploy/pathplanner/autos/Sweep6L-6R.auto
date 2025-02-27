@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left1-Reef10R"
+            "pathName": "Left1 -sweep-6L"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "10R-RHPC"
+            "pathName": "6L-RHPN"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RHPC-4R"
+            "pathName": "RHPN-6R"
           }
         },
         {
@@ -39,11 +39,23 @@
           "data": {
             "name": "ScoreL4"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6R-RHPN"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeFromHP"
+          }
         }
       ]
     }
   },
-  "resetOdom": false,
-  "folder": null,
+  "resetOdom": true,
+  "folder": "Left1",
   "choreoAuto": false
 }

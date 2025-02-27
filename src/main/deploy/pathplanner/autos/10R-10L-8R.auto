@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right2-2L"
+            "pathName": "Left3-10R"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "2L-RHPF"
+            "pathName": "10R-LHPF"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RHPF-4R"
+            "pathName": "LHPF-10L"
           }
         },
         {
@@ -43,7 +43,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "4R-RHPF"
+            "pathName": "10L-LHPF"
           }
         },
         {
@@ -55,19 +55,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RHPF-4L"
+            "pathName": "LHPF-8L"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "8L-LHPF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeFromHP"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right2",
+  "folder": "Left3",
   "choreoAuto": false
 }

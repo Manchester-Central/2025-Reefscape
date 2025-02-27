@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.130985915492958,
-        "y": 1.927464788732393
+        "x": 3.672887323943661,
+        "y": 2.891197183098591
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.565229105950781,
-        "y": 1.8088656690667688
+        "x": 3.9771351418037137,
+        "y": 3.1787922302914704
       },
       "isLocked": false,
-      "linkedName": "Red2"
+      "linkedName": "4L"
     },
     {
       "anchor": {
-        "x": 5.033450704225352,
-        "y": 2.7211267605633793
+        "x": 0.7533450704225337,
+        "y": 1.4314260563380266
       },
       "prevControl": {
-        "x": 5.661072399232195,
-        "y": 2.435940106628096
+        "x": 0.3408922653267924,
+        "y": 1.326024893632872
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2R"
+      "linkedName": "RHPN"
     }
   ],
   "rotationTargets": [],
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 680.0,
     "maxAngularAcceleration": 540.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 118.61045966596527
+    "rotation": -125.27242144859838
   },
   "reversed": false,
-  "folder": "Red Start",
+  "folder": "to RHP",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 141.41084002023246
+    "rotation": 60.113473059575966
   },
   "useDefaultConstraints": true
 }

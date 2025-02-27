@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7533450704225337,
-        "y": 1.4314260563380266
+        "x": 7.145158450704225,
+        "y": 6.335123239436619
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6069756346114608,
-        "y": 2.3340971170597635
+        "x": 5.954619718309859,
+        "y": 5.914999999999998
       },
       "isLocked": false,
-      "linkedName": "RHPN"
+      "linkedName": "Blue2"
     },
     {
       "anchor": {
-        "x": 3.899647887323943,
-        "y": 2.7919894366197173
+        "x": 5.047623239436619,
+        "y": 5.3005281690140835
       },
       "prevControl": {
-        "x": 1.126294855555018,
-        "y": 2.948120937262326
+        "x": 6.068045774647887,
+        "y": 5.739876760563379
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "4R"
+      "linkedName": "10L"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 60.64224645720875
+    "rotation": -121.12247019679201
   },
   "reversed": false,
-  "folder": "From RHP",
+  "folder": "Left Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -125.27242144859838
+    "rotation": -139.8713910315241
   },
   "useDefaultConstraints": true
 }

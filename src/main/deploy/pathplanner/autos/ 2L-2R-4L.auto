@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Red1-Sweep-6R"
+            "pathName": "Right2-2L"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6R-LHPN"
+            "pathName": "2L-RHPF"
           }
         },
         {
@@ -31,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LHPN-6L"
+            "pathName": "RHPF-2R"
           }
         },
         {
@@ -43,19 +43,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6L-LHPN"
+            "pathName": "2R-RHPF"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "IntakeFromHP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RHPF-4R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4R-RHPF"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Red1",
+  "folder": "Right2",
   "choreoAuto": false
 }

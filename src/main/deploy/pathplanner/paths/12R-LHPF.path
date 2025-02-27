@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.827112676056338,
-        "y": 3.84075704225352
+        "x": 5.817910376670927,
+        "y": 3.866267605633801
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.450704225352113,
-        "y": 5.782394366197183
+        "x": 6.441501925966702,
+        "y": 5.807904929577464
       },
       "isLocked": false,
       "linkedName": "12R"
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 680.0,
     "maxAngularAcceleration": 540.0,
     "nominalVoltage": 12.0,
@@ -48,7 +48,7 @@
   "folder": "to LHP",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 178.75463573323165
+    "rotation": 179.8632561557819
   },
   "useDefaultConstraints": true
 }

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.304881911947401,
-        "y": 2.2854405564583664
+        "x": 2.233132037044218,
+        "y": 2.303251247989231
       },
       "isLocked": false,
       "linkedName": "RHPN"
@@ -20,8 +20,8 @@
         "y": 3.869102112676055
       },
       "prevControl": {
-        "x": 1.7534745751775624,
-        "y": 2.237547277757815
+        "x": 1.7098021317720837,
+        "y": 2.21067458272356
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 680.0,
     "maxAngularAcceleration": 540.0,
     "nominalVoltage": 12.0,

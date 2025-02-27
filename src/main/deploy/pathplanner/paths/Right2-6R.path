@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.959364609528936,
-        "y": 2.1294958089876244
+        "x": 5.572007042253521,
+        "y": 1.9699823943661958
       },
       "isLocked": false,
       "linkedName": "Red2"
     },
     {
       "anchor": {
-        "x": 5.827112676056338,
-        "y": 3.84075704225352
+        "x": 3.1,
+        "y": 3.869102112676055
       },
       "prevControl": {
-        "x": 6.485985193151651,
-        "y": 3.0886540698201777
+        "x": 2.6464788732394364,
+        "y": 2.168397887323942
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "12R"
+      "linkedName": "6R"
     }
   ],
   "rotationTargets": [],
@@ -34,7 +34,7 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 680.0,
     "maxAngularAcceleration": 540.0,
     "nominalVoltage": 12.0,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 178.75463573323165
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Red Start",
+  "folder": "Right Start",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 141.41084002023246
