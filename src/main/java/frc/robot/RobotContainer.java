@@ -152,6 +152,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.rightBumper().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.PrepState).withLiftInterrupt(LiftState.HOLD_CORAL));
     m_driver.rightTrigger().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL));
     m_driver.leftTrigger().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).withLiftInterrupt(LiftState.STOW));
+    m_driver.leftBumper().whileTrue(new ChangeState().setLift(LiftState.ALGAE_HIGH).withLiftInterrupt(LiftState.STOW));
 
     m_operator.a().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L1));
     m_operator.x().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L2));

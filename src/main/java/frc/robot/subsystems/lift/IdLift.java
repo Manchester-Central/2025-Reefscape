@@ -73,6 +73,8 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     SCORE_L2,
     SCORE_L3,
     SCORE_L4,
+    ALGAE_HIGH,
+    ALGAE_LOW,
     HOLD_CORAL,
     BOTTOM_BUCKET,
     TOP_BUCKET,
@@ -132,6 +134,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
         break;
       case SCORE_L4:
         scoreL4State();
+        break;
+      case ALGAE_HIGH:
+        algaeHighState();
+        break;
+      case ALGAE_LOW:
+        algaeLowState();
         break;
       case HOLD_CORAL:
         holdCoralState();
@@ -262,6 +270,28 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private void scoreL4State() {
     scoreHelper(LiftPoses.ScoreL4, false);
+  }
+
+  private void algaeHighState() {
+    if (!getLiftValues().hasCoral) {
+      m_basePivot.setTargetAngle(LiftPoses.AlgaeHigh.getBasePivotAngle());
+      m_extender.setTargetLength(LiftPoses.AlgaeHigh.getExtensionMeters());
+      m_gripperPivot.setTargetAngle(LiftPoses.AlgaeHigh.getGripperPivotAngle());
+      m_gripper.setCoralGripSpeed(-1);
+    } else {
+      changeState(LiftState.HOLD_CORAL);
+    }
+  }
+
+  private void algaeLowState() {
+    if (!getLiftValues().hasCoral) {
+      m_basePivot.setTargetAngle(LiftPoses.AlgaeLow.getBasePivotAngle());
+      m_extender.setTargetLength(LiftPoses.AlgaeLow.getExtensionMeters());
+      m_gripperPivot.setTargetAngle(LiftPoses.AlgaeLow.getGripperPivotAngle());
+      m_gripper.setCoralGripSpeed(-1);
+    } else {
+      changeState(LiftState.HOLD_CORAL);
+    }
   }
 
   private void holdCoralState() {
