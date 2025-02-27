@@ -44,6 +44,9 @@ import frc.robot.utils.PathUtil;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.ejml.data.FEigenpair;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -66,6 +69,14 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public static Camera m_leftCamera;
   public static MechManager2D m_mech2dManager;
   public static SwerveDriveSimulation m_driveSim;
+  private Map<String, LiftState> m_aprilTagToAlgaeHeightMap = Map.of(
+      "17 ReefTag", LiftState.ALGAE_LOW,
+      "18 ReefTag", LiftState.ALGAE_HIGH,
+      "19 ReefTag", LiftState.ALGAE_LOW,
+      "20 ReefTag", LiftState.ALGAE_HIGH,
+      "21 ReefTag", LiftState.ALGAE_LOW,
+      "22 ReefTag", LiftState.ALGAE_HIGH
+  );
   private SelectedLiftState m_selectedLiftState = SelectedLiftState.L4;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -152,7 +163,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.rightBumper().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.PrepState).withLiftInterrupt(LiftState.HOLD_CORAL));
     m_driver.rightTrigger().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL));
     m_driver.leftTrigger().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).withLiftInterrupt(LiftState.STOW));
-    m_driver.leftBumper().whileTrue(new ChangeState().setLift(LiftState.ALGAE_HIGH).withLiftInterrupt(LiftState.STOW));
+    m_driver.leftBumper().whileTrue(new ChangeState().setLift(() -> {
+      var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
+      return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());
+    }).withLiftInterrupt(LiftState.STOW));
 
     m_operator.a().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L1));
     m_operator.x().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L2));
