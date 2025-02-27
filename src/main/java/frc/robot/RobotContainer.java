@@ -144,10 +144,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
     m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
-    m_operator.povDown().whileTrue(new RunCommand(() -> {
-      // m_idLift.m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
-      m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
-    }, m_idLift));
+    
+    m_operator.start().onTrue(new ChangeState().setLift(LiftState.STOW));
+    m_operator.back().whileTrue(new ChangeState().setLift(LiftState.MANUAL));
 
     // Everything after this is for demos and testing
     // m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
