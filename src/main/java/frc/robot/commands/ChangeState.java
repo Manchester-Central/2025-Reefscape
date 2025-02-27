@@ -4,19 +4,21 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * A command for changing ANY state on the robot.
  */
 public class ChangeState extends Command {
-  Optional<LiftState> m_idLiftState = Optional.empty();
+  Optional<Supplier<LiftState>> m_idLiftStateSupplier = Optional.empty();
   Optional<IntakeState> m_intakeState = Optional.empty();
-
+  Optional<LiftState> m_liftInterruptState = Optional.empty();
   /** Creates a new uhhh. */
   public ChangeState() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -26,7 +28,15 @@ public class ChangeState extends Command {
    * Sets the state of the lift.
    */
   public ChangeState setLift(LiftState newLiftState) {
-    m_idLiftState = Optional.of(newLiftState);
+    m_idLiftStateSupplier = Optional.of(() -> newLiftState);
+    return this;
+  }
+
+    /**
+   * Sets the state of the lift.
+   */
+  public ChangeState setLift(Supplier<LiftState> newLiftStateSupplier) {
+    m_idLiftStateSupplier = Optional.of(newLiftStateSupplier);
     return this;
   }
 
@@ -38,11 +48,16 @@ public class ChangeState extends Command {
     return this;
   }
 
+  public ChangeState withLiftInterrupt(LiftState newLiftState){
+    m_liftInterruptState = Optional.of(newLiftState);
+    return this;
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (m_idLiftState.isPresent()) {
-      RobotContainer.m_idLift.changeState(m_idLiftState.get());
+    if (m_idLiftStateSupplier.isPresent()) {
+      RobotContainer.m_idLift.changeState(m_idLiftStateSupplier.get().get());
     }
 
     if (m_intakeState.isPresent()) {
@@ -56,11 +71,17 @@ public class ChangeState extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if(interrupted && m_idLiftStateSupplier.isPresent() && m_liftInterruptState.isPresent() 
+    && RobotContainer.m_idLift.getCurrentState() == m_idLiftStateSupplier.get().get()){
+      
+      RobotContainer.m_idLift.changeState(m_liftInterruptState.get());
+    }
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return DriverStation.isAutonomous();
   }
 }

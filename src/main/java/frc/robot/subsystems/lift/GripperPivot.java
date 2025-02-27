@@ -25,6 +25,8 @@ import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
+
+import java.util.Currency;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -45,7 +47,7 @@ public class GripperPivot extends AbstractLiftPart {
   private ChaosCanCoder m_canCoder =
       new ChaosCanCoder(CanIdentifiers.GripperPivotCANCoderCANID);
 
-  private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("GriperPivot", m_motor);
+  private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("GripperPivot", m_motor);
   private ChaosCanCoderTuner m_canCoderTuner = new ChaosCanCoderTuner("Gripper Pivot", m_canCoder);
 
   private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tuner",
@@ -92,11 +94,10 @@ public class GripperPivot extends AbstractLiftPart {
    */
   public GripperPivot(Supplier<IdLiftValues> idLiftValuesSupplier) {
     super(idLiftValuesSupplier);
-    CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
-    canCoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
-    canCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    canCoderConfig.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(m_canCoderOffsetDegrees.get()).getRotations();
-    m_canCoder.getConfigurator().apply(canCoderConfig);
+    m_canCoder.Configuration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
+    m_canCoder.Configuration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    m_canCoder.Configuration.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(m_canCoderOffsetDegrees.get()).getRotations();
+    m_canCoder.applyConfig();
 
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -105,8 +106,8 @@ public class GripperPivot extends AbstractLiftPart {
     m_motor.Configuration.CurrentLimits.StatorCurrentLimitEnable = true;
     m_motor.Configuration.CurrentLimits.StatorCurrentLimit = m_statorCurrentLimit.get();
     m_motor.Configuration.Feedback.FeedbackRemoteSensorID = CanIdentifiers.GripperPivotCANCoderCANID;
-    // m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-    m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    // m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
     m_motor.Configuration.Feedback.RotorToSensorRatio = m_rotorToSensorRatio.get();
     m_motor.Configuration.Feedback.SensorToMechanismRatio = m_sensorToMechRatio.get();
     m_motor.Configuration.ClosedLoopRamps.VoltageClosedLoopRampPeriod = m_rampPeriod.get();
@@ -126,7 +127,7 @@ public class GripperPivot extends AbstractLiftPart {
 
     m_motor.applyConfig();
 
-    m_motor.attachMotorSim(m_motorSim, m_simGearRatio, ChassisReference.CounterClockwise_Positive, true);
+    m_motor.attachMotorSim(m_motorSim, m_simGearRatio, ChassisReference.Clockwise_Positive, true);
     m_motor.attachCanCoderSim(m_canCoder);
   }
 
@@ -176,7 +177,7 @@ public class GripperPivot extends AbstractLiftPart {
    * Checks if the current angle is at the goal angle.
    */
   public boolean atTarget() {
-    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.1;
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 1.0;
   }
 
   @Override
@@ -212,5 +213,7 @@ public class GripperPivot extends AbstractLiftPart {
     Logger.recordOutput("GripperPivot/StatorCurrent", m_motor.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("GripperPivot/SupplyCurrent", m_motor.getSupplyCurrent().getValueAsDouble());
     Logger.recordOutput("GripperPivot/MotorAngle", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).getDegrees());
+    Logger.recordOutput("GripperPivot/Erro", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).minus(getCurrentAngle()).getDegrees());  
+    Logger.recordOutput("GripperPivot/MotorVelocityRPS", m_motor.getVelocity().getValueAsDouble());
   }
 }

@@ -6,10 +6,14 @@ package frc.robot.subsystems.lift;
 
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
+import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
+
+import java.text.BreakIterator;
+
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
@@ -61,13 +65,21 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     STOW,
     INTAKE_FROM_FLOOR,
     INTAKE_FROM_HP, // Probably won't implement -Josh // nevermind -Josh
+    PREP_L1,
+    PREP_L2,
+    PREP_L3,
+    PREP_L4, // Might need many prep states
     SCORE_L1,
     SCORE_L2,
     SCORE_L3,
-    SCORE_L4, // Might need many prep states
+    SCORE_L4,
+    ALGAE_HIGH,
+    ALGAE_LOW,
     HOLD_CORAL,
     BOTTOM_BUCKET,
-    TOP_BUCKET;
+    TOP_BUCKET,
+    PREP_CLIMB,
+    POST_CLIMB;
   }
 
   /** Creates a new Lift. */
@@ -99,6 +111,18 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       case INTAKE_FROM_HP:
         intakeFromHpState();
         break;
+      case PREP_L1:
+        prepL1State();
+        break;
+      case PREP_L2:
+        prepL2State();
+        break;
+      case PREP_L3:
+        prepL3State();
+        break;
+      case PREP_L4:
+        prepL4State();
+        break;
       case SCORE_L1:
         scoreL1State();
         break;
@@ -111,6 +135,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       case SCORE_L4:
         scoreL4State();
         break;
+      case ALGAE_HIGH:
+        algaeHighState();
+        break;
+      case ALGAE_LOW:
+        algaeLowState();
+        break;
       case HOLD_CORAL:
         holdCoralState();
         break;
@@ -120,20 +150,28 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       case TOP_BUCKET:
         topBucketState();
         break;
+        case PREP_CLIMB:
+        prepClimb();
+        break;
+        case POST_CLIMB:
+        postClimb();
+        break;
     }
   }
 
   private void startState() {
-    // if (!m_extender.hasReachedMinimum()) {
-    // m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
-    // return;
-    // }
+    if (ExtenderConstants.HasMagnetSensor && !m_extender.hasReachedMinimum()) {
+      m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
+      m_gripperPivot.setTargetAngle(LiftPoses.Stow.getGripperPivotAngle());
+      return;
+    }
 
     if (Robot.isSimulation()) {
       // changeState(LiftState.STOW);
       changeState(LiftState.STOW);
     } else {
-      changeState(LiftState.MANUAL);
+      // changeState(LiftState.MANUAL);
+      changeState(LiftState.STOW);
     }
   }
 
@@ -143,29 +181,34 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
      * m_gripper.setCoralGripSpeed(0.0);
      * m_gripperPivot.setSpeed(0.0);
      * m_extender.setSpeed(m_operator.getRightY() * 0.5);
-     */
-    // setMotorStartUp();
-    m_basePivot.setTargetAngle(Rotation2d.fromDegrees(90));
-    if (m_extender.getCurrentLength() >= LiftPoses.HoldCoral.getExtensionMeters()) {
-      // for operator controls
-      m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.4);
-      double yValue = m_operator.getRightY();
-      if (m_gripper.hasCoral()) {
-        yValue = yValue < 0 ? 0 : yValue;
-      }
-      m_gripper.setCoralGripSpeed(yValue * 0.131);
+*/
+    m_basePivot.setSpeed(m_operator.getRightY() * 0.131);
+
+    m_extender.setSpeed(m_operator.getLeftY() * 0.5);
+
+    if (m_operator.leftBumper().getAsBoolean()) {
+      m_gripperPivot.setSpeed(0.2);
+    } else if (m_operator.leftTrigger().getAsBoolean()) {
+      m_gripperPivot.setSpeed(-0.2);
     } else {
-      m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(0));
-      if (m_gripperPivot.atTarget()) {
-        setMotorCleanUp(); // TODO Command Scheduler Loop overun
-        m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
-      }
+      m_gripperPivot.setSpeed(0);
     }
+
+    if (m_operator.rightBumper().getAsBoolean()) {
+      m_gripper.setCoralGripSpeed(0.2);
+    } else if (m_operator.rightTrigger().getAsBoolean()) {
+      m_gripper.setCoralGripSpeed(-0.2);
+    } else {
+      m_gripper.setCoralGripSpeed(0);
+    }
+
   }
 
   private void stowState() {
     if (m_gripper.hasCoral()) {
-      changeState(LiftState.HOLD_CORAL);
+      changeState(m_extender.getCurrentLength() <= ExtenderConstants.BucketTopClearanceMeter 
+      ? LiftState.BOTTOM_BUCKET 
+      : LiftState.HOLD_CORAL);
       return;
     }
     m_basePivot.setTargetAngle(LiftPoses.Stow.getBasePivotAngle());
@@ -184,6 +227,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private void intakeFromHpState() {
     if (m_gripper.hasCoral()) {
       changeState(LiftState.BOTTOM_BUCKET);
+      m_gripper.setCoralGripSpeed(0.0);
       return;
     }
     m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
@@ -196,20 +240,58 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void scoreL1State() {
+  private void prepL1State() {
     scoreHelper(LiftPoses.ScoreL1, true);
   }
 
-  private void scoreL2State() {
+  private void prepL2State() {
     scoreHelper(LiftPoses.ScoreL2, true);
   }
 
-  private void scoreL3State() {
+  private void prepL3State() {
     scoreHelper(LiftPoses.ScoreL3, true);
+  }
+
+  private void prepL4State() {
+    scoreHelper(LiftPoses.ScoreL4, true);
+  }
+
+  private void scoreL1State() {
+    scoreHelper(LiftPoses.ScoreL1, false);
+  }
+
+  private void scoreL2State() {
+    scoreHelper(LiftPoses.ScoreL2, false);
+  }
+
+  private void scoreL3State() {
+    scoreHelper(LiftPoses.ScoreL3, false);
   }
 
   private void scoreL4State() {
     scoreHelper(LiftPoses.ScoreL4, false);
+  }
+
+  private void algaeHighState() {
+    if (!getLiftValues().hasCoral) {
+      m_basePivot.setTargetAngle(LiftPoses.AlgaeHigh.getBasePivotAngle());
+      m_extender.setTargetLength(LiftPoses.AlgaeHigh.getExtensionMeters());
+      m_gripperPivot.setTargetAngle(LiftPoses.AlgaeHigh.getGripperPivotAngle());
+      m_gripper.setCoralGripSpeed(-0.5);
+    } else {
+      changeState(LiftState.HOLD_CORAL);
+    }
+  }
+
+  private void algaeLowState() {
+    if (!getLiftValues().hasCoral) {
+      m_basePivot.setTargetAngle(LiftPoses.AlgaeLow.getBasePivotAngle());
+      m_extender.setTargetLength(LiftPoses.AlgaeLow.getExtensionMeters());
+      m_gripperPivot.setTargetAngle(LiftPoses.AlgaeLow.getGripperPivotAngle());
+      m_gripper.setCoralGripSpeed(-0.5);
+    } else {
+      changeState(LiftState.HOLD_CORAL);
+    }
   }
 
   private void holdCoralState() {
@@ -230,7 +312,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       changeState(LiftState.TOP_BUCKET);
       return;
     } else if (!m_gripper.hasCoral()) {
-      changeState(LiftState.INTAKE_FROM_HP);
+      changeState(LiftState.STOW);
       return;
     }
   }
@@ -248,7 +330,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     }
   }
 
-  private void scoreHelper(LiftPose liftPose, boolean isGripperReleaseForward) {
+  private void scoreHelper(LiftPose liftPose, boolean isPrep) {
     if (!(m_gripper.hasCoral())) {
       changeState(LiftState.STOW);
       return;
@@ -256,15 +338,27 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(liftPose.getBasePivotAngle());
     m_extender.setTargetLength(liftPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(liftPose.getGripperPivotAngle());
-    if (isPoseReady()) {
-      m_gripper.setCoralGripSpeed(isGripperReleaseForward ? 0.5 : -0.5);
+    if (!isPrep && isPoseReady()) {
+      m_gripper.setCoralGripSpeed(0.5);
     } else {
       m_gripper.setCoralGripSpeed(0);
     }
 
-    if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
+    if (!isPrep && Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Gripper.hasCoralGrippedSim = false;
     }
+  }
+
+  private void prepClimb() {
+    m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
+    m_gripperPivot.setTargetAngle(LiftPoses.ClimbPrep.getGripperPivotAngle());
+    m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
+  }
+
+  private void postClimb() {
+    m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
+    m_gripperPivot.setTargetAngle(LiftPoses.Climb.getGripperPivotAngle());
+    m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
   }
 
   /**
@@ -272,7 +366,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorCleanUp() {
     m_extender.setMotorCoast();
-    m_basePivot.setMotorCoast();
+    // m_basePivot.setMotorCoast();
     m_gripperPivot.setMotorCoast();
   }
 
@@ -281,7 +375,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
    */
   public void setMotorStartUp() {
     m_extender.setMotorBrake();
-    m_basePivot.setMotorBrake();
+    // m_basePivot.setMotorBrake();
     m_gripperPivot.setMotorBrake();
   }
 

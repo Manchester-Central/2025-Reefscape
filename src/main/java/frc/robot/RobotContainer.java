@@ -4,13 +4,11 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
 import com.chaos131.vision.LimelightCamera.LimelightVersion;
+import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,23 +24,34 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
+import frc.robot.commands.ReefAlignment;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForState;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.MechManager2D;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.lift.Gripper;
 import frc.robot.subsystems.lift.IdLift;
+import frc.robot.subsystems.lift.LiftPose;
+import frc.robot.subsystems.lift.SelectedLiftState;
 import frc.robot.subsystems.lift.IdLift.LiftState;
 import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.ejml.data.FEigenpair;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -60,7 +69,15 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public static Camera m_leftCamera;
   public static MechManager2D m_mech2dManager;
   public static SwerveDriveSimulation m_driveSim;
-
+  private Map<String, LiftState> m_aprilTagToAlgaeHeightMap = Map.of(
+      "17 ReefTag", LiftState.ALGAE_LOW,
+      "18 ReefTag", LiftState.ALGAE_HIGH,
+      "19 ReefTag", LiftState.ALGAE_LOW,
+      "20 ReefTag", LiftState.ALGAE_HIGH,
+      "21 ReefTag", LiftState.ALGAE_LOW,
+      "22 ReefTag", LiftState.ALGAE_HIGH
+  );
+  private SelectedLiftState m_selectedLiftState = SelectedLiftState.L4;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -71,7 +88,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_idLift = new IdLift(m_operator);
     m_intake = new Intake();
     m_mech2dManager = new MechManager2D(m_idLift, m_intake);
-    m_rightCamera =
+     m_rightCamera =
         new Camera(
             "limelight-right",
             LimelightVersion.LL3G,
@@ -90,12 +107,16 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
             () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
     
-    NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.STOW)));
-    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL)));
+    NamedCommands.registerCommand("GoToReef8L", new ReefAlignment(FieldPoint.ReefPose8, true, m_swerveDrive));
+    NamedCommands.registerCommand("ScoreL1",  new ChangeState().setLift(LiftState.SCORE_L1).andThen(new WaitForState().forLiftState(LiftState.STOW)));
+    NamedCommands.registerCommand("ScoreL2",  new ChangeState().setLift(LiftState.SCORE_L2).andThen(new WaitForState().forLiftState(LiftState.STOW)));
+    NamedCommands.registerCommand("ScoreL3",  new ChangeState().setLift(LiftState.SCORE_L3).andThen(new WaitForState().forLiftState(LiftState.STOW)));
+    NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).andThen(new WaitForState().forLiftState(LiftState.STOW)));
+    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("XMode", new RunCommand(() -> m_swerveDrive.setXMode()).withTimeout(0.1));
     buildPathplannerAutoChooser();
 
-
+    System.out.println(LiftPoses.ScoreL4); // needed for static poses TODO find better way
     
     // Configure the trigger bindings
     configureBindings();
@@ -111,23 +132,60 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    * joysticks}.
    */
   private void configureBindings() {
-    // Everything after this is for competition
-    m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
-      FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
-      return pose.getCurrentAlliancePose().minus(m_swerveDrive.getPose()).getTranslation().getAngle();
-    }, 1.0));
-
-    // Everything after this is for demos and testing
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
 
-    m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
-    m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
-    m_driver.y().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive));
-    m_driver.x().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    // Everything after this is for competition
+    // m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
+    //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
+    //   return pose.getCurrentAlliancePose().getRotation();
+    // }, 1.0));
+    m_driver.a().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
+        .alongWith(new ChangeState().setLift(LiftState.INTAKE_FROM_HP)
+        .withLiftInterrupt(LiftState.STOW)));
+        
+    m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Right.getAllianceAngle(), 1.0));
+    m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
+    // m_driver.y().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
+    //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefDrivePoses());
+    //   return pose.getCurrentAlliancePose().getRotation();
+    // }, 1.0));
+    m_driver.y().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    // .andThen(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL))
+
     m_driver.povUp().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
     m_driver.povDown().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
     m_driver.povLeft().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
     m_driver.povRight().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
+
+    m_driver.start().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
+    m_driver.back().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
+
+    m_driver.rightBumper().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.PrepState).withLiftInterrupt(LiftState.HOLD_CORAL));
+    m_driver.rightTrigger().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL));
+    m_driver.leftTrigger().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).withLiftInterrupt(LiftState.STOW));
+    m_driver.leftBumper().whileTrue(new ChangeState().setLift(() -> {
+      var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
+      return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());
+    }).withLiftInterrupt(LiftState.STOW));
+
+    m_operator.a().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L1));
+    m_operator.x().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L2));
+    m_operator.b().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L3));
+    m_operator.y().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L4));
+
+    m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
+    m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
+    
+    m_operator.start().onTrue(new ChangeState().setLift(LiftState.STOW));
+    m_operator.back().whileTrue(new ChangeState().setLift(LiftState.MANUAL));
+
+    // Everything after this is for demos and testing
+    // m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
+    // m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
+    // m_driver.y().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive));
+    // m_driver.x().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
+
+
 
     // v on keyboard 0
     m_simKeyboard.y().onTrue(
@@ -139,30 +197,26 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // z on keyboard 0
     m_simKeyboard.a().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim));
 
-    m_operator.start().whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
-    m_operator.leftBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
-    m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
-    m_operator.a().whileTrue(new ChangeState().setLift(LiftState.SCORE_L1).setIntake(IntakeState.STOW));
-    m_operator.x().whileTrue(new ChangeState().setLift(LiftState.SCORE_L2).setIntake(IntakeState.STOW));
-    m_operator.b().whileTrue(new ChangeState().setLift(LiftState.SCORE_L3).setIntake(IntakeState.STOW));
-    m_operator.y().whileTrue(new ChangeState().setLift(LiftState.SCORE_L4).setIntake(IntakeState.STOW));
-    m_operator.back().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim)); // TODO: delete if back button needed for competition
-    m_operator.povLeft().whileTrue(new ChangeState().setLift(LiftState.MANUAL).setIntake(IntakeState.STOW));
+    // m_operator.start().whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
+    // m_operator.leftBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
+    // m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
+    // m_operator.back().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim)); // TODO: delete if back button needed for competition
+    // m_operator.povLeft().whileTrue(new ChangeState().setLift(LiftState.MANUAL).setIntake(IntakeState.STOW));
 
-    // m_operator.leftTrigger().whileTrue(new RunCommand(() -> m_idLift.m_basePivot.fsetTargetAngle(Rotation2d.fromDegrees(45)),
+    // m_operator.leftTrigger().whileTrue(new RunCommand(() -> m_idLift.m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-20)),
     //     m_idLift));
-    // m_operator.rightTrigger().whileTrue(new RunCommand(() -> m_idLift.m_basePivot.setTargetAngle(Rotation2d.fromDegrees(80)),
+    // m_operator.rightTrigger().whileTrue(new RunCommand(() -> m_idLift.m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-90)),
     //     m_idLift));
     // m_operator.a().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(0.5), m_idLift));
     // m_operator.b().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(1.2), m_idLift));
-    m_operator.povUp().whileTrue(new RunCommand(() -> {
-      m_idLift.m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
-      m_idLift.m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
-    }, m_idLift));
-    m_operator.povDown().whileTrue(new RunCommand(() -> {
-      m_idLift.m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
-      m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
-    }, m_idLift));
+    // m_operator.a().whileTrue(new RunCommand(() -> {
+    //   m_idLift.m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
+    //   double yValue = -0.5;
+    //   if (m_idLift.m_gripper.hasCoral()) {
+    //     yValue = yValue < 0 ? 0 : yValue;
+    //   }
+    //   m_idLift.m_gripper.setCoralGripSpeed(yValue);
+    // }, m_idLift));
   }
 
   @Override
@@ -189,6 +243,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     DashboardNumber.checkAll();
   }
 
+  public void autoAndTeleInit(){
+    m_idLift.changeState(LiftState.START);
+  }
+
   /**
   * Sets motor to cleanup when disabled.
   */
@@ -201,5 +259,26 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   */
   public void setMotorStartUp() {
     m_idLift.setMotorStartUp();
+  }
+
+  @Override
+   /**
+   * Attempts to update the pose estimator within the swerve drive object. Note that the SwerveDrive
+   * may disregard pose updates as well.
+   *
+   * @param data VisionData structure containing the required parts
+   */
+  public synchronized void updatePoseEstimator(VisionData data) {
+    var pose = data.getPose2d();
+    if (pose == null
+        || !Double.isFinite(pose.getX())
+        || !Double.isFinite(pose.getY())
+        || !Double.isFinite(pose.getRotation().getDegrees())) {
+      return;
+    }
+    if (pose.getX() == 0.0 || pose.getY() == 0.0) {
+      return;
+    }
+    m_swerveDrive.addVisionMeasurement(data);
   }
 }
