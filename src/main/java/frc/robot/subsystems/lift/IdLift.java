@@ -11,6 +11,9 @@ import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
+
+import java.text.BreakIterator;
+
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
@@ -72,7 +75,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     SCORE_L4,
     HOLD_CORAL,
     BOTTOM_BUCKET,
-    TOP_BUCKET;
+    TOP_BUCKET,
+    PREP_CLIMB,
+    POST_CLIMB;
   }
 
   /** Creates a new Lift. */
@@ -136,6 +141,12 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
         break;
       case TOP_BUCKET:
         topBucketState();
+        break;
+        case PREP_CLIMB:
+        prepClimb();
+        break;
+        case POST_CLIMB:
+        postClimb();
         break;
     }
   }
@@ -311,6 +322,18 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     if (!isPrep && Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Gripper.hasCoralGrippedSim = false;
     }
+  }
+
+  private void prepClimb() {
+    m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
+    m_gripperPivot.setTargetAngle(LiftPoses.ClimbPrep.getGripperPivotAngle());
+    m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
+  }
+
+  private void postClimb() {
+    m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
+    m_gripperPivot.setTargetAngle(LiftPoses.Climb.getGripperPivotAngle());
+    m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
   }
 
   /**

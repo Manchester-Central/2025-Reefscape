@@ -130,6 +130,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.povLeft().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
     m_driver.povRight().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
 
+    m_driver.start().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
+    m_driver.back().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
+
     m_driver.rightBumper().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.PrepState).withLiftInterrupt(LiftState.HOLD_CORAL));
     m_driver.rightTrigger().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL));
     m_driver.leftTrigger().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).withLiftInterrupt(LiftState.STOW));
@@ -139,10 +142,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.b().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L3));
     m_operator.y().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L4));
 
-    m_operator.povUp().whileTrue(new RunCommand(() -> {
-      // m_idLift.m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
-      m_idLift.m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
-    }, m_idLift));
+    m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
+    m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
     m_operator.povDown().whileTrue(new RunCommand(() -> {
       // m_idLift.m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
       m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
