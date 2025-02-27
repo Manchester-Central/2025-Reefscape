@@ -125,12 +125,21 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
       FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
       return pose.getCurrentAlliancePose().getRotation();
-      // return pose.getCurrentAlliancePose().getTranslation().minus(m_swerveDrive.getPose().getTranslation()).getAngle();
     }, 1.0));
+    m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Right.getAllianceAngle(), 1.0));
+    m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
+    m_driver.y().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
+      FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefDrivePoses());
+      return pose.getCurrentAlliancePose().getRotation();
+    }, 1.0));
+
     m_driver.povUp().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
     m_driver.povDown().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
     m_driver.povLeft().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
     m_driver.povRight().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
+
+    m_driver.start().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
+    m_driver.back().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
 
     m_driver.rightBumper().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.PrepState).withLiftInterrupt(LiftState.HOLD_CORAL));
     m_driver.rightTrigger().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL));
@@ -141,14 +150,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.b().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L3));
     m_operator.y().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L4));
 
-    m_operator.povUp().whileTrue(new RunCommand(() -> {
-      // m_idLift.m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
-      m_idLift.m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
-    }, m_idLift));
-    m_operator.povDown().whileTrue(new RunCommand(() -> {
-      // m_idLift.m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
-      m_idLift.m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
-    }, m_idLift));
+    m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
+    m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
+    
+    m_operator.start().onTrue(new ChangeState().setLift(LiftState.STOW));
+    m_operator.back().whileTrue(new ChangeState().setLift(LiftState.MANUAL));
 
     // Everything after this is for demos and testing
     // m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
