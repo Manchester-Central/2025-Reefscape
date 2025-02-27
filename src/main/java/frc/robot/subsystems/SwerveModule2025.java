@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -42,6 +43,15 @@ public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
             canCoderCanId, SwerveConstants.InvertedEncoder, angleEncoderOffset),
         new DriveConfig(
             SwerveConstants.DriverRampRatePeriod, SwerveConstants.AutonomousRampRatePeriod));
+
+    m_speedConfig.CurrentLimits = new CurrentLimitsConfigs();
+    m_speedConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    m_speedConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    m_speedConfig.CurrentLimits.SupplyCurrentLowerLimit = 85;
+    m_speedConfig.CurrentLimits.SupplyCurrentLowerTime = 0.01;
+    m_speedConfig.CurrentLimits.StatorCurrentLimit = 75;
+    m_speedConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    m_speedController.getConfigurator().apply(m_speedConfig.CurrentLimits);
   }
 
   /**

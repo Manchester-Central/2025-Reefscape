@@ -151,10 +151,12 @@ public final class Constants {
     public static class LiftPoses {
       public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
-      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 54.0, 0.97, 0.0);
+      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 34.0, 0.60, -20.0);
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.565, -100.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 76.0, 0.92, -105.5);
-      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 80.0, 1.6, -120.0);
+      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 82.0, 1.58, -120.0);
+      public static final LiftPose AlgaeHigh = new LiftPose("AlgaeHigh", 64.0, 1.0, -72.0);
+      public static final LiftPose AlgaeLow = new LiftPose("AlgaeLow", 51.0, 0.71, -60.0);
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
@@ -181,8 +183,8 @@ public final class Constants {
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
 
-      public static final double SupplyCurrentLimit = 30;
-      public static final double StatorCurrentLimit = 30; // TODO: up when climbing
+      public static final double SupplyCurrentLimit = 50;
+      public static final double StatorCurrentLimit = 50; // TODO: up when climbing
 
       // Sensor Feedback
       public static final double RotorToSensorRatio = 302.4;
@@ -247,7 +249,7 @@ public final class Constants {
       public static final double kA = 0.01;
 
       // Motion Magic
-      public static final double MMCruiseVelocity = 2;
+      public static final double MMCruiseVelocity = 3;
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
 

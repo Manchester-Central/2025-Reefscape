@@ -102,6 +102,17 @@ public class FieldPoint {
   }
 
   /**
+   * Returns an array list of all the april tags on the reef is made.
+   */
+  public static ArrayList<FieldPoint> getReefAprilTagPoses() {
+    ArrayList<FieldPoint> reefAprilTagPoses = new ArrayList<FieldPoint>();
+    for (AprilTag aprilTag : blueReefAprilTags()) {
+      reefAprilTagPoses.add(new FieldPoint(aprilTag.id + " ReefTag", aprilTag.pose2d));
+    }
+    return reefAprilTagPoses;
+  }
+
+  /**
    * Gets our positions for picking up coral from the HP stations.
    */
   public static ArrayList<FieldPoint> getHpDrivePoses() {
@@ -158,6 +169,10 @@ public class FieldPoint {
 
   public Pose2d getRedPose() {
     return m_redPose;
+  }
+
+  public String getName() {
+    return m_name;
   }
 
   /**

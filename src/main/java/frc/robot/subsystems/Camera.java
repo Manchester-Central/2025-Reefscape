@@ -55,8 +55,8 @@ public class Camera extends LimelightCamera {
      * from the log file. If we're a real robot, we instead log the data TO the
      * file!
      */
-    System.out.println("Pose3d" + m_poseData.pose.length);
-    System.out.println("PoseTimestamps" + m_poseData.timestamps.length);
+    // System.out.println("Pose3d" + m_poseData.pose.length);
+    // System.out.println("PoseTimestamps" + m_poseData.timestamps.length);
 
     Logger.processInputs(m_name, m_poseData);
 
@@ -119,8 +119,8 @@ public class Camera extends LimelightCamera {
       long timestamp = mt1_poses[idx].getTime();
       var data = mt1_poses[idx].getDoubleArray();
 
-      System.out.println("ServerTime " + timestamp);
-      System.out.println("FPGA Time " + Timer.getFPGATimestamp());
+      // System.out.println("ServerTime " + timestamp);
+      // System.out.println("FPGA Time " + Timer.getFPGATimestamp());
       double timestampSeconds = timestamp / 1000000.0 - data[idxLatency] / 1000.0;
 
       // if (data == null || data[idxX] < EPSILON) {

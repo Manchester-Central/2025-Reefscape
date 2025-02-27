@@ -179,9 +179,9 @@ public class SwerveDrive extends BaseSwerveDrive {
   }
 
   public void addVisionMeasurement(VisionData data) {
-    System.out.println("Received Vision Update");
+    // System.out.println("Received Vision Update");
     if (!m_acceptVisionUpdates) return;
-    System.out.println("Using Vision Update from " + data.getTimestampSeconds());
+    // System.out.println("Using Vision Update from " + data.getTimestampSeconds());
     synchronized (m_odometry) {
       m_odometry.addVisionMeasurement(
           data.getPose2d(), data.getTimestampSeconds(), data.getDeviationMatrix());
