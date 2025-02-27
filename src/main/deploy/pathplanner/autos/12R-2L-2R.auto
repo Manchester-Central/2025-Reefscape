@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center-12R"
+            "pathName": "center-12R"
           }
         },
         {
@@ -67,7 +67,7 @@
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "center",
   "choreoAuto": false
 }

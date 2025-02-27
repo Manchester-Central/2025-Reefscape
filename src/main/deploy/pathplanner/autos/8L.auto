@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Drive2MetersForward"
+            "pathName": "Left2-10L"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "XMode"
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
           }
         }
       ]
