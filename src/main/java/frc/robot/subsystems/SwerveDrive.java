@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
 import com.chaos131.swerve.SwerveConfigs;
+import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -53,6 +54,8 @@ public class SwerveDrive extends BaseSwerveDrive {
       Supplier<Rotation2d> getRotation)
       throws Exception {
     super(swerveModules, swerveConfigs, getRotation);
+
+    m_acceptVisionUpdates = SwerveConstants.AcceptVisionUpdates;
 
     resetPose(GeneralConstants.InitialRobotPose);
     m_simDriveTrain = DriveTrainSimulationConfig.Default();
@@ -172,6 +175,16 @@ public class SwerveDrive extends BaseSwerveDrive {
 
     for (var i = 0; i < states.length; i++) {
       m_swerveModules.get(i).setTarget(states[i]);
+    }
+  }
+
+  public void addVisionMeasurement(VisionData data) {
+    System.out.println("Received Vision Update");
+    if (!m_acceptVisionUpdates) return;
+    System.out.println("Using Vision Update from " + data.getTimestampSeconds());
+    synchronized (m_odometry) {
+      m_odometry.addVisionMeasurement(
+          data.getPose2d(), data.getTimestampSeconds(), data.getDeviationMatrix());
     }
   }
 

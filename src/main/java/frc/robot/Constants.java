@@ -83,6 +83,7 @@ public final class Constants {
 
   /** This contains constants for setting up our swerve drive. */
   public static class SwerveConstants {
+    public static final boolean AcceptVisionUpdates = true;
 
     public static final InvertedValue InvertedAngle = InvertedValue.CounterClockwise_Positive;
     public static final SensorDirectionValue InvertedEncoder =
