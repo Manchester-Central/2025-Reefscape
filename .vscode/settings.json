@@ -63,6 +63,5 @@
     "editor.defaultFormatter": "redhat.java"
   },
   "java.checkstyle.version": "10.21.2",
-  "java.checkstyle.configuration": "config/checkstyle/checkstyle.xml",
-  "java.debug.settings.onBuildFailureProceed": true
+  "java.checkstyle.configuration": "config/checkstyle/checkstyle.xml"
 }
