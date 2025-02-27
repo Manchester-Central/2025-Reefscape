@@ -277,7 +277,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       m_basePivot.setTargetAngle(LiftPoses.AlgaeHigh.getBasePivotAngle());
       m_extender.setTargetLength(LiftPoses.AlgaeHigh.getExtensionMeters());
       m_gripperPivot.setTargetAngle(LiftPoses.AlgaeHigh.getGripperPivotAngle());
-      m_gripper.setCoralGripSpeed(-1);
+      m_gripper.setCoralGripSpeed(-0.5);
     } else {
       changeState(LiftState.HOLD_CORAL);
     }
@@ -288,7 +288,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       m_basePivot.setTargetAngle(LiftPoses.AlgaeLow.getBasePivotAngle());
       m_extender.setTargetLength(LiftPoses.AlgaeLow.getExtensionMeters());
       m_gripperPivot.setTargetAngle(LiftPoses.AlgaeLow.getGripperPivotAngle());
-      m_gripper.setCoralGripSpeed(-1);
+      m_gripper.setCoralGripSpeed(-0.5);
     } else {
       changeState(LiftState.HOLD_CORAL);
     }
