@@ -44,6 +44,7 @@ import frc.robot.utils.PathUtil;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
+import org.ejml.data.FEigenpair;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
@@ -104,7 +105,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("XMode", new RunCommand(() -> m_swerveDrive.setXMode()).withTimeout(0.1));
     buildPathplannerAutoChooser();
 
-    System.out.println(LiftPoses.ScoreL4);
+    System.out.println(LiftPoses.ScoreL4); // needed for static poses TODO find better way
     
     // Configure the trigger bindings
     configureBindings();
@@ -123,18 +124,22 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
 
     // Everything after this is for competition
-    m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
-      FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
-      return pose.getCurrentAlliancePose().getRotation();
-    }, 1.0));
+    // m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
+    //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
+    //   return pose.getCurrentAlliancePose().getRotation();
+    // }, 1.0));
+    m_driver.a().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
+        .alongWith(new ChangeState().setLift(LiftState.INTAKE_FROM_HP)
+        .withLiftInterrupt(LiftState.STOW)));
+        
     m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Right.getAllianceAngle(), 1.0));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
-    new PathUtil();
     // m_driver.y().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
     //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefDrivePoses());
     //   return pose.getCurrentAlliancePose().getRotation();
     // }, 1.0));
-    m_driver.y().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive).andThen(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL)));
+    m_driver.y().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    // .andThen(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL))
 
     m_driver.povUp().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
     m_driver.povDown().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue

@@ -282,7 +282,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
       changeState(LiftState.TOP_BUCKET);
       return;
     } else if (!m_gripper.hasCoral()) {
-      changeState(LiftState.INTAKE_FROM_HP);
+      changeState(LiftState.STOW);
       return;
     }
   }
