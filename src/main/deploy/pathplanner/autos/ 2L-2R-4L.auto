@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left1-Reef10R"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "GoToReef8L"
+            "pathName": "Right2-2L"
           }
         },
         {
@@ -25,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "10R-RHPC"
+            "pathName": "2L-RHPF"
           }
         },
         {
@@ -37,7 +31,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RHPC-4R"
+            "pathName": "RHPF-2R"
           }
         },
         {
@@ -45,11 +39,41 @@
           "data": {
             "name": "ScoreL4"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "2R-RHPF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeFromHP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RHPF-4R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4R-RHPF"
+          }
         }
       ]
     }
   },
   "resetOdom": false,
-  "folder": null,
+  "folder": "Right2",
   "choreoAuto": false
 }

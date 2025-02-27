@@ -87,13 +87,13 @@ public class FieldPoint {
     for (AprilTag aprilTag : blueReefAprilTags()) {
       Pose2d leftPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
+              RobotDimensions.FrontBackLengthMeters / 2 + 0.00,
               FieldDimensions.ReefBranchLeft.getY(),
               Rotation2d.fromDegrees(180)));
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefLeft", leftPose));
       Pose2d rightPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
+              RobotDimensions.FrontBackLengthMeters / 2 + 0.00,
               FieldDimensions.ReefBranchRight.getY(),
               Rotation2d.fromDegrees(180)));
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefRight", rightPose));

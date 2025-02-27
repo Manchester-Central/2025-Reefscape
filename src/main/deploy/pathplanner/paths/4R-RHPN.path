@@ -3,42 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.5,
-        "y": 4.0
+        "x": 3.899647887323943,
+        "y": 2.7919894366197173
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.5,
-        "y": 4.0
+        "x": 4.203895705183996,
+        "y": 3.0795844838125968
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "4R"
     },
     {
       "anchor": {
-        "x": 5.5,
-        "y": 4.0
+        "x": 0.7533450704225337,
+        "y": 1.4314260563380266
       },
       "prevControl": {
-        "x": 6.5,
-        "y": 4.0
+        "x": 0.3408922653267924,
+        "y": 1.326024893632872
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "RHPN"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 3.5,
@@ -49,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -125.27242144859838
   },
   "reversed": false,
-  "folder": null,
+  "folder": "to RHP",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": 180.0
+    "velocity": 0,
+    "rotation": 60.64224645720875
   },
   "useDefaultConstraints": true
 }
