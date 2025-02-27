@@ -116,7 +116,7 @@ public class Camera extends LimelightCamera {
     // Parse MegaTag1 Info
     m_poseData.resize(mt1_poses.length);
     for (int idx = 0; idx < mt1_poses.length; idx++) {
-      long timestamp = mt1_poses[idx].getServerTime();
+      long timestamp = mt1_poses[idx].getTime();
       var data = mt1_poses[idx].getDoubleArray();
 
       System.out.println("ServerTime " + timestamp);

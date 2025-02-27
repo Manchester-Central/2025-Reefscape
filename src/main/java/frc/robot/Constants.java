@@ -83,7 +83,7 @@ public final class Constants {
 
   /** This contains constants for setting up our swerve drive. */
   public static class SwerveConstants {
-    public static final boolean AcceptVisionUpdates = true;
+    public static final boolean AcceptVisionUpdates = false;
 
     public static final InvertedValue InvertedAngle = InvertedValue.CounterClockwise_Positive;
     public static final SensorDirectionValue InvertedEncoder =
@@ -152,12 +152,12 @@ public final class Constants {
       public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
       public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 54.0, 0.97, 0.0);
-      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, -90.0);
-      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, 0.0);
-      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 80.0, 1.55, -120.0);
+      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.565, -100.0);
+      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 76.0, 0.92, -105.5);
+      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 80.0, 1.6, -120.0);
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
-      public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
+      public static final LiftPose Climb = new LiftPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
       public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 0.567, -90.0);
       public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
       public static final LiftPose TopBucket = new LiftPose("TopBucket", 90.0, 0.6, 0);
