@@ -135,7 +135,7 @@ public final class Constants {
       limeLight3G.minimum_error = 0.02;
       limeLight3G.error_exponent = 2.2;
       limeLight3G.distance_scalar = 1 / 3.15;
-      limeLight3G.error_multiplier = 1.0;
+      limeLight3G.error_multiplier = 3.0;
       limeLight3G.tag_count_scalar = 1.0;
       limeLight3G.VFOV = 56.0;
       limeLight3G.HFOV = 80.0;

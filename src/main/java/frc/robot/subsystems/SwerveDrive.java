@@ -16,6 +16,9 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
+
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -56,6 +59,12 @@ public class SwerveDrive extends BaseSwerveDrive {
     super(swerveModules, swerveConfigs, getRotation);
 
     m_acceptVisionUpdates = SwerveConstants.AcceptVisionUpdates;
+
+    m_odometry =
+        new SwerveDrivePoseEstimator(
+            m_kinematics, getGyroRotation(), getModulePositions(), GeneralConstants.InitialRobotPose,
+             VecBuilder.fill(0.1, 0.1, 0.1),
+        VecBuilder.fill(2.5, 2.5, 2.5));
 
     resetPose(GeneralConstants.InitialRobotPose);
     m_simDriveTrain = DriveTrainSimulationConfig.Default();
