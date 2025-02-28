@@ -338,7 +338,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(liftPose.getBasePivotAngle());
     m_extender.setTargetLength(liftPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(liftPose.getGripperPivotAngle());
-    if (!isPrep && isPoseReady()) {
+    if ((!isPrep && isPoseReady()) || m_operator.rightBumper().getAsBoolean()) {
       m_gripper.setCoralGripSpeed(0.5);
     } else {
       m_gripper.setCoralGripSpeed(0);
