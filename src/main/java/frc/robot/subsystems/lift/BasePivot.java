@@ -161,9 +161,15 @@ public class BasePivot extends AbstractLiftPart {
    * Checks if the current angle is at the goal angle.
    */
   public boolean atTarget() {
-    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.3;
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.5;
   }
 
+  /**
+   * Checks if the current angle is close to goal angle.
+   */
+  public boolean atClose() {
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 1;
+  }
 
   @Override
   public void simulationPeriodic() {

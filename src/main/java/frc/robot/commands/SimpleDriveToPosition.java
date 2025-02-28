@@ -48,6 +48,6 @@ public class SimpleDriveToPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_swerveDrive.atTarget(0.01);
+    return m_swerveDrive.atTarget(0.03);
   }
 }

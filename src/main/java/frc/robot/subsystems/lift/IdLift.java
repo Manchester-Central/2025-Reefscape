@@ -6,6 +6,7 @@ package frc.robot.subsystems.lift;
 
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Robot;
@@ -90,6 +91,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
 
   private boolean isPoseReady() {
     return m_extender.atTarget() && m_basePivot.atTarget() && m_gripperPivot.atTarget();
+  }
+
+  private boolean isPoseClose() {
+    return m_extender.atClose() && m_basePivot.atClose() && m_gripperPivot.atClose();
   }
 
   @Override
@@ -338,7 +343,7 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     m_basePivot.setTargetAngle(liftPose.getBasePivotAngle());
     m_extender.setTargetLength(liftPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(liftPose.getGripperPivotAngle());
-    if ((!isPrep && isPoseReady()) || m_operator.rightBumper().getAsBoolean()) {
+    if ((!isPrep && isPoseReady()) || m_operator.rightBumper().getAsBoolean() || (DriverStation.isAutonomousEnabled() && isPoseClose() && m_stateTimer.hasElapsed(2))) {
       m_gripper.setCoralGripSpeed(0.5);
     } else {
       m_gripper.setCoralGripSpeed(0);

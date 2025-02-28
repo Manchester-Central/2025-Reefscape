@@ -180,6 +180,13 @@ public class GripperPivot extends AbstractLiftPart {
     return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 1.0;
   }
 
+  /**
+   * Checks if the current angle close to the goal angle.
+   */
+  public boolean atClose() {
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 2.0;
+  }
+
   @Override
   public void simulationPeriodic() {
     m_motor.simUpdate();

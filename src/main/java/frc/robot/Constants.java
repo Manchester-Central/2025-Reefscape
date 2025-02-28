@@ -175,7 +175,7 @@ public final class Constants {
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
       public static final double kP = 400.0;
-      public static final double kI = 0.0055;
+      public static final double kI = 10.00;
       public static final double kD = 0.0;
       public static final double kG = 0.4;
       public static final double kS = 0.25;
@@ -322,7 +322,7 @@ public final class Constants {
     // Buffer space to use between the end effector and an interaction point
     public static final double CoralPlacementMargin = 0.03;
     // Robot length buffer
-    public static final double RobotToReefMargin = 0.10; // This is in meters
+    public static final double RobotToReefMargin = 0.005; // This is in meters
     // Distance from the robot origin to the axle for the Base Pivot
     public static final Transform2d BasePivotOffset =
         new Transform2d(-0.1973, 0.1762, Rotation2d.fromDegrees(0));
