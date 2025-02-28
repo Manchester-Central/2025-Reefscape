@@ -104,8 +104,10 @@ public class Camera extends LimelightCamera {
      * needs to.
      */
     NetworkTableValue[] mt1_poses = m_botpose.readQueue();
+    Logger.recordOutput(m_name + "/DataLength", mt1_poses.length);
     NetworkTableValue[] mt2_poses = m_botposeMT2.readQueue();
     m_poseData.reset();
+    // TODO: Investigate TableEntry issues...
     if (mt1_poses.length == 1 && mt1_poses[0] == null) {
       return;
     }

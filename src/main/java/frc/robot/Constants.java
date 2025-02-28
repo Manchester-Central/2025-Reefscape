@@ -135,7 +135,7 @@ public final class Constants {
       limeLight3G.minimum_error = 0.02;
       limeLight3G.error_exponent = 2.2;
       limeLight3G.distance_scalar = 1 / 3.15;
-      limeLight3G.error_multiplier = 1.0;
+      limeLight3G.error_multiplier = 10.0;  // Higher values reduce confidence, tuned to 10 from 1 based on Isaac's feedback.
       limeLight3G.tag_count_scalar = 1.0;
       limeLight3G.VFOV = 56.0;
       limeLight3G.HFOV = 80.0;
@@ -151,9 +151,9 @@ public final class Constants {
     public static class LiftPoses {
       public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
-      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 34.0, 0.60, -20.0);
+      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 29.0, 0.60, -20.0);
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.565, -100.0);
-      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 76.0, 0.92, -105.5);
+      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 76.0, 0.93, -105.5);
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 82.0, 1.58, -120.0);
       public static final LiftPose AlgaeHigh = new LiftPose("AlgaeHigh", 64.0, 1.0, -72.0);
       public static final LiftPose AlgaeLow = new LiftPose("AlgaeLow", 51.0, 0.71, -60.0);
@@ -171,7 +171,7 @@ public final class Constants {
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
       public static final double kP = 400.0;
-      public static final double kI = 0.005;
+      public static final double kI = 0.0055;
       public static final double kD = 0.0;
       public static final double kG = 0.4;
       public static final double kS = 0.25;
