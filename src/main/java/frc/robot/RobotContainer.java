@@ -270,13 +270,19 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    */
   public synchronized void updatePoseEstimator(VisionData data) {
     var pose = data.getPose2d();
+    var pose3D = data.getPose3d();
     if (pose == null
         || !Double.isFinite(pose.getX())
         || !Double.isFinite(pose.getY())
         || !Double.isFinite(pose.getRotation().getDegrees())) {
       return;
     }
-    if (pose.getX() == 0.0 || pose.getY() == 0.0) {
+
+    if(data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement){
+      return;
+    }
+
+    if (pose.getX() <= 0.0 || pose.getY() <= 0.0 || pose3D.getZ() <= -0.10 || pose3D.getZ() >= 0.30) {
       return;
     }
     m_swerveDrive.addVisionMeasurement(data);

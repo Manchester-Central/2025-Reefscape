@@ -139,6 +139,10 @@ public final class Constants {
       limeLight3G.tag_count_scalar = 1.0;
       limeLight3G.VFOV = 56.0;
       limeLight3G.HFOV = 80.0;
+      limeLight3G.max_speed_acceptable = 1.0; //mps
+      limeLight3G.max_distance_acceptable = 3.0; // meters
+      limeLight3G.max_rotation_acceptable = 0.8; //rps
+      limeLight3G.confidence_requirement = 0.5; 
       return limeLight3G;
     }
 
