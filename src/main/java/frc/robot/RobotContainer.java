@@ -285,6 +285,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       return;
     }
 
+    if (m_idLift.getLiftValues().basePivotAngle.getDegrees() < 60.0) {
+      return;
+    }
+
     if(data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement){
       return;
     }
