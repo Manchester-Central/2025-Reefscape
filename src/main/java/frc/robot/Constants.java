@@ -155,7 +155,7 @@ public final class Constants {
     public static class LiftPoses {
       public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
-      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 29.0, 0.60, -20.0);
+      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 29.0, 0.59, -20.0);
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.565, -100.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 76.0, 0.93, -105.5);
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 82.0, 1.58, -120.0);
