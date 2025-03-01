@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.GripperPivotConstants;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
+import frc.robot.SimConstants.SimGripperPivotConstants;
+import frc.robot.Robot;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
@@ -51,13 +53,13 @@ public class GripperPivot extends AbstractLiftPart {
   private ChaosCanCoderTuner m_canCoderTuner = new ChaosCanCoderTuner("Gripper Pivot", m_canCoder);
 
   private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tuner",
-      GripperPivotConstants.canCoderOffsetDegrees, (config, newValue) -> 
+      Robot.isReal() ? GripperPivotConstants.canCoderOffsetDegrees : SimGripperPivotConstants.canCoderOffsetDegrees, (config, newValue) -> 
       config.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(newValue).getRotations());
 
   // Motion Magic Slot 0 Configs
-  private DashboardNumber m_kp = m_tuner.tunable("kP", GripperPivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
-  private DashboardNumber m_ki = m_tuner.tunable("kI", GripperPivotConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
-  private DashboardNumber m_kd = m_tuner.tunable("kD", GripperPivotConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
+  private DashboardNumber m_kp = m_tuner.tunable("kP", Robot.isReal() ? GripperPivotConstants.kP : SimGripperPivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
+  private DashboardNumber m_ki = m_tuner.tunable("kI", Robot.isReal() ? GripperPivotConstants.kI : SimGripperPivotConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
+  private DashboardNumber m_kd = m_tuner.tunable("kD", Robot.isReal() ? GripperPivotConstants.kD : SimGripperPivotConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
   private DashboardNumber m_kg = m_tuner.tunable("kG", GripperPivotConstants.kG, (config, newValue) -> config.Slot0.kG = newValue);
   private DashboardNumber m_ks = m_tuner.tunable("kS", GripperPivotConstants.kS, (config, newValue) -> config.Slot0.kS = newValue);
   private DashboardNumber m_kv = m_tuner.tunable("kV", GripperPivotConstants.kV, (config, newValue) -> config.Slot0.kV = newValue);
