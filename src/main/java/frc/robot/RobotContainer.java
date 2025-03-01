@@ -112,7 +112,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("ScoreL2",  new ChangeState().setLift(LiftState.SCORE_L2).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("ScoreL3",  new ChangeState().setLift(LiftState.SCORE_L3).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).andThen(new WaitForState().forLiftState(LiftState.STOW)));
-    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.STOW)));
+    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL)));
+    NamedCommands.registerCommand("AimHP", PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
+        .withDeadline(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL))));
     NamedCommands.registerCommand("XMode", new RunCommand(() -> m_swerveDrive.setXMode()).withTimeout(0.1));
     buildPathplannerAutoChooser();
 

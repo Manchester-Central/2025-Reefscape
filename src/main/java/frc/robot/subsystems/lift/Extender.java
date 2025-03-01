@@ -183,6 +183,13 @@ public class Extender extends AbstractLiftPart {
   public boolean atTarget() {
     return Math.abs(getCurrentLength() - m_targetLength) < 0.01;
   }
+
+  /**
+   * Checks if the extender length is close to target length.
+   */
+  public boolean atClose() {
+    return Math.abs(getCurrentLength() - m_targetLength) < 0.02;
+  }
   
   /**
    * Checks if the extender is at the minimum value of the lift.

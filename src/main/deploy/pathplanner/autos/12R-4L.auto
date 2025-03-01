@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left2-10L"
+            "pathName": "center-12R"
           }
         },
         {
@@ -20,6 +20,24 @@
           "type": "named",
           "data": {
             "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "12R-RHPF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimHP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RHPF-4L"
           }
         }
       ]

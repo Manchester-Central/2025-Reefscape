@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import frc.robot.commands.SimpleDriveToPosition;
@@ -43,8 +44,12 @@ public class PathUtil {
           for (int i = 0; i < possibleTargets.size(); i++) {
             possiblePoses.add(possibleTargets.get(i).getCurrentAlliancePose());
           }
+          Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets));
+          if (DriverStation.isAutonomousEnabled()) {
+            simpleDriveToPosition = simpleDriveToPosition.withTimeout(2);
+          }
           return AutoBuilder.pathfindToPose(
-              swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0).andThen(new SimpleDriveToPosition(swerveDrive, FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets)));
+              swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0).andThen(simpleDriveToPosition);
         },
         Set.of(swerveDrive));
   }

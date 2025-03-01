@@ -140,7 +140,7 @@ public final class Constants {
       limeLight3G.VFOV = 56.0;
       limeLight3G.HFOV = 80.0;
       limeLight3G.max_speed_acceptable = 1.0; //mps
-      limeLight3G.max_distance_acceptable = 3.0; // meters
+      limeLight3G.max_distance_acceptable = 4.0; // meters
       limeLight3G.max_rotation_acceptable = 0.8; //rps
       limeLight3G.confidence_requirement = 0.5; 
       return limeLight3G;
@@ -155,7 +155,7 @@ public final class Constants {
     public static class LiftPoses {
       public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
-      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 29.0, 0.60, -20.0);
+      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 29.0, 0.59, -20.0);
       public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.565, -100.0);
       public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 76.0, 0.93, -105.5);
       public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 82.0, 1.58, -120.0);
@@ -175,7 +175,7 @@ public final class Constants {
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
       public static final double kP = 400.0;
-      public static final double kI = 0.0055;
+      public static final double kI = 10.00;
       public static final double kD = 0.0;
       public static final double kG = 0.4;
       public static final double kS = 0.25;
@@ -322,7 +322,7 @@ public final class Constants {
     // Buffer space to use between the end effector and an interaction point
     public static final double CoralPlacementMargin = 0.03;
     // Robot length buffer
-    public static final double RobotToReefMargin = 0.10; // This is in meters
+    public static final double RobotToReefMargin = 0.005; // This is in meters
     // Distance from the robot origin to the axle for the Base Pivot
     public static final Transform2d BasePivotOffset =
         new Transform2d(-0.1973, 0.1762, Rotation2d.fromDegrees(0));
