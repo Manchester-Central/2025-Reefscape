@@ -19,6 +19,7 @@ import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
 import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
 import frc.robot.Robot;
+import frc.robot.SimConstants.SimExtenderConstants;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
@@ -39,14 +40,13 @@ public class Extender extends AbstractLiftPart {
           0.001,
           0.001);
   private ChaosTalonFx m_motor1 = new ChaosTalonFx(CanIdentifiers.ExtenderMotorCANID);
-
   private ChaosTalonFxTuner m_tuner = new ChaosTalonFxTuner("Extender", m_motor1);
   private DigitalInput m_minimumSensor = new DigitalInput(IoPortsConstants.ExtenderMinimumChannelID);
 
   // Motion Magic Slot 0 Configs
-  private DashboardNumber m_kp = m_tuner.tunable("kP", ExtenderConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
-  private DashboardNumber m_ki = m_tuner.tunable("kI", ExtenderConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
-  private DashboardNumber m_kd = m_tuner.tunable("kD", ExtenderConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
+  private DashboardNumber m_kp = m_tuner.tunable("kP", Robot.isReal() ? ExtenderConstants.kP : SimExtenderConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
+  private DashboardNumber m_ki = m_tuner.tunable("kI", Robot.isReal() ? ExtenderConstants.kI : SimExtenderConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
+  private DashboardNumber m_kd = m_tuner.tunable("kD", Robot.isReal() ? ExtenderConstants.kD : SimExtenderConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
   private DashboardNumber m_kg = m_tuner.tunable("kG", ExtenderConstants.kG, (config, newValue) -> config.Slot0.kG = newValue);
   private DashboardNumber m_ks = m_tuner.tunable("kS", ExtenderConstants.kS, (config, newValue) -> config.Slot0.kS = newValue);
   private DashboardNumber m_kv = m_tuner.tunable("kV", ExtenderConstants.kV, (config, newValue) -> config.Slot0.kV = newValue);

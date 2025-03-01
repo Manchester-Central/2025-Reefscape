@@ -18,6 +18,8 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
+import frc.robot.Robot;
+import frc.robot.SimConstants.SimBasePivotConstants;
 import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
@@ -45,12 +47,12 @@ public class BasePivot extends AbstractLiftPart {
   private ChaosCanCoderTuner m_canCoderTuner = new ChaosCanCoderTuner("Base Pivot", m_canCoder);
 
   private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tuner",
-      BasePivotConstants.canCoderOffsetDegrees, (config, newValue) -> 
+      Robot.isReal() ? BasePivotConstants.canCoderOffsetDegrees : SimBasePivotConstants.canCoderOffsetDegrees, (config, newValue) -> 
       config.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(newValue).getRotations());
 
-  private DashboardNumber m_kp = m_talonTuner.tunable("kP", BasePivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
-  private DashboardNumber m_ki = m_talonTuner.tunable("kI", BasePivotConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
-  private DashboardNumber m_kd = m_talonTuner.tunable("kD", BasePivotConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
+  private DashboardNumber m_kp = m_talonTuner.tunable("kP", Robot.isReal() ? BasePivotConstants.kP : SimBasePivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
+  private DashboardNumber m_ki = m_talonTuner.tunable("kI", Robot.isReal() ? BasePivotConstants.kI : SimBasePivotConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
+  private DashboardNumber m_kd = m_talonTuner.tunable("kD", Robot.isReal() ? BasePivotConstants.kD : SimBasePivotConstants.kD, (config, newValue) -> config.Slot0.kD = newValue);
   private DashboardNumber m_kg = m_talonTuner.tunable("kG", BasePivotConstants.kG, (config, newValue) -> config.Slot0.kG = newValue);
   private DashboardNumber m_ks = m_talonTuner.tunable("kS", BasePivotConstants.kS, (config, newValue) -> config.Slot0.kS = newValue);
   private DashboardNumber m_kv = m_talonTuner.tunable("kV", BasePivotConstants.kV, (config, newValue) -> config.Slot0.kV = newValue);
