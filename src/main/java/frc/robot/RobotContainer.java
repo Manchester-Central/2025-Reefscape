@@ -118,7 +118,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL)));
     NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 0.5)
-        .andThen(new RunCommand(() -> m_swerveDrive.moveRobotRelative(MetersPerSecond.of(1.0), MetersPerSecond.of(0.0), DegreesPerSecond.of(0)), m_swerveDrive)))
+        .andThen(new RunCommand(() -> m_swerveDrive.moveRobotRelative(MetersPerSecond.of(1.75), MetersPerSecond.of(0.0), DegreesPerSecond.of(0)), m_swerveDrive)))
         .withDeadline(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL))));
     NamedCommands.registerCommand("AimHPOld", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 2)
         .withDeadline(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL))));
