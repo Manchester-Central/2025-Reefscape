@@ -93,11 +93,14 @@ public final class Constants {
     public static final double SpeedCircumference = 0.1016 * Math.PI;
     public static final double DriverRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
+    public static final double DriverSlowRampRatePeriod = 0.1;
     public static final LinearVelocity MaxFreeSpeed = FeetPerSecond.of(15.01);
     public static final AngularVelocity MaxRotationSpeed = RadiansPerSecond.of(12.0); // TODO: GET REAL
     public static final PIDValue DefaultModuleAnglePIDValue = new PIDValue(60.0, 12.0, 0.0);
     public static final PIDFValue DefaultModuleVelocityPIDFValues =
         new PIDFValue(5.0, 0.0, 0.0, 2.19);
+    public static final PIDValue AutoAnglePID = new PIDValue(0.04, 0.0001, 0.0);
+    public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.05, 0.1);
 
     /** This stores our constants for the front left swerve module. */
     public static class SwerveFrontLeftConstants {

@@ -127,6 +127,8 @@ public class SwerveDrive extends BaseSwerveDrive {
             .setMaxRobotRotation(SwerveConstants.MaxRotationSpeed)
             .setDefaultModuleVelocityPIDFValues(SwerveConstants.DefaultModuleVelocityPIDFValues)
             .setDefaultModuleAnglePIDValues(SwerveConstants.DefaultModuleAnglePIDValue)
+            .setDefaultRotationPIDValues(SwerveConstants.AutoAnglePID)
+            .setDefaultTranslationPIDValues(SwerveConstants.AutoTranslationPID)
             .setDebugMode(true);
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(
@@ -209,13 +211,19 @@ public class SwerveDrive extends BaseSwerveDrive {
 
   public void addVisionMeasurement(VisionData data) {
     // System.out.println("Received Vision Update");
-    if (!m_acceptVisionUpdates) return;
+    if (!m_acceptVisionUpdates) {
+      return;
+    }
     // System.out.println("Using Vision Update from " + data.getTimestampSeconds());
     synchronized (m_odometry) {
       m_hasReceivedVisionUpdates = true;
       m_odometry.addVisionMeasurement(
           data.getPose2d(), data.getTimestampSeconds(), data.getDeviationMatrix());
     }
+  }
+
+  public void setRampRatePeriod(double newRate) {
+    forAllModules((module) -> ((SwerveModule2025) module).setRampRatePeriod(newRate));
   }
 
   /**

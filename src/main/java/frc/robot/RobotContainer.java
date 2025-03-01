@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.MidLiftConstants.LiftPoses;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
@@ -117,7 +118,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL)));
     NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
-        .andThen(new RunCommand(() -> m_swerveDrive.moveRobotRelative(MetersPerSecond.of(0.5), MetersPerSecond.of(0.0), DegreesPerSecond.of(0)), m_swerveDrive)))
+        .andThen(new RunCommand(() -> m_swerveDrive.moveRobotRelative(MetersPerSecond.of(1.0), MetersPerSecond.of(0.0), DegreesPerSecond.of(0)), m_swerveDrive)))
         .withDeadline(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL))));
     NamedCommands.registerCommand("AimHPOld", PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
         .withDeadline(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL))));
@@ -168,6 +169,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.start().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
     m_driver.back().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
 
+    m_driver.rightBumper().or(m_driver.rightTrigger()).whileTrue(new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod), () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
     m_driver.rightBumper().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.PrepState).withLiftInterrupt(LiftState.HOLD_CORAL));
     m_driver.rightTrigger().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL));
     m_driver.leftTrigger().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).withLiftInterrupt(LiftState.STOW));

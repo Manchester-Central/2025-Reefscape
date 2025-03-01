@@ -66,6 +66,12 @@ public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
     m_angleController.getPosition().setUpdateFrequency(updateFrequency);
   }
 
+  public void setRampRatePeriod(double newRate) {
+    m_speedConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = newRate;
+    m_speedConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = newRate;
+    m_speedController.getConfigurator().apply(m_speedConfig.ClosedLoopRamps);
+  }
+
   /**
    * Inits the sim in the module (after the swerve drive has been instantiated).
    */
