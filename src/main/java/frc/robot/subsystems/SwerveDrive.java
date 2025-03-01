@@ -293,5 +293,6 @@ public class SwerveDrive extends BaseSwerveDrive {
     Logger.recordOutput("Swerve/Pose", getPose());
     Logger.recordOutput("Swerve/CurrentSpeeds", getModuleStates());
     Logger.recordOutput("Swerve/Speed", getRobotSpeed());
+    Logger.recordOutput("Swerve/RotationSpeed", getRobotRotationSpeed());
   }
 }

@@ -110,17 +110,17 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             (data) -> updatePoseEstimator(data),
             () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
             () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
-    NamedCommands.registerCommand("AimReef", PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    NamedCommands.registerCommand("AimReef", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 1));
     NamedCommands.registerCommand("GoToReef8L", new ReefAlignment(FieldPoint.ReefPose8, true, m_swerveDrive));
     NamedCommands.registerCommand("ScoreL1",  new ChangeState().setLift(LiftState.SCORE_L1).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("ScoreL2",  new ChangeState().setLift(LiftState.SCORE_L2).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("ScoreL3",  new ChangeState().setLift(LiftState.SCORE_L3).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).andThen(new WaitForState().forLiftState(LiftState.STOW)));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL)));
-    NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
+    NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 0.5)
         .andThen(new RunCommand(() -> m_swerveDrive.moveRobotRelative(MetersPerSecond.of(1.0), MetersPerSecond.of(0.0), DegreesPerSecond.of(0)), m_swerveDrive)))
         .withDeadline(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL))));
-    NamedCommands.registerCommand("AimHPOld", PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
+    NamedCommands.registerCommand("AimHPOld", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 2)
         .withDeadline(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL))));
     NamedCommands.registerCommand("XMode", new RunCommand(() -> m_swerveDrive.setXMode()).withTimeout(0.1));
     buildPathplannerAutoChooser();
@@ -158,7 +158,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefDrivePoses());
     //   return pose.getCurrentAlliancePose().getRotation();
     // }, 1.0));
-    m_driver.y().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    m_driver.y().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
     // .andThen(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL))
 
     m_driver.povUp().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
@@ -300,6 +300,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       return;
     }
     data.m_time -= VisionConstants.timeOffset;
+    Logger.recordOutput("LimelightLatency", data.m_time);
     m_swerveDrive.addVisionMeasurement(data);
   }
 }
