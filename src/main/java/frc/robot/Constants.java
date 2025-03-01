@@ -167,7 +167,7 @@ public final class Constants {
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
-      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 0.567, 0.0);
+      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 81.5, 0.567, 0.0);
       public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
       public static final LiftPose TopBucket = new LiftPose("TopBucket", 90.0, 0.6, 0);
     }
