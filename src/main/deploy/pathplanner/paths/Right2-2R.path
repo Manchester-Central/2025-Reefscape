@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.565229105950781,
-        "y": 1.8088656690667688
+        "x": 5.728109580507734,
+        "y": 2.421989150818638
       },
       "isLocked": false,
       "linkedName": "Red2"
@@ -20,8 +20,8 @@
         "y": 2.7211267605633793
       },
       "prevControl": {
-        "x": 5.661072399232195,
-        "y": 2.435940106628096
+        "x": 6.123751026310834,
+        "y": 2.3119523722766675
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "Right Start",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 141.41084002023246
+    "rotation": 141.41084002023248
   },
   "useDefaultConstraints": true
 }
