@@ -52,6 +52,18 @@ public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
     m_speedConfig.CurrentLimits.StatorCurrentLimit = 75;
     m_speedConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     m_speedController.getConfigurator().apply(m_speedConfig.CurrentLimits);
+    double updateFrequency = 250.0;
+    m_speedController.getPosition().setUpdateFrequency(updateFrequency);
+    m_speedController.getRotorPosition().setUpdateFrequency(updateFrequency);
+    m_speedController.getVelocity().setUpdateFrequency(updateFrequency);
+    m_speedController.getRotorVelocity().setUpdateFrequency(updateFrequency);
+    m_speedController.getMotorVoltage().setUpdateFrequency(updateFrequency);
+    m_speedController.getSupplyCurrent().setUpdateFrequency(updateFrequency);
+
+    m_angleController.getRotorVelocity().setUpdateFrequency(updateFrequency);
+    m_angleController.getMotorVoltage().setUpdateFrequency(updateFrequency);
+    m_angleController.getSupplyCurrent().setUpdateFrequency(updateFrequency);
+    m_angleController.getPosition().setUpdateFrequency(updateFrequency);
   }
 
   /**
