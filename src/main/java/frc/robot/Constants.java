@@ -171,7 +171,7 @@ public final class Constants {
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(20); // TODO: go back to 20
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(18); // TODO: go back to 20
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
       public static final double kP = 400.0;
