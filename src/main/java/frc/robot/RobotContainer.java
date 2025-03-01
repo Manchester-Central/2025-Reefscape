@@ -299,6 +299,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     if (pose.getX() <= 0.0 || pose.getY() <= 0.0 || pose3D.getZ() <= -0.10 || pose3D.getZ() >= 0.30) {
       return;
     }
+    data.m_time -= VisionConstants.timeOffset;
     m_swerveDrive.addVisionMeasurement(data);
   }
 }

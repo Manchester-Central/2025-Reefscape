@@ -150,6 +150,7 @@ public final class Constants {
     }
 
     public static final CameraSpecs limeLight3GSpecs = initializeLimelight3G();
+    public static final double timeOffset = 0.01;
   }
 
   /** This contains constants for our entire lift system. */
