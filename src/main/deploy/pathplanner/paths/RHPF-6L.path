@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6705298664376533,
-        "y": 2.6277505816406252
+        "x": 2.946961313300335,
+        "y": 3.0405303772264745
       },
       "isLocked": false,
       "linkedName": "RHPF"
     },
     {
       "anchor": {
-        "x": 3.705,
-        "y": 2.075
+        "x": 2.58375,
+        "y": 4.2589999999999995
       },
       "prevControl": {
-        "x": 3.563104799453014,
-        "y": 1.5429743759708168
+        "x": 2.4988334738153126,
+        "y": 2.333509104858777
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "4R"
+      "linkedName": "6L"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0.5,
-    "rotation": 60.64224645720875
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "From RHP",
