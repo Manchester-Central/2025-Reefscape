@@ -156,9 +156,9 @@ public final class Constants {
       public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
       public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 29.0, 0.59, -20.0);
-      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.565, -100.0);
-      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 76.0, 0.93, -105.5);
-      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 82.0, 1.58, -120.0);
+      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.575, -100.0);
+      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 75.5, 0.93, -103.5);
+      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 81.5, 1.59, -120.0);
       public static final LiftPose AlgaeHigh = new LiftPose("AlgaeHigh", 64.0, 1.0, -72.0);
       public static final LiftPose AlgaeLow = new LiftPose("AlgaeLow", 51.0, 0.71, -60.0);
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
