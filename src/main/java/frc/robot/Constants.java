@@ -261,6 +261,10 @@ public final class Constants {
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
 
+      public static final double MMUpCruiseVelocity = 3;
+      public static final double MMUpAcceleration = 10;
+      public static final double MMUpJerk = 100;
+
       // Current limits
       public static final double SupplyCurrentLimit = 50;
       public static final double StatorCurrentLimit = 50;
