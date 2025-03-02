@@ -191,6 +191,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     
     m_operator.start().onTrue(new ChangeState().setLift(LiftState.STOW));
     m_operator.back().whileTrue(new ChangeState().setLift(LiftState.MANUAL));
+    //.alongWith(new InstantCommand(() -> m_idLift.m_gripperPivot.disableFuseCANcoder()))
 
     // Everything after this is for demos and testing
     // m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
