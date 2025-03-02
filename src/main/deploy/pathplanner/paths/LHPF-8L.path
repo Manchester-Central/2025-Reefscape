@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.213680176246026,
-        "y": 5.523473527724855
+        "x": 3.230960030843412,
+        "y": 5.469783131561562
       },
       "isLocked": false,
       "linkedName": "LHPF"
     },
     {
       "anchor": {
-        "x": 3.79275,
-        "y": 5.78
+        "x": 3.7161885245901645,
+        "y": 5.961014344262295
       },
       "prevControl": {
-        "x": 3.309210416826771,
-        "y": 6.071176308756557
+        "x": 3.3449522606144027,
+        "y": 6.2598569226926335
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,7 +41,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.5,
+    "velocity": 0.0,
     "rotation": -60.7176718754881
   },
   "reversed": false,

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7373020500443226,
-        "y": 2.271552790697206
+        "x": 2.6417311787432176,
+        "y": 2.55117374327598
       },
       "isLocked": false,
       "linkedName": "RHPF"
@@ -20,8 +20,8 @@
         "y": 2.3967499999999995
       },
       "prevControl": {
-        "x": 1.7826232307158743,
-        "y": 0.7292186785391395
+        "x": 3.048955153712332,
+        "y": 2.0705547340052117
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,7 +41,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.5,
+    "velocity": 0.0,
     "rotation": 60.113473059575966
   },
   "reversed": false,
