@@ -93,11 +93,14 @@ public final class Constants {
     public static final double SpeedCircumference = 0.1016 * Math.PI;
     public static final double DriverRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
+    public static final double DriverSlowRampRatePeriod = 0.1;
     public static final LinearVelocity MaxFreeSpeed = FeetPerSecond.of(15.01);
     public static final AngularVelocity MaxRotationSpeed = RadiansPerSecond.of(12.0); // TODO: GET REAL
     public static final PIDValue DefaultModuleAnglePIDValue = new PIDValue(60.0, 12.0, 0.0);
     public static final PIDFValue DefaultModuleVelocityPIDFValues =
         new PIDFValue(5.0, 0.0, 0.0, 2.19);
+    public static final PIDValue AutoAnglePID = new PIDValue(0.04, 0.0001, 0.0);
+    public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.05, 0.1);
 
     /** This stores our constants for the front left swerve module. */
     public static class SwerveFrontLeftConstants {
@@ -135,7 +138,7 @@ public final class Constants {
       limeLight3G.minimum_error = 0.02;
       limeLight3G.error_exponent = 2.2;
       limeLight3G.distance_scalar = 1 / 3.15;
-      limeLight3G.error_multiplier = 10.0;  // Higher values reduce confidence, tuned to 10 from 1 based on Isaac's feedback.
+      limeLight3G.error_multiplier = 4.0;  // Higher values reduce confidence, tuned to 10 from 1 based on Isaac's feedback.
       limeLight3G.tag_count_scalar = 1.0;
       limeLight3G.VFOV = 56.0;
       limeLight3G.HFOV = 80.0;
@@ -147,6 +150,7 @@ public final class Constants {
     }
 
     public static final CameraSpecs limeLight3GSpecs = initializeLimelight3G();
+    public static final double timeOffset = 0.01;
   }
 
   /** This contains constants for our entire lift system. */
@@ -155,23 +159,23 @@ public final class Constants {
     public static class LiftPoses {
       public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
       public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
-      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 29.0, 0.59, -20.0);
-      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.565, -100.0);
-      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 76.0, 0.93, -105.5);
-      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 82.0, 1.58, -120.0);
+      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 28.5, 0.58, -20.0);
+      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.575, -100.0);
+      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 75.5, 0.93, -103.5);
+      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 81.5, 1.59, -120.0);
       public static final LiftPose AlgaeHigh = new LiftPose("AlgaeHigh", 64.0, 1.0, -72.0);
       public static final LiftPose AlgaeLow = new LiftPose("AlgaeLow", 51.0, 0.71, -60.0);
       public static final LiftPose HpIntake = new LiftPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
-      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 0.567, -90.0);
+      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 81.5, 0.567, -90.0);
       public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
       public static final LiftPose TopBucket = new LiftPose("TopBucket", 90.0, 0.6, 0);
     }
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(20); // TODO: go back to 20
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(18); // TODO: go back to 20
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
       public static final double kP = 400.0;

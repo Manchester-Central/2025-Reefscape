@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7995,
-        "y": 1.6264999999999998
+        "x": 1.5795,
+        "y": 1.840999999999999
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.326359866206471,
-        "y": 2.444049979690213
+        "x": 2.1063598662064713,
+        "y": 2.6585499796902115
       },
       "isLocked": false,
       "linkedName": "RHPN"
     },
     {
       "anchor": {
-        "x": 3.672887323943661,
-        "y": 2.891197183098591
+        "x": 3.42225,
+        "y": 2.3967499999999995
       },
       "prevControl": {
-        "x": 0.9535770507180081,
-        "y": 3.063632635638645
+        "x": 0.7029397267743471,
+        "y": 2.5691854525400535
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": "From RHP",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -125.27242144859838
+    "rotation": -126.99879681986185
   },
   "useDefaultConstraints": true
 }

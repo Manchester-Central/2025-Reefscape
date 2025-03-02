@@ -13,25 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ScoreL4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "4L-RHPN"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeFromHP"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RHPN-6R"
+            "name": "AimReef"
           }
         },
         {
@@ -43,19 +25,55 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6R-RHPN"
+            "pathName": "4L-RHPF"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "IntakeFromHP"
+            "name": "AimHP"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RHPN-6L"
+            "pathName": "RHPF-6R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6R-RHPF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimHP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RHPF-6L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
           }
         },
         {

@@ -40,7 +40,7 @@ public class Robot extends ChaosRobot {
    * initialization code.
    */
   public Robot() throws Exception {
-    super(Mode.SIM);
+    super(Mode.REAL);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();

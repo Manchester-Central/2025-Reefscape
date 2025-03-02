@@ -174,7 +174,7 @@ public class Extender extends AbstractLiftPart {
    * Checks if the current length is safe for other parts to move.
    */
   public boolean isSafeLength() {
-    return Math.abs(getCurrentLength() - m_targetLength) < 0.02;
+    return Math.abs(getCurrentLength() - m_targetLength) < 0.02 || getCurrentLength() >= ExtenderConstants.BucketTopClearanceMeter;
   }
 
   /**

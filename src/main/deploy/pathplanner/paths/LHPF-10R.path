@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.7454225352112664,
-        "y": 7.313028169014084
+        "x": 2.2035,
+        "y": 6.4625
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.981785449190249,
-        "y": 6.23930393461744
+        "x": 3.861,
+        "y": 6.111500000000001
       },
       "isLocked": false,
       "linkedName": "LHPF"
     },
     {
       "anchor": {
-        "x": 5.288556338028169,
-        "y": 5.116285211267606
+        "x": 5.5185,
+        "y": 5.63375
       },
       "prevControl": {
-        "x": 3.899647887323943,
-        "y": 6.27843309859155
+        "x": 4.94325,
+        "y": 7.15475
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,7 +41,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.5,
     "rotation": -120.34324888423953
   },
   "reversed": false,

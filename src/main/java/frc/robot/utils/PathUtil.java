@@ -36,8 +36,8 @@ public class PathUtil {
   /**
    * Drives to the closest FieldPoint on the field (respective of the current alliance).
    */
-  public static Command driveToClosestPointCommand(
-      ArrayList<FieldPoint> possibleTargets, SwerveDrive swerveDrive) {
+  public static Command driveToClosestPointAutoCommand(
+      ArrayList<FieldPoint> possibleTargets, SwerveDrive swerveDrive, double timeOutSeconds) {
     return new DeferredCommand(
         () -> {
           ArrayList<Pose2d> possiblePoses = new ArrayList<Pose2d>();
@@ -46,8 +46,26 @@ public class PathUtil {
           }
           Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets));
           if (DriverStation.isAutonomousEnabled()) {
-            simpleDriveToPosition = simpleDriveToPosition.withTimeout(2);
+            simpleDriveToPosition = simpleDriveToPosition.withTimeout(timeOutSeconds);
           }
+          return AutoBuilder.pathfindToPose(
+              swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0).andThen(simpleDriveToPosition);
+        },
+        Set.of(swerveDrive));
+  }
+
+  /**
+   * Drives to the closest FieldPoint on the field (respective of the current alliance).
+   */
+  public static Command driveToClosestPointTeleopCommand(
+      ArrayList<FieldPoint> possibleTargets, SwerveDrive swerveDrive) {
+    return new DeferredCommand(
+        () -> {
+          ArrayList<Pose2d> possiblePoses = new ArrayList<Pose2d>();
+          for (int i = 0; i < possibleTargets.size(); i++) {
+            possiblePoses.add(possibleTargets.get(i).getCurrentAlliancePose());
+          }
+          Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets));
           return AutoBuilder.pathfindToPose(
               swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0).andThen(simpleDriveToPosition);
         },
