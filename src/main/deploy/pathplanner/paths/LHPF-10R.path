@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.861,
-        "y": 6.111500000000001
+        "x": 4.423463114754098,
+        "y": 5.973002049180327
       },
       "isLocked": false,
       "linkedName": "LHPF"
@@ -41,7 +41,7 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.5,
+    "velocity": 0.0,
     "rotation": -120.34324888423953
   },
   "reversed": false,

@@ -153,6 +153,11 @@ public class GripperPivot extends AbstractLiftPart {
   public boolean isSafeAngle() {
     return Math.abs(getCurrentAngle().minus(GripperPivotConstants.SafeAngle).getDegrees()) < GripperPivotConstants.SafeAngleTolerance.getDegrees();
   }
+  
+  public void disableFuseCANcoder() {
+    m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
+    m_motor.applyConfig();
+  }
 
   /**
    * Sets the direct speed [-1.0, 1.0] of the motors.

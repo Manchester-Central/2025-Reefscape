@@ -100,7 +100,7 @@ public final class Constants {
     public static final PIDFValue DefaultModuleVelocityPIDFValues =
         new PIDFValue(5.0, 0.0, 0.0, 2.19);
     public static final PIDValue AutoAnglePID = new PIDValue(0.04, 0.0001, 0.0);
-    public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.05, 0.1);
+    public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.06, 0.1);
 
     /** This stores our constants for the front left swerve module. */
     public static class SwerveFrontLeftConstants {
@@ -169,8 +169,8 @@ public final class Constants {
       public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final LiftPose Climb = new LiftPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
       public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 81.5, 0.567, -90.0);
-      public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
-      public static final LiftPose TopBucket = new LiftPose("TopBucket", 90.0, 0.6, 0);
+      public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 81.5, 0.01, 0);
+      public static final LiftPose TopBucket = new LiftPose("TopBucket", 81.5, 0.6, 0);
     }
 
     /** This contains constants for our Base Pivot. */
@@ -260,6 +260,10 @@ public final class Constants {
       public static final double MMCruiseVelocity = 3;
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
+
+      public static final double MMUpCruiseVelocity = 3;
+      public static final double MMUpAcceleration = 10;
+      public static final double MMUpJerk = 100;
 
       // Current limits
       public static final double SupplyCurrentLimit = 50;

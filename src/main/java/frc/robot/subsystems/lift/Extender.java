@@ -57,6 +57,9 @@ public class Extender extends AbstractLiftPart {
   private DashboardNumber m_mmAcceleration = m_tuner.tunable("MM_Acceleration", ExtenderConstants.MMAcceleration, (config, newValue) -> config.MotionMagic.MotionMagicAcceleration = newValue);
   private DashboardNumber m_mmJerk = m_tuner.tunable("MM_Jerk", ExtenderConstants.MMJerk, (config, newValue) -> config.MotionMagic.MotionMagicJerk = newValue);
 
+  private DashboardNumber m_mmUpCruiseVelocity = m_tuner.tunable("MM_Up_CruiseVelocity", ExtenderConstants.MMUpCruiseVelocity, (config, newValue) -> {});
+  private DashboardNumber m_mmUpAcceleration = m_tuner.tunable("MM_Up_Acceleration", ExtenderConstants.MMUpAcceleration, (config, newValue) -> {});
+  private DashboardNumber m_mmUpJerk = m_tuner.tunable("MM_Up_Jerk", ExtenderConstants.MMUpJerk, (config, newValue) -> {});
   // Current limits
   private DashboardNumber m_supplyCurrentLimit = m_tuner.tunable("SupplyCurrentLimit", ExtenderConstants.SupplyCurrentLimit, (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
   private DashboardNumber m_statorCurrentLimit = m_tuner.tunable("StatorCurrentLimit", ExtenderConstants.StatorCurrentLimit, (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
@@ -150,7 +153,11 @@ public class Extender extends AbstractLiftPart {
       //   newLength = LiftPoses.Stow.getExtensionMeters();
       // }
       m_targetLength = newLength;
-      m_motor1.moveToPositionMotionMagic(newLength);
+      if (newLength > getCurrentLength()) {
+        m_motor1.moveToPositionMotionMagic(newLength, m_mmUpCruiseVelocity.get(), m_mmUpAcceleration.get(), m_mmUpJerk.get());
+      } else {
+        m_motor1.moveToPositionMotionMagic(newLength, m_mmCruiseVelocity.get(), m_mmAcceleration.get(), m_mmJerk.get());
+      }
     }
   }
 
