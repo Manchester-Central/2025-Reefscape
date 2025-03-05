@@ -2,23 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.lift;
+package frc.robot.subsystems.arm;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
-import frc.robot.Constants.MidLiftConstants.GripperConstants;
+import frc.robot.Constants.ArmConstants.GripperConstants;
+import frc.robot.subsystems.arm.Arm.ArmValues;
 import frc.robot.Robot;
-import frc.robot.subsystems.lift.IdLift.IdLiftValues;
 import frc.robot.utils.ChaosTalonFx;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
-public class Gripper extends AbstractLiftPart {
+public class Gripper extends AbstractArmPart {
   public static boolean hasCoralGrippedSim = false;
 
   private static boolean m_hasCoralGripped = false;
@@ -32,10 +32,10 @@ public class Gripper extends AbstractLiftPart {
   /**
    * Creates a new Gripper.
    *
-   * @param idLiftValuesSupplier the supplier of lift values
+   * @param armValuesSupplier the supplier of arm values
    */
-  public Gripper(Supplier<IdLiftValues> idLiftValuesSupplier) {
-    super(idLiftValuesSupplier);
+  public Gripper(Supplier<ArmValues> armValuesSupplier) {
+    super(armValuesSupplier);
   }
 
   /**
