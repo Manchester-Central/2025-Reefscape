@@ -190,7 +190,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     
     m_operator.start().onTrue(new ChangeState().setArm(ArmState.STOW));
     m_operator.back().whileTrue(new ChangeState().setArm(ArmState.MANUAL));
-    //.alongWith(new InstantCommand(() -> m_idArm.m_gripperPivot.disableFuseCANcoder()))
+    //.alongWith(new InstantCommand(() -> m_arm.m_gripperPivot.disableFuseCANcoder()))
 
     // Everything after this is for demos and testing
     // m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
@@ -291,7 +291,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       return;
     }
 
-    if (m_arm.ArmValues().basePivotAngle.getDegrees() < 60.0) {
+    if (m_arm.getArmValues().basePivotAngle.getDegrees() < 60.0) {
       return;
     }
 

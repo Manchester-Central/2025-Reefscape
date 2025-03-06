@@ -35,7 +35,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   /**
    * Gets the latest arm values.
    */
-  public ArmValues ArmValues() {
+  public ArmValues getArmValues() {
     ArmValues values = new ArmValues();
     values.basePivotAngle = m_basePivot.getCurrentAngle();
     values.gripperPivotAngle = m_gripperPivot.getCurrentAngle();
@@ -48,10 +48,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     return values;
   }
 
-  public BasePivot m_basePivot = new BasePivot(this::ArmValues); // TODO: UNDO public
-  public Extender m_extender = new Extender(this::ArmValues); // TODO: UNDO public
-  public Gripper m_gripper = new Gripper(this::ArmValues);
-  public GripperPivot m_gripperPivot = new GripperPivot(this::ArmValues);
+  public BasePivot m_basePivot = new BasePivot(this::getArmValues); // TODO: UNDO public
+  public Extender m_extender = new Extender(this::getArmValues); // TODO: UNDO public
+  public Gripper m_gripper = new Gripper(this::getArmValues);
+  public GripperPivot m_gripperPivot = new GripperPivot(this::getArmValues);
   private Gamepad m_operator;
 
   /**
@@ -275,7 +275,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void algaeHighState() {
-    if (!ArmValues().hasCoral) {
+    if (!getArmValues().hasCoral) {
       m_basePivot.setTargetAngle(ArmPoses.AlgaeHigh.getBasePivotAngle());
       m_extender.setTargetLength(ArmPoses.AlgaeHigh.getExtensionMeters());
       m_gripperPivot.setTargetAngle(ArmPoses.AlgaeHigh.getGripperPivotAngle());
@@ -286,7 +286,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void algaeLowState() {
-    if (!ArmValues().hasCoral) {
+    if (!getArmValues().hasCoral) {
       m_basePivot.setTargetAngle(ArmPoses.AlgaeLow.getBasePivotAngle());
       m_extender.setTargetLength(ArmPoses.AlgaeLow.getExtensionMeters());
       m_gripperPivot.setTargetAngle(ArmPoses.AlgaeLow.getGripperPivotAngle());

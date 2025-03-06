@@ -99,7 +99,7 @@ public class MechManager2D extends SubsystemBase {
 
   @Override
   public void periodic() {
-    ArmValues values = m_arm.ArmValues();
+    ArmValues values = m_arm.getArmValues();
 
     // Set angles and length of Arm parts
     m_extenderLigament.setLength(values.extenderLength == 0 ? 0.0001 : values.extenderLength);
