@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.lift;
+package frc.robot.subsystems.arm;
 
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -17,17 +17,17 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
-import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Robot;
 import frc.robot.SimConstants.SimExtenderConstants;
-import frc.robot.subsystems.lift.IdLift.IdLiftValues;
+import frc.robot.subsystems.arm.Arm.ArmValues;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
-public class Extender extends AbstractLiftPart {
+public class Extender extends AbstractArmPart {
   private double m_targetLength = 1;
   private double m_gearRatio = ExtenderConstants.SensorToMechanismRatio;
   private double m_jkgMetersSquared = 0.1;
@@ -78,10 +78,10 @@ public class Extender extends AbstractLiftPart {
   /**
    * Creates a new Extender.
    *
-   * @param idLiftValuesSupplier the supplier of lift values
+   * @param armValuesSupplier the supplier of arm values
    */
-  public Extender(Supplier<IdLiftValues> idLiftValuesSupplier) {
-    super(idLiftValuesSupplier);
+  public Extender(Supplier<ArmValues> armValuesSupplier) {
+    super(armValuesSupplier);
 
     m_motor1.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor1.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -134,7 +134,7 @@ public class Extender extends AbstractLiftPart {
    */
   public void setTargetLength(double newLength) {
     if (hasReachedMinimum()) {
-      if (!getLiftValues().isGripperPivotAtSafeAngle) {
+      if (!getArmValues().isGripperPivotAtSafeAngle) {
         if (getCurrentLength() < ExtenderConstants.BucketBottomClearanceMeter && newLength > ExtenderConstants.BucketBottomClearanceMeter) {
           newLength = ExtenderConstants.BucketBottomClearanceMeter;
         }
@@ -149,8 +149,8 @@ public class Extender extends AbstractLiftPart {
         newLength = ExtenderConstants.MinLengthMeter;
       }
 
-      // if (!getLiftValues().isBasePivotAtSafeAngle) {
-      //   newLength = LiftPoses.Stow.getExtensionMeters();
+      // if (!getArmValues().isBasePivotAtSafeAngle) {
+      //   newLength = ArmPoses.Stow.getExtensionMeters();
       // }
       m_targetLength = newLength;
       if (newLength > getCurrentLength()) {
@@ -199,7 +199,7 @@ public class Extender extends AbstractLiftPart {
   }
   
   /**
-   * Checks if the extender is at the minimum value of the lift.
+   * Checks if the extender is at the minimum value of the arm.
    */
   public boolean isAtMinimum() {
     return !m_minimumSensor.get();

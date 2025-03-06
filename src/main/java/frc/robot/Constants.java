@@ -16,7 +16,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
-import frc.robot.subsystems.lift.LiftPose;
+import frc.robot.subsystems.arm.ArmPose;
 
 /** This class holds all of our 2025 constants. */
 public final class Constants {
@@ -153,24 +153,24 @@ public final class Constants {
     public static final double timeOffset = 0.01;
   }
 
-  /** This contains constants for our entire lift system. */
-  public static class MidLiftConstants {
-    /** Contains values for different known lift poses. */
-    public static class LiftPoses {
-      public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
-      public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
-      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 28.5, 0.58, -20.0);
-      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 66.0, 0.575, -100.0);
-      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 75.5, 0.93, -103.5);
-      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 81.5, 1.59, -120.0);
-      public static final LiftPose AlgaeHigh = new LiftPose("AlgaeHigh", 64.0, 1.0, -72.0);
-      public static final LiftPose AlgaeLow = new LiftPose("AlgaeLow", 51.0, 0.71, -60.0);
-      public static final LiftPose HpIntake = new LiftPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
-      public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
-      public static final LiftPose Climb = new LiftPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
-      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 81.5, 0.567, -90.0);
-      public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 81.5, 0.01, 0);
-      public static final LiftPose TopBucket = new LiftPose("TopBucket", 81.5, 0.6, 0);
+  /** This contains constants for our entire arm system. */
+  public static class ArmConstants {
+    /** Contains values for different known arm poses. */
+    public static class ArmPoses {
+      public static final ArmPose Stow = new ArmPose("Stow", 90, 0.01, 0.0);
+      public static final ArmPose Handoff = new ArmPose("Handoff", 30.0, 0.4, 0.0);
+      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 28.5, 0.58, -20.0);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 66.0, 0.575, -100.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 75.5, 0.93, -103.5);
+      public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 81.5, 1.59, -120.0);
+      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 64.0, 1.0, -72.0);
+      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 51.0, 0.71, -60.0);
+      public static final ArmPose HpIntake = new ArmPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
+      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 80.0, 0.1, 0.0);
+      public static final ArmPose Climb = new ArmPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
+      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 81.5, 0.567, -90.0);
+      public static final ArmPose BottomBucket = new ArmPose("BottomBucket", 81.5, 0.01, 0);
+      public static final ArmPose TopBucket = new ArmPose("TopBucket", 81.5, 0.6, 0);
     }
 
     /** This contains constants for our Base Pivot. */
@@ -335,11 +335,11 @@ public final class Constants {
     public static final Transform2d BasePivotOffset =
         new Transform2d(-0.1973, 0.1762, Rotation2d.fromDegrees(0));
 
-    /** Distance from the dynamic lift position to the wrist on the gripper mechanism.
-     * If the lift were all the way down, then this would be the distance from the center of the axle of 
+    /** Distance from the dynamic arm position to the wrist on the gripper mechanism.
+     * If the arm were all the way down, then this would be the distance from the center of the axle of 
      * the Base Pivot to the center of the axle of the wrist pivot. 
      * This must be rotated by the angle of the Base Pivot at some point in the Forward Kinematics. */
-    public static final Transform2d LiftToWristOffset =
+    public static final Transform2d ArmToWristOffset =
         new Transform2d(0.1784, 0.4259, Rotation2d.fromDegrees(0));
 
     /** Distance from the center of the wrist's axle to the point used for the EndEffector calculations 

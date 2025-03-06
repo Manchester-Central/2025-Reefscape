@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.lift;
+package frc.robot.subsystems.arm;
 
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -17,10 +17,10 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
-import frc.robot.Constants.MidLiftConstants.BasePivotConstants;
+import frc.robot.Constants.ArmConstants.BasePivotConstants;
 import frc.robot.Robot;
 import frc.robot.SimConstants.SimBasePivotConstants;
-import frc.robot.subsystems.lift.IdLift.IdLiftValues;
+import frc.robot.subsystems.arm.Arm.ArmValues;
 import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
-public class BasePivot extends AbstractLiftPart {
+public class BasePivot extends AbstractArmPart {
   private double m_gearRatio = BasePivotConstants.RotorToSensorRatio;
   private double m_jkgMetersSquared = 1.0;
   private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
@@ -78,10 +78,10 @@ public class BasePivot extends AbstractLiftPart {
   /**
    * Creates a new BasePivot.
    *
-   * @param idLiftValuesSupplier the supplier of lift values
+   * @param ArmValuesSupplier the supplier of arm values
    */
-  public BasePivot(Supplier<IdLiftValues> idLiftValuesSupplier) {
-    super(idLiftValuesSupplier);
+  public BasePivot(Supplier<ArmValues> armValuesSupplier) {
+    super(armValuesSupplier);
 
     m_canCoder.Configuration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
     m_canCoder.Configuration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;

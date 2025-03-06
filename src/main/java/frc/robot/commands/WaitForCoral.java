@@ -5,14 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.lift.IdLift;
+import frc.robot.subsystems.arm.Arm;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class WaitForCoral extends Command {
-  IdLift m_idLift;
+  Arm m_arm;
   /** Creates a new WaitForCoral. */
-  public WaitForCoral(IdLift idLift) {
-    m_idLift = idLift;
+  public WaitForCoral(Arm arm) {
+    m_arm = arm;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -31,6 +31,6 @@ public class WaitForCoral extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_idLift.getLiftValues().hasCoral;
+    return m_arm.getArmValues().hasCoral;
   }
 }

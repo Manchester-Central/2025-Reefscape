@@ -2,29 +2,26 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.lift;
+package frc.robot.subsystems.arm;
 
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.MidLiftConstants.ExtenderConstants;
-import frc.robot.Constants.MidLiftConstants.LiftPoses;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
-
-import java.text.BreakIterator;
-
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
-public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
+public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   /**
-   * Possible values from the lift that can be used in lift parts and other areas
+   * Possible values from the arm that can be used in arm parts and other areas
    * of the code
    * (without having to know about the base parts).
    */
-  public class IdLiftValues {
+  public class ArmValues {
     public Rotation2d basePivotAngle;
     public Rotation2d gripperPivotAngle;
     public double coralGripSpeed;
@@ -36,10 +33,10 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   /**
-   * Gets the latest lift values.
+   * Gets the latest arm values.
    */
-  public IdLiftValues getLiftValues() {
-    IdLiftValues values = new IdLiftValues();
+  public ArmValues getArmValues() {
+    ArmValues values = new ArmValues();
     values.basePivotAngle = m_basePivot.getCurrentAngle();
     values.gripperPivotAngle = m_gripperPivot.getCurrentAngle();
     values.coralGripSpeed = m_gripper.getCoralGripSpeed();
@@ -51,16 +48,16 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     return values;
   }
 
-  public BasePivot m_basePivot = new BasePivot(this::getLiftValues); // TODO: UNDO public
-  public Extender m_extender = new Extender(this::getLiftValues); // TODO: UNDO public
-  public Gripper m_gripper = new Gripper(this::getLiftValues);
-  public GripperPivot m_gripperPivot = new GripperPivot(this::getLiftValues);
+  public BasePivot m_basePivot = new BasePivot(this::getArmValues); // TODO: UNDO public
+  public Extender m_extender = new Extender(this::getArmValues); // TODO: UNDO public
+  public Gripper m_gripper = new Gripper(this::getArmValues);
+  public GripperPivot m_gripperPivot = new GripperPivot(this::getArmValues);
   private Gamepad m_operator;
 
   /**
-   * The possible states of the Lift's state machine.
+   * The possible states of the Arm's state machine.
    */
-  public enum LiftState implements SubsystemState {
+  public enum ArmState implements SubsystemState {
     MANUAL,
     START,
     STOW,
@@ -83,9 +80,9 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     POST_CLIMB;
   }
 
-  /** Creates a new Lift. */
-  public IdLift(Gamepad operator) {
-    super(LiftState.START);
+  /** Creates a new Arm. */
+  public Arm(Gamepad operator) {
+    super(ArmState.START);
     m_operator = operator;
   }
 
@@ -167,16 +164,16 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private void startState() {
     if (ExtenderConstants.HasMagnetSensor && !m_extender.hasReachedMinimum()) {
       m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
-      m_gripperPivot.setTargetAngle(LiftPoses.Stow.getGripperPivotAngle());
+      m_gripperPivot.setTargetAngle(ArmPoses.Stow.getGripperPivotAngle());
       return;
     }
 
     if (Robot.isSimulation()) {
-      // changeState(LiftState.STOW);
-      changeState(LiftState.STOW);
+      // changeState(ArmState.STOW);
+      changeState(ArmState.STOW);
     } else {
-      // changeState(LiftState.MANUAL);
-      changeState(LiftState.STOW);
+      // changeState(ArmState.MANUAL);
+      changeState(ArmState.STOW);
     }
   }
 
@@ -212,32 +209,32 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   private void stowState() {
     if (m_gripper.hasCoral()) {
       changeState(m_extender.getCurrentLength() <= ExtenderConstants.BucketTopClearanceMeter 
-      ? LiftState.BOTTOM_BUCKET 
-      : LiftState.HOLD_CORAL);
+      ? ArmState.BOTTOM_BUCKET 
+      : ArmState.HOLD_CORAL);
       return;
     }
-    m_basePivot.setTargetAngle(LiftPoses.Stow.getBasePivotAngle());
-    m_extender.setTargetLength(LiftPoses.Stow.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(LiftPoses.Stow.getGripperPivotAngle());
+    m_basePivot.setTargetAngle(ArmPoses.Stow.getBasePivotAngle());
+    m_extender.setTargetLength(ArmPoses.Stow.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(ArmPoses.Stow.getGripperPivotAngle());
     m_gripper.setCoralGripSpeed(0.0);
   }
 
   private void intakeFromFloorState() {
-    m_basePivot.setTargetAngle(LiftPoses.Handoff.getBasePivotAngle());
-    m_extender.setTargetLength(LiftPoses.Handoff.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(LiftPoses.Handoff.getGripperPivotAngle());
+    m_basePivot.setTargetAngle(ArmPoses.Handoff.getBasePivotAngle());
+    m_extender.setTargetLength(ArmPoses.Handoff.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(ArmPoses.Handoff.getGripperPivotAngle());
     m_gripper.setCoralGripSpeed(0.5);
   }
 
   private void intakeFromHpState() {
     if (m_gripper.hasCoral()) {
-      changeState(LiftState.BOTTOM_BUCKET);
+      changeState(ArmState.BOTTOM_BUCKET);
       m_gripper.setCoralGripSpeed(0.0);
       return;
     }
-    m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
-    m_extender.setTargetLength(LiftPoses.HpIntake.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(LiftPoses.HpIntake.getGripperPivotAngle());
+    m_basePivot.setTargetAngle(ArmPoses.HpIntake.getBasePivotAngle());
+    m_extender.setTargetLength(ArmPoses.HpIntake.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(ArmPoses.HpIntake.getGripperPivotAngle());
     m_gripper.setCoralGripSpeed(-0.5);
 
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
@@ -246,103 +243,103 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void prepL1State() {
-    scoreHelper(LiftPoses.ScoreL1, true);
+    scoreHelper(ArmPoses.ScoreL1, true);
   }
 
   private void prepL2State() {
-    scoreHelper(LiftPoses.ScoreL2, true);
+    scoreHelper(ArmPoses.ScoreL2, true);
   }
 
   private void prepL3State() {
-    scoreHelper(LiftPoses.ScoreL3, true);
+    scoreHelper(ArmPoses.ScoreL3, true);
   }
 
   private void prepL4State() {
-    scoreHelper(LiftPoses.ScoreL4, true);
+    scoreHelper(ArmPoses.ScoreL4, true);
   }
 
   private void scoreL1State() {
-    scoreHelper(LiftPoses.ScoreL1, false);
+    scoreHelper(ArmPoses.ScoreL1, false);
   }
 
   private void scoreL2State() {
-    scoreHelper(LiftPoses.ScoreL2, false);
+    scoreHelper(ArmPoses.ScoreL2, false);
   }
 
   private void scoreL3State() {
-    scoreHelper(LiftPoses.ScoreL3, false);
+    scoreHelper(ArmPoses.ScoreL3, false);
   }
 
   private void scoreL4State() {
-    scoreHelper(LiftPoses.ScoreL4, false);
+    scoreHelper(ArmPoses.ScoreL4, false);
   }
 
   private void algaeHighState() {
-    if (!getLiftValues().hasCoral) {
-      m_basePivot.setTargetAngle(LiftPoses.AlgaeHigh.getBasePivotAngle());
-      m_extender.setTargetLength(LiftPoses.AlgaeHigh.getExtensionMeters());
-      m_gripperPivot.setTargetAngle(LiftPoses.AlgaeHigh.getGripperPivotAngle());
+    if (!getArmValues().hasCoral) {
+      m_basePivot.setTargetAngle(ArmPoses.AlgaeHigh.getBasePivotAngle());
+      m_extender.setTargetLength(ArmPoses.AlgaeHigh.getExtensionMeters());
+      m_gripperPivot.setTargetAngle(ArmPoses.AlgaeHigh.getGripperPivotAngle());
       m_gripper.setCoralGripSpeed(-0.5);
     } else {
-      changeState(LiftState.HOLD_CORAL);
+      changeState(ArmState.HOLD_CORAL);
     }
   }
 
   private void algaeLowState() {
-    if (!getLiftValues().hasCoral) {
-      m_basePivot.setTargetAngle(LiftPoses.AlgaeLow.getBasePivotAngle());
-      m_extender.setTargetLength(LiftPoses.AlgaeLow.getExtensionMeters());
-      m_gripperPivot.setTargetAngle(LiftPoses.AlgaeLow.getGripperPivotAngle());
+    if (!getArmValues().hasCoral) {
+      m_basePivot.setTargetAngle(ArmPoses.AlgaeLow.getBasePivotAngle());
+      m_extender.setTargetLength(ArmPoses.AlgaeLow.getExtensionMeters());
+      m_gripperPivot.setTargetAngle(ArmPoses.AlgaeLow.getGripperPivotAngle());
       m_gripper.setCoralGripSpeed(-0.5);
     } else {
-      changeState(LiftState.HOLD_CORAL);
+      changeState(ArmState.HOLD_CORAL);
     }
   }
 
   private void holdCoralState() {
-    m_basePivot.setTargetAngle(LiftPoses.HoldCoral.getBasePivotAngle());
-    m_extender.setTargetLength(LiftPoses.HoldCoral.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(LiftPoses.HoldCoral.getGripperPivotAngle());
+    m_basePivot.setTargetAngle(ArmPoses.HoldCoral.getBasePivotAngle());
+    m_extender.setTargetLength(ArmPoses.HoldCoral.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(ArmPoses.HoldCoral.getGripperPivotAngle());
     if (!m_gripper.hasCoral()) {
-      changeState(LiftState.TOP_BUCKET);
+      changeState(ArmState.TOP_BUCKET);
       return;
     }
   }
 
   private void bottomBucketState() {
-    m_basePivot.setTargetAngle(LiftPoses.BottomBucket.getBasePivotAngle());
-    m_extender.setTargetLength(LiftPoses.BottomBucket.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(LiftPoses.BottomBucket.getGripperPivotAngle());
+    m_basePivot.setTargetAngle(ArmPoses.BottomBucket.getBasePivotAngle());
+    m_extender.setTargetLength(ArmPoses.BottomBucket.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(ArmPoses.BottomBucket.getGripperPivotAngle());
     if (m_gripper.hasCoral() && m_gripperPivot.atTarget()) {
-      changeState(LiftState.TOP_BUCKET);
+      changeState(ArmState.TOP_BUCKET);
       return;
     } else if (!m_gripper.hasCoral()) {
-      changeState(LiftState.STOW);
+      changeState(ArmState.STOW);
       return;
     }
   }
 
   private void topBucketState() {
-    m_basePivot.setTargetAngle(LiftPoses.TopBucket.getBasePivotAngle());
-    m_extender.setTargetLength(LiftPoses.TopBucket.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(LiftPoses.TopBucket.getGripperPivotAngle());
+    m_basePivot.setTargetAngle(ArmPoses.TopBucket.getBasePivotAngle());
+    m_extender.setTargetLength(ArmPoses.TopBucket.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(ArmPoses.TopBucket.getGripperPivotAngle());
     if (m_gripper.hasCoral() && m_extender.atTarget()) {
-      changeState(LiftState.HOLD_CORAL);
+      changeState(ArmState.HOLD_CORAL);
       return;
     } else if (!m_gripper.hasCoral() && m_gripperPivot.atTarget()) {
-      changeState(LiftState.BOTTOM_BUCKET);
+      changeState(ArmState.BOTTOM_BUCKET);
       return;
     }
   }
 
-  private void scoreHelper(LiftPose liftPose, boolean isPrep) {
+  private void scoreHelper(ArmPose ArmPose, boolean isPrep) {
     if (!(m_gripper.hasCoral())) {
-      changeState(LiftState.STOW);
+      changeState(ArmState.STOW);
       return;
     }
-    m_basePivot.setTargetAngle(liftPose.getBasePivotAngle());
-    m_extender.setTargetLength(liftPose.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(liftPose.getGripperPivotAngle());
+    m_basePivot.setTargetAngle(ArmPose.getBasePivotAngle());
+    m_extender.setTargetLength(ArmPose.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(ArmPose.getGripperPivotAngle());
     if ((!isPrep && isPoseReady()) || m_operator.rightBumper().getAsBoolean() || (DriverStation.isAutonomousEnabled() && isPoseClose() && m_stateTimer.hasElapsed(2))) {
       m_gripper.setCoralGripSpeed(0.5);
     } else {
@@ -355,15 +352,15 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
   }
 
   private void prepClimb() {
-    m_basePivot.setTargetAngle(LiftPoses.ClimbPrep.getBasePivotAngle());
-    m_gripperPivot.setTargetAngle(LiftPoses.ClimbPrep.getGripperPivotAngle());
-    m_extender.setTargetLength(LiftPoses.ClimbPrep.getExtensionMeters());
+    m_basePivot.setTargetAngle(ArmPoses.ClimbPrep.getBasePivotAngle());
+    m_gripperPivot.setTargetAngle(ArmPoses.ClimbPrep.getGripperPivotAngle());
+    m_extender.setTargetLength(ArmPoses.ClimbPrep.getExtensionMeters());
   }
 
   private void postClimb() {
-    m_basePivot.setTargetAngle(LiftPoses.Climb.getBasePivotAngle());
-    m_gripperPivot.setTargetAngle(LiftPoses.Climb.getGripperPivotAngle());
-    m_extender.setTargetLength(LiftPoses.Climb.getExtensionMeters());
+    m_basePivot.setTargetAngle(ArmPoses.Climb.getBasePivotAngle());
+    m_gripperPivot.setTargetAngle(ArmPoses.Climb.getGripperPivotAngle());
+    m_extender.setTargetLength(ArmPoses.Climb.getExtensionMeters());
   }
 
   /**
@@ -391,4 +388,4 @@ public class IdLift extends StateBasedSubsystem<IdLift.LiftState> {
     Logger.recordOutput("CurrentState", getCurrentState().name());
   }
 }
-// RIP m_oldLift & m_oldGripper 2025-2025
+// RIP m_oldArm & m_oldGripper 2025-2025

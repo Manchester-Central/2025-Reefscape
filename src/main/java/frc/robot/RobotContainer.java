@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CanIdentifiers;
-import frc.robot.Constants.MidLiftConstants.LiftPoses;
+import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -36,11 +36,10 @@ import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.MechManager2D;
 import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.lift.Gripper;
-import frc.robot.subsystems.lift.IdLift;
-import frc.robot.subsystems.lift.LiftPose;
-import frc.robot.subsystems.lift.SelectedLiftState;
-import frc.robot.subsystems.lift.IdLift.LiftState;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Gripper;
+import frc.robot.subsystems.arm.SelectedArmState;
+import frc.robot.subsystems.arm.Arm.ArmState;
 import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
@@ -68,21 +67,21 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   Pigeon2 m_gyro;
 
-  public static IdLift m_idLift;
+  public static Arm m_arm;
   public static Intake m_intake;
   public static Camera m_rightCamera;
   public static Camera m_leftCamera;
   public static MechManager2D m_mech2dManager;
   public static SwerveDriveSimulation m_driveSim;
-  private Map<String, LiftState> m_aprilTagToAlgaeHeightMap = Map.of(
-      "17 ReefTag", LiftState.ALGAE_LOW,
-      "18 ReefTag", LiftState.ALGAE_HIGH,
-      "19 ReefTag", LiftState.ALGAE_LOW,
-      "20 ReefTag", LiftState.ALGAE_HIGH,
-      "21 ReefTag", LiftState.ALGAE_LOW,
-      "22 ReefTag", LiftState.ALGAE_HIGH
+  private Map<String, ArmState> m_aprilTagToAlgaeHeightMap = Map.of(
+      "17 ReefTag", ArmState.ALGAE_LOW,
+      "18 ReefTag", ArmState.ALGAE_HIGH,
+      "19 ReefTag", ArmState.ALGAE_LOW,
+      "20 ReefTag", ArmState.ALGAE_HIGH,
+      "21 ReefTag", ArmState.ALGAE_LOW,
+      "22 ReefTag", ArmState.ALGAE_HIGH
   );
-  private SelectedLiftState m_selectedLiftState = SelectedLiftState.L4;
+  private SelectedArmState m_selectedArmState = SelectedArmState.L4;
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -90,9 +89,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     super();
     m_gyro = new Pigeon2(CanIdentifiers.GyroCANID, CanIdentifiers.CTRECANBus);
     m_swerveDrive = SwerveDrive.createSwerveDrive(m_gyro);
-    m_idLift = new IdLift(m_operator);
+    m_arm = new Arm(m_operator);
     m_intake = new Intake();
-    m_mech2dManager = new MechManager2D(m_idLift, m_intake);
+    m_mech2dManager = new MechManager2D(m_arm, m_intake);
      m_rightCamera =
         new Camera(
             "limelight-right",
@@ -113,22 +112,22 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
     NamedCommands.registerCommand("AimReef", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 1));
     NamedCommands.registerCommand("AimReefPrep", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 1)
-        .alongWith(new ChangeState().setLift(LiftState.PREP_L4)));
+        .alongWith(new ChangeState().setArm(ArmState.PREP_L4)));
     NamedCommands.registerCommand("GoToReef8L", new ReefAlignment(FieldPoint.ReefPose8, true, m_swerveDrive));
-    NamedCommands.registerCommand("ScoreL1",  new ChangeState().setLift(LiftState.SCORE_L1).andThen(new WaitForState().forLiftState(LiftState.STOW)));
-    NamedCommands.registerCommand("ScoreL2",  new ChangeState().setLift(LiftState.SCORE_L2).andThen(new WaitForState().forLiftState(LiftState.STOW)));
-    NamedCommands.registerCommand("ScoreL3",  new ChangeState().setLift(LiftState.SCORE_L3).andThen(new WaitForState().forLiftState(LiftState.STOW)));
-    NamedCommands.registerCommand("ScoreL4",  new ChangeState().setLift(LiftState.SCORE_L4).andThen(new WaitForState().forLiftState(LiftState.STOW)));
-    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL)));
+    NamedCommands.registerCommand("ScoreL1",  new ChangeState().setArm(ArmState.SCORE_L1).andThen(new WaitForState().forArmState(ArmState.STOW)));
+    NamedCommands.registerCommand("ScoreL2",  new ChangeState().setArm(ArmState.SCORE_L2).andThen(new WaitForState().forArmState(ArmState.STOW)));
+    NamedCommands.registerCommand("ScoreL3",  new ChangeState().setArm(ArmState.SCORE_L3).andThen(new WaitForState().forArmState(ArmState.STOW)));
+    NamedCommands.registerCommand("ScoreL4",  new ChangeState().setArm(ArmState.SCORE_L4).andThen(new WaitForState().forArmState(ArmState.STOW)));
+    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForState().forArmState(ArmState.HOLD_CORAL)));
     NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 0.5)
         .andThen(new RunCommand(() -> m_swerveDrive.moveRobotRelative(MetersPerSecond.of(1.75), MetersPerSecond.of(0.0), DegreesPerSecond.of(0)), m_swerveDrive)))
-        .withDeadline(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForCoral(m_idLift))));
+        .withDeadline(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForCoral(m_arm))));
     NamedCommands.registerCommand("AimHPOld", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 2)
-        .withDeadline(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).andThen(new WaitForState().forLiftState(LiftState.HOLD_CORAL))));
+        .withDeadline(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForState().forArmState(ArmState.HOLD_CORAL))));
     NamedCommands.registerCommand("XMode", new RunCommand(() -> m_swerveDrive.setXMode()).withTimeout(0.1));
     buildPathplannerAutoChooser();
 
-    System.out.println(LiftPoses.ScoreL4); // needed for static poses TODO find better way
+    System.out.println(ArmPoses.ScoreL4); // needed for static poses TODO find better way
     
     // Configure the trigger bindings
     configureBindings();
@@ -152,8 +151,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       return pose.getCurrentAlliancePose().getRotation();
     }, 1.0));
     // m_driver.a().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
-    //     .alongWith(new ChangeState().setLift(LiftState.INTAKE_FROM_HP)
-    //     .withLiftInterrupt(LiftState.STOW)));
+    //     .alongWith(new ChangeState().setArm(ArmState.INTAKE_FROM_HP)
+    //     .withArmInterrupt(ArmState.STOW)));
         
     m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Right.getAllianceAngle(), 1.0));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
@@ -162,36 +161,36 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //   return pose.getCurrentAlliancePose().getRotation();
     // }, 1.0));
     m_driver.y().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
-    // .andThen(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL))
+    // .andThen(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL))
 
     m_driver.povUp().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
     m_driver.povDown().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
     m_driver.povLeft().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
     m_driver.povRight().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
 
-    m_driver.start().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
-    m_driver.back().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
+    m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
+    m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
 
     m_driver.rightBumper().or(m_driver.rightTrigger()).whileTrue(new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod), () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
-    m_driver.rightBumper().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.PrepState).withLiftInterrupt(LiftState.HOLD_CORAL));
-    m_driver.rightTrigger().whileTrue(new ChangeState().setLift(() -> m_selectedLiftState.ScoreState).withLiftInterrupt(LiftState.HOLD_CORAL));
-    m_driver.leftTrigger().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).withLiftInterrupt(LiftState.STOW));
-    m_driver.leftBumper().whileTrue(new ChangeState().setLift(() -> {
+    m_driver.rightBumper().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
+    m_driver.rightTrigger().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL));
+    m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).withArmInterrupt(ArmState.STOW));
+    m_driver.leftBumper().whileTrue(new ChangeState().setArm(() -> {
       var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
       return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());
-    }).withLiftInterrupt(LiftState.STOW));
+    }).withArmInterrupt(ArmState.STOW));
 
-    m_operator.a().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L1));
-    m_operator.x().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L2));
-    m_operator.b().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L3));
-    m_operator.y().onTrue(new InstantCommand(() -> m_selectedLiftState = SelectedLiftState.L4));
+    m_operator.a().onTrue(new InstantCommand(() -> m_selectedArmState = SelectedArmState.L1));
+    m_operator.x().onTrue(new InstantCommand(() -> m_selectedArmState = SelectedArmState.L2));
+    m_operator.b().onTrue(new InstantCommand(() -> m_selectedArmState = SelectedArmState.L3));
+    m_operator.y().onTrue(new InstantCommand(() -> m_selectedArmState = SelectedArmState.L4));
 
-    m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.PREP_CLIMB));
-    m_operator.povUp().whileTrue(new ChangeState().setLift(LiftState.POST_CLIMB));
+    m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
+    m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     
-    m_operator.start().onTrue(new ChangeState().setLift(LiftState.STOW));
-    m_operator.back().whileTrue(new ChangeState().setLift(LiftState.MANUAL));
-    //.alongWith(new InstantCommand(() -> m_idLift.m_gripperPivot.disableFuseCANcoder()))
+    m_operator.start().onTrue(new ChangeState().setArm(ArmState.STOW));
+    m_operator.back().whileTrue(new ChangeState().setArm(ArmState.MANUAL));
+    //.alongWith(new InstantCommand(() -> m_arm.m_gripperPivot.disableFuseCANcoder()))
 
     // Everything after this is for demos and testing
     // m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
@@ -211,26 +210,26 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // z on keyboard 0
     m_simKeyboard.a().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim));
 
-    // m_operator.start().whileTrue(new ChangeState().setLift(LiftState.STOW).setIntake(IntakeState.STOW));
-    // m_operator.leftBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
-    // m_operator.rightBumper().whileTrue(new ChangeState().setLift(LiftState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
+    // m_operator.start().whileTrue(new ChangeState().setArm(ArmState.STOW).setIntake(IntakeState.STOW));
+    // m_operator.leftBumper().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
+    // m_operator.rightBumper().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
     // m_operator.back().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim)); // TODO: delete if back button needed for competition
-    // m_operator.povLeft().whileTrue(new ChangeState().setLift(LiftState.MANUAL).setIntake(IntakeState.STOW));
+    // m_operator.povLeft().whileTrue(new ChangeState().setArm(ArmState.MANUAL).setIntake(IntakeState.STOW));
 
-    // m_operator.leftTrigger().whileTrue(new RunCommand(() -> m_idLift.m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-20)),
-    //     m_idLift));
-    // m_operator.rightTrigger().whileTrue(new RunCommand(() -> m_idLift.m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-90)),
-    //     m_idLift));
-    // m_operator.a().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(0.5), m_idLift));
-    // m_operator.b().whileTrue(new RunCommand(() -> m_idLift.m_extender.setTargetLength(1.2), m_idLift));
+    // m_operator.leftTrigger().whileTrue(new RunCommand(() -> m_arm.m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-20)),
+    //     m_arm));
+    // m_operator.rightTrigger().whileTrue(new RunCommand(() -> m_arm.m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-90)),
+    //     m_arm));
+    // m_operator.a().whileTrue(new RunCommand(() -> m_arm.m_extender.setTargetLength(0.5), m_arm));
+    // m_operator.b().whileTrue(new RunCommand(() -> m_arm.m_extender.setTargetLength(1.2), m_arm));
     // m_operator.a().whileTrue(new RunCommand(() -> {
-    //   m_idLift.m_basePivot.setTargetAngle(LiftPoses.HpIntake.getBasePivotAngle());
+    //   m_arm.m_basePivot.setTargetAngle(ArmPoses.HpIntake.getBasePivotAngle());
     //   double yValue = -0.5;
-    //   if (m_idLift.m_gripper.hasCoral()) {
+    //   if (m_arm.m_gripper.hasCoral()) {
     //     yValue = yValue < 0 ? 0 : yValue;
     //   }
-    //   m_idLift.m_gripper.setCoralGripSpeed(yValue);
-    // }, m_idLift));
+    //   m_arm.m_gripper.setCoralGripSpeed(yValue);
+    // }, m_arm));
   }
 
   @Override
@@ -258,21 +257,21 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   }
 
   public void autoAndTeleInit(){
-    m_idLift.changeState(LiftState.START);
+    m_arm.changeState(ArmState.START);
   }
 
   /**
   * Sets motor to cleanup when disabled.
   */
   public void setMotorCleanUp() {
-    m_idLift.setMotorCleanUp();
+    m_arm.setMotorCleanUp();
   }
 
   /**
   * Sets motor to Start when enabled.
   */
   public void setMotorStartUp() {
-    m_idLift.setMotorStartUp();
+    m_arm.setMotorStartUp();
   }
 
   @Override
@@ -292,7 +291,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       return;
     }
 
-    if (m_idLift.getLiftValues().basePivotAngle.getDegrees() < 60.0) {
+    if (m_arm.getArmValues().basePivotAngle.getDegrees() < 60.0) {
       return;
     }
 
