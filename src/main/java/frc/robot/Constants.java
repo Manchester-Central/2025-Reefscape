@@ -317,27 +317,37 @@ public final class Constants {
     public static final double SideSideLengthMeters = 0.85;
     // Buffer space to use between the end effector and an interaction point
     public static final double CoralPlacementMargin = 0.03;
-
+    public static final double CoralLengthMeters = 0.2;
     // Max range beyond the end of the bumpers
     public static final Distance MechanismExtensionMargin = Units.Inches.of(18);
 
+
+    /*
+     * The following are values used for automatic pose generation, like Inverse Kinematics.
+     */
+
     // Angle between the Lift and the Gripped Pivot
-    public static final Rotation2d WristMountAngle = Rotation2d.fromDegrees(176); // TODO: Fix this! Eyeballed it!
+    public static final Rotation2d WristMountAngle = Rotation2d.fromDegrees(-2.014);
 
     // Distance from the robot origin to the axle for the Base Pivot
     public static final Transform2d BasePivotOffset =
         new Transform2d(-0.197396, 0.176162, Rotation2d.fromDegrees(0));
 
-    /** Distance from the dynamic lift position to the wrist on the gripper mechanism.
+    /*
+     * Distance from the dynamic lift position to the wrist on the gripper mechanism.
      * If the lift were all the way down, then this would be the distance from the center of the axle of 
      * the Base Pivot to the center of the axle of the wrist pivot. 
-     * This must be rotated by the angle of the Base Pivot at some point in the Forward Kinematics. */
+     * This must be rotated by the angle of the Base Pivot at some point in the Forward Kinematics,
+     * it's initialized as if the base pivot was at 0 degrees (for easier rotation later).
+     */
     public static final Transform2d LiftToWristOffset =
-        new Transform2d(0.036977, 0.388697, Rotation2d.fromDegrees(0));
+        new Transform2d(0.388697, -0.036977, Rotation2d.fromDegrees(0));
 
     /** Distance from the center of the wrist's axle to the point used for the EndEffector calculations 
      * Presumably this is just beyond the end of the wheels but should be just past where the Coral is. */
-    public static final Transform2d WristToEndEffector =
-        new Transform2d(0.2, 0, Rotation2d.fromDegrees(0)); // TODO: Check Gripper Length
+    public static final Transform2d WristToCoralTip =
+        new Transform2d(0.352081, 0, Rotation2d.fromDegrees(0));
+    public static final Transform2d WristToEndEffectorTip =
+        new Transform2d(0.172409, 0, Rotation2d.fromDegrees(0));
   }
 }

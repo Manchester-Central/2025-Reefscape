@@ -63,13 +63,13 @@ public class MechManager2D extends SubsystemBase {
     m_liftBase = new LoggedMechanism2d(0,0);
     
     m_liftRoot = m_liftBase.getRoot("Lift", RobotDimensions.BasePivotOffset.getTranslation().getX(), RobotDimensions.BasePivotOffset.getTranslation().getY());
-    m_extenderBaseLigament = m_liftRoot.append(new LoggedMechanismLigament2d("ExtenderBase", 0.89, 0, 6, m_extenderColor));
+    //m_extenderBaseLigament = m_liftRoot.append(new LoggedMechanismLigament2d("ExtenderBase", 0.89, 0, 6, m_extenderColor));
     m_extenderLigament = m_liftRoot.append(new LoggedMechanismLigament2d("Extender", 0.001, 0, 8, m_extenderColor));
 
     // Gripper
     m_gripperPivotLigament = m_extenderLigament.append(new LoggedMechanismLigament2d("GripperPivot", 0.410, -2.04, 1, m_gripperNeutralColor));
     m_gripperBodyLigament = m_gripperPivotLigament.append(new LoggedMechanismLigament2d("GripperBody", 0.2, 0, 5, m_gripperNeutralColor));
-    m_gripperCoralLigament = m_gripperPivotLigament.append(new LoggedMechanismLigament2d("GripperCoral", 0.0001, 0, 10, m_gripperHasCoralColor));
+    m_gripperCoralLigament = m_gripperPivotLigament.append(new LoggedMechanismLigament2d("GripperCoral", 0.0001, 0, 2, m_gripperHasCoralColor));
 
     // Bucket
     m_bucketBaseLigament = m_liftRoot.append(new LoggedMechanismLigament2d("BucketBase", 0.423, 0, 1, m_bucketColor));
@@ -87,10 +87,10 @@ public class MechManager2D extends SubsystemBase {
     // Set angles and length of IdLift parts
     m_extenderLigament.setLength(values.extenderLength == 0 ? 0.0001 : values.extenderLength);
     m_extenderLigament.setAngle(values.basePivotAngle);
-    m_extenderBaseLigament.setAngle(values.basePivotAngle);
+    //m_extenderBaseLigament.setAngle(values.basePivotAngle);
     m_bucketBaseLigament.setAngle(values.basePivotAngle);
-    m_gripperBodyLigament.setAngle(values.gripperPivotAngle);
-    m_gripperCoralLigament.setAngle(values.gripperPivotAngle);
+    m_gripperBodyLigament.setAngle(values.gripperPivotAngle.plus(RobotDimensions.WristMountAngle));
+    m_gripperCoralLigament.setAngle(values.gripperPivotAngle.plus(RobotDimensions.WristMountAngle));
 
     // Change color if holding a coral
     if (values.hasCoral) {

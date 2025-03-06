@@ -167,7 +167,12 @@ public class Extender extends AbstractLiftPart {
   }
 
   public double getCurrentLength() {
+    if (Robot.isSimulation()) return m_targetLength;
     return m_motor1.getPosition().getValueAsDouble();
+  }
+
+  public double getTargetLength() {
+    return m_targetLength;
   }
 
   /**
