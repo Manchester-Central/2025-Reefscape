@@ -145,12 +145,13 @@ public final class Constants {
       limeLight3G.max_speed_acceptable = 1.0; //mps
       limeLight3G.max_distance_acceptable = 4.0; // meters
       limeLight3G.max_rotation_acceptable = 0.8; //rps
-      limeLight3G.confidence_requirement = 0.5; 
+      limeLight3G.confidence_requirement = 0.5;
       return limeLight3G;
     }
 
     public static final CameraSpecs limeLight3GSpecs = initializeLimelight3G();
-    public static final double timeOffset = 0.01;
+    // Fudge factor to adjust camera capture time between the limelight and the robot's timestamps
+    public static final double timeOffset = 0.00;
   }
 
   /** This contains constants for our entire arm system. */
