@@ -157,7 +157,7 @@ public final class Constants {
   public static class ArmConstants {
     /** Contains values for different known arm poses. */
     public static class ArmPoses {
-      public static final ArmPose Stow = new ArmPose("Stow", 90, 0.01, 0.0);
+      public static final ArmPose Stow = new ArmPose("Stow", 72.0, 0.01, 0.0);
       public static final ArmPose Handoff = new ArmPose("Handoff", 30.0, 0.4, 0.0);
       public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 28.5, 0.58, -20.0);
       public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 66.0, 0.575, -100.0);
