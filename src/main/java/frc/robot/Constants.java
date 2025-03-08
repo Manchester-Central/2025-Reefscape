@@ -331,7 +331,7 @@ public final class Constants {
     // Buffer space to use between the end effector and an interaction point
     public static final double CoralPlacementMargin = 0.03;
     // Robot length buffer
-    public static final double RobotToReefMargin = 0.005; // This is in meters
+    public static final double RobotToReefMargin = 0.015; // This is in meters
     // Distance from the robot origin to the axle for the Base Pivot
     public static final Transform2d BasePivotOffset =
         new Transform2d(-0.1973, 0.1762, Rotation2d.fromDegrees(0));
