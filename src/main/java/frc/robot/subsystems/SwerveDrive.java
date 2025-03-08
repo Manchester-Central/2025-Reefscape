@@ -17,13 +17,16 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -35,6 +38,9 @@ import frc.robot.Constants.SwerveConstants.SwerveBackRightConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontLeftConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontRightConstants;
 import frc.robot.Robot;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
@@ -294,5 +300,30 @@ public class SwerveDrive extends BaseSwerveDrive {
     Logger.recordOutput("Swerve/CurrentSpeeds", getModuleStates());
     Logger.recordOutput("Swerve/Speed", getRobotSpeed());
     Logger.recordOutput("Swerve/RotationSpeed", getRobotRotationSpeed());
+  }
+
+  @Override
+  public void moveToTarget(double maxTranslationSpeedPercent) {
+    Pose2d pose = getPose();
+
+    Translation2d difference =
+        pose.getTranslation().minus(new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint()));
+
+    var normalizedDifference = difference.div(difference.getNorm());
+    maxTranslationSpeedPercent *= m_swerveConfigs.maxRobotSpeed().in(MetersPerSecond); //TODO: do this the right way in shared code
+
+    double x =
+        MathUtil.clamp(
+            m_XPid.calculate(pose.getX()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getX()),
+            (maxTranslationSpeedPercent * normalizedDifference.getX()));
+    double y =
+        MathUtil.clamp(
+            m_YPid.calculate(pose.getY()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getY()),
+            (maxTranslationSpeedPercent * normalizedDifference.getY()));
+    double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
+    moveFieldRelativeForPID(
+        Units.MetersPerSecond.of(x), Units.MetersPerSecond.of(y), Units.RadiansPerSecond.of(angle));
   }
 }

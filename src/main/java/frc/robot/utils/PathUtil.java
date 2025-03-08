@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.littletonrobotics.junction.Logger;
+
 /** Add your docs here. */
 public class PathUtil {
 
@@ -65,9 +67,12 @@ public class PathUtil {
           for (int i = 0; i < possibleTargets.size(); i++) {
             possiblePoses.add(possibleTargets.get(i).getCurrentAlliancePose());
           }
-          Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets));
+          FieldPoint nearestPoint = FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets);
+          Logger.recordOutput("Swerve/Nearest Point", nearestPoint.getCurrentAlliancePose());
+          Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, nearestPoint);
           return AutoBuilder.pathfindToPose(
               swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0).andThen(simpleDriveToPosition);
+          // return simpleDriveToPosition;
         },
         Set.of(swerveDrive));
   }
