@@ -252,23 +252,23 @@ public final class Constants {
       public static final double kP = 150.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.35;
+      public static final double kG = 0.7;
       public static final double kS = 0.5;
       public static final double kV = 0.12;
       public static final double kA = 0.01;
 
       // Motion Magic
-      public static final double MMCruiseVelocity = 3;
-      public static final double MMAcceleration = 10;
+      public static final double MMCruiseVelocity = 2;
+      public static final double MMAcceleration = 5;
       public static final double MMJerk = 100;
 
-      public static final double MMUpCruiseVelocity = 3;
-      public static final double MMUpAcceleration = 10;
+      public static final double MMUpCruiseVelocity = 2;
+      public static final double MMUpAcceleration = 5;
       public static final double MMUpJerk = 100;
 
       // Current limits
-      public static final double SupplyCurrentLimit = 50;
-      public static final double StatorCurrentLimit = 50;
+      public static final double SupplyCurrentLimit = 65;
+      public static final double StatorCurrentLimit = 65;
 
       // Sensor Feedback
       public static final double RotorToSensorRatio = 1.0;

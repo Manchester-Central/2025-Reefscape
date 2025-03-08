@@ -11,6 +11,7 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.arm.Gripper;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.LocalADStarAK;
@@ -67,6 +68,7 @@ public class Robot extends ChaosRobot {
   public void robotPeriodic() {
     super.robotPeriodic();
     DashboardNumber.checkAll();
+    ((RobotContainer) m_robotContainer).setSwerveDriveAcceptingVisionUpdates(isDisabled() ? true : SwerveConstants.AcceptVisionUpdates);
   }
 
   @Override
