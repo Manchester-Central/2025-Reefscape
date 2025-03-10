@@ -11,9 +11,13 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.ChassisReference;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
@@ -23,6 +27,8 @@ import frc.robot.SimConstants.SimExtenderConstants;
 import frc.robot.subsystems.arm.Arm.ArmValues;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
+
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -74,6 +80,9 @@ public class Extender extends AbstractArmPart {
   private DashboardNumber m_rampPeriod = m_tuner.tunable("VoltageClosedLoopRampPeriod", ExtenderConstants.VoltageClosedLoopRampPeriod,
       (config, newValue) -> config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = newValue);
 
+
+  private final TimeInterpolatableBuffer<Double> m_lengthHistory =
+      TimeInterpolatableBuffer.createDoubleBuffer(1.0);
 
   /**
    * Creates a new Extender.
@@ -221,6 +230,10 @@ public class Extender extends AbstractArmPart {
     // m_motor2.simUpdate();
   }
 
+  public Optional<Double> getLengthAtTimestamp(double time) {
+    return m_lengthHistory.getSample(time);
+  }
+
   @Override
   public void periodic() {
     super.periodic();
@@ -229,6 +242,7 @@ public class Extender extends AbstractArmPart {
       m_hasReachedMinimum = true;
       m_motor1.setPosition(ExtenderConstants.MinLengthMeter);
     }
+    var periodic_timestamp = Timer.getFPGATimestamp();
 
     Logger.recordOutput("Extender/Setpoint", m_targetLength);
     Logger.recordOutput("Extender/CurrentLength", getCurrentLength());
@@ -239,5 +253,6 @@ public class Extender extends AbstractArmPart {
     Logger.recordOutput("Extender/SupplyCurrent", m_motor1.getSupplyCurrent().getValueAsDouble());
     Logger.recordOutput("Extender/IsAtMinimum", isAtMinimum());
     Logger.recordOutput("Extender/hasReachedMin", hasReachedMinimum());
+    m_lengthHistory.addSample(periodic_timestamp, getCurrentLength());
   }
 }

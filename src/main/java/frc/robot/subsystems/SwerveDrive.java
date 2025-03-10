@@ -21,10 +21,12 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.CanIdentifiers;
@@ -35,6 +37,8 @@ import frc.robot.Constants.SwerveConstants.SwerveBackRightConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontLeftConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontRightConstants;
 import frc.robot.Robot;
+
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
@@ -55,6 +59,10 @@ public class SwerveDrive extends BaseSwerveDrive {
 
   /** A value to help determine if we should use PathPlanner's reset odometry or not. */
   private boolean m_hasReceivedVisionUpdates = false;
+
+  // Come on WPILib, now's the time for that Units Library!
+  private final TimeInterpolatableBuffer<Pose2d> m_odometryPoseBuffer =
+      TimeInterpolatableBuffer.createBuffer(1.0);
 
   private SwerveDrive(
       SwerveModule2025[] swerveModules,
@@ -283,6 +291,10 @@ public class SwerveDrive extends BaseSwerveDrive {
     return super.getGyroRotation();
   }
 
+  public Optional<Pose2d> getPoseAtTimestamp(double time) {
+    return m_odometryPoseBuffer.getSample(time);
+  }
+
   @Override
   public void periodic() {
     if (GeneralConstants.RobotMode == Mode.SIM) {
@@ -290,9 +302,12 @@ public class SwerveDrive extends BaseSwerveDrive {
       Logger.recordOutput("Swerve/SimPose", m_simulatedDrive.getActualPoseInSimulationWorld());
     }
     super.periodic();
+    var periodic_timestamp = Timer.getFPGATimestamp();
     Logger.recordOutput("Swerve/Pose", getPose());
     Logger.recordOutput("Swerve/CurrentSpeeds", getModuleStates());
     Logger.recordOutput("Swerve/Speed", getRobotSpeed());
     Logger.recordOutput("Swerve/RotationSpeed", getRobotRotationSpeed());
+
+    m_odometryPoseBuffer.addSample(periodic_timestamp, getPose());
   }
 }

@@ -12,9 +12,12 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.ChassisReference;
+
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.ArmConstants.BasePivotConstants;
@@ -74,6 +77,10 @@ public class BasePivot extends AbstractArmPart {
   // Ramp rates
   private DashboardNumber m_rampPeriod = m_talonTuner.tunable("VoltageClosedLoopRampPeriod", BasePivotConstants.VoltageClosedLoopRampPeriod,
       (config, newValue) -> config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = newValue);
+
+
+  private final TimeInterpolatableBuffer<Rotation2d> m_angleHistory =
+      TimeInterpolatableBuffer.createBuffer(1.0);
 
   /**
    * Creates a new BasePivot.
@@ -197,6 +204,7 @@ public class BasePivot extends AbstractArmPart {
   @Override
   public void periodic() {
     super.periodic();
+    var periodic_timestamp = Timer.getFPGATimestamp();
     Logger.recordOutput("BasePivot/Setpoint", m_targetAngle);
     Logger.recordOutput("BasePivot/CurrentAngle", getCurrentAngle().getDegrees());
     Logger.recordOutput("BasePivot/AtTarget", atTarget());
@@ -205,5 +213,6 @@ public class BasePivot extends AbstractArmPart {
     Logger.recordOutput("BasePivot/StatorCurrent", m_motor.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("BasePivot/SupplyCurrent", m_motor.getSupplyCurrent().getValueAsDouble());
     Logger.recordOutput("BasePivot/MotorAngle", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).getDegrees());
+    m_angleHistory.addSample(periodic_timestamp, getCurrentAngle());
   }
 }

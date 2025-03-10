@@ -14,8 +14,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.ArmConstants.GripperPivotConstants;
@@ -28,7 +30,7 @@ import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
 
-import java.util.Currency;
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -88,6 +90,9 @@ public class GripperPivot extends AbstractArmPart {
   // Ramp rates
   private DashboardNumber m_rampPeriod = m_tuner.tunable("VoltageClosedLoopRampPeriod", GripperPivotConstants.VoltageClosedLoopRampPeriod,
       (config, newValue) -> config.ClosedLoopRamps.VoltageClosedLoopRampPeriod = newValue);
+
+  private final TimeInterpolatableBuffer<Rotation2d> m_angleHistory =
+      TimeInterpolatableBuffer.createBuffer(1.0);
 
   /**
    * Creates a new GripperPivot.
@@ -215,10 +220,15 @@ public class GripperPivot extends AbstractArmPart {
     m_motor.applyConfig();
   }
 
+  public Optional<Rotation2d> getLengthAtTimestamp(double time) {
+    return m_angleHistory.getSample(time);
+  }
+
   @Override
   public void periodic() {
     // TODO Auto-generated method stub
     super.periodic();
+    var periodic_timestamp = Timer.getFPGATimestamp();
     Logger.recordOutput("GripperPivot/Setpoint", m_targetAngle);
     Logger.recordOutput("GripperPivot/CurrentAngle", getCurrentAngle().getDegrees());
     Logger.recordOutput("GripperPivot/AtTarget", atTarget());
@@ -229,5 +239,6 @@ public class GripperPivot extends AbstractArmPart {
     Logger.recordOutput("GripperPivot/MotorAngle", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).getDegrees());
     Logger.recordOutput("GripperPivot/Erro", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).minus(getCurrentAngle()).getDegrees());  
     Logger.recordOutput("GripperPivot/MotorVelocityRPS", m_motor.getVelocity().getValueAsDouble());
+    m_angleHistory.addSample(periodic_timestamp, getCurrentAngle());
   }
 }

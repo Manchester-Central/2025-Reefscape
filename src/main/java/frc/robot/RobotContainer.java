@@ -48,10 +48,8 @@ import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.ejml.data.FEigenpair;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
@@ -284,24 +282,33 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public synchronized void updatePoseEstimator(VisionData data) {
     var pose = data.getPose2d();
     var pose3D = data.getPose3d();
+    boolean accept_pose = true;
     if (pose == null
         || !Double.isFinite(pose.getX())
         || !Double.isFinite(pose.getY())
         || !Double.isFinite(pose.getRotation().getDegrees())) {
-      return;
+      accept_pose = false;
     }
 
     if (m_arm.getArmValues().basePivotAngle.getDegrees() < 60.0) {
-      return;
+      accept_pose = false;
     }
 
-    if(data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement){
-      return;
+    if(data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement) {
+      accept_pose = false;
     }
 
     if (pose.getX() <= 0.0 || pose.getY() <= 0.0 || pose3D.getZ() <= -0.10 || pose3D.getZ() >= 0.30) {
-      return;
+      accept_pose = false;
     }
+    if (accept_pose) {
+      Logger.recordOutput("AcceptedPose", pose);
+    } else {
+      Logger.recordOutput("RejectedPose", pose);
+    }
+    var current_pose = m_swerveDrive.getPoseAtTimestamp(data.getTimestampSeconds());
+    if (current_pose.isPresent()) Logger.recordOutput("EstimatedPose", current_pose.get());
+    
     data.m_time -= VisionConstants.timeOffset;
     Logger.recordOutput("LimelightLatency", data.m_time);
     m_swerveDrive.addVisionMeasurement(data);
