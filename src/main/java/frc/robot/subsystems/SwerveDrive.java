@@ -23,11 +23,14 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.Interpolatable;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.CanIdentifiers;
@@ -41,6 +44,7 @@ import frc.robot.Robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
@@ -58,6 +62,7 @@ public class SwerveDrive extends BaseSwerveDrive {
   private PPHolonomicDriveController m_holonomicDriveController = new PPHolonomicDriveController(
       new PIDConstants(1.0, 0.0, 0.0),
       new PIDConstants(2.0, 0.0, 0.0));
+  private TimeInterpolatableBuffer<Pose2d> m_pastPoses;
 
   /** A value to help determine if we should use PathPlanner's reset odometry or not. */
   private boolean m_hasReceivedVisionUpdates = false;
@@ -70,7 +75,7 @@ public class SwerveDrive extends BaseSwerveDrive {
     super(swerveModules, swerveConfigs, getRotation);
 
     m_acceptVisionUpdates = SwerveConstants.AcceptVisionUpdates;
-
+    m_pastPoses = TimeInterpolatableBuffer.createBuffer(1);
     m_odometry =
         new SwerveDrivePoseEstimator(
             m_kinematics, getGyroRotation(), getModulePositions(), GeneralConstants.InitialRobotPose,
@@ -300,6 +305,17 @@ public class SwerveDrive extends BaseSwerveDrive {
     Logger.recordOutput("Swerve/CurrentSpeeds", getModuleStates());
     Logger.recordOutput("Swerve/Speed", getRobotSpeed());
     Logger.recordOutput("Swerve/RotationSpeed", getRobotRotationSpeed());
+    m_pastPoses.addSample(Timer.getFPGATimestamp(), getPose());
+  }
+
+  /**
+   * Get past pose.
+   *
+   * @param timeStamp in seconds
+   * @return pose
+   */
+  public Optional<Pose2d> getPastPose(double timeStamp) {
+    return m_pastPoses.getSample(timeStamp);
   }
 
   @Override

@@ -94,7 +94,7 @@ public class Camera extends LimelightCamera {
         m_poseData.pose[idx],
         m_poseData.timestamps[idx],
         new double[] {m_poseData.deviations[idx], m_poseData.deviations[idx], 1},
-        conf);
+        conf, m_name);
   }
 
   @Override

@@ -288,26 +288,33 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public synchronized void updatePoseEstimator(VisionData data) {
     var pose = data.getPose2d();
     var pose3D = data.getPose3d();
+    boolean check = true;
     if (pose == null
         || !Double.isFinite(pose.getX())
         || !Double.isFinite(pose.getY())
         || !Double.isFinite(pose.getRotation().getDegrees())) {
-      return;
+      check = false;
     }
 
     if (m_arm.getArmValues().basePivotAngle.getDegrees() < 60.0) {
-      return;
+      check = false;
     }
 
-    if(data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement){
-      return;
+    if (data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement){
+      check = false;
     }
 
     if (pose.getX() <= 0.0 || pose.getY() <= 0.0 || pose3D.getZ() <= -0.10 || pose3D.getZ() >= 0.30) {
-      return;
+      check = false;
     }
-    data.m_time -= VisionConstants.timeOffset;
-    Logger.recordOutput("LimelightLatency", data.m_time);
-    m_swerveDrive.addVisionMeasurement(data);
+    if (check) {
+      data.m_time -= VisionConstants.timeOffset;
+      Logger.recordOutput("LimelightLatency", data.m_time);
+      m_swerveDrive.addVisionMeasurement(data);
+      Logger.recordOutput(data.getName() + "/accepted pose", pose);
+    } else {
+      Logger.recordOutput(data.getName() + "/rejected pose", pose);
+    }
+   
   }
 }
