@@ -145,12 +145,13 @@ public final class Constants {
       limeLight3G.max_speed_acceptable = 1.0; //mps
       limeLight3G.max_distance_acceptable = 4.0; // meters
       limeLight3G.max_rotation_acceptable = 0.8; //rps
-      limeLight3G.confidence_requirement = 0.5; 
+      limeLight3G.confidence_requirement = 0.5;
       return limeLight3G;
     }
 
     public static final CameraSpecs limeLight3GSpecs = initializeLimelight3G();
-    public static final double timeOffset = 0.01;
+    // Fudge factor to adjust camera capture time between the limelight and the robot's timestamps
+    public static final double timeOffset = 0.00;
   }
 
   /** This contains constants for our entire arm system. */
@@ -251,23 +252,23 @@ public final class Constants {
       public static final double kP = 150.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.35;
+      public static final double kG = 0.7;
       public static final double kS = 0.5;
       public static final double kV = 0.12;
       public static final double kA = 0.01;
 
       // Motion Magic
-      public static final double MMCruiseVelocity = 3;
-      public static final double MMAcceleration = 10;
+      public static final double MMCruiseVelocity = 2;
+      public static final double MMAcceleration = 5;
       public static final double MMJerk = 100;
 
-      public static final double MMUpCruiseVelocity = 3;
-      public static final double MMUpAcceleration = 10;
+      public static final double MMUpCruiseVelocity = 2;
+      public static final double MMUpAcceleration = 5;
       public static final double MMUpJerk = 100;
 
       // Current limits
-      public static final double SupplyCurrentLimit = 50;
-      public static final double StatorCurrentLimit = 50;
+      public static final double SupplyCurrentLimit = 65;
+      public static final double StatorCurrentLimit = 65;
 
       // Sensor Feedback
       public static final double RotorToSensorRatio = 1.0;
@@ -330,7 +331,7 @@ public final class Constants {
     // Buffer space to use between the end effector and an interaction point
     public static final double CoralPlacementMargin = 0.03;
     // Robot length buffer
-    public static final double RobotToReefMargin = 0.005; // This is in meters
+    public static final double RobotToReefMargin = 0.015; // This is in meters
     // Distance from the robot origin to the axle for the Base Pivot
     public static final Transform2d BasePivotOffset =
         new Transform2d(-0.1973, 0.1762, Rotation2d.fromDegrees(0));

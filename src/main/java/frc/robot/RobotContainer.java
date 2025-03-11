@@ -256,6 +256,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     DashboardNumber.checkAll();
   }
 
+  public void setSwerveDriveAcceptingVisionUpdates(boolean accept) {
+    m_swerveDrive.setOdometryAcceptVisionData(accept);
+  }
+
   public void autoAndTeleInit(){
     m_arm.changeState(ArmState.START);
   }
