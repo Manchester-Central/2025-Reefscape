@@ -36,7 +36,7 @@ public class SimpleDriveToPosition extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerveDrive.moveToTarget(0.7);
+    m_swerveDrive.moveToTarget(0.3);
   }
 
   // Called once the command ends or is interrupted.
@@ -50,6 +50,6 @@ public class SimpleDriveToPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_swerveDrive.atTarget(0.03);
+    return m_swerveDrive.atTarget(0.01);
   }
 }
