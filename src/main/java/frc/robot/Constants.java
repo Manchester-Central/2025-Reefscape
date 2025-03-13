@@ -173,8 +173,6 @@ public final class Constants {
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final ArmPose Climb = new ArmPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
       public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 81.5, 0.567, -90.0);
-      public static final ArmPose BottomBucket = new ArmPose("BottomBucket", 81.5, 0.01, 0);
-      public static final ArmPose TopBucket = new ArmPose("TopBucket", 81.5, 0.6, 0);
     }
 
     /** This contains constants for our Base Pivot. */
@@ -247,8 +245,6 @@ public final class Constants {
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
       public static final double MaxLengthMeter = 1.6;
-      public static final double BucketTopClearanceMeter = 0.567;
-      public static final double BucketBottomClearanceMeter = 0.013;
       public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto 
 
       // Slot 0 Configs
