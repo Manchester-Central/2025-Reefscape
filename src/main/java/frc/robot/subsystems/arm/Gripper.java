@@ -10,18 +10,30 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
 import frc.robot.Constants.ArmConstants.GripperConstants;
+import frc.robot.Constants.ArmConstants.GripperPivotConstants;
 import frc.robot.subsystems.arm.Arm.ArmValues;
 import frc.robot.Robot;
 import frc.robot.utils.ChaosTalonFx;
+import frc.robot.utils.ChaosTalonFxTuner;
+
+import static edu.wpi.first.units.Units.Amps;
+
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
+
+import com.chaos131.util.DashboardNumber;
 
 /** Add your docs here. */
 public class Gripper extends AbstractArmPart {
   public static boolean hasCoralGrippedSim = false;
 
   private static boolean m_hasCoralGripped = false;
+
+  public static boolean hasAlgaeGrippedSim = false;
+
+  private static boolean m_hasAlgaeGripped = false;
+
 
   private ChaosTalonFx m_coralMotor = new ChaosTalonFx(CanIdentifiers.GripperCoralMotorCANID);
 
@@ -31,6 +43,15 @@ public class Gripper extends AbstractArmPart {
 
   private ChaosTalonFx m_algaeMotor = new ChaosTalonFx(CanIdentifiers.GripperAlgaeMotorCANID);
 
+  private Debouncer m_algaeSensorDebouncer = new Debouncer(GripperConstants.AlgaeDropDebounceSeconds, DebounceType.kFalling);
+
+  private ChaosTalonFxTuner m_algaeTuner = new ChaosTalonFxTuner("AlgaeGripper", m_algaeMotor);
+  // Current limits
+  private DashboardNumber m_algaeSupplyCurrentLimit = m_algaeTuner.tunable(
+      "SupplyCurrentLimit", GripperConstants.AlgaeSupplyCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
+  private DashboardNumber m_algaeStatorCurrentLimit = m_algaeTuner.tunable(
+      "StatorCurrentLimit", GripperConstants.AlgaeStatorCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
+
   /**
    * Creates a new Gripper.
    *
@@ -38,6 +59,11 @@ public class Gripper extends AbstractArmPart {
    */
   public Gripper(Supplier<ArmValues> armValuesSupplier) {
     super(armValuesSupplier);
+    m_algaeMotor.Configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+    m_algaeMotor.Configuration.CurrentLimits.StatorCurrentLimit = m_algaeStatorCurrentLimit.get();
+    m_algaeMotor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    m_algaeMotor.Configuration.CurrentLimits.SupplyCurrentLimit = m_algaeSupplyCurrentLimit.get();
+    m_algaeMotor.applyConfig();
   }
 
   /**
@@ -69,11 +95,21 @@ public class Gripper extends AbstractArmPart {
     return m_hasCoralGripped;
   }
 
+  /**
+   * Checks if we have Algae.
+   */
+  public boolean hasAlgae() {
+    return m_hasAlgaeGripped;
+  }
+
 
   @Override
   public void periodic() {
     super.periodic();
     m_hasCoralGripped = m_coralSensorDebouncer.calculate(Robot.isSimulation() ? hasCoralGrippedSim : !m_coralSensor.get());
+    boolean algaeCurrentLimitReached = m_algaeMotor.getStatorCurrent().getValue().gt(Amps.of(m_algaeStatorCurrentLimit.get() - 0.1));
+    m_hasAlgaeGripped = m_algaeSensorDebouncer.calculate(Robot.isSimulation() ? hasAlgaeGrippedSim : algaeCurrentLimitReached);
     Logger.recordOutput("Gripper/HasCoral", hasCoral());
+    Logger.recordOutput("Gripper/HasAlgae", hasAlgae());
   }
 }
