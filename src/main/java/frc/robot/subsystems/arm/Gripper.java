@@ -29,6 +29,8 @@ public class Gripper extends AbstractArmPart {
 
   private Debouncer m_coralSensorDebouncer = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
 
+  private ChaosTalonFx m_algaeMotor = new ChaosTalonFx(CanIdentifiers.GripperAlgaeMotorCANID);
+
   /**
    * Creates a new Gripper.
    *
@@ -47,6 +49,17 @@ public class Gripper extends AbstractArmPart {
 
   public double getCoralGripSpeed() {
     return m_coralMotor.get();
+  }
+
+  /**
+   * Sets the speed [-1.0, 1.0] of the algae gripper.
+   */
+  public void setAlgaeGripSpeed(double newSpeed) {
+    m_algaeMotor.set(newSpeed);
+  }
+
+  public double getAlgaeGripSpeed() {
+    return m_algaeMotor.get();
   }
 
   /**

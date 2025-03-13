@@ -71,7 +71,7 @@ public final class Constants {
 
     // Gripper (70s)
     public static final int GripperCoralMotorCANID = 13; // TODO: set on robot
-    // public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
+    public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
 
     // Intake (80s) RIP 2025-2025 for now for now
     public static final int IntakeMotor1CANID = 80; // TODO: set on robot
