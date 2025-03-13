@@ -1,6 +1,8 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.FeetPerSecond;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
@@ -15,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.subsystems.arm.ArmPose;
 
@@ -320,6 +323,8 @@ public final class Constants {
     public static final double Reef3Meters = 1.8287;
     // Value taken from field cad
     public static final double BargeMeters = 1.0;
+    // Distance between center of robot + safety +center of reef
+    public static final Distance ReefScoringDistanceThreshold = Meters.of((RobotDimensions.FrontBackLengthMeters / 2) + 0.912493).plus(Inches.of(13)); 
   }
 
   /** This contains constants for our robot dimensions. */

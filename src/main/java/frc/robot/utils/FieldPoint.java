@@ -6,10 +6,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
+
+import static edu.wpi.first.units.Units.Meters;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -53,6 +57,7 @@ public class FieldPoint {
   public static final FieldPoint ReefPose8 = new FieldPoint("reefPose8", aprilTagMap.get(19).pose2d);
   public static final FieldPoint ReefPose10 = new FieldPoint("reefPose10", aprilTagMap.get(20).pose2d);
   public static final FieldPoint ReefPose12 = new FieldPoint("reefPose12", aprilTagMap.get(21).pose2d);
+  public static final FieldPoint ReefCenter = new FieldPoint("reefCenter", ReefPose2.getBluePose().interpolate(ReefPose8.getBluePose(), 0.5));
 
   /**
    * Gets the april tabs for the blue reef.
@@ -191,5 +196,12 @@ public class FieldPoint {
    */
   public Pose2d getCurrentAlliancePose() {
     return getCurrentAlliance() == Alliance.Blue ? m_bluePose : m_redPose;
+  }
+
+  /**
+   * Get the distance between the robot and a specified point.
+   */
+  public Distance getDistance(Pose2d pose) {
+    return Meters.of(getCurrentAlliancePose().getTranslation().getDistance(pose.getTranslation()));
   }
 }
