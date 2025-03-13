@@ -1,0 +1,91 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left2-6L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6L-LHPF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimHP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LHPF-8R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "8R-LHPF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimHP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LHPF-6R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": "Left2",
+  "choreoAuto": false
+}

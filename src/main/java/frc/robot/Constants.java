@@ -17,7 +17,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
-import frc.robot.subsystems.lift.LiftPose;
+import frc.robot.subsystems.arm.ArmPose;
 
 /** This class holds all of our 2025 constants. */
 public final class Constants {
@@ -79,11 +79,12 @@ public final class Constants {
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
     public static final int CoralChannelID = 1;
-    public static final int ExtenderMinimumChannelID = 3;
+    public static final int ExtenderMinimumChannelID = 4;
   }
 
   /** This contains constants for setting up our swerve drive. */
   public static class SwerveConstants {
+    public static final boolean AcceptVisionUpdates = true;
 
     public static final InvertedValue InvertedAngle = InvertedValue.CounterClockwise_Positive;
     public static final SensorDirectionValue InvertedEncoder =
@@ -93,12 +94,15 @@ public final class Constants {
     public static final double SpeedCircumference = 0.1016 * Math.PI;
     public static final double DriverRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
+    public static final double DriverSlowRampRatePeriod = 0.1;
     public static final LinearVelocity MaxFreeSpeed = FeetPerSecond.of(15.01);
     public static final AngularVelocity MaxRotationSpeed = RadiansPerSecond.of(12.0); // TODO: GET REAL
     public static final PIDValue DefaultModuleAnglePIDValue = new PIDValue(60.0, 12.0, 0.0);
     public static final PIDFValue DefaultModuleVelocityPIDFValues =
         new PIDFValue(5.0, 0.0, 0.0, 2.19);
     public static final PIDValue DefaultRotationPidValue = new PIDValue(0.5, 0, 0);
+    public static final PIDValue AutoAnglePID = new PIDValue(0.04, 0.0001, 0.0);
+    public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.06, 0.1);
 
     /** This stores our constants for the front left swerve module. */
     public static class SwerveFrontLeftConstants {
@@ -136,41 +140,49 @@ public final class Constants {
       limeLight3G.minimum_error = 0.02;
       limeLight3G.error_exponent = 2.2;
       limeLight3G.distance_scalar = 1 / 3.15;
-      limeLight3G.error_multiplier = 1.0;
+      limeLight3G.error_multiplier = 4.0;  // Higher values reduce confidence, tuned to 10 from 1 based on Isaac's feedback.
       limeLight3G.tag_count_scalar = 1.0;
       limeLight3G.VFOV = 56.0;
       limeLight3G.HFOV = 80.0;
+      limeLight3G.max_speed_acceptable = 1.0; //mps
+      limeLight3G.max_distance_acceptable = 4.0; // meters
+      limeLight3G.max_rotation_acceptable = 0.8; //rps
+      limeLight3G.confidence_requirement = 0.5;
       return limeLight3G;
     }
 
     public static final CameraSpecs limeLight3GSpecs = initializeLimelight3G();
+    // Fudge factor to adjust camera capture time between the limelight and the robot's timestamps
+    public static final double timeOffset = 0.00;
   }
 
-  /** This contains constants for our entire lift system. */
-  public static class MidLiftConstants {
-    /** Contains values for different known lift poses. */
-    public static class LiftPoses {
-      public static final LiftPose Stow = new LiftPose("Stow", 90, 0.01, 0.0);
-      public static final LiftPose Handoff = new LiftPose("Handoff", 30.0, 0.4, 0.0);
-      public static final LiftPose ScoreL1 = new LiftPose("ScoreL1", 54.0, 0.97, 0.0);
-      public static final LiftPose ScoreL2 = new LiftPose("ScoreL2", 61.0, 1.0, -90.0);
-      public static final LiftPose ScoreL3 = new LiftPose("ScoreL3", 70.0, 1.31, 0.0);
-      public static final LiftPose ScoreL4 = new LiftPose("ScoreL4", 70.0, 1.8, 0.0);
-      public static final LiftPose HpIntake = new LiftPose("HpIntake", 70.0, 0.057, -33.5); // Last updated 2/22/25
-      public static final LiftPose ClimbPrep = new LiftPose("ClimbPrep", 80.0, 0.1, 0.0);
-      public static final LiftPose Climb = new LiftPose("Climb", 20.0, 0.1, 0.0);
-      public static final LiftPose HoldCoral = new LiftPose("HoldCoral", 90.0, 1.0, -90.0);
-      public static final LiftPose BottomBucket = new LiftPose("BottomBucket", 90.0, 0.01, 0);
-      public static final LiftPose TopBucket = new LiftPose("TopBucket", 90.0, 0.6, 0);
+  /** This contains constants for our entire arm system. */
+  public static class ArmConstants {
+    /** Contains values for different known arm poses. */
+    public static class ArmPoses {
+      public static final ArmPose Stow = new ArmPose("Stow", 72.0, 0.01, 0.0);
+      public static final ArmPose Handoff = new ArmPose("Handoff", 30.0, 0.4, 0.0);
+      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 28.5, 0.58, -20.0);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 66.0, 0.575, -100.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 75.5, 0.93, -103.5);
+      public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 81.5, 1.59, -120.0);
+      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 64.0, 1.0, -72.0);
+      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 51.0, 0.71, -60.0);
+      public static final ArmPose HpIntake = new ArmPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
+      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 80.0, 0.1, 0.0);
+      public static final ArmPose Climb = new ArmPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
+      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 81.5, 0.567, -90.0);
+      public static final ArmPose BottomBucket = new ArmPose("BottomBucket", 81.5, 0.01, 0);
+      public static final ArmPose TopBucket = new ArmPose("TopBucket", 81.5, 0.6, 0);
     }
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(20); // TODO: go back to 20
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(18); // TODO: go back to 20
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
 
-      public static final double kP = 150.0;
-      public static final double kI = 0.0;
+      public static final double kP = 400.0;
+      public static final double kI = 10.00;
       public static final double kD = 0.0;
       public static final double kG = 0.4;
       public static final double kS = 0.25;
@@ -182,8 +194,8 @@ public final class Constants {
       public static final double MMAcceleration = 10;
       public static final double MMJerk = 100;
 
-      public static final double SupplyCurrentLimit = 70;
-      public static final double StatorCurrentLimit = 70;
+      public static final double SupplyCurrentLimit = 50;
+      public static final double StatorCurrentLimit = 50; // TODO: up when climbing
 
       // Sensor Feedback
       public static final double RotorToSensorRatio = 302.4;
@@ -216,8 +228,8 @@ public final class Constants {
       public static final double MMAcceleration = 160;
       public static final double MMJerk = 1600;
 
-      public static final double SupplyCurrentLimit = 40;
-      public static final double StatorCurrentLimit = 40;
+      public static final double SupplyCurrentLimit = 10;
+      public static final double StatorCurrentLimit = 10;
 
       // Sensor Feedback // TODO: get real values
       public static final double RotorToSensorRatio = 51.04;
@@ -233,28 +245,32 @@ public final class Constants {
     /** This contains constants for our Extender. */
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
-      public static final double MaxLengthMeter = 1.5;
-      public static final double BucketTopClearanceMeter = 0.59;
-      public static final double BucketBottomClearanceMeter = 0.1;
-      public static final boolean HasMagnetSensor = false; // TODO: enable hasMagneto 
+      public static final double MaxLengthMeter = 1.6;
+      public static final double BucketTopClearanceMeter = 0.567;
+      public static final double BucketBottomClearanceMeter = 0.013;
+      public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto 
 
       // Slot 0 Configs
-      public static final double kP = 50.0;
+      public static final double kP = 150.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.35;
+      public static final double kG = 0.7;
       public static final double kS = 0.5;
       public static final double kV = 0.12;
       public static final double kA = 0.01;
 
       // Motion Magic
-      public static final double MMCruiseVelocity = 10;
-      public static final double MMAcceleration = 10;
+      public static final double MMCruiseVelocity = 2;
+      public static final double MMAcceleration = 5;
       public static final double MMJerk = 100;
 
+      public static final double MMUpCruiseVelocity = 2;
+      public static final double MMUpAcceleration = 5;
+      public static final double MMUpJerk = 100;
+
       // Current limits
-      public static final double SupplyCurrentLimit = 40;
-      public static final double StatorCurrentLimit = 40;
+      public static final double SupplyCurrentLimit = 65;
+      public static final double StatorCurrentLimit = 65;
 
       // Sensor Feedback
       public static final double RotorToSensorRatio = 1.0;
@@ -313,10 +329,21 @@ public final class Constants {
     // Includes the Bumpers, robot origin assumed to be in the center
     public static final double FrontBackLengthMetersBumpers = 0.91;
     public static final double FrontBackLengthMetersFrame = 0.85;
-    // Includes the Bumpers, robot origin assumed to be in the center
-    public static final double SideSideLengthMeters = 0.85;
+    public static final double CoralLengthMeters = 0.2;
+    // Max range beyond the end of the bumpers
+    public static final Distance MechanismExtensionMargin = Units.Inches.of(18);
+
+
+    /*
+     * The following are values used for automatic pose generation, like Inverse Kinematics.
+     */
+
+    // Includes the Bumpers
+    public static final double SideSideLengthMeters = 0.9157;
     // Buffer space to use between the end effector and an interaction point
     public static final double CoralPlacementMargin = 0.03;
+    // Robot length buffer
+    public static final double RobotToReefMargin = 0.015; // This is in meters
     public static final double CoralLengthMeters = 0.2;
     // Max range beyond the end of the bumpers
     public static final Distance MechanismExtensionMargin = Units.Inches.of(18);
@@ -333,14 +360,14 @@ public final class Constants {
     public static final Transform2d BasePivotOffset =
         new Transform2d(-0.197396, 0.176162, Rotation2d.fromDegrees(0));
 
-    /*
-     * Distance from the dynamic lift position to the wrist on the gripper mechanism.
-     * If the lift were all the way down, then this would be the distance from the center of the axle of 
+    // Angle between the Lift and the Gripped Pivot
+    public static final Rotation2d WristMountAngle = Rotation2d.fromDegrees(-2.014);
+
+    /** Distance from the dynamic arm position to the wrist on the gripper mechanism.
+     * If the arm were all the way down, then this would be the distance from the center of the axle of 
      * the Base Pivot to the center of the axle of the wrist pivot. 
-     * This must be rotated by the angle of the Base Pivot at some point in the Forward Kinematics,
-     * it's initialized as if the base pivot was at 0 degrees (for easier rotation later).
-     */
-    public static final Transform2d LiftToWristOffset =
+     * This must be rotated by the angle of the Base Pivot at some point in the Forward Kinematics. */
+    public static final Transform2d ArmToWristOffset =
         new Transform2d(0.388697, -0.036977, Rotation2d.fromDegrees(0));
 
     /** Distance from the center of the wrist's axle to the point used for the EndEffector calculations 

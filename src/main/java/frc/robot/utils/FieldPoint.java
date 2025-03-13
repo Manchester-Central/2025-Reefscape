@@ -43,8 +43,16 @@ public class FieldPoint {
       new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(90)));
   public static final FieldPoint testPoint = new FieldPoint("testPoint",
       new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
+      
 
   public static HashMap<Integer, AprilTag> aprilTagMap = FieldData.GetAprilTagMap("assets/frc2025.fmap");
+
+  public static final FieldPoint ReefPose2 = new FieldPoint("reefPose2", aprilTagMap.get(22).pose2d);
+  public static final FieldPoint ReefPose4 = new FieldPoint("reefPose4", aprilTagMap.get(17).pose2d);
+  public static final FieldPoint ReefPose6 = new FieldPoint("reefPose6", aprilTagMap.get(18).pose2d);
+  public static final FieldPoint ReefPose8 = new FieldPoint("reefPose8", aprilTagMap.get(19).pose2d);
+  public static final FieldPoint ReefPose10 = new FieldPoint("reefPose10", aprilTagMap.get(20).pose2d);
+  public static final FieldPoint ReefPose12 = new FieldPoint("reefPose12", aprilTagMap.get(21).pose2d);
 
   /**
    * Gets the april tabs for the blue reef.
@@ -79,18 +87,29 @@ public class FieldPoint {
     for (AprilTag aprilTag : blueReefAprilTags()) {
       Pose2d leftPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLengthMetersBumpers / 2 + 0.05,
+              RobotDimensions.FrontBackLengthMetersBumpers / 2 + RobotDimensions.RobotToReefMargin,
               FieldDimensions.ReefBranchLeft.getY(),
               Rotation2d.fromDegrees(180)));
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefLeft", leftPose));
       Pose2d rightPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLengthMetersBumpers / 2 + 0.05,
+              RobotDimensions.FrontBackLengthMetersBumpers / 2 + RobotDimensions.RobotToReefMargin,
               FieldDimensions.ReefBranchRight.getY(),
               Rotation2d.fromDegrees(180)));
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefRight", rightPose));
     }
     return reefDrivePoses;
+  }
+
+  /**
+   * Returns an array list of all the april tags on the reef is made.
+   */
+  public static ArrayList<FieldPoint> getReefAprilTagPoses() {
+    ArrayList<FieldPoint> reefAprilTagPoses = new ArrayList<FieldPoint>();
+    for (AprilTag aprilTag : blueReefAprilTags()) {
+      reefAprilTagPoses.add(new FieldPoint(aprilTag.id + " ReefTag", aprilTag.pose2d));
+    }
+    return reefAprilTagPoses;
   }
 
   /**
@@ -150,6 +169,10 @@ public class FieldPoint {
 
   public Pose2d getRedPose() {
     return m_redPose;
+  }
+
+  public String getName() {
+    return m_name;
   }
 
   /**

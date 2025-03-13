@@ -7,14 +7,15 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Intake.IntakeState;
-import frc.robot.subsystems.lift.IdLift.LiftState;
+import frc.robot.subsystems.arm.Arm.ArmState;
+
 import java.util.Optional;
 
 /**
  * A command for awaiting ANY state on the robot.
  */
 public class WaitForState extends Command {
-  Optional<LiftState> m_idLiftState = Optional.empty();
+  Optional<ArmState> m_armState = Optional.empty();
   Optional<IntakeState> m_intakeState = Optional.empty();
 
   /** Creates a new Wait Command. */
@@ -23,10 +24,10 @@ public class WaitForState extends Command {
   }
 
   /**
-   *  the state of the lift to wait for.
+   *  the state of the arm to wait for.
    */
-  public WaitForState forLiftState(LiftState newLiftState) {
-    m_idLiftState = Optional.of(newLiftState);
+  public WaitForState forArmState(ArmState newArmState) {
+    m_armState = Optional.of(newArmState);
     return this;
   }
 
@@ -41,8 +42,8 @@ public class WaitForState extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    boolean isLiftStateGood = m_idLiftState.isPresent() ? RobotContainer.m_idLift.getCurrentState() == m_idLiftState.get() : true;
+    boolean isArmStateGood = m_armState.isPresent() ? RobotContainer.m_arm.getCurrentState() == m_armState.get() : true;
     boolean isIntakeStateGood = m_intakeState.isPresent() ? RobotContainer.m_intake.getCurrentState() == m_intakeState.get() : true;
-    return isLiftStateGood && isIntakeStateGood;
+    return isArmStateGood && isIntakeStateGood;
   }
 }

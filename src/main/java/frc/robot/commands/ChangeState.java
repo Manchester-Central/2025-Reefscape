@@ -4,10 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Intake.IntakeState;
-import frc.robot.subsystems.lift.IdLift.LiftState;
+import frc.robot.subsystems.arm.Arm.ArmState;
+
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -15,27 +17,27 @@ import java.util.function.Supplier;
  * A command for changing ANY state on the robot.
  */
 public class ChangeState extends Command {
-  Optional<Supplier<LiftState>> m_idLiftStateSupplier = Optional.empty();
+  Optional<Supplier<ArmState>> m_armStateSupplier = Optional.empty();
   Optional<IntakeState> m_intakeState = Optional.empty();
-
+  Optional<ArmState> m_armInterruptState = Optional.empty();
   /** Creates a new uhhh. */
   public ChangeState() {
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   /**
-   * Sets the state of the lift.
+   * Sets the state of the arm.
    */
-  public ChangeState setLift(LiftState newLiftState) {
-    m_idLiftStateSupplier = Optional.of(() -> newLiftState);
+  public ChangeState setArm(ArmState newArmState) {
+    m_armStateSupplier = Optional.of(() -> newArmState);
     return this;
   }
 
     /**
-   * Sets the state of the lift.
+   * Sets the state of the arm.
    */
-  public ChangeState setLift(Supplier<LiftState> newLiftStateSupplier) {
-    m_idLiftStateSupplier = Optional.of(newLiftStateSupplier);
+  public ChangeState setArm(Supplier<ArmState> newArmStateSupplier) {
+    m_armStateSupplier = Optional.of(newArmStateSupplier);
     return this;
   }
 
@@ -47,11 +49,16 @@ public class ChangeState extends Command {
     return this;
   }
 
+  public ChangeState withArmInterrupt(ArmState newArmState){
+    m_armInterruptState = Optional.of(newArmState);
+    return this;
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (m_idLiftStateSupplier.isPresent()) {
-      RobotContainer.m_idLift.changeState(m_idLiftStateSupplier.get().get());
+    if (m_armStateSupplier.isPresent()) {
+      RobotContainer.m_arm.changeState(m_armStateSupplier.get().get());
     }
 
     if (m_intakeState.isPresent()) {
@@ -65,11 +72,17 @@ public class ChangeState extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if(interrupted && m_armStateSupplier.isPresent() && m_armInterruptState.isPresent() 
+    && RobotContainer.m_arm.getCurrentState() == m_armStateSupplier.get().get()){
+      
+      RobotContainer.m_arm.changeState(m_armInterruptState.get());
+    }
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return DriverStation.isAutonomous();
   }
 }

@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
 import com.chaos131.swerve.SwerveConfigs;
+import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -15,11 +16,21 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.Interpolatable;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.CanIdentifiers;
@@ -29,6 +40,11 @@ import frc.robot.Constants.SwerveConstants.SwerveBackLeftConstants;
 import frc.robot.Constants.SwerveConstants.SwerveBackRightConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontLeftConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontRightConstants;
+import frc.robot.Robot;
+
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
@@ -46,6 +62,10 @@ public class SwerveDrive extends BaseSwerveDrive {
   private PPHolonomicDriveController m_holonomicDriveController = new PPHolonomicDriveController(
       new PIDConstants(1.0, 0.0, 0.0),
       new PIDConstants(2.0, 0.0, 0.0));
+  private TimeInterpolatableBuffer<Pose2d> m_pastPoses;
+
+  /** A value to help determine if we should use PathPlanner's reset odometry or not. */
+  private boolean m_hasReceivedVisionUpdates = false;
 
   private SwerveDrive(
       SwerveModule2025[] swerveModules,
@@ -53,6 +73,14 @@ public class SwerveDrive extends BaseSwerveDrive {
       Supplier<Rotation2d> getRotation)
       throws Exception {
     super(swerveModules, swerveConfigs, getRotation);
+
+    m_acceptVisionUpdates = SwerveConstants.AcceptVisionUpdates;
+    m_pastPoses = TimeInterpolatableBuffer.createBuffer(1);
+    m_odometry =
+        new SwerveDrivePoseEstimator(
+            m_kinematics, getGyroRotation(), getModulePositions(), GeneralConstants.InitialRobotPose,
+             VecBuilder.fill(0.1, 0.1, 0.1),
+        VecBuilder.fill(2.5, 2.5, 2.5));
 
     resetPose(GeneralConstants.InitialRobotPose);
     m_simDriveTrain = DriveTrainSimulationConfig.Default();
@@ -75,7 +103,7 @@ public class SwerveDrive extends BaseSwerveDrive {
 
     AutoBuilder.configure(
         this::getPose, // Robot pose supplier
-        this::resetPose, // Method to reset odometry (will be called if your auto has a starting
+        this::resetPosePathPlanner, // Method to reset odometry (will be called if your auto has a starting
         // pose)
         this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         (speeds, feedforwards) -> move(speeds), // Method that will drive the robot given ROBOT
@@ -110,7 +138,8 @@ public class SwerveDrive extends BaseSwerveDrive {
             .setMaxRobotRotation(SwerveConstants.MaxRotationSpeed)
             .setDefaultModuleVelocityPIDFValues(SwerveConstants.DefaultModuleVelocityPIDFValues)
             .setDefaultModuleAnglePIDValues(SwerveConstants.DefaultModuleAnglePIDValue)
-            .setDefaultRotationPIDValues(SwerveConstants.DefaultRotationPidValue)
+            .setDefaultRotationPIDValues(SwerveConstants.AutoAnglePID)
+            .setDefaultTranslationPIDValues(SwerveConstants.AutoTranslationPID)
             .setDebugMode(true);
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(
@@ -156,6 +185,21 @@ public class SwerveDrive extends BaseSwerveDrive {
     return swerveDrive;
   }
 
+  /**
+   * Resets the robot's position on the field - will skip if certain conditions are met.
+   *
+   *
+   * @param targetPose the pose to set to
+   */
+  public void resetPosePathPlanner(Pose2d targetPose) {
+    if (Robot.isReal() && m_hasReceivedVisionUpdates) {
+      // If this is a real robot and we have received camera updates, trust the camera updates over PathPlanner's starting pose
+      return;
+    }
+    // If it's a sim robot or we have not received vision updates, we can trust PathPlanner's pose
+    resetPose(targetPose);
+  }
+
   @Override
   public void move(ChassisSpeeds chassisSpeeds) {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
@@ -174,6 +218,23 @@ public class SwerveDrive extends BaseSwerveDrive {
     for (var i = 0; i < states.length; i++) {
       m_swerveModules.get(i).setTarget(states[i]);
     }
+  }
+
+  public void addVisionMeasurement(VisionData data) {
+    // System.out.println("Received Vision Update");
+    if (!m_acceptVisionUpdates) {
+      return;
+    }
+    // System.out.println("Using Vision Update from " + data.getTimestampSeconds());
+    synchronized (m_odometry) {
+      m_hasReceivedVisionUpdates = true;
+      m_odometry.addVisionMeasurement(
+          data.getPose2d(), data.getTimestampSeconds(), data.getDeviationMatrix());
+    }
+  }
+
+  public void setRampRatePeriod(double newRate) {
+    forAllModules((module) -> ((SwerveModule2025) module).setRampRatePeriod(newRate));
   }
 
   /**
@@ -221,6 +282,8 @@ public class SwerveDrive extends BaseSwerveDrive {
     }
   }
 
+  
+
   @Override
   public Rotation2d getGyroRotation() {
     if (GeneralConstants.RobotMode == Mode.SIM) {
@@ -240,5 +303,43 @@ public class SwerveDrive extends BaseSwerveDrive {
     super.periodic();
     Logger.recordOutput("Swerve/Pose", getPose());
     Logger.recordOutput("Swerve/CurrentSpeeds", getModuleStates());
+    Logger.recordOutput("Swerve/Speed", getRobotSpeed());
+    Logger.recordOutput("Swerve/RotationSpeed", getRobotRotationSpeed());
+    m_pastPoses.addSample(Timer.getFPGATimestamp(), getPose());
+  }
+
+  /**
+   * Get past pose.
+   *
+   * @param timeStamp in seconds
+   * @return pose
+   */
+  public Optional<Pose2d> getPastPose(double timeStamp) {
+    return m_pastPoses.getSample(timeStamp);
+  }
+
+  @Override
+  public void moveToTarget(double maxTranslationSpeedPercent) {
+    Pose2d pose = getPose();
+
+    Translation2d difference =
+        pose.getTranslation().minus(new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint()));
+
+    var normalizedDifference = difference.div(difference.getNorm());
+    maxTranslationSpeedPercent *= m_swerveConfigs.maxRobotSpeed().in(MetersPerSecond); //TODO: do this the right way in shared code
+
+    double x =
+        MathUtil.clamp(
+            m_XPid.calculate(pose.getX()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getX()),
+            (maxTranslationSpeedPercent * normalizedDifference.getX()));
+    double y =
+        MathUtil.clamp(
+            m_YPid.calculate(pose.getY()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getY()),
+            (maxTranslationSpeedPercent * normalizedDifference.getY()));
+    double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
+    moveFieldRelativeForPID(
+        Units.MetersPerSecond.of(x), Units.MetersPerSecond.of(y), Units.RadiansPerSecond.of(angle));
   }
 }

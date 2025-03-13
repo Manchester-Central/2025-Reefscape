@@ -11,7 +11,8 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import frc.robot.subsystems.lift.Gripper;
+import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.arm.Gripper;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.LocalADStarAK;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class Robot extends ChaosRobot {
    * initialization code.
    */
   public Robot() throws Exception {
-    super(Mode.SIM);
+    super(Mode.REAL);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -67,6 +68,7 @@ public class Robot extends ChaosRobot {
   public void robotPeriodic() {
     super.robotPeriodic();
     DashboardNumber.checkAll();
+    ((RobotContainer) m_robotContainer).setSwerveDriveAcceptingVisionUpdates(isDisabled() ? true : SwerveConstants.AcceptVisionUpdates);
   }
 
   @Override
@@ -86,12 +88,14 @@ public class Robot extends ChaosRobot {
   @Override
   public void teleopInit() {
     ((RobotContainer) m_robotContainer).setMotorStartUp();
+    ((RobotContainer) m_robotContainer).autoAndTeleInit();
     super.teleopInit();
   }
 
   @Override
   public void autonomousInit() {
     ((RobotContainer) m_robotContainer).setMotorStartUp();
+    ((RobotContainer) m_robotContainer).autoAndTeleInit();
     Gripper.hasCoralGrippedSim = true;
     super.autonomousInit();
   }

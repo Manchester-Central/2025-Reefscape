@@ -7,6 +7,7 @@ package frc.robot.utils;
 import com.chaos131.pid.PIDFValue;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -28,6 +29,7 @@ public class ChaosTalonFx extends TalonFX {
   private ChaosCanCoder m_attachedCanCoder;
   private final PositionVoltage m_positionVoltage = new PositionVoltage(0);
   private final MotionMagicVoltage m_positionMotionMagicVoltage = new MotionMagicVoltage(0);
+  private final DynamicMotionMagicVoltage m_positionDynamicMotionMagicVoltage = new DynamicMotionMagicVoltage(0, 0, 0, 0);
   public final TalonFXConfiguration Configuration = new TalonFXConfiguration();
   private double m_lastUserSetSpeed = 0.0;
 
@@ -161,5 +163,13 @@ public class ChaosTalonFx extends TalonFX {
   public void moveToPositionMotionMagic(double position) {
     m_positionMotionMagicVoltage.Slot = 0;
     setControl(m_positionMotionMagicVoltage.withPosition(position));
+  }
+
+  public void moveToPositionMotionMagic(double position, double velocity, double acceleration, double jerk) {
+    m_positionDynamicMotionMagicVoltage.Slot = 0;
+    m_positionDynamicMotionMagicVoltage.Velocity = velocity;
+    m_positionDynamicMotionMagicVoltage.Acceleration = acceleration;
+    m_positionDynamicMotionMagicVoltage.Jerk = jerk;
+    setControl(m_positionDynamicMotionMagicVoltage.withPosition(position));
   }
 }
