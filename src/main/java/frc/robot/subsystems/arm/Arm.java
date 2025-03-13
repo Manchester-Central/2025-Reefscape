@@ -5,13 +5,22 @@
 package frc.robot.subsystems.arm;
 
 import com.chaos131.gamepads.Gamepad;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
+import frc.robot.utils.IkEquations;
+
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
@@ -53,6 +62,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   public Gripper m_gripper = new Gripper(this::getArmValues);
   public GripperPivot m_gripperPivot = new GripperPivot(this::getArmValues);
   private Gamepad m_operator;
+  private Pose3d m_ikTargetPose = new Pose3d(0, 0, FieldDimensions.Reef3Meters, new Rotation3d());
+  private Supplier<Pose2d> m_robotPoseSupplier;
 
   /**
    * The possible states of the Arm's state machine.
@@ -61,6 +72,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     MANUAL,
     START,
     STOW,
+    IKSOLVER,
     INTAKE_FROM_FLOOR,
     INTAKE_FROM_HP, // Probably won't implement -Josh // nevermind -Josh
     PREP_L1,
@@ -81,9 +93,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   /** Creates a new Arm. */
-  public Arm(Gamepad operator) {
+  public Arm(Gamepad operator, Supplier<Pose2d> robotPose) {
     super(ArmState.START);
     m_operator = operator;
+    m_robotPoseSupplier = robotPose;
   }
 
   private boolean isPoseReady() {
@@ -106,6 +119,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       default:
       case STOW:
         stowState();
+        break;
+      case IKSOLVER:
+        ikSolverState();
         break;
       case INTAKE_FROM_FLOOR:
         intakeFromFloorState();
@@ -170,11 +186,37 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 
     if (Robot.isSimulation()) {
       // changeState(ArmState.STOW);
-      changeState(ArmState.STOW);
+      changeState(ArmState.IKSOLVER);
     } else {
       // changeState(ArmState.MANUAL);
       changeState(ArmState.STOW);
     }
+  }
+
+
+  public void setIkSolverTarget(Pose3d ikTarget) {
+    m_ikTargetPose = ikTarget;
+  }
+
+  /**
+   * See The drawio diagram 'IKMath' in documents for details on the math.
+   */
+  private void ikSolverState() {
+    // Calculate IK root
+    Pose3d robotPose = new Pose3d(m_robotPoseSupplier.get()); // This becomes 0,0 very soon
+    
+    ArmPose mechanismPose = IkEquations.getPivotLiftPivot(robotPose, m_ikTargetPose);
+
+    // Logging
+    Logger.recordOutput("IkSolver/targetEndEffector", m_ikTargetPose);
+    Logger.recordOutput("IkSolver/Extension", mechanismPose.getExtensionMeters());
+    Logger.recordOutput("IkSolver/BasePivot", mechanismPose.getBasePivotAngle());
+    Logger.recordOutput("IkSolver/GripperPivot", mechanismPose.getGripperPivotAngle());
+
+    // Now apply them!
+    m_extender.setTargetLength(mechanismPose.getExtensionMeters());
+    m_basePivot.setTargetAngle(mechanismPose.getBasePivotAngle());
+    m_gripperPivot.setTargetAngle(mechanismPose.getGripperPivotAngle());
   }
 
   private void manualState() {

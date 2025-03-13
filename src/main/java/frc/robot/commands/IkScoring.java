@@ -10,8 +10,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Robot;
-import frc.robot.subsystems.lift.IdLift;
-import frc.robot.subsystems.lift.IdLift.LiftState;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Arm.ArmState;
 
 /**
  * A class to drive the robot in driver relative mode.
@@ -20,13 +20,13 @@ public class IkScoring extends Command {
   /** Creates a new DriverRelativeDrive. */
   Gamepad m_driver;
   BaseSwerveDrive m_swerveDrive;
-  IdLift m_lift;
+  Arm m_lift;
   Pose3d m_endEffectorPose;
 
   /**
    * Creates a new DriverRelativeDrive.
    */
-  public IkScoring(Gamepad driver, BaseSwerveDrive swerve, IdLift lift, Pose3d endEffectorPose) {
+  public IkScoring(Gamepad driver, BaseSwerveDrive swerve, Arm lift, Pose3d endEffectorPose) {
     m_driver = driver;
     m_swerveDrive = swerve;
     m_lift = lift;
@@ -39,7 +39,7 @@ public class IkScoring extends Command {
   @Override
   public void initialize() {
     m_lift.setIkSolverTarget(m_endEffectorPose);
-    m_lift.changeState(LiftState.IKSOLVER);
+    m_lift.changeState(ArmState.IKSOLVER);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

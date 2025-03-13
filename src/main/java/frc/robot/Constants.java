@@ -329,9 +329,6 @@ public final class Constants {
     // Includes the Bumpers, robot origin assumed to be in the center
     public static final double FrontBackLengthMetersBumpers = 0.91;
     public static final double FrontBackLengthMetersFrame = 0.85;
-    public static final double CoralLengthMeters = 0.2;
-    // Max range beyond the end of the bumpers
-    public static final Distance MechanismExtensionMargin = Units.Inches.of(18);
 
 
     /*
@@ -352,9 +349,6 @@ public final class Constants {
     /*
      * The following are values used for automatic pose generation, like Inverse Kinematics.
      */
-
-    // Angle between the Lift and the Gripped Pivot
-    public static final Rotation2d WristMountAngle = Rotation2d.fromDegrees(-2.014);
 
     // Distance from the robot origin to the axle for the Base Pivot
     public static final Transform2d BasePivotOffset =

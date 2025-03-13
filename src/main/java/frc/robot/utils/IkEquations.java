@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Constants.RobotDimensions;
-import frc.robot.subsystems.lift.LiftPose;
+import frc.robot.subsystems.arm.ArmPose;
 
 import static edu.wpi.first.units.Units.Meters;
 
@@ -20,6 +20,12 @@ import org.littletonrobotics.junction.Logger;
  * Inverse Kinematic Equations for our 2025 Robot.
  */
 public class IkEquations {
+  /**
+   * 
+   * @param point
+   * @param robotPose
+   * @return
+   */
   public static Pose3d make3dFromIk2d(Pose2d point, Pose2d robotPose) {
     return new Pose3d(robotPose).transformBy(new Transform3d(point.getX(), 0, point.getY(), new Rotation3d(0, -1 * point.getRotation().getRadians(), 0)));
   }
@@ -30,7 +36,7 @@ public class IkEquations {
    *
    * @param startPoint - origin of the vector, typically robot pose
    * @param targetPoint - point to point at, normally a joint or end location
-   * @return
+   * @return the 2d mechanism representation
    */
   public static Translation2d makeMechanismPointFrom3dPoses(Translation3d startPoint, Translation3d targetPoint) {
     var diff = targetPoint.minus(startPoint);
@@ -44,7 +50,7 @@ public class IkEquations {
    * @param endEffectorPose of the END of the end effector, not the start of it (must be consistent with the coordinate frame)
    * @return The final pose, should never be null
    */
-  public static LiftPose getPivotLiftPivot(Pose3d robotPose, Pose3d endEffectorPose) {
+  public static ArmPose getPivotLiftPivot(Pose3d robotPose, Pose3d endEffectorPose) {
     Logger.recordOutput("IkSolver/EndEffectorPose", endEffectorPose);
     // Robot Origin to Reef Branch
     Translation3d robotOriginToReefBranch = endEffectorPose.getTranslation().minus(robotPose.getTranslation());
@@ -94,7 +100,7 @@ public class IkEquations {
     Distance hlength = Meters.of(hvector.getNorm());
     Logger.recordOutput("IkSolver/hvector_length", hlength);
     Rotation2d hangle = hvector.getAngle(); // Mechanism Coord Frame, so positive is up
-    Distance clength = Meters.of(RobotDimensions.LiftToWristOffset.getTranslation().getNorm());
+    Distance clength = Meters.of(RobotDimensions.ArmToWristOffset.getTranslation().getNorm());
 
     var angleB = RobotDimensions.WristMountAngle;
     var alength = clength.in(Meters) * Math.sin(angleB.getRadians());
@@ -116,10 +122,10 @@ public class IkEquations {
     // Lift 60d, gripper pivot -60d -> gripper -(60)+(-60) = -120d
     // Lift 90d, gripper pivot -45d -> gripper -(90)+(-45) = -135d
 
-    return new LiftPose("IkCalculatedPose", alpha, liftLength, gripperPivotAngle);
+    return new ArmPose("IkCalculatedPose", alpha, liftLength, gripperPivotAngle);
   }
 
-  public static LiftPose getPivotLiftPivot(Pose2d robotPose, Pose3d endEffectorPose) {
+  public static ArmPose getPivotLiftPivot(Pose2d robotPose, Pose3d endEffectorPose) {
     return getPivotLiftPivot(new Pose3d(robotPose), endEffectorPose);
   }
 }

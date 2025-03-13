@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Radians;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
+import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -27,6 +28,7 @@ import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.IkScoring;
@@ -35,6 +37,7 @@ import frc.robot.commands.ReefAlignment;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
 import frc.robot.commands.WaitForState;
+import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.MechManager2D;
 import frc.robot.subsystems.SwerveDrive;
@@ -44,6 +47,7 @@ import frc.robot.subsystems.arm.SelectedArmState;
 import frc.robot.subsystems.arm.Arm.ArmState;
 import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
+import frc.robot.utils.PathUtil;
 
 import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
@@ -90,10 +94,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     super();
     m_gyro = new Pigeon2(CanIdentifiers.GyroCANID, CanIdentifiers.CTRECANBus);
     m_swerveDrive = SwerveDrive.createSwerveDrive(m_gyro);
-    m_arm = new Arm(m_operator);
+    m_arm = new Arm(m_operator, () -> m_swerveDrive.getPose());
     m_intake = new Intake();
     m_mech2dManager = new MechManager2D(m_arm, m_intake);
-     m_rightCamera =
+    m_rightCamera =
         new Camera(
             "limelight-right",
             LimelightVersion.LL3G,
@@ -232,28 +236,28 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
                                                       FieldDimensions.Reef4Meters,
                                                       new Rotation3d(0, Degrees.of(60).in(Radians), Math.PI));
     Pose3d branchLeftR4 = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR4Offset);
-    m_driver.rightTrigger().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR4));
+    m_driver.rightTrigger().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_arm, branchLeftR4));
 
     Transform3d branchLeftR3Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
                                                       FieldDimensions.ReefBranchLeft.getY(),
                                                       FieldDimensions.Reef3Meters,
                                                       new Rotation3d(0, lower_branch_angle, Math.PI));
     Pose3d branchLeftR3 = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR3Offset);
-    m_driver.rightBumper().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR3));
+    m_driver.rightBumper().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_arm, branchLeftR3));
     
     Transform3d branchLeftR2Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
                                                       FieldDimensions.ReefBranchLeft.getY(),
                                                       FieldDimensions.Reef2Meters,
                                                       new Rotation3d(0, lower_branch_angle, Math.PI));
     Pose3d branchLeftR2 = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR2Offset);
-    m_driver.leftBumper().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR2));
+    m_driver.leftBumper().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_arm, branchLeftR2));
     
     Transform3d branchLeftR1Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
                                                       FieldDimensions.ReefBranchLeft.getY(),
                                                       FieldDimensions.Reef1Meters,
                                                       new Rotation3d(0, 0, Math.PI));
     Pose3d branchLeftR1 = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR1Offset);
-    m_driver.leftTrigger().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_idLift, branchLeftR1));
+    m_driver.leftTrigger().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_arm, branchLeftR1));
   }
 
   @Override

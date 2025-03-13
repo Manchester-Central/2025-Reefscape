@@ -80,12 +80,6 @@ public class MechManager2D extends SubsystemBase {
     m_bucketFlatUpperLigament = m_bucketVerticalLowerLigament.append(new LoggedMechanismLigament2d("BucketFlatUpper", 0.261715, 90, 2, m_bucketPassableColor));
     m_bucketVerticalUpperLigament = m_bucketVerticalLowerLigament.append(new LoggedMechanismLigament2d("BucketVerticalUpper", 0.099762, 0, 2, m_bucketColor));
     m_bucketSlotLigament = m_bucketFlatLowerLigament.append(new LoggedMechanismLigament2d("BucketSlot", 0.364320, 60, 2, m_bucketColor));
-
-    // Intake
-    m_intakeBase = new LoggedMechanism2d(2, 3);
-    m_intakeRoot = m_intakeBase.getRoot("Intake", 1.2, 0.2);
-    m_innerIntakeLigament = m_intakeRoot.append(new LoggedMechanismLigament2d("InnerIntake", 0.3, 90, 8, m_innerIntakeColor));
-    m_outerIntakeLigament = m_innerIntakeLigament.append(new LoggedMechanismLigament2d("OuterIntake", 0.2, -90, 10, m_intakeNeutralColor));
   }
 
   @Override
