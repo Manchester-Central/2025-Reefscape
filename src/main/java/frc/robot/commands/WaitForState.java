@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.arm.Arm.ArmState;
-
 import java.util.Optional;
 
 /**

@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.arm.Arm.ArmState;
-
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -20,6 +19,7 @@ public class ChangeState extends Command {
   Optional<Supplier<ArmState>> m_armStateSupplier = Optional.empty();
   Optional<IntakeState> m_intakeState = Optional.empty();
   Optional<ArmState> m_armInterruptState = Optional.empty();
+
   /** Creates a new uhhh. */
   public ChangeState() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -33,7 +33,7 @@ public class ChangeState extends Command {
     return this;
   }
 
-    /**
+  /**
    * Sets the state of the arm.
    */
   public ChangeState setArm(Supplier<ArmState> newArmStateSupplier) {
@@ -49,7 +49,13 @@ public class ChangeState extends Command {
     return this;
   }
 
-  public ChangeState withArmInterrupt(ArmState newArmState){
+  /**
+   * Builder function to handle a return to state when the command is interrupted.
+   *
+   * @param newArmState state to become
+   * @return self
+   */
+  public ChangeState withArmInterrupt(ArmState newArmState) {
     m_armInterruptState = Optional.of(newArmState);
     return this;
   }
@@ -73,9 +79,9 @@ public class ChangeState extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(interrupted && m_armStateSupplier.isPresent() && m_armInterruptState.isPresent() 
-    && RobotContainer.m_arm.getCurrentState() == m_armStateSupplier.get().get()){
-      
+    if (interrupted && m_armStateSupplier.isPresent() && m_armInterruptState.isPresent() 
+        && RobotContainer.m_arm.getCurrentState() == m_armStateSupplier.get().get()) {
+
       RobotContainer.m_arm.changeState(m_armInterruptState.get());
     }
   }

@@ -17,8 +17,6 @@ import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -53,7 +51,6 @@ import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
 import java.util.Map;
 import java.util.Random;
-
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
@@ -274,11 +271,19 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     DashboardNumber.checkAll();
   }
 
+  /**
+   * Simple setter method.
+   *
+   * @param accept the pose or not
+   */
   public void setSwerveDriveAcceptingVisionUpdates(boolean accept) {
     m_swerveDrive.setOdometryAcceptVisionData(accept);
   }
 
-  public void autoAndTeleInit(){
+  /**
+   * Run when Autonomous and Tele-op start.
+   */
+  public void autoAndTeleInit() {
     m_arm.changeState(ArmState.START);
   }
 
@@ -296,16 +301,15 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_arm.setMotorStartUp();
   }
 
-  @Override
-   /**
+  /**
    * Attempts to update the pose estimator within the swerve drive object. Note that the SwerveDrive
    * may disregard pose updates as well.
    *
    * @param data VisionData structure containing the required parts
    */
+  @Override
   public synchronized void updatePoseEstimator(VisionData data) {
     var pose = data.getPose2d();
-    var pose3D = data.getPose3d();
     boolean check = true;
     if (pose == null
         || !Double.isFinite(pose.getX())
@@ -318,10 +322,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       check = false;
     }
 
-    if (data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement){
+    if (data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement) {
       check = false;
     }
 
+    var pose3D = data.getPose3d();
     if (pose.getX() <= 0.0 || pose.getY() <= 0.0 || pose3D.getZ() <= -0.10 || pose3D.getZ() >= 0.30) {
       check = false;
     }

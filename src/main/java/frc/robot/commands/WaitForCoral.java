@@ -7,9 +7,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.arm.Arm;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ * You should consider using the more terse Command factories API instead.
+ * https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands
+ */
 public class WaitForCoral extends Command {
   Arm m_arm;
+
   /** Creates a new WaitForCoral. */
   public WaitForCoral(Arm arm) {
     m_arm = arm;

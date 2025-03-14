@@ -4,23 +4,11 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Arm.ArmValues;
-import frc.robot.utils.FieldPoint;
-
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
@@ -47,6 +35,7 @@ public class MechManager2D extends SubsystemBase {
   private LoggedMechanismLigament2d m_gripperWristLigament;
   private LoggedMechanismLigament2d m_gripperCenterLigament;
   private LoggedMechanismLigament2d m_gripperAlgaeSupportLigament;
+  @SuppressWarnings("unused")
   private LoggedMechanismLigament2d m_gripperAlgaeWheelsLigament;
   private LoggedMechanismLigament2d m_gripperCoralWheelsLigament;
   private LoggedMechanismLigament2d m_gripperCoralFrontLigament;

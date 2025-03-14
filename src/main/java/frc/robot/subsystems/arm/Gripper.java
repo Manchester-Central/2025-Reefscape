@@ -4,25 +4,21 @@
 
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.units.Units.Amps;
+
+import com.chaos131.util.DashboardNumber;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
+import frc.robot.Constants.ArmConstants.GripperConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
-import frc.robot.Constants.ArmConstants.GripperConstants;
-import frc.robot.Constants.ArmConstants.GripperPivotConstants;
-import frc.robot.subsystems.arm.Arm.ArmValues;
 import frc.robot.Robot;
+import frc.robot.subsystems.arm.Arm.ArmValues;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
-
-import static edu.wpi.first.units.Units.Amps;
-
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
-
-import com.chaos131.util.DashboardNumber;
 
 /** Add your docs here. */
 public class Gripper extends AbstractArmPart {

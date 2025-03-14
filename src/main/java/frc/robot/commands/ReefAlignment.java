@@ -9,15 +9,25 @@ import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.utils.FieldPoint;
 
-public class ReefAlignment extends Command{
+/**
+ * Moves to a position on the reef nearest an april tag.
+ */
+public class ReefAlignment extends Command {
 
   private FieldPoint m_aprilTag;
   private boolean m_isInvert;
   private SwerveDrive m_swerveDrive;
 
-  private Pose2d branchPostion;
+  private Pose2d m_branchPostion;
 
-  public ReefAlignment(FieldPoint aprilTag, boolean isInvert, SwerveDrive swerveDrive){
+  /**
+   * Moves to a position on the reef nearest an april tag.
+   *
+   * @param aprilTag to align with
+   * @param isInvert determines if the pose moves to the left (with respect to april tag orientation), false moves right
+   * @param swerveDrive the swerve system to drive
+   */
+  public ReefAlignment(FieldPoint aprilTag, boolean isInvert, SwerveDrive swerveDrive) {
     m_aprilTag = aprilTag;
     m_isInvert = isInvert;
     m_swerveDrive = swerveDrive;
@@ -29,12 +39,12 @@ public class ReefAlignment extends Command{
     m_swerveDrive.driverModeInit();
     int invertValue = m_isInvert ? -1 : 1;
 
-    branchPostion = m_aprilTag.getCurrentAlliancePose().plus(new Transform2d(
-      (RobotDimensions.FrontBackLengthMeters / 2) + RobotDimensions.RobotToReefMargin, 
-      FieldDimensions.ReefBranchRight.getY() * invertValue, 
-      Rotation2d.fromDegrees(180)));
+    m_branchPostion = m_aprilTag.getCurrentAlliancePose().plus(
+        new Transform2d((RobotDimensions.FrontBackLengthMeters / 2) + RobotDimensions.RobotToReefMargin, 
+                        FieldDimensions.ReefBranchRight.getY() * invertValue, 
+                        Rotation2d.fromDegrees(180)));
 
-      m_swerveDrive.setTarget(branchPostion);
+    m_swerveDrive.setTarget(m_branchPostion);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

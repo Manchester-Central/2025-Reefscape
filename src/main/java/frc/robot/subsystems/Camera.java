@@ -12,11 +12,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableValue;
-import edu.wpi.first.wpilibj.Timer;
-
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -49,21 +46,18 @@ public class Camera extends LimelightCamera {
   public void periodic() {
     LoadNTQueueToVisionData();
 
-    /**
+    /*
      * This step will replace all that data (ie, no data) if we're in replay mode by
-     * reading values
+     * reading values.
      * from the log file. If we're a real robot, we instead log the data TO the
      * file!
      */
-    // System.out.println("Pose3d" + m_poseData.pose.length);
-    // System.out.println("PoseTimestamps" + m_poseData.timestamps.length);
-
     Logger.processInputs(m_name, m_poseData);
 
-    /** Now we do that thang with the all the data we received. */
+    // Now we do that thang with the all the data we received.
     processUpdateQueue();
 
-    /** If the timer has expired, so set the state to inactive... */
+    // If the timer has expired, so set the state to inactive...
     if (m_poseData.timestamps.length > 0 || m_targetData.timestamps.length > 0) {
       m_disconnectedTimer.reset();
       m_activeData = true;
@@ -99,35 +93,29 @@ public class Camera extends LimelightCamera {
 
   @Override
   protected void LoadNTQueueToVisionData() {
-    /**
-     * TODO: Serious race condition concern here! I can't simply fix this, Limelight
-     * needs to.
+    /*
+     * TODO: Serious race condition concern with MT1 and MT2! I can't simply fix this, Limelight needs to.
      */
-    NetworkTableValue[] mt1_poses = m_botpose.readQueue();
-    Logger.recordOutput(m_name + "/DataLength", mt1_poses.length);
-    NetworkTableValue[] mt2_poses = m_botposeMT2.readQueue();
+    NetworkTableValue[] mt1Poses = m_botpose.readQueue();
+    Logger.recordOutput(m_name + "/DataLength", mt1Poses.length);
+    @SuppressWarnings("unused")
+    NetworkTableValue[] mt2Poses = m_botposeMT2.readQueue();
     m_poseData.reset();
     // TODO: Investigate TableEntry issues...
-    if (mt1_poses.length == 1 && mt1_poses[0] == null) {
+    if (mt1Poses.length == 1 && mt1Poses[0] == null) {
       return;
     }
-    if (mt1_poses.length == 0) {
+    if (mt1Poses.length == 0) {
       return;
     }
 
     // Parse MegaTag1 Info
-    m_poseData.resize(mt1_poses.length);
-    for (int idx = 0; idx < mt1_poses.length; idx++) {
-      long timestamp = mt1_poses[idx].getTime();
-      var data = mt1_poses[idx].getDoubleArray();
+    m_poseData.resize(mt1Poses.length);
+    for (int idx = 0; idx < mt1Poses.length; idx++) {
+      long timestamp = mt1Poses[idx].getTime();
+      var data = mt1Poses[idx].getDoubleArray();
 
-      // System.out.println("ServerTime " + timestamp);
-      // System.out.println("FPGA Time " + Timer.getFPGATimestamp());
-      double timestampSeconds = timestamp / 1000000.0 - data[idxLatency] / 1000.0;
-
-      // if (data == null || data[idxX] < EPSILON) {
-      // continue;
-      // }
+      final double timestampSeconds = timestamp / 1000000.0 - data[idxLatency] / 1000.0;
 
       var posePosition = new Translation3d(data[idxX], data[idxY], data[idxZ]);
 
