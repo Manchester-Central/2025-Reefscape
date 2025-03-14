@@ -27,7 +27,8 @@ public final class Constants {
   /** This has contants that can be used throughout the robot. */
   public static class GeneralConstants {
     public static final double RobotMassKg = 54.43;
-    public static final Mode RobotMode = Mode.REAL;
+    // public static final Mode RobotMode = Mode.REPLAY;
+    public static final Mode RobotMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
     public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
   }
 

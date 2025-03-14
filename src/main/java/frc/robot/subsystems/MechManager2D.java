@@ -35,7 +35,8 @@ public class MechManager2D extends SubsystemBase {
   private LoggedMechanismLigament2d m_gripperAlgaeSupportLigament;
   private LoggedMechanismLigament2d m_gripperAlgaeWheelsLigament;
   private LoggedMechanismLigament2d m_gripperCoralWheelsLigament;
-  private LoggedMechanismLigament2d m_gripperCoralLigament;
+  private LoggedMechanismLigament2d m_gripperCoralFrontLigament;
+  private LoggedMechanismLigament2d m_gripperCoralBackLigament;
 
 
   private final Color8Bit m_extenderColor = new Color8Bit(0, 0, 255);
@@ -77,7 +78,8 @@ public class MechManager2D extends SubsystemBase {
     m_gripperAlgaeSupportLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgaeSupport", 0.2, 64, 2, m_gripperNeutralColor));
     m_gripperAlgaeWheelsLigament = m_gripperAlgaeSupportLigament.append(new LoggedMechanismLigament2d("GripperAlgaeWheels", 0.05, 0, 2, m_gripperHasAlgaeColor));
     m_gripperCoralWheelsLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("CoralWheels", 0.144, -90, 2, m_gripperNeutralColor));
-    m_gripperCoralLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoral", 0.0001, 90, 10, m_gripperHasCoralColor));
+    m_gripperCoralFrontLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralFront", 0.0001, 90, 10, m_gripperHasCoralColor));
+    m_gripperCoralBackLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralBack", 0.0001, -90, 10, m_gripperHasCoralColor));
 
     // Intake
     m_intakeBase = new LoggedMechanism2d(2, 3);
@@ -107,9 +109,11 @@ public class MechManager2D extends SubsystemBase {
 
     // Change color if holding a coral
     if (values.hasCoral) {
-      m_gripperCoralLigament.setLength(0.301625);
+      m_gripperCoralFrontLigament.setLength(0.301625 / 2.0);
+      m_gripperCoralBackLigament.setLength(0.301625 / 2.0);
     } else {
-      m_gripperCoralLigament.setLength(0.001);
+      m_gripperCoralFrontLigament.setLength(0.001);
+      m_gripperCoralBackLigament.setLength(0.001);
     }
 
     // Control angle and color of intake
