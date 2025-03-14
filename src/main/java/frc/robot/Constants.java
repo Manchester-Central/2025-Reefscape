@@ -1,5 +1,6 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.subsystems.arm.ArmPose;
@@ -71,7 +73,7 @@ public final class Constants {
 
     // Gripper (70s)
     public static final int GripperCoralMotorCANID = 13; // TODO: set on robot
-    // public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
+    public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
 
     // Intake (80s) RIP 2025-2025 for now for now
     public static final int IntakeMotor1CANID = 80; // TODO: set on robot
@@ -286,6 +288,9 @@ public final class Constants {
     /** This contains constants for our Gripper. */
     public static class GripperConstants {
       public static final double CoralDropDebounceSeconds = 0.5;
+      public static final double AlgaeDropDebounceSeconds = 0.5;
+      public static final Current AlgaeStatorCurrentLimit = Amps.of(15);
+      public static final Current AlgaeSupplyCurrentLimit = Amps.of(15);
     }
   }
 
