@@ -4,15 +4,29 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Arm.ArmValues;
+import frc.robot.utils.FieldPoint;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
+
+
 
 /** A class for sending a 2d representation of our robot over network tables. */
 public class MechManager2D extends SubsystemBase {
@@ -77,7 +91,7 @@ public class MechManager2D extends SubsystemBase {
     m_gripperCenterLigament = m_gripperWristLigament.append(new LoggedMechanismLigament2d("GripperCenter", 0.232, 0, 2, m_gripperNeutralColor));
     m_gripperAlgaeSupportLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgaeSupport", 0.2, 64, 2, m_gripperNeutralColor));
     m_gripperAlgaeWheelsLigament = m_gripperAlgaeSupportLigament.append(new LoggedMechanismLigament2d("GripperAlgaeWheels", 0.05, 0, 2, m_gripperHasAlgaeColor));
-    m_gripperCoralWheelsLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("CoralWheels", 0.144, -90, 2, m_gripperNeutralColor));
+    m_gripperCoralWheelsLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("CoralWheels", RobotDimensions.WristToCoralIntakeAxle, -90, 2, m_gripperNeutralColor));
     m_gripperCoralFrontLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralFront", 0.0001, 90, 10, m_gripperHasCoralColor));
     m_gripperCoralBackLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralBack", 0.0001, -90, 10, m_gripperHasCoralColor));
 
@@ -109,8 +123,8 @@ public class MechManager2D extends SubsystemBase {
 
     // Change color if holding a coral
     if (values.hasCoral) {
-      m_gripperCoralFrontLigament.setLength(0.301625 / 2.0);
-      m_gripperCoralBackLigament.setLength(0.301625 / 2.0);
+      m_gripperCoralFrontLigament.setLength(RobotDimensions.WristToCoralFront.getX() - RobotDimensions.WristToCoralIntakeAxle);
+      m_gripperCoralBackLigament.setLength(RobotDimensions.WristToCoralIntakeAxle - RobotDimensions.WristToCoralBack.getX());
     } else {
       m_gripperCoralFrontLigament.setLength(0.001);
       m_gripperCoralBackLigament.setLength(0.001);

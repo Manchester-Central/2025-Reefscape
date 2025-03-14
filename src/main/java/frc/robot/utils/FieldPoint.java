@@ -42,9 +42,9 @@ public class FieldPoint {
   public static final FieldPoint processor = new FieldPoint("processor",
       new Pose2d(5.988, 0, Rotation2d.fromDegrees(90)));
   public static final FieldPoint leftSource = new FieldPoint("leftSource",
-      new Pose2d(0.8512, 7.396, Rotation2d.fromDegrees(90)));
+      new Pose2d(0.8512, 7.396, Rotation2d.fromDegrees(-60)));
   public static final FieldPoint rightSource = new FieldPoint("rightSource",
-      new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(90)));
+      new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(60)));
   public static final FieldPoint testPoint = new FieldPoint("testPoint",
       new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
       
