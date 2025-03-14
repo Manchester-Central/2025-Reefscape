@@ -29,7 +29,8 @@ public final class Constants {
   /** This has contants that can be used throughout the robot. */
   public static class GeneralConstants {
     public static final double RobotMassKg = 54.43;
-    public static final Mode RobotMode = Mode.REAL;
+    // public static final Mode RobotMode = Mode.REPLAY;
+    public static final Mode RobotMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
     public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
   }
 
@@ -175,8 +176,6 @@ public final class Constants {
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final ArmPose Climb = new ArmPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
       public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 81.5, 0.567, -90.0);
-      public static final ArmPose BottomBucket = new ArmPose("BottomBucket", 81.5, 0.01, 0);
-      public static final ArmPose TopBucket = new ArmPose("TopBucket", 81.5, 0.6, 0);
     }
 
     /** This contains constants for our Base Pivot. */
@@ -249,8 +248,6 @@ public final class Constants {
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
       public static final double MaxLengthMeter = 1.6;
-      public static final double BucketTopClearanceMeter = 0.567;
-      public static final double BucketBottomClearanceMeter = 0.013;
       public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto 
 
       // Slot 0 Configs

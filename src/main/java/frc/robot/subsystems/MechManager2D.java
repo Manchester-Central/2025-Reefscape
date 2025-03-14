@@ -30,17 +30,14 @@ public class MechManager2D extends SubsystemBase {
   // Gripper
   private LoggedMechanismLigament2d m_gripperBaseLigament;
   private LoggedMechanismLigament2d m_gripperBaseVericalLigament;
-  private LoggedMechanismLigament2d m_gripperPivotLigament;
-  private LoggedMechanismLigament2d m_gripperWheelsLigament;
-  private LoggedMechanismLigament2d m_gripperCoralLigament;
+  private LoggedMechanismLigament2d m_gripperWristLigament;
+  private LoggedMechanismLigament2d m_gripperCenterLigament;
+  private LoggedMechanismLigament2d m_gripperAlgaeSupportLigament;
+  private LoggedMechanismLigament2d m_gripperAlgaeWheelsLigament;
+  private LoggedMechanismLigament2d m_gripperCoralWheelsLigament;
+  private LoggedMechanismLigament2d m_gripperCoralFrontLigament;
+  private LoggedMechanismLigament2d m_gripperCoralBackLigament;
 
-  // Bucket
-  private LoggedMechanismLigament2d m_bucketBaseLigament;
-  private LoggedMechanismLigament2d m_bucketFlatLowerLigament;
-  private LoggedMechanismLigament2d m_bucketFlatUpperLigament;
-  private LoggedMechanismLigament2d m_bucketVerticalLowerLigament;
-  private LoggedMechanismLigament2d m_bucketVerticalUpperLigament;
-  private LoggedMechanismLigament2d m_bucketSlotLigament;
 
   private final Color8Bit m_extenderColor = new Color8Bit(0, 0, 255);
   private final Color8Bit m_gripperNeutralColor = new Color8Bit(100, 100, 100);
@@ -48,9 +45,7 @@ public class MechManager2D extends SubsystemBase {
   private final Color8Bit m_gripperReverseColor = new Color8Bit(255, 0, 0);
   private final Color8Bit m_gripperHasCoralColor = new Color8Bit(255, 255, 255);
   private final Color8Bit m_gripperHasAlgaeColor = new Color8Bit(0, 128, 128);
-  private final Color8Bit m_bucketColor = new Color8Bit(150, 150, 150);
-  private final Color8Bit m_bucketPassableColor = new Color8Bit(200, 200, 200);
-
+  
   @AutoLogOutput(key = "Mech2d/Intake")
   private LoggedMechanism2d m_intakeBase;
 
@@ -78,17 +73,13 @@ public class MechManager2D extends SubsystemBase {
     // Gripper
     m_gripperBaseLigament = m_extenderLigament.append(new LoggedMechanismLigament2d("GripperBase", 0.1, -90, 4, m_gripperNeutralColor));
     m_gripperBaseVericalLigament = m_gripperBaseLigament.append(new LoggedMechanismLigament2d("GripperBaseVertical", 0.284828, 90, 2, m_gripperNeutralColor));
-    m_gripperPivotLigament = m_gripperBaseVericalLigament.append(new LoggedMechanismLigament2d("GripperPivot", 0.058165, 0, 2, m_gripperNeutralColor));
-    m_gripperWheelsLigament = m_gripperPivotLigament.append(new LoggedMechanismLigament2d("GripperWheels", 0.058165, 0, 5, m_gripperNeutralColor));
-    m_gripperCoralLigament = m_gripperPivotLigament.append(new LoggedMechanismLigament2d("GripperCoral", 0.0001, 0, 10, m_gripperHasCoralColor));
-
-    // Bucket
-    m_bucketBaseLigament = m_armRoot.append(new LoggedMechanismLigament2d("BucketBase", 0.40, 0, 2, m_bucketColor));
-    m_bucketFlatLowerLigament = m_bucketBaseLigament.append(new LoggedMechanismLigament2d("BucketFlatLower", 0.186307, -90, 2, m_bucketColor));
-    m_bucketVerticalLowerLigament = m_bucketFlatLowerLigament.append(new LoggedMechanismLigament2d("BucketVerticalLower", 0.313388, 90, 2, m_bucketPassableColor));
-    m_bucketFlatUpperLigament = m_bucketVerticalLowerLigament.append(new LoggedMechanismLigament2d("BucketFlatUpper", 0.261715, 90, 2, m_bucketPassableColor));
-    m_bucketVerticalUpperLigament = m_bucketVerticalLowerLigament.append(new LoggedMechanismLigament2d("BucketVerticalUpper", 0.099762, 0, 2, m_bucketColor));
-    m_bucketSlotLigament = m_bucketFlatLowerLigament.append(new LoggedMechanismLigament2d("BucketSlot", 0.364320, 60, 2, m_bucketColor));
+    m_gripperWristLigament = m_gripperBaseVericalLigament.append(new LoggedMechanismLigament2d("GripperWrist", 0.058165, 0, 2, m_gripperNeutralColor));
+    m_gripperCenterLigament = m_gripperWristLigament.append(new LoggedMechanismLigament2d("GripperCenter", 0.232, 0, 2, m_gripperNeutralColor));
+    m_gripperAlgaeSupportLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgaeSupport", 0.2, 64, 2, m_gripperNeutralColor));
+    m_gripperAlgaeWheelsLigament = m_gripperAlgaeSupportLigament.append(new LoggedMechanismLigament2d("GripperAlgaeWheels", 0.05, 0, 2, m_gripperHasAlgaeColor));
+    m_gripperCoralWheelsLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("CoralWheels", 0.144, -90, 2, m_gripperNeutralColor));
+    m_gripperCoralFrontLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralFront", 0.0001, 90, 10, m_gripperHasCoralColor));
+    m_gripperCoralBackLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralBack", 0.0001, -90, 10, m_gripperHasCoralColor));
 
     // Intake
     m_intakeBase = new LoggedMechanism2d(2, 3);
@@ -105,23 +96,24 @@ public class MechManager2D extends SubsystemBase {
     m_extenderLigament.setLength(values.extenderLength == 0 ? 0.0001 : values.extenderLength);
     m_extenderLigament.setAngle(values.basePivotAngle);
     m_extenderBaseLigament.setAngle(values.basePivotAngle);
-    m_bucketBaseLigament.setAngle(values.basePivotAngle);
-    m_gripperPivotLigament.setAngle(values.gripperPivotAngle);
+    m_gripperWristLigament.setAngle(values.gripperPivotAngle);
 
     // Change coral gripper color
     if (values.coralGripSpeed == 0) {
-      m_gripperWheelsLigament.setColor(m_gripperNeutralColor);
+      m_gripperCoralWheelsLigament.setColor(m_gripperNeutralColor);
     } else if (values.coralGripSpeed > 0) {
-      m_gripperWheelsLigament.setColor(m_gripperForwardColor);
+      m_gripperCoralWheelsLigament.setColor(m_gripperForwardColor);
     } else {
-      m_gripperWheelsLigament.setColor(m_gripperReverseColor);
+      m_gripperCoralWheelsLigament.setColor(m_gripperReverseColor);
     }
 
     // Change color if holding a coral
     if (values.hasCoral) {
-      m_gripperCoralLigament.setLength(0.301625);
+      m_gripperCoralFrontLigament.setLength(0.301625 / 2.0);
+      m_gripperCoralBackLigament.setLength(0.301625 / 2.0);
     } else {
-      m_gripperCoralLigament.setLength(0.001);
+      m_gripperCoralFrontLigament.setLength(0.001);
+      m_gripperCoralBackLigament.setLength(0.001);
     }
 
     // Control angle and color of intake

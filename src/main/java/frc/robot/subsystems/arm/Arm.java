@@ -74,8 +74,6 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     ALGAE_HIGH,
     ALGAE_LOW,
     HOLD_CORAL,
-    BOTTOM_BUCKET,
-    TOP_BUCKET,
     PREP_CLIMB,
     POST_CLIMB;
   }
@@ -146,12 +144,6 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       case HOLD_CORAL:
         holdCoralState();
         break;
-      case BOTTOM_BUCKET:
-        bottomBucketState();
-        break;
-      case TOP_BUCKET:
-        topBucketState();
-        break;
         case PREP_CLIMB:
         prepClimb();
         break;
@@ -208,9 +200,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 
   private void stowState() {
     if (m_gripper.hasCoral()) {
-      changeState(m_extender.getCurrentLength() <= ExtenderConstants.BucketTopClearanceMeter 
-      ? ArmState.BOTTOM_BUCKET 
-      : ArmState.HOLD_CORAL);
+      changeState(ArmState.HOLD_CORAL);
       return;
     }
     m_basePivot.setTargetAngle(ArmPoses.Stow.getBasePivotAngle());
@@ -228,7 +218,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 
   private void intakeFromHpState() {
     if (m_gripper.hasCoral()) {
-      changeState(ArmState.BOTTOM_BUCKET);
+      changeState(ArmState.HOLD_CORAL);
       m_gripper.setCoralGripSpeed(0.0);
       return;
     }
@@ -301,33 +291,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_extender.setTargetLength(ArmPoses.HoldCoral.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.HoldCoral.getGripperPivotAngle());
     if (!m_gripper.hasCoral()) {
-      changeState(ArmState.TOP_BUCKET);
-      return;
-    }
-  }
-
-  private void bottomBucketState() {
-    m_basePivot.setTargetAngle(ArmPoses.BottomBucket.getBasePivotAngle());
-    m_extender.setTargetLength(ArmPoses.BottomBucket.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(ArmPoses.BottomBucket.getGripperPivotAngle());
-    if (m_gripper.hasCoral() && m_gripperPivot.atTarget()) {
-      changeState(ArmState.TOP_BUCKET);
-      return;
-    } else if (!m_gripper.hasCoral()) {
       changeState(ArmState.STOW);
-      return;
-    }
-  }
-
-  private void topBucketState() {
-    m_basePivot.setTargetAngle(ArmPoses.TopBucket.getBasePivotAngle());
-    m_extender.setTargetLength(ArmPoses.TopBucket.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(ArmPoses.TopBucket.getGripperPivotAngle());
-    if (m_gripper.hasCoral() && m_extender.atTarget()) {
-      changeState(ArmState.HOLD_CORAL);
-      return;
-    } else if (!m_gripper.hasCoral() && m_gripperPivot.atTarget()) {
-      changeState(ArmState.BOTTOM_BUCKET);
       return;
     }
   }
