@@ -189,7 +189,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
     m_driver.rightBumper().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
     m_driver.rightTrigger().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL));
-    m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).withArmInterrupt(ArmState.STOW));
+    m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_FLOOR).withArmInterrupt(ArmState.STOW));
     m_driver.leftBumper().whileTrue(new ChangeState().setArm(() -> {
       var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
       return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());
@@ -208,6 +208,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //.alongWith(new InstantCommand(() -> m_arm.m_gripperPivot.disableFuseCANcoder()))
 
     // Everything after this is for demos and testing
+
+    // m_driver.rightBumper().whileTrue(new ChangeState().setArm(ArmState.PREP_PROCESSOR));
+    // m_driver.rightTrigger().whileTrue(new ChangeState().setArm(ArmState.PREP_BARGE));
+
     // m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
     // m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
     // m_driver.y().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive));

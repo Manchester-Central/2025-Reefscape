@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
-import frc.robot.subsystems.SwerveDrive;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,6 +44,12 @@ public class FieldPoint {
       new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(60)));
   public static final FieldPoint testPoint = new FieldPoint("testPoint",
       new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
+  public static final FieldPoint LollipopLeft = new FieldPoint("LollipopLeft",
+      new Pose2d(1.204913, 5.854700, Rotation2d.fromDegrees(180)));
+  public static final FieldPoint LollipopCenter = new FieldPoint("LollipopCenter",
+      new Pose2d(1.204913, 4.02500, Rotation2d.fromDegrees(180)));
+  public static final FieldPoint LollipopRight = new FieldPoint("LollipopRight",
+      new Pose2d(1.204913, 2.197100, Rotation2d.fromDegrees(180)));
       
 
   public static HashMap<Integer, AprilTag> aprilTagMap = FieldData.GetAprilTagMap("assets/frc2025.fmap");
@@ -119,6 +124,17 @@ public class FieldPoint {
       reefCenterDrivePose.add(new FieldPoint(aprilTag.id + " ReefCenter", centerPose));
     }
     return reefCenterDrivePose;
+  }
+
+  /** 
+   * Returns an array list of all the Lollipop poses.
+   */
+  public static ArrayList<FieldPoint> getLollipopPoses() {
+    ArrayList<FieldPoint> lollipopPoses = new ArrayList<FieldPoint>();
+    lollipopPoses.add(LollipopCenter);
+    lollipopPoses.add(LollipopLeft);
+    lollipopPoses.add(LollipopRight);
+    return lollipopPoses;
   }
 
   /**

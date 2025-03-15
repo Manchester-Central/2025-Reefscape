@@ -84,7 +84,8 @@ public final class Constants {
 
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
-    public static final int CoralChannelID = 1;
+    public static final int CoralChannelIDFront = 1;
+    public static final int CoralChannelIDBack = 2;
     public static final int ExtenderMinimumChannelID = 4;
   }
 
@@ -97,7 +98,7 @@ public final class Constants {
         SensorDirectionValue.CounterClockwise_Positive;
     public static final double SpeedGearRatio = 6.98;
     public static final double AngleGearRatio = 12.1;
-    public static final double SpeedCircumference = 0.1016 * Math.PI;
+    public static final double SpeedCircumference = Inches.of(4).in(Meters) * Math.PI;
     public static final double DriverRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double DriverSlowRampRatePeriod = 0.1;
@@ -177,6 +178,9 @@ public final class Constants {
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final ArmPose Climb = new ArmPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
       public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 81.5, 0.567, -90.0);
+      public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 90, 1.59, 45); //TODO tune this
+      public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 20, 0.2, -10.0); //TODO tune this
+      public static final ArmPose FloorIntake = new ArmPose("FloorIntake", 20, 0.2, -20); //TODO tune this
     }
 
     /** This contains constants for our Base Pivot. */
@@ -213,8 +217,11 @@ public final class Constants {
     /** This contains constants for our Gripper Pivot. */
     public static class GripperPivotConstants {
 
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
-      public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(0);
+      public static final Rotation2d MinAngleBase = Rotation2d.fromDegrees(-25); // TODO tune this
+      public static final Rotation2d MinAngleLow = Rotation2d.fromDegrees(-70); // TODO tune this
+      public static final Rotation2d MinAngleStandard = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
+      public static final Rotation2d MaxAngleStandard = Rotation2d.fromDegrees(0);
+      public static final Rotation2d MaxAngleHigh = Rotation2d.fromDegrees(45); // TODO tune this
       public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
       public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
 
@@ -249,7 +256,11 @@ public final class Constants {
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
       public static final double MaxLengthMeter = 1.6;
-      public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto 
+      public static final double HighThresholdMeter = 0.93; // TODO tune this
+      public static final double LowThresholdMeter = 0.58; // TODO tune this
+      public static final double BaseThresholdMeter = 0.1; // TODO tune this
+      public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto
+
 
       // Slot 0 Configs
       public static final double kP = 150.0;
@@ -289,6 +300,9 @@ public final class Constants {
       public static final double AlgaeDropDebounceSeconds = 0.5;
       public static final Current AlgaeStatorCurrentLimit = Amps.of(15);
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(15);
+      public static final double IntakeCoralSpeed = -0.5;
+      public static final double IntakeCoralSlow = -0.2;
+      public static final double OutakeCoralSpeed = 0.2;
     }
   }
 
