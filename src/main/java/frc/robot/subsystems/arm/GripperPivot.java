@@ -134,8 +134,9 @@ public class GripperPivot extends AbstractArmPart {
    * Sets the target angle and tries to drive there.
    */
   public void setTargetAngle(Rotation2d newAngle) {
+    Rotation2d lowLevelMin = getArmValues().extenderLength < ExtenderConstants.BaseThresholdMeter ? GripperPivotConstants.MinAngleBase : GripperPivotConstants.MinAngleLow;
     Rotation2d currentMax = getArmValues().extenderLength > ExtenderConstants.HighThresholdMeter ? GripperPivotConstants.MaxAngleHigh : GripperPivotConstants.MaxAngleStandard;
-    Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? GripperPivotConstants.MinAngleLow : GripperPivotConstants.MinAngleStandard;
+    Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? lowLevelMin : GripperPivotConstants.MinAngleStandard;
     
     if (newAngle.getDegrees() > currentMax.getDegrees()) {
       newAngle = currentMax;
@@ -166,8 +167,9 @@ public class GripperPivot extends AbstractArmPart {
    * Sets the direct speed [-1.0, 1.0] of the motors.
    */
   public void setSpeed(double speed) {
+    Rotation2d lowLevelMin = getArmValues().extenderLength < ExtenderConstants.BaseThresholdMeter ? GripperPivotConstants.MinAngleBase : GripperPivotConstants.MinAngleLow;
     Rotation2d currentMax = getArmValues().extenderLength > ExtenderConstants.HighThresholdMeter ? GripperPivotConstants.MaxAngleHigh : GripperPivotConstants.MaxAngleStandard;
-    Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? GripperPivotConstants.MinAngleLow : GripperPivotConstants.MinAngleStandard;
+    Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? lowLevelMin : GripperPivotConstants.MinAngleStandard;
 
     if (getCurrentAngle().getDegrees() > currentMax.getDegrees()) {
       speed = Math.min(speed, 0.0);
