@@ -26,8 +26,6 @@ import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
-import pabeles.concurrency.IntOperatorTask.Max;
-
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
