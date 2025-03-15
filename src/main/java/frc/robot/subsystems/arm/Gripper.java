@@ -51,7 +51,6 @@ public class Gripper extends AbstractArmPart {
 
   private ChaosTalonFxTuner m_algaeTuner = new ChaosTalonFxTuner("AlgaeGripper", m_algaeMotor);
 
-  private double m_targetSpeed = 0;
   // Current limits
   private DashboardNumber m_algaeSupplyCurrentLimit = m_algaeTuner.tunable(
       "SupplyCurrentLimit", GripperConstants.AlgaeSupplyCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
@@ -76,7 +75,6 @@ public class Gripper extends AbstractArmPart {
    * Sets the speed [-1.0, 1.0] of the coral gripper.
    */
   public void setCoralGripSpeed(double newSpeed) {
-    m_targetSpeed = newSpeed;
     m_coralMotor.set(newSpeed);
   }
 
@@ -133,5 +131,7 @@ public class Gripper extends AbstractArmPart {
     m_hasAlgaeGripped = m_algaeSensorDebouncer.calculate(Robot.isSimulation() ? hasAlgaeGrippedSim : algaeCurrentLimitReached);
     Logger.recordOutput("Gripper/HasCoral", hasCoral());
     Logger.recordOutput("Gripper/HasAlgae", hasAlgae());
+    Logger.recordOutput("Gripper/CoralSensorFront", hasCoralFront());
+    Logger.recordOutput("Gripper/CoralSensorBack", hasCoralBack());
   }
 }
