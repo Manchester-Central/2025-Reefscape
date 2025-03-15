@@ -103,6 +103,19 @@ public class FieldPoint {
     return reefDrivePoses;
   }
 
+  public static ArrayList<FieldPoint> getReefCenterDrivePose() {
+    ArrayList<FieldPoint> reefCenterDrivePose = new ArrayList<FieldPoint>();
+    for (AprilTag aprilTag : blueReefAprilTags()) {
+      Pose2d centerPose = aprilTag.pose2d.transformBy( 
+          new Transform2d(
+              RobotDimensions.FrontBackLengthMeters / 2 + RobotDimensions.RobotToReefMargin,
+              FieldDimensions.ReefCenterBranch.getY(),
+              Rotation2d.fromDegrees(180)));
+     reefCenterDrivePose.add(new FieldPoint(aprilTag.id + " ReefCenter", centerPose));
+    }
+    return reefCenterDrivePose;
+  }
+
   /**
    * Returns an array list of all the april tags on the reef is made.
    */

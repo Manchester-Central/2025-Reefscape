@@ -19,6 +19,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -67,6 +68,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   Pigeon2 m_gyro;
 
   public static Arm m_arm;
+  public static Gripper m_gripper;
   public static Intake m_intake;
   public static Camera m_rightCamera;
   public static Camera m_leftCamera;
@@ -161,10 +163,17 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefDrivePoses());
     //   return pose.getCurrentAlliancePose().getRotation();
     // }, 1.0));
-    m_driver.y().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive).alongWith(
-      new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold)).andThen(
+    m_driver.y().whileTrue(PathUtil.driveToClosestPointTeleopCommand(m_arm.m_gripper.hasCoral() ? FieldPoint.getReefDrivePoses():FieldPoint.getReefCenterDrivePose(), m_swerveDrive)
+    .alongWith(
+      new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
+      .andThen(
         new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)))); 
     // .andThen(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL))
+
+    m_driver.y().whileTrue(new ConditionalCommand(
+      PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive), 
+      PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefCenterDrivePose(), m_swerveDrive),
+      m_arm.m_gripper::hasCoral));
 
     m_driver.povUp().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
     m_driver.povDown().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
