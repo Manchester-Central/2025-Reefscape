@@ -29,6 +29,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -60,6 +61,7 @@ public class SwerveDrive extends BaseSwerveDrive {
       new PIDConstants(1.0, 0.0, 0.0),
       new PIDConstants(2.0, 0.0, 0.0));
   private TimeInterpolatableBuffer<Pose2d> m_pastPoses;
+  private CircularBuffer<Rotation2d> m_swerveAngles;
 
   /** A value to help determine if we should use PathPlanner's reset odometry or not. */
   private boolean m_hasReceivedVisionUpdates = false;
@@ -73,6 +75,7 @@ public class SwerveDrive extends BaseSwerveDrive {
 
     m_acceptVisionUpdates = SwerveConstants.AcceptVisionUpdates;
     m_pastPoses = TimeInterpolatableBuffer.createBuffer(1);
+    m_swerveAngles = new CircularBuffer<>(50);
     m_odometry =
         new SwerveDrivePoseEstimator(
             m_kinematics, getGyroRotation(), getModulePositions(), GeneralConstants.InitialRobotPose,
@@ -197,6 +200,20 @@ public class SwerveDrive extends BaseSwerveDrive {
     resetPose(targetPose);
   }
 
+  public boolean atTargetDynamic() {
+    //TODO: math
+    //calculate standard deviation of angles
+    //return true if greater than threshold
+    return false;
+  }
+
+  /**
+   * To clear the CircularBuffer of swerve rotation values.
+   */
+  public void clearSwerveAngleBuffer() {
+    m_swerveAngles.clear();
+  }
+
   @Override
   public void move(ChassisSpeeds chassisSpeeds) {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
@@ -310,6 +327,9 @@ public class SwerveDrive extends BaseSwerveDrive {
     Logger.recordOutput("Swerve/Speed", getRobotSpeed());
     Logger.recordOutput("Swerve/RotationSpeed", getRobotRotationSpeed());
     m_pastPoses.addSample(Timer.getFPGATimestamp(), getPose());
+    Translation2d targetPosition = new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint());
+    Rotation2d currentAngle = getPose().getTranslation().minus(targetPosition).getAngle();
+    m_swerveAngles.addLast(currentAngle);
   }
 
   /**
