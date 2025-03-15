@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
+import frc.robot.subsystems.SwerveDrive;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -192,6 +194,12 @@ public class FieldPoint {
   public Pose2d getRedPose() {
     return m_redPose;
   }
+
+  public void setCenterPose(SwerveDrive swerveDrive){
+    ReefCenter.getDistance(swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold);
+
+  }
+
 
   public String getName() {
     return m_name;
