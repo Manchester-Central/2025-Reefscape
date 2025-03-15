@@ -7,6 +7,8 @@ package frc.robot.subsystems.arm;
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.GripperConstants;
@@ -56,6 +58,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   public Gripper m_gripper = new Gripper(this::getArmValues);
   public GripperPivot m_gripperPivot = new GripperPivot(this::getArmValues);
   private Gamepad m_operator;
+  private Gamepad m_driver;
 
   /**
    * The possible states of the Arm's state machine.
@@ -87,9 +90,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   /** Creates a new Arm. */
-  public Arm(Gamepad operator) {
+  public Arm(Gamepad operator, Gamepad driver) {
     super(ArmState.START);
     m_operator = operator;
+    m_driver = driver;
   }
 
   private boolean isPoseReady() {
@@ -436,8 +440,18 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 
   @Override
   public void periodic() {
-    // TODO Auto-generated method stub
     super.periodic();
+    switch (getCurrentState()) {
+      case INTAKE_FROM_FLOOR:
+      case INTAKE_FROM_HP:
+        //TODO: add more states
+        m_driver.getHID().setRumble(RumbleType.kBothRumble, GeneralConstants.RumbleIntensity);
+        break;
+    
+      default:
+        m_driver.getHID().setRumble(RumbleType.kBothRumble, 0);
+        break;
+    }
     Logger.recordOutput("CurrentState", getCurrentState().name());
   }
 }
