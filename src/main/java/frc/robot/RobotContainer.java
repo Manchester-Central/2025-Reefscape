@@ -19,6 +19,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -171,13 +172,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // .andThen(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL))
 
     m_driver.y().whileTrue(new ConditionalCommand(
-      PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive)
-      .alongWith(
-        new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
-        .andThen(
-          new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)
-        )),
-      PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefCenterDrivePose(), m_swerveDrive),
+      aimAndPrepCoral(),
+      aimAndPrepAlgaeGrab(),
       m_arm.m_gripper::hasCoral));
 
     m_driver.povUp().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
@@ -261,6 +257,18 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // }, m_arm));
   }
 
+  public Command aimAndPrepCoral(){
+    return PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive)
+      .alongWith(
+        new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
+        .andThen(
+          new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)
+        ));
+  }
+
+  public Command aimAndPrepAlgaeGrab(){
+    return PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefCenterDrivePose(), m_swerveDrive);
+  }
   @Override
   public void configureDriverController() {
     m_driver = new Gamepad(OperatorConstants.DriverControllerPort);
