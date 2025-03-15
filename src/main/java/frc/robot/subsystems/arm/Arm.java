@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.ArmConstants.GripperConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
@@ -222,22 +223,32 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void intakeFromFloorState() {
+    if (!m_gripper.hasCoralFront()) {
+      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSpeed); 
+    } else if (m_gripper.hasCoralFront() && !m_gripper.hasCoralBack()) {
+      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSlow);
+    } else {
+      m_gripper.setCoralGripSpeed(0.0);
+      changeState(ArmState.HOLD_CORAL);
+    }
     m_basePivot.setTargetAngle(ArmPoses.FloorIntake.getBasePivotAngle());
     m_extender.setTargetLength(ArmPoses.FloorIntake.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.FloorIntake.getGripperPivotAngle());
-    m_gripper.setCoralGripSpeed(0.5);
   }
 
   private void intakeFromHpState() {
-    if (m_gripper.hasCoral()) {
-      changeState(ArmState.HOLD_CORAL);
+    if (!m_gripper.hasCoralFront()) {
+      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSpeed); 
+    } else if (m_gripper.hasCoralFront() && !m_gripper.hasCoralBack()) {
+      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSlow);
+    } else {
       m_gripper.setCoralGripSpeed(0.0);
+      changeState(ArmState.HOLD_CORAL);
       return;
     }
     m_basePivot.setTargetAngle(ArmPoses.HpIntake.getBasePivotAngle());
     m_extender.setTargetLength(ArmPoses.HpIntake.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.HpIntake.getGripperPivotAngle());
-    m_gripper.setCoralGripSpeed(-0.5);
 
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Gripper.hasCoralGrippedSim = true;
