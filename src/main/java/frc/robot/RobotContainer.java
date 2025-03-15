@@ -93,7 +93,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     super();
     m_gyro = new Pigeon2(CanIdentifiers.GyroCANID, CanIdentifiers.CTRECANBus);
     m_swerveDrive = SwerveDrive.createSwerveDrive(m_gyro);
-    m_arm = new Arm(m_operator);
+    m_arm = new Arm(m_operator, m_driver);
     m_intake = new Intake();
     m_mech2dManager = new MechManager2D(m_arm, m_intake);
     m_rightCamera =

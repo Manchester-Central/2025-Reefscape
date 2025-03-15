@@ -33,6 +33,7 @@ public final class Constants {
     // public static final Mode RobotMode = Mode.REPLAY;
     public static final Mode RobotMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
     public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
+    public static final double RumbleIntensity = 1; //Rumble Intensity is on a range from zero to one.
   }
 
   /** This contains constants needed for setting up our controllers. */
