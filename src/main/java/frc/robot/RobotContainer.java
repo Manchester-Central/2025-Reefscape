@@ -177,9 +177,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.rightBumper().or(m_driver.rightTrigger()).whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
-    m_driver.rightBumper().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
+    m_driver.rightBumper().whileTrue(m_arm.getArmValues().hasCoral ? new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL) : new ChangeState().setArm(ArmState.INTAKE_ALGAE_FROM_FLOOR));
     m_driver.rightTrigger().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL));
-    m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_FLOOR).withArmInterrupt(ArmState.STOW));
+    m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_CORAL_FROM_FLOOR).withArmInterrupt(ArmState.STOW));
     m_driver.leftBumper().whileTrue(new ChangeState().setArm(() -> {
       var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
       return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());

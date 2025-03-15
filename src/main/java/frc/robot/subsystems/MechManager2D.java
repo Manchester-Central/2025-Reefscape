@@ -40,6 +40,7 @@ public class MechManager2D extends SubsystemBase {
   private LoggedMechanismLigament2d m_gripperCoralWheelsLigament;
   private LoggedMechanismLigament2d m_gripperCoralFrontLigament;
   private LoggedMechanismLigament2d m_gripperCoralBackLigament;
+  private LoggedMechanismLigament2d m_gripperAlgaeLigament;
 
 
   private final Color8Bit m_extenderColor = new Color8Bit(0, 0, 255);
@@ -83,6 +84,7 @@ public class MechManager2D extends SubsystemBase {
     m_gripperCoralWheelsLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("CoralWheels", RobotDimensions.WristToCoralIntakeAxle, -90, 2, m_gripperNeutralColor));
     m_gripperCoralFrontLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralFront", 0.0001, 90, 10, m_gripperHasCoralColor));
     m_gripperCoralBackLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralBack", 0.0001, -90, 10, m_gripperHasCoralColor));
+    m_gripperAlgaeLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgae", 0.0001, 0, 40, m_gripperHasAlgaeColor));
 
     // Intake
     m_intakeBase = new LoggedMechanism2d(2, 3);
@@ -110,13 +112,20 @@ public class MechManager2D extends SubsystemBase {
       m_gripperCoralWheelsLigament.setColor(m_gripperReverseColor);
     }
 
-    // Change color if holding a coral
+    // Change length if holding a coral
     if (values.hasCoral) {
       m_gripperCoralFrontLigament.setLength(RobotDimensions.WristToCoralFront.getX() - RobotDimensions.WristToCoralIntakeAxle);
       m_gripperCoralBackLigament.setLength(RobotDimensions.WristToCoralIntakeAxle - RobotDimensions.WristToCoralBack.getX());
     } else {
       m_gripperCoralFrontLigament.setLength(0.001);
       m_gripperCoralBackLigament.setLength(0.001);
+    }
+
+    // Change length if holding a coral
+    if (values.hasAlgae) {
+      m_gripperAlgaeLigament.setLength(0.4);
+    } else {
+      m_gripperAlgaeLigament.setLength(0.0001);
     }
 
     // Control angle and color of intake
