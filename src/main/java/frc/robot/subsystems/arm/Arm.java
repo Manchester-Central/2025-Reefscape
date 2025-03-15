@@ -230,6 +230,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       changeState(ArmState.HOLD_CORAL);
       return;
     }
+    if (m_gripper.hasAlgae()) {
+      changeState(ArmState.HOLD_ALGAE);
+      return;
+    }
     m_basePivot.setTargetAngle(ArmPoses.Stow.getBasePivotAngle());
     m_extender.setTargetLength(ArmPoses.Stow.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.Stow.getGripperPivotAngle());
