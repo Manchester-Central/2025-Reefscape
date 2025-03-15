@@ -33,7 +33,7 @@ import org.littletonrobotics.junction.Logger;
 public class GripperPivot extends AbstractArmPart {
   private double m_simGearRatio = GripperPivotConstants.RotorToSensorRatio;
   private double m_jkgMetersSquared = 0.1;
-  private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
+  private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
