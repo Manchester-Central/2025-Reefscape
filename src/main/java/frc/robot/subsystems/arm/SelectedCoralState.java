@@ -7,7 +7,7 @@ package frc.robot.subsystems.arm;
 import frc.robot.subsystems.arm.Arm.ArmState;
 
 /** Add your docs here. */
-public enum SelectedArmState {
+public enum SelectedCoralState {
   L1(ArmState.PREP_L1, ArmState.SCORE_L1),
   L2(ArmState.PREP_L2, ArmState.SCORE_L2),
   L3(ArmState.PREP_L3, ArmState.SCORE_L3),
@@ -16,7 +16,7 @@ public enum SelectedArmState {
   public final ArmState PrepState;
   public final ArmState ScoreState;
 
-  private SelectedArmState(ArmState prepState, ArmState scoreState) {
+  private SelectedCoralState(ArmState prepState, ArmState scoreState) {
     PrepState = prepState;
     ScoreState = scoreState;
   }

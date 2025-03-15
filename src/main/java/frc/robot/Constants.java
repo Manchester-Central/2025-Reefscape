@@ -179,9 +179,11 @@ public final class Constants {
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final ArmPose Climb = new ArmPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
       public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 81.5, 0.567, -90.0);
+      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 81.5, 0.567, -90.0); // TODO tune this
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 90, 1.59, 45); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 20, 0.2, -10.0); //TODO tune this
-      public static final ArmPose FloorIntake = new ArmPose("FloorIntake", 20, 0.2, -20); //TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 20, 0.2, -20); //TODO tune this
+      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 30, 0.25, -35); //TODO tune this
     }
 
     /** This contains constants for our Base Pivot. */
@@ -301,6 +303,8 @@ public final class Constants {
       public static final double AlgaeDropDebounceSeconds = 0.5;
       public static final Current AlgaeStatorCurrentLimit = Amps.of(15);
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(15);
+      public static final double IntakeAlgaeSpeed = -0.5;
+      public static final double OutakeAlgaeSpeed = 0.5;
       public static final double IntakeCoralSpeed = -0.5;
       public static final double IntakeCoralSlow = -0.2;
       public static final double OutakeCoralSpeed = 0.2;

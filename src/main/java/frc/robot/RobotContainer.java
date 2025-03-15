@@ -47,7 +47,8 @@ import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Arm.ArmState;
 import frc.robot.subsystems.arm.Gripper;
-import frc.robot.subsystems.arm.SelectedArmState;
+import frc.robot.subsystems.arm.SelectedAlgaeState;
+import frc.robot.subsystems.arm.SelectedCoralState;
 import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
@@ -83,7 +84,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       "21 ReefTag", ArmState.ALGAE_LOW,
       "22 ReefTag", ArmState.ALGAE_HIGH
   );
-  private SelectedArmState m_selectedArmState = SelectedArmState.L4;
+
+  private SelectedAlgaeState m_selectedAlgaeState = SelectedAlgaeState.PROCESSOR;
+  private SelectedCoralState m_selectedCoralState = SelectedCoralState.L4;
   private Random m_rng = new Random();
 
   /**
@@ -162,17 +165,6 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         
     m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Right.getAllianceAngle(), 1.0));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
-    // m_driver.y().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
-    //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefDrivePoses());
-    //   return pose.getCurrentAlliancePose().getRotation();
-    // }, 1.0));
-    // m_driver.y().whileTrue(PathUtil.driveToClosestPointTeleopCommand(m_arm.m_gripper.hasCoral() ? FieldPoint.getReefDrivePoses():FieldPoint.getReefCenterDrivePose(), m_swerveDrive)
-    // .alongWith(
-    //   new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
-    //   .andThen(
-    //     new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)))); 
-    // .andThen(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL))
-
     m_driver.y().whileTrue(new ConditionalCommand(
         aimAndPrepCoral(),
         aimAndPrepAlgaeGrab(),
@@ -189,18 +181,28 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.rightBumper().or(m_driver.rightTrigger()).whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
-    m_driver.rightBumper().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
-    m_driver.rightTrigger().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL));
-    m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_FLOOR).withArmInterrupt(ArmState.STOW));
+    m_driver.rightBumper().whileTrue(
+      new ConditionalCommand(
+          new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL),
+          new ConditionalCommand(
+            new ChangeState().setArm(() -> m_selectedAlgaeState.State).withArmInterrupt(ArmState.HOLD_ALGAE), 
+            new ChangeState().setArm(ArmState.INTAKE_ALGAE_FROM_FLOOR),
+            m_arm.m_gripper::hasAlgae), 
+          m_arm.m_gripper::hasCoral));
+    m_driver.rightTrigger().whileTrue(new ConditionalCommand(
+      new ChangeState().setArm(ArmState.SCORE_ALGAE).withArmInterrupt(ArmState.HOLD_ALGAE), 
+      new ChangeState().setArm(() -> m_selectedCoralState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL), 
+    m_arm.m_gripper::hasAlgae));
+    m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_CORAL_FROM_FLOOR).withArmInterrupt(ArmState.STOW));
     m_driver.leftBumper().whileTrue(new ChangeState().setArm(() -> {
       var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
       return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());
     }).withArmInterrupt(ArmState.STOW));
 
-    m_operator.a().onTrue(new InstantCommand(() -> m_selectedArmState = SelectedArmState.L1));
-    m_operator.x().onTrue(new InstantCommand(() -> m_selectedArmState = SelectedArmState.L2));
-    m_operator.b().onTrue(new InstantCommand(() -> m_selectedArmState = SelectedArmState.L3));
-    m_operator.y().onTrue(new InstantCommand(() -> m_selectedArmState = SelectedArmState.L4));
+    m_operator.a().onTrue(new ConditionalCommand(new InstantCommand(() -> m_selectedAlgaeState = SelectedAlgaeState.PROCESSOR), new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L1), m_arm.m_gripper::hasAlgae));
+    m_operator.x().onTrue(new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L2));
+    m_operator.b().onTrue(new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L3));
+    m_operator.y().onTrue(new ConditionalCommand(new InstantCommand(() -> m_selectedAlgaeState = SelectedAlgaeState.BARGE), new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L4), m_arm.m_gripper::hasAlgae));
 
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
@@ -272,7 +274,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       .alongWith(
         new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
         .andThen(
-          new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)
+          new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)
         ));
   }
 
