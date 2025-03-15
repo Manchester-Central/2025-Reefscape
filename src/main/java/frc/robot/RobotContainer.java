@@ -122,7 +122,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("ScoreL2",  new ChangeState().setArm(ArmState.SCORE_L2).andThen(new WaitForState().forArmState(ArmState.STOW)));
     NamedCommands.registerCommand("ScoreL3",  new ChangeState().setArm(ArmState.SCORE_L3).andThen(new WaitForState().forArmState(ArmState.STOW)));
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setArm(ArmState.SCORE_L4).andThen(new WaitForState().forArmState(ArmState.STOW)));
-    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForState().forArmState(ArmState.HOLD_CORAL)));
+    NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForCoral(m_arm)));
+    NamedCommands.registerCommand("IntakeFromFloor", new ChangeState().setArm(ArmState.INTAKE_FROM_FLOOR).andThen(new WaitForCoral(m_arm)));
+    //JOHN SAVE US PLEASE: change hold coral to hold algae
     NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 0.5)
         .andThen(new RunCommand(() -> m_swerveDrive.moveRobotRelative(MetersPerSecond.of(1.75), MetersPerSecond.of(0.0), DegreesPerSecond.of(0)), m_swerveDrive)))
         .withDeadline(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForCoral(m_arm))));

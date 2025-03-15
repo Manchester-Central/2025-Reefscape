@@ -3,13 +3,14 @@
   "robotLength": 0.912,
   "holonomicMode": true,
   "pathFolders": [
-    "Left Start",
-    "Center Start",
-    "From RHP",
-    "Right Start",
-    "from LHP",
+    "to RHP",
     "to LHP",
-    "to RHP"
+    "from LHP",
+    "Right Start",
+    "test",
+    "Left Start",
+    "From RHP",
+    "Center Start"
   ],
   "autoFolders": [
     "Left1",
