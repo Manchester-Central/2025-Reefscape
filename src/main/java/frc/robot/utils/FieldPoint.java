@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.SwerveDrive;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -105,15 +104,19 @@ public class FieldPoint {
     return reefDrivePoses;
   }
 
+  /**
+   * Gets all the drive positions we can consider for scoring on the reef (middle
+   * april tag).
+   */
   public static ArrayList<FieldPoint> getReefCenterDrivePose() {
     ArrayList<FieldPoint> reefCenterDrivePose = new ArrayList<FieldPoint>();
     for (AprilTag aprilTag : blueReefAprilTags()) {
-      Pose2d centerPose = aprilTag.pose2d.transformBy( 
+      Pose2d centerPose = aprilTag.pose2d.transformBy(
           new Transform2d(
               RobotDimensions.FrontBackLengthMeters / 2 + RobotDimensions.RobotToReefMargin,
               FieldDimensions.ReefCenterBranch.getY(),
               Rotation2d.fromDegrees(180)));
-     reefCenterDrivePose.add(new FieldPoint(aprilTag.id + " ReefCenter", centerPose));
+      reefCenterDrivePose.add(new FieldPoint(aprilTag.id + " ReefCenter", centerPose));
     }
     return reefCenterDrivePose;
   }
@@ -193,11 +196,6 @@ public class FieldPoint {
 
   public Pose2d getRedPose() {
     return m_redPose;
-  }
-
-  public void setCenterPose(SwerveDrive swerveDrive){
-    ReefCenter.getDistance(swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold);
-
   }
 
 

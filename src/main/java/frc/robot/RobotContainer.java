@@ -172,9 +172,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // .andThen(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL))
 
     m_driver.y().whileTrue(new ConditionalCommand(
-      aimAndPrepCoral(),
-      aimAndPrepAlgaeGrab(),
-      m_arm.m_gripper::hasCoral));
+        aimAndPrepCoral(),
+        aimAndPrepAlgaeGrab(),
+        m_arm.m_gripper::hasCoral));
 
     m_driver.povUp().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Away)); // 0 degrees for blue
     m_driver.povDown().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Towards)); // 180 degrees for blue
@@ -257,7 +257,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // }, m_arm));
   }
 
-  public Command aimAndPrepCoral(){
+  /**
+   * aim and prep the coral.
+   */
+  public Command aimAndPrepCoral() {
+
     return PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive)
       .alongWith(
         new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
@@ -266,9 +270,13 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         ));
   }
 
-  public Command aimAndPrepAlgaeGrab(){
+  /**
+   * aim algae.
+   */
+  public Command aimAndPrepAlgaeGrab() {
     return PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefCenterDrivePose(), m_swerveDrive);
   }
+
   @Override
   public void configureDriverController() {
     m_driver = new Gamepad(OperatorConstants.DriverControllerPort);

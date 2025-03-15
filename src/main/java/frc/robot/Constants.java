@@ -316,8 +316,8 @@ public final class Constants {
     // Transform to the Driver Perspective Right Reef from the perspective of the April Tag
     public static final Transform2d ReefBranchRight =
         new Transform2d(-0.0536, 0.1643, Rotation2d.fromDegrees(0));
-    // Trasform th Driver Perspective Center Reef from the perspective of the April Tag
-     public static final Transform2d ReefCenterBranch =
+    // Trasform the Driver Perspective Center Reef from the perspective of the April Tag
+    public static final Transform2d ReefCenterBranch =
         new Transform2d(-0.0536, 0, Rotation2d.fromDegrees(0));
     // Value taken from field cad
     public static final double TroughHeightMeters = 0.5175;
