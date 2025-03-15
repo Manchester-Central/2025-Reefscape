@@ -171,7 +171,7 @@ public final class Constants {
       public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 66.0, 0.575, -100.0);
       public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 75.5, 0.93, -103.5);
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 81.5, 1.59, -120.0);
-      public static final ArmPose AlgaeHigh = new ArmPose( "AlgaeHigh", 64.0, 1.0, -72.0);
+      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 64.0, 1.0, -72.0);
       public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 51.0, 0.71, -60.0);
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 80.0, 0.1, 0.0);
