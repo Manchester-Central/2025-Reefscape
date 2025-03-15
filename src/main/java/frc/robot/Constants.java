@@ -217,44 +217,6 @@ public final class Constants {
       public static final double canCoderOffsetDegrees = -107.5;
     }
 
-    /** This contains constants for our Gripper Pivot. */
-    public static class GripperPivotConstants {
-
-      public static final Rotation2d MinAngleBase = Rotation2d.fromDegrees(-25); // TODO tune this
-      public static final Rotation2d MinAngleLow = Rotation2d.fromDegrees(-70); // TODO tune this
-      public static final Rotation2d MinAngleStandard = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
-      public static final Rotation2d MaxAngleStandard = Rotation2d.fromDegrees(0);
-      public static final Rotation2d MaxAngleHigh = Rotation2d.fromDegrees(45); // TODO tune this
-      public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
-      public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
-
-      public static final double kP = 30.0;
-      public static final double kI = 0.0;
-      public static final double kD = 0.0;
-      public static final double kG = 0.13;
-      public static final double kS = 0.25;
-      public static final double kV = 0.0;
-      public static final double kA = 0.00;
-
-      // Motion Magic // TODO: get real values
-      public static final double MMCruiseVelocity = 80;
-      public static final double MMAcceleration = 160;
-      public static final double MMJerk = 1600;
-
-      public static final double SupplyCurrentLimit = 10;
-      public static final double StatorCurrentLimit = 10;
-
-      // Sensor Feedback // TODO: get real values
-      public static final double RotorToSensorRatio = 51.04;
-      public static final double SensorToMechanismRatio = 1;
-      
-      // Ramp Rates // TODO: get real values
-      public static final double VoltageClosedLoopRampPeriod = 0.1;
-
-      //Offset // TODO: Get Real
-      public static final double canCoderOffsetDegrees = -74;
-    }
-
     /** This contains constants for our Extender. */
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
@@ -293,8 +255,44 @@ public final class Constants {
 
       // Ramp Rates
       public static final double VoltageClosedLoopRampPeriod = 0.1;
+    }
 
+    /** This contains constants for our Gripper Pivot. */
+    public static class GripperPivotConstants {
+
+      public static final Rotation2d MinAngleBase = Rotation2d.fromDegrees(-25); // TODO tune this
+      public static final Rotation2d MinAngleLow = Rotation2d.fromDegrees(-70); // TODO tune this
+      public static final Rotation2d MinAngleStandard = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
+      public static final Rotation2d MaxAngleStandard = Rotation2d.fromDegrees(0);
+      public static final Rotation2d MaxAngleHigh = Rotation2d.fromDegrees(45); // TODO tune this
+      public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
+      public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
+
+      public static final double kP = 30.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kG = 0.13;
+      public static final double kS = 0.25;
+      public static final double kV = 0.0;
+      public static final double kA = 0.00;
+
+      // Motion Magic // TODO: get real values
+      public static final double MMCruiseVelocity = 80;
+      public static final double MMAcceleration = 160;
+      public static final double MMJerk = 1600;
+
+      public static final double SupplyCurrentLimit = 10;
+      public static final double StatorCurrentLimit = 10;
+
+      // Sensor Feedback // TODO: get real values
+      public static final double RotorToSensorRatio = 51.04;
+      public static final double SensorToMechanismRatio = 1;
       
+      // Ramp Rates // TODO: get real values
+      public static final double VoltageClosedLoopRampPeriod = 0.1;
+
+      //Offset // TODO: Get Real
+      public static final double canCoderOffsetDegrees = -74;
     }
 
     /** This contains constants for our Gripper. */
@@ -307,7 +305,7 @@ public final class Constants {
       public static final double OutakeAlgaeSpeed = 0.5;
       public static final double IntakeCoralSpeed = -0.5;
       public static final double IntakeCoralSlow = -0.2;
-      public static final double OutakeCoralSpeed = 0.2;
+      public static final double OutakeCoralSpeed = 0.5;
     }
   }
 
