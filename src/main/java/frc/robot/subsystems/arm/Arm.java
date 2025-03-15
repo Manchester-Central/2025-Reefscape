@@ -8,6 +8,7 @@ import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.GripperConstants;
@@ -394,7 +395,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       case INTAKE_FROM_FLOOR:
       case INTAKE_FROM_HP:
         //TODO: add more states
-        m_driver.getHID().setRumble(RumbleType.kBothRumble, 1);
+        m_driver.getHID().setRumble(RumbleType.kBothRumble, GeneralConstants.RumbleIntensity);
         break;
     
       default:
