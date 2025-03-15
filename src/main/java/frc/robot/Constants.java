@@ -216,8 +216,10 @@ public final class Constants {
     /** This contains constants for our Gripper Pivot. */
     public static class GripperPivotConstants {
 
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
-      public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(0);
+      public static final Rotation2d MinAngleLow = Rotation2d.fromDegrees(-70); // TODO tune this
+      public static final Rotation2d MinAngleStandard = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
+      public static final Rotation2d MaxAngleStandard = Rotation2d.fromDegrees(0);
+      public static final Rotation2d MaxAngleHigh = Rotation2d.fromDegrees(45); // TODO tune this
       public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
       public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
 
@@ -252,7 +254,10 @@ public final class Constants {
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
       public static final double MaxLengthMeter = 1.6;
-      public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto 
+      public static final double HighThresholdMeter = 0.93;
+      public static final double LowThresholdMeter = 0.58;
+      public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto
+
 
       // Slot 0 Configs
       public static final double kP = 150.0;

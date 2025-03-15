@@ -16,6 +16,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.ArmConstants.ArmPoses;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.GripperPivotConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Robot;
@@ -25,6 +26,8 @@ import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
+import pabeles.concurrency.IntOperatorTask.Max;
+
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -133,10 +136,13 @@ public class GripperPivot extends AbstractArmPart {
    * Sets the target angle and tries to drive there.
    */
   public void setTargetAngle(Rotation2d newAngle) {
-    if (newAngle.getDegrees() > GripperPivotConstants.MaxAngle.getDegrees()) {
-      newAngle = GripperPivotConstants.MaxAngle;
-    } else if (newAngle.getDegrees() < GripperPivotConstants.MinAngle.getDegrees()) {
-      newAngle = GripperPivotConstants.MinAngle;
+    Rotation2d currentMax = getArmValues().extenderLength > ExtenderConstants.HighThresholdMeter ? GripperPivotConstants.MaxAngleHigh : GripperPivotConstants.MaxAngleStandard;
+    Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? GripperPivotConstants.MinAngleLow : GripperPivotConstants.MinAngleStandard;
+    
+    if (newAngle.getDegrees() > currentMax.getDegrees()) {
+      newAngle = currentMax;
+    } else if (newAngle.getDegrees() < currentMin.getDegrees()) {
+      newAngle = currentMin;
     }
 
     if (!getArmValues().isBasePivotAtSafeAngle || !getArmValues().isExtenderAtSafeLength) {
@@ -162,9 +168,12 @@ public class GripperPivot extends AbstractArmPart {
    * Sets the direct speed [-1.0, 1.0] of the motors.
    */
   public void setSpeed(double speed) {
-    if (getCurrentAngle().getDegrees() > GripperPivotConstants.MaxAngle.getDegrees()) {
+    Rotation2d currentMax = getArmValues().extenderLength > ExtenderConstants.HighThresholdMeter ? GripperPivotConstants.MaxAngleHigh : GripperPivotConstants.MaxAngleStandard;
+    Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? GripperPivotConstants.MinAngleLow : GripperPivotConstants.MinAngleStandard;
+
+    if (getCurrentAngle().getDegrees() > currentMax.getDegrees()) {
       speed = Math.min(speed, 0.0);
-    } else if (getCurrentAngle().getDegrees() < GripperPivotConstants.MinAngle.getDegrees()) {
+    } else if (getCurrentAngle().getDegrees() < currentMin.getDegrees()) {
       speed = Math.max(speed, 0.0);
     }
     m_motor.set(speed);
