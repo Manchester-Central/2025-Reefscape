@@ -24,7 +24,11 @@ import org.littletonrobotics.junction.Logger;
 public class Gripper extends AbstractArmPart {
   public static boolean hasCoralGrippedSim = false;
 
-  private static boolean m_hasCoralGripped = false;
+  private static boolean m_hasCoralGrippedFront = false;
+
+  private static boolean m_hasCoralGrippedBack = false;
+
+  private static boolean m_hasCoralGrippedBoth = false;
 
   public static boolean hasAlgaeGrippedSim = false;
 
@@ -33,15 +37,21 @@ public class Gripper extends AbstractArmPart {
 
   private ChaosTalonFx m_coralMotor = new ChaosTalonFx(CanIdentifiers.GripperCoralMotorCANID);
 
-  private DigitalInput m_coralSensor = new DigitalInput(IoPortsConstants.CoralChannelID);
+  private DigitalInput m_coralSensorFront = new DigitalInput(IoPortsConstants.CoralChannelIDFront);
 
-  private Debouncer m_coralSensorDebouncer = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
+  private DigitalInput m_coralSensorBack = new DigitalInput(IoPortsConstants.CoralChannelIDBack);
+
+  private Debouncer m_coralSensorDebouncerFront = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kBoth);
+
+  private Debouncer m_coralSensorDebouncerBack = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
 
   private ChaosTalonFx m_algaeMotor = new ChaosTalonFx(CanIdentifiers.GripperAlgaeMotorCANID);
 
   private Debouncer m_algaeSensorDebouncer = new Debouncer(GripperConstants.AlgaeDropDebounceSeconds, DebounceType.kFalling);
 
   private ChaosTalonFxTuner m_algaeTuner = new ChaosTalonFxTuner("AlgaeGripper", m_algaeMotor);
+
+  private double m_targetSpeed = 0;
   // Current limits
   private DashboardNumber m_algaeSupplyCurrentLimit = m_algaeTuner.tunable(
       "SupplyCurrentLimit", GripperConstants.AlgaeSupplyCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
@@ -66,6 +76,7 @@ public class Gripper extends AbstractArmPart {
    * Sets the speed [-1.0, 1.0] of the coral gripper.
    */
   public void setCoralGripSpeed(double newSpeed) {
+    m_targetSpeed = newSpeed;
     m_coralMotor.set(newSpeed);
   }
 
@@ -88,7 +99,7 @@ public class Gripper extends AbstractArmPart {
    * Checks if there is a coral at the sensor.
    */
   public boolean hasCoral() {
-    return m_hasCoralGripped;
+    return m_hasCoralGrippedBoth;
   }
 
   /**
@@ -97,12 +108,27 @@ public class Gripper extends AbstractArmPart {
   public boolean hasAlgae() {
     return m_hasAlgaeGripped;
   }
+  
+  /**
+   * checks if front sensor is triggered.
+   */
+  public boolean hasCoralFront() {
+    return m_hasCoralGrippedFront;
+  }
 
+  /**
+   * checks if back sensor is triggered.
+   */
+  public boolean hasCoralBack() {
+    return m_hasCoralGrippedBack;
+  }
 
   @Override
   public void periodic() {
     super.periodic();
-    m_hasCoralGripped = m_coralSensorDebouncer.calculate(Robot.isSimulation() ? hasCoralGrippedSim : !m_coralSensor.get());
+    m_hasCoralGrippedFront = m_coralSensorDebouncerFront.calculate(Robot.isSimulation() ? hasCoralGrippedSim : !m_coralSensorFront.get());
+    m_hasCoralGrippedBack = m_coralSensorDebouncerBack.calculate(Robot.isSimulation() ? hasCoralGrippedSim : !m_coralSensorBack.get());
+    m_hasCoralGrippedBoth = m_hasCoralGrippedFront && m_hasCoralGrippedBack;
     boolean algaeCurrentLimitReached = m_algaeMotor.getStatorCurrent().getValue().gt(Amps.of(m_algaeStatorCurrentLimit.get() - 0.1));
     m_hasAlgaeGripped = m_algaeSensorDebouncer.calculate(Robot.isSimulation() ? hasAlgaeGrippedSim : algaeCurrentLimitReached);
     Logger.recordOutput("Gripper/HasCoral", hasCoral());

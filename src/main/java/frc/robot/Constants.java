@@ -84,7 +84,8 @@ public final class Constants {
 
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
-    public static final int CoralChannelID = 1;
+    public static final int CoralChannelIDFront = 1;
+    public static final int CoralChannelIDBack = 2;
     public static final int ExtenderMinimumChannelID = 4;
   }
 
@@ -289,6 +290,9 @@ public final class Constants {
       public static final double AlgaeDropDebounceSeconds = 0.5;
       public static final Current AlgaeStatorCurrentLimit = Amps.of(15);
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(15);
+      public static final double IntakeCoralSpeed = -0.5;
+      public static final double IntakeCoralSlow = -0.2;
+      public static final double OutakeCoralSpeed = 0.2;
     }
   }
 
