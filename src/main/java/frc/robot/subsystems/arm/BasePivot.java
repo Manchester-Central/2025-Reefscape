@@ -16,8 +16,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.ArmConstants.BasePivotConstants;
+import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Robot;
 import frc.robot.SimConstants.SimBasePivotConstants;
 import frc.robot.subsystems.arm.Arm.ArmValues;
@@ -78,7 +78,7 @@ public class BasePivot extends AbstractArmPart {
   /**
    * Creates a new BasePivot.
    *
-   * @param ArmValuesSupplier the supplier of arm values
+   * @param armValuesSupplier the supplier of arm values
    */
   public BasePivot(Supplier<ArmValues> armValuesSupplier) {
     super(armValuesSupplier);

@@ -15,9 +15,10 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
+import frc.robot.Constants.ArmConstants.ArmPoses;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
-import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Robot;
 import frc.robot.SimConstants.SimExtenderConstants;
 import frc.robot.subsystems.arm.Arm.ArmValues;
@@ -134,15 +135,6 @@ public class Extender extends AbstractArmPart {
    */
   public void setTargetLength(double newLength) {
     if (hasReachedMinimum()) {
-      if (!getArmValues().isGripperPivotAtSafeAngle) {
-        if (getCurrentLength() < ExtenderConstants.BucketBottomClearanceMeter && newLength > ExtenderConstants.BucketBottomClearanceMeter) {
-          newLength = ExtenderConstants.BucketBottomClearanceMeter;
-        }
-        if (getCurrentLength() > ExtenderConstants.BucketTopClearanceMeter && newLength < ExtenderConstants.BucketTopClearanceMeter) {
-          newLength = ExtenderConstants.BucketTopClearanceMeter;
-        }
-      }
-      
       if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {
         newLength = ExtenderConstants.MaxLengthMeter;
       } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
@@ -186,7 +178,7 @@ public class Extender extends AbstractArmPart {
    * Checks if the current length is safe for other parts to move.
    */
   public boolean isSafeLength() {
-    return Math.abs(getCurrentLength() - m_targetLength) < 0.02 || getCurrentLength() >= ExtenderConstants.BucketTopClearanceMeter;
+    return Math.abs(getCurrentLength() - m_targetLength) < 0.02 || getCurrentLength() >= ArmPoses.HoldCoral.getExtensionMeters() - 0.005;
   }
 
   /**

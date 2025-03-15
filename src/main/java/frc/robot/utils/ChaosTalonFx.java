@@ -165,6 +165,14 @@ public class ChaosTalonFx extends TalonFX {
     setControl(m_positionMotionMagicVoltage.withPosition(position));
   }
 
+  /**
+   * Runs the motion magic curve for smoother transitions.
+   *
+   * @param position target position value in the consistent unit frame
+   * @param velocity cruise velocity
+   * @param acceleration max acceleration
+   * @param jerk rate of change of the acceleration, you meanie
+   */
   public void moveToPositionMotionMagic(double position, double velocity, double acceleration, double jerk) {
     m_positionDynamicMotionMagicVoltage.Slot = 0;
     m_positionDynamicMotionMagicVoltage.Velocity = velocity;

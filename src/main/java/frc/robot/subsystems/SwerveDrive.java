@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
 import com.chaos131.swerve.SwerveConfigs;
@@ -16,14 +18,12 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.Interpolatable;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -41,9 +41,6 @@ import frc.robot.Constants.SwerveConstants.SwerveBackRightConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontLeftConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontRightConstants;
 import frc.robot.Robot;
-
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
@@ -220,12 +217,14 @@ public class SwerveDrive extends BaseSwerveDrive {
     }
   }
 
+  /**
+   * Thread Safe mechanism for adding a vision update from the camera to the swerve estimator.
+   * Checks if the SwervePoseEstimator is going to process vision updates at all first.
+   */
   public void addVisionMeasurement(VisionData data) {
-    // System.out.println("Received Vision Update");
     if (!m_acceptVisionUpdates) {
       return;
     }
-    // System.out.println("Using Vision Update from " + data.getTimestampSeconds());
     synchronized (m_odometry) {
       m_hasReceivedVisionUpdates = true;
       m_odometry.addVisionMeasurement(
@@ -233,6 +232,11 @@ public class SwerveDrive extends BaseSwerveDrive {
     }
   }
 
+  /**
+   * To change the ramp rate period on the fly.
+   *
+   * @param newRate time in seconds (clamped to [0-1])
+   */
   public void setRampRatePeriod(double newRate) {
     forAllModules((module) -> ((SwerveModule2025) module).setRampRatePeriod(newRate));
   }

@@ -5,10 +5,8 @@
 package frc.robot.subsystems.arm;
 
 import com.chaos131.util.DashboardNumber;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -17,18 +15,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.Constants.CanIdentifiers;
-import frc.robot.Constants.ArmConstants.GripperPivotConstants;
 import frc.robot.Constants.ArmConstants.ArmPoses;
+import frc.robot.Constants.ArmConstants.GripperPivotConstants;
+import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Robot;
 import frc.robot.SimConstants.SimGripperPivotConstants;
 import frc.robot.subsystems.arm.Arm.ArmValues;
-import frc.robot.Robot;
 import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
-
-import java.util.Currency;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -154,7 +150,10 @@ public class GripperPivot extends AbstractArmPart {
     return Math.abs(getCurrentAngle().minus(GripperPivotConstants.SafeAngle).getDegrees()) < GripperPivotConstants.SafeAngleTolerance.getDegrees();
   }
   
-  public void disableFuseCANcoder() {
+  /**
+   * Disables the FusedCANCoder, this was used when the GripperPivot was breaking.
+   */
+  public void disableFuseCanCoder() {
     m_motor.Configuration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.SyncCANcoder;
     m_motor.applyConfig();
   }

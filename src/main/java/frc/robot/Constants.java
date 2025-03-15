@@ -1,6 +1,10 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.FeetPerSecond;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.chaos131.pid.PIDFValue;
@@ -13,9 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.subsystems.arm.ArmPose;
 
@@ -25,7 +27,8 @@ public final class Constants {
   /** This has contants that can be used throughout the robot. */
   public static class GeneralConstants {
     public static final double RobotMassKg = 54.43;
-    public static final Mode RobotMode = Mode.REAL;
+    // public static final Mode RobotMode = Mode.REPLAY;
+    public static final Mode RobotMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
     public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
   }
 
@@ -69,7 +72,7 @@ public final class Constants {
 
     // Gripper (70s)
     public static final int GripperCoralMotorCANID = 13; // TODO: set on robot
-    // public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
+    public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
 
     // Intake (80s) RIP 2025-2025 for now for now
     public static final int IntakeMotor1CANID = 80; // TODO: set on robot
@@ -172,8 +175,6 @@ public final class Constants {
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 80.0, 0.1, 0.0);
       public static final ArmPose Climb = new ArmPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
       public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 81.5, 0.567, -90.0);
-      public static final ArmPose BottomBucket = new ArmPose("BottomBucket", 81.5, 0.01, 0);
-      public static final ArmPose TopBucket = new ArmPose("TopBucket", 81.5, 0.6, 0);
     }
 
     /** This contains constants for our Base Pivot. */
@@ -246,8 +247,6 @@ public final class Constants {
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
       public static final double MaxLengthMeter = 1.6;
-      public static final double BucketTopClearanceMeter = 0.567;
-      public static final double BucketBottomClearanceMeter = 0.013;
       public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto 
 
       // Slot 0 Configs
@@ -285,6 +284,9 @@ public final class Constants {
     /** This contains constants for our Gripper. */
     public static class GripperConstants {
       public static final double CoralDropDebounceSeconds = 0.5;
+      public static final double AlgaeDropDebounceSeconds = 0.5;
+      public static final Current AlgaeStatorCurrentLimit = Amps.of(15);
+      public static final Current AlgaeSupplyCurrentLimit = Amps.of(15);
     }
   }
 
@@ -321,7 +323,9 @@ public final class Constants {
     // Value taken from field cad
     public static final double Reef4Meters = 1.825488;
     // Value taken from field cad
-    public static final double BargeMeters = 2.1;
+    public static final double BargeMeters = 1.0;
+    // Distance between center of robot + safety +center of reef
+    public static final Distance ReefScoringDistanceThreshold = Meters.of((RobotDimensions.FrontBackLengthMetersBumpers / 2) + 0.912493).plus(Inches.of(13)); 
   }
 
   /** This contains constants for our robot dimensions. */
@@ -341,6 +345,8 @@ public final class Constants {
     public static final double CoralPlacementMargin = 0.03;
     // Robot length buffer
     public static final double RobotToReefMargin = 0.015; // This is in meters
+    public static final double WristToCoralIntakeAxle = 0.169627; // -0.209097 down, but who cares?
+    public static final Angle AlgaeBarAngle = Degrees.of(117.160050);
     public static final double CoralLengthMeters = 0.2;
     // Max range beyond the end of the bumpers
     public static final Distance MechanismExtensionMargin = Units.Inches.of(18);
@@ -351,8 +357,7 @@ public final class Constants {
      */
 
     // Distance from the robot origin to the axle for the Base Pivot
-    public static final Transform2d BasePivotOffset =
-        new Transform2d(-0.197396, 0.176162, Rotation2d.fromDegrees(0));
+    public static final Transform2d BasePivotOffset = new Transform2d(-0.197396, 0.176162, Rotation2d.kZero);
 
     // Angle between the Lift and the Gripped Pivot
     public static final Rotation2d WristMountAngle = Rotation2d.fromDegrees(-2.014);
@@ -361,14 +366,11 @@ public final class Constants {
      * If the arm were all the way down, then this would be the distance from the center of the axle of 
      * the Base Pivot to the center of the axle of the wrist pivot. 
      * This must be rotated by the angle of the Base Pivot at some point in the Forward Kinematics. */
-    public static final Transform2d ArmToWristOffset =
-        new Transform2d(0.388697, -0.036977, Rotation2d.fromDegrees(0));
+    public static final Transform2d ArmToWristOffset = new Transform2d(0.388697, -0.036977, Rotation2d.kZero);
 
-    /** Distance from the center of the wrist's axle to the point used for the EndEffector calculations 
-     * Presumably this is just beyond the end of the wheels but should be just past where the Coral is. */
-    public static final Transform2d WristToCoralTip =
-        new Transform2d(0.352081, 0, Rotation2d.fromDegrees(0));
-    public static final Transform2d WristToEndEffectorTip =
-        new Transform2d(0.172409, 0, Rotation2d.fromDegrees(0));
+    // Distance from the wrist to the back of the coral, placed as if it was as in the CAD mockup (Mar/14)
+    public static final Transform2d WristToCoralFront = new Transform2d(0.382352, -0.164647, Rotation2d.kZero);
+    // Distance from the wrist to the front of the coral, placed as if it was as in the CAD mockup (Mar/14)
+    public static final Transform2d WristToCoralBack = new Transform2d(0.080727, -0.164647, Rotation2d.kZero);
   }
 }
