@@ -50,7 +50,7 @@ public class IkEquations {
    * @param endEffectorPose of the END of the end effector, not the start of it (must be consistent with the coordinate frame)
    * @return The final pose, should never be null
    */
-  public static ArmPose getPivotLiftPivot(Pose3d robotPose, Pose3d endEffectorPose) {
+  public static ArmPose getPivotLiftPivot(Pose3d robotPose, Pose3d endEffectorPose, boolean backScore) {
     Logger.recordOutput("IkSolver/EndEffectorPose", endEffectorPose);
     // Robot Origin to Reef Branch
     Translation3d robotOriginToReefBranch = endEffectorPose.getTranslation().minus(robotPose.getTranslation());
@@ -69,8 +69,13 @@ public class IkEquations {
     Logger.recordOutput("IkSolver/ConstrainedEndEffectorPose", constrainedEndEffectorPose);
 
     // Calculate End Effector Wrist Point
-    Pose2d endEffectorWristPoint = constrainedEndEffectorPoint.transformBy(new Transform2d(
-        -(RobotDimensions.WristToCoralTip.getTranslation().getNorm() + RobotDimensions.CoralPlacementMargin), 0, Rotation2d.kZero));
+    Pose2d endEffectorWristPoint = backScore
+        ? constrainedEndEffectorPoint.transformBy(new Transform2d(-(RobotDimensions.WristToCoralBack.getX() + RobotDimensions.CoralPlacementMargin),
+                                                                  -RobotDimensions.WristToCoralBack.getY(),
+                                                                  Rotation2d.kZero))
+        : constrainedEndEffectorPoint.transformBy(new Transform2d(-(RobotDimensions.WristToCoralFront.getX() + RobotDimensions.CoralPlacementMargin),
+                                                                  -RobotDimensions.WristToCoralFront.getY(),
+                                                                  Rotation2d.kZero));
     Pose3d endEffectorWristPose = make3dFromIk2d(endEffectorWristPoint, robotPose.toPose2d());
     Logger.recordOutput("IkSolver/EndEffectorWristPose", endEffectorWristPose);
 
@@ -102,9 +107,9 @@ public class IkEquations {
     Rotation2d hangle = hvector.getAngle(); // Mechanism Coord Frame, so positive is up
     Distance clength = Meters.of(RobotDimensions.ArmToWristOffset.getTranslation().getNorm());
 
-    var angleB = RobotDimensions.WristMountAngle;
-    var alength = clength.in(Meters) * Math.sin(angleB.getRadians());
-    var blength = clength.in(Meters) * Math.cos(angleB.getRadians());
+    var angleB = -RobotDimensions.WristMountAngle.getRadians();
+    var alength = clength.in(Meters) * Math.sin(angleB);
+    var blength = clength.in(Meters) * Math.cos(angleB);
     var omegaRadians = Rotation2d.fromRadians(Math.asin(alength / hlength.in(Meters)));
     var blLength = hlength.in(Meters) * Math.cos(omegaRadians.getRadians());
 
@@ -125,7 +130,7 @@ public class IkEquations {
     return new ArmPose("IkCalculatedPose", alpha, liftLength, gripperPivotAngle);
   }
 
-  public static ArmPose getPivotLiftPivot(Pose2d robotPose, Pose3d endEffectorPose) {
-    return getPivotLiftPivot(new Pose3d(robotPose), endEffectorPose);
+  public static ArmPose getPivotLiftPivot(Pose2d robotPose, Pose3d endEffectorPose, boolean backScore) {
+    return getPivotLiftPivot(new Pose3d(robotPose), endEffectorPose, backScore);
   }
 }

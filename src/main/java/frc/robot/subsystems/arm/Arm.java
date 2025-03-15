@@ -64,6 +64,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   private Gamepad m_operator;
   private Pose3d m_ikTargetPose = new Pose3d(0, 0, FieldDimensions.Reef3Meters, new Rotation3d());
   private Supplier<Pose2d> m_robotPoseSupplier;
+  private boolean m_ikSolverBackScore = false;
 
   /**
    * The possible states of the Arm's state machine.
@@ -190,6 +191,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_ikTargetPose = ikTarget;
   }
 
+  public void setIkSolverBackScore(boolean backScore) {
+    m_ikSolverBackScore = backScore;
+  }
+
   /**
    * See The drawio diagram 'IKMath' in documents for details on the math.
    */
@@ -197,7 +202,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     // Calculate IK root
     Pose3d robotPose = new Pose3d(m_robotPoseSupplier.get()); // This becomes 0,0 very soon
     
-    ArmPose mechanismPose = IkEquations.getPivotLiftPivot(robotPose, m_ikTargetPose);
+    // For testing's sake, always score backwards
+    ArmPose mechanismPose = IkEquations.getPivotLiftPivot(robotPose, m_ikTargetPose, m_ikSolverBackScore);
 
     // Logging
     Logger.recordOutput("IkSolver/targetEndEffector", m_ikTargetPose);
@@ -217,7 +223,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
      * m_gripper.setCoralGripSpeed(0.0);
      * m_gripperPivot.setSpeed(0.0);
      * m_extender.setSpeed(m_operator.getRightY() * 0.5);
-*/
+     */
     m_basePivot.setSpeed(m_operator.getRightY() * 0.131);
 
     m_extender.setSpeed(m_operator.getLeftY() * 0.5);

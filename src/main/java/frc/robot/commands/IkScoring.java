@@ -22,15 +22,17 @@ public class IkScoring extends Command {
   BaseSwerveDrive m_swerveDrive;
   Arm m_lift;
   Pose3d m_endEffectorPose;
+  boolean m_backScore;
 
   /**
    * Creates a new DriverRelativeDrive.
    */
-  public IkScoring(Gamepad driver, BaseSwerveDrive swerve, Arm lift, Pose3d endEffectorPose) {
+  public IkScoring(Gamepad driver, BaseSwerveDrive swerve, Arm lift, Pose3d endEffectorPose, boolean backScore) {
     m_driver = driver;
     m_swerveDrive = swerve;
     m_lift = lift;
     m_endEffectorPose = endEffectorPose;
+    m_backScore = backScore;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerve);
   }
@@ -39,6 +41,7 @@ public class IkScoring extends Command {
   @Override
   public void initialize() {
     m_lift.setIkSolverTarget(m_endEffectorPose);
+    m_lift.setIkSolverBackScore(m_backScore);
     m_lift.changeState(ArmState.IKSOLVER);
   }
 

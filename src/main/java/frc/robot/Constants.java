@@ -17,7 +17,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.subsystems.arm.ArmPose;
 
@@ -211,8 +214,8 @@ public final class Constants {
     /** This contains constants for our Gripper Pivot. */
     public static class GripperPivotConstants {
 
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
-      public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(0);
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(-140); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
+      public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(80);
       public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
       public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
 
@@ -346,10 +349,10 @@ public final class Constants {
     // Robot length buffer
     public static final double RobotToReefMargin = 0.015; // This is in meters
     public static final double WristToCoralIntakeAxle = 0.169627; // -0.209097 down, but who cares?
-    public static final Angle AlgaeBarAngle = Degrees.of(117.160050);
-    public static final double CoralLengthMeters = 0.2;
-    // Max range beyond the end of the bumpers
-    public static final Distance MechanismExtensionMargin = Units.Inches.of(18);
+    public static final Angle AlgaeBarAngle = Degrees.of(180-117.160050);
+    public static final double CoralLengthMeters = 0.301625;
+    // Max range beyond the end of the frame
+    public static final Distance MechanismExtensionMargin = Inches.of(18);
 
 
     /*
@@ -360,7 +363,7 @@ public final class Constants {
     public static final Transform2d BasePivotOffset = new Transform2d(-0.197396, 0.176162, Rotation2d.kZero);
 
     // Angle between the Lift and the Gripped Pivot
-    public static final Rotation2d WristMountAngle = Rotation2d.fromDegrees(-2.014);
+    public static final Rotation2d WristMountAngle = Rotation2d.fromDegrees(-30);
 
     /** Distance from the dynamic arm position to the wrist on the gripper mechanism.
      * If the arm were all the way down, then this would be the distance from the center of the axle of 
@@ -372,5 +375,6 @@ public final class Constants {
     public static final Transform2d WristToCoralFront = new Transform2d(0.382352, -0.164647, Rotation2d.kZero);
     // Distance from the wrist to the front of the coral, placed as if it was as in the CAD mockup (Mar/14)
     public static final Transform2d WristToCoralBack = new Transform2d(0.080727, -0.164647, Rotation2d.kZero);
+    public static final Transform2d WristToMidWheels = new Transform2d(0.277484, -0.086859, Rotation2d.kZero);
   }
 }
