@@ -163,20 +163,6 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
         
     m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Right.getAllianceAngle(), 1.0));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
-    // m_driver.y().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
-    //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefDrivePoses());
-    //   return pose.getCurrentAlliancePose().getRotation();
-    // }, 1.0));
-    m_driver.y().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive).alongWith(
-      new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold)).andThen(
-        new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)))); 
-    // m_driver.y().whileTrue(PathUtil.driveToClosestPointTeleopCommand(m_arm.m_gripper.hasCoral() ? FieldPoint.getReefDrivePoses():FieldPoint.getReefCenterDrivePose(), m_swerveDrive)
-    // .alongWith(
-    //   new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
-    //   .andThen(
-    //     new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)))); 
-    // .andThen(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL))
-
     m_driver.y().whileTrue(new ConditionalCommand(
         aimAndPrepCoral(),
         aimAndPrepAlgaeGrab(),

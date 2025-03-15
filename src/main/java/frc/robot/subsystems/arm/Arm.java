@@ -349,7 +349,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void scoreAlgaeState() {
-    m_gripper.setAlgaeGripSpeed(0.5);
+    m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeAlgaeSpeed);
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Gripper.hasAlgaeGrippedSim = false;
     }

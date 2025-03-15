@@ -304,6 +304,7 @@ public final class Constants {
       public static final Current AlgaeStatorCurrentLimit = Amps.of(15);
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(15);
       public static final double IntakeAlgaeSpeed = -0.5;
+      public static final double OutakeAlgaeSpeed = 0.5;
       public static final double IntakeCoralSpeed = -0.5;
       public static final double IntakeCoralSlow = -0.2;
       public static final double OutakeCoralSpeed = 0.2;
