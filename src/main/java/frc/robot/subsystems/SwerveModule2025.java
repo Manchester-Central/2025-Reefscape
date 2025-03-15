@@ -11,12 +11,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.SwerveConstants;
-import org.ironmaple.simulation.drivesims.SwerveModuleSimulation;
 
 /** Add your docs here. */
 public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
-  private SwerveModuleSimulation m_simulation;
-
   /**
    * Creates a swerve module for the 2025 bot.
    */
@@ -66,16 +63,14 @@ public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
     m_angleController.getPosition().setUpdateFrequency(updateFrequency);
   }
 
+  /**
+   * To change the ramp rate period on the fly.
+   *
+   * @param newRate time in seconds
+   */
   public void setRampRatePeriod(double newRate) {
     m_speedConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = newRate;
     m_speedConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = newRate;
     m_speedController.getConfigurator().apply(m_speedConfig.ClosedLoopRamps);
-  }
-
-  /**
-   * Inits the sim in the module (after the swerve drive has been instantiated).
-   */
-  public void initSim(SwerveModuleSimulation simDrive) {
-    m_simulation = simDrive;
   }
 }

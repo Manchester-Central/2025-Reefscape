@@ -1,5 +1,7 @@
 package frc.robot.utils;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import com.chaos131.util.FieldData;
 import com.chaos131.vision.AprilTag;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,13 +13,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
-
-import static edu.wpi.first.units.Units.Meters;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.opencv.core.Point;
 
 /**
  * A class to help managing positions on the field (for either alliance color).
@@ -42,9 +39,9 @@ public class FieldPoint {
   public static final FieldPoint processor = new FieldPoint("processor",
       new Pose2d(5.988, 0, Rotation2d.fromDegrees(90)));
   public static final FieldPoint leftSource = new FieldPoint("leftSource",
-      new Pose2d(0.8512, 7.396, Rotation2d.fromDegrees(90)));
+      new Pose2d(0.8512, 7.396, Rotation2d.fromDegrees(-60)));
   public static final FieldPoint rightSource = new FieldPoint("rightSource",
-      new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(90)));
+      new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(60)));
   public static final FieldPoint testPoint = new FieldPoint("testPoint",
       new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
       
@@ -139,17 +136,24 @@ public class FieldPoint {
     return hpDrivePoses;
   }
 
-  public static FieldPoint getNearestPoint(Pose2d RobotPose, ArrayList<FieldPoint> Points) {
-    FieldPoint Nearest = null;
-    double minimum_distance = 99;
-    for (FieldPoint PT : Points) {
-      double distance = RobotPose.relativeTo(PT.getCurrentAlliancePose()).getTranslation().getNorm();
-      if (distance < minimum_distance) {
-        minimum_distance = distance;
-        Nearest = PT;
+  /**
+   * Finds the nearest point in an ArrayList of Field Points to the given robotPose.
+   *
+   * @param robotPose The robot's pose, could be anything but generally the robot pose
+   * @param points ArrayList of the points
+   * @return Whichever point was the closest, null if points is empty
+   */
+  public static FieldPoint getNearestPoint(Pose2d robotPose, ArrayList<FieldPoint> points) {
+    FieldPoint nearest = null;
+    double minimumDistance = 99;
+    for (FieldPoint pt : points) {
+      double distance = robotPose.relativeTo(pt.getCurrentAlliancePose()).getTranslation().getNorm();
+      if (distance < minimumDistance) {
+        minimumDistance = distance;
+        nearest = pt;
       }
     }
-    return Nearest;
+    return nearest;
   }
 
   /**

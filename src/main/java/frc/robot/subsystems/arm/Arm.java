@@ -7,8 +7,8 @@ package frc.robot.subsystems.arm;
 import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.ArmPoses;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
@@ -144,10 +144,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       case HOLD_CORAL:
         holdCoralState();
         break;
-        case PREP_CLIMB:
+      case PREP_CLIMB:
         prepClimb();
         break;
-        case POST_CLIMB:
+      case POST_CLIMB:
         postClimb();
         break;
     }
@@ -296,14 +296,14 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     }
   }
 
-  private void scoreHelper(ArmPose ArmPose, boolean isPrep) {
+  private void scoreHelper(ArmPose armPose, boolean isPrep) {
     if (!(m_gripper.hasCoral())) {
       changeState(ArmState.STOW);
       return;
     }
-    m_basePivot.setTargetAngle(ArmPose.getBasePivotAngle());
-    m_extender.setTargetLength(ArmPose.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(ArmPose.getGripperPivotAngle());
+    m_basePivot.setTargetAngle(armPose.getBasePivotAngle());
+    m_extender.setTargetLength(armPose.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(armPose.getGripperPivotAngle());
     if ((!isPrep && isPoseReady()) || m_operator.rightBumper().getAsBoolean() || (DriverStation.isAutonomousEnabled() && isPoseClose() && m_stateTimer.hasElapsed(2))) {
       m_gripper.setCoralGripSpeed(0.5);
     } else {

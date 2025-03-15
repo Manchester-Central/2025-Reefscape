@@ -1,10 +1,10 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 
 import com.chaos131.pid.PIDFValue;
@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -339,20 +340,20 @@ public final class Constants {
     public static final double CoralPlacementMargin = 0.03;
     // Robot length buffer
     public static final double RobotToReefMargin = 0.015; // This is in meters
+    public static final double WristToCoralIntakeAxle = 0.169627; // -0.209097 down, but who cares?
+    public static final Angle AlgaeBarAngle = Degrees.of(117.160050);
     // Distance from the robot origin to the axle for the Base Pivot
-    public static final Transform2d BasePivotOffset =
-        new Transform2d(-0.1973, 0.1762, Rotation2d.fromDegrees(0));
+    public static final Transform2d BasePivotOffset = new Transform2d(-0.1973, 0.1762, Rotation2d.kZero);
 
     /** Distance from the dynamic arm position to the wrist on the gripper mechanism.
      * If the arm were all the way down, then this would be the distance from the center of the axle of 
      * the Base Pivot to the center of the axle of the wrist pivot. 
      * This must be rotated by the angle of the Base Pivot at some point in the Forward Kinematics. */
-    public static final Transform2d ArmToWristOffset =
-        new Transform2d(0.1784, 0.4259, Rotation2d.fromDegrees(0));
+    public static final Transform2d ArmToWristOffset = new Transform2d(0.1784, 0.4259, Rotation2d.kZero);
 
-    /** Distance from the center of the wrist's axle to the point used for the EndEffector calculations 
-     * Presumably this is just beyond the end of the wheels but should be just past where the Coral is. */
-    public static final Transform2d WristToEndEffector =
-        new Transform2d(0, 0, Rotation2d.fromDegrees(0));
+    // Distance from the wrist to the back of the coral, placed as if it was as in the CAD mockup (Mar/14)
+    public static final Transform2d WristToCoralFront = new Transform2d(0.382352, -0.164647, Rotation2d.kZero);
+    // Distance from the wrist to the front of the coral, placed as if it was as in the CAD mockup (Mar/14)
+    public static final Transform2d WristToCoralBack = new Transform2d(0.080727, -0.164647, Rotation2d.kZero);
   }
 }

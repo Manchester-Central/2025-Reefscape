@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
@@ -11,19 +17,17 @@ import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.FieldDimensions;
-import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -31,7 +35,6 @@ import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.ReefAlignment;
-import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
 import frc.robot.commands.WaitForState;
@@ -40,26 +43,17 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.MechManager2D;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.ArmPose;
+import frc.robot.subsystems.arm.Arm.ArmState;
 import frc.robot.subsystems.arm.Gripper;
 import frc.robot.subsystems.arm.SelectedArmState;
-import frc.robot.subsystems.arm.Arm.ArmState;
 import frc.robot.utils.DriveDirection;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
-
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
-
-import org.ejml.data.FEigenpair;
+import java.util.Random;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnField;
+import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -87,6 +81,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       "22 ReefTag", ArmState.ALGAE_HIGH
   );
   private SelectedArmState m_selectedArmState = SelectedArmState.L4;
+  private Random m_rng = new Random();
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -97,7 +93,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_arm = new Arm(m_operator);
     m_intake = new Intake();
     m_mech2dManager = new MechManager2D(m_arm, m_intake);
-     m_rightCamera =
+    m_rightCamera =
         new Camera(
             "limelight-right",
             LimelightVersion.LL3G,
@@ -178,7 +174,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
 
-    m_driver.rightBumper().or(m_driver.rightTrigger()).whileTrue(new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod), () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
+    m_driver.rightBumper().or(m_driver.rightTrigger()).whileTrue(
+      new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
+                          () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
     m_driver.rightBumper().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
     m_driver.rightTrigger().whileTrue(new ChangeState().setArm(() -> m_selectedArmState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL));
     m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).withArmInterrupt(ArmState.STOW));
@@ -211,7 +209,17 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_simKeyboard.y().onTrue(
       new InstantCommand(() -> {
         System.out.println("Adding Game Piece");
-        SimulatedArena.getInstance().addGamePiece(new ReefscapeCoralOnField(new Pose2d(2, 1, Rotation2d.fromDegrees(90))));
+        Logger.recordOutput("DebugPose", FieldPoint.rightSource.getCurrentAlliancePose());
+        var newPiece = new ReefscapeCoralOnFly(
+            FieldPoint.rightSource.getCurrentAlliancePose().getTranslation(),
+            new Translation2d(0.1, 0),
+            new ChassisSpeeds(),
+            FieldPoint.rightSource.getCurrentAlliancePose().getRotation(), // .plus(Rotation2d.fromDegrees(m_rng.nextDouble(0, 20) - 10)),
+            Meters.of(1.5),
+            MetersPerSecond.of(m_rng.nextDouble(0.1, 3)),
+            Degrees.of(m_rng.nextDouble(0, 10) - 15));
+        //newPiece.addGamePieceAfterTouchGround(SimulatedArena.getInstance());
+        SimulatedArena.getInstance().addGamePieceProjectile(newPiece);
       })
     );
     // z on keyboard 0
@@ -263,11 +271,19 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     DashboardNumber.checkAll();
   }
 
+  /**
+   * Simple setter method.
+   *
+   * @param accept the pose or not
+   */
   public void setSwerveDriveAcceptingVisionUpdates(boolean accept) {
     m_swerveDrive.setOdometryAcceptVisionData(accept);
   }
 
-  public void autoAndTeleInit(){
+  /**
+   * Run when Autonomous and Tele-op start.
+   */
+  public void autoAndTeleInit() {
     m_arm.changeState(ArmState.START);
   }
 
@@ -285,16 +301,15 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_arm.setMotorStartUp();
   }
 
-  @Override
-   /**
+  /**
    * Attempts to update the pose estimator within the swerve drive object. Note that the SwerveDrive
    * may disregard pose updates as well.
    *
    * @param data VisionData structure containing the required parts
    */
+  @Override
   public synchronized void updatePoseEstimator(VisionData data) {
     var pose = data.getPose2d();
-    var pose3D = data.getPose3d();
     boolean check = true;
     if (pose == null
         || !Double.isFinite(pose.getX())
@@ -307,10 +322,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       check = false;
     }
 
-    if (data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement){
+    if (data.getConfidence() <= VisionConstants.limeLight3GSpecs.confidence_requirement) {
       check = false;
     }
 
+    var pose3D = data.getPose3d();
     if (pose.getX() <= 0.0 || pose.getY() <= 0.0 || pose3D.getZ() <= -0.10 || pose3D.getZ() >= 0.30) {
       check = false;
     }
