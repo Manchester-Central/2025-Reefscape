@@ -98,7 +98,7 @@ public final class Constants {
         SensorDirectionValue.CounterClockwise_Positive;
     public static final double SpeedGearRatio = 6.98;
     public static final double AngleGearRatio = 12.1;
-    public static final double SpeedCircumference = 0.1016 * Math.PI;
+    public static final double SpeedCircumference = Inches.of(4).in(Meters) * Math.PI;
     public static final double DriverRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double AutonomousRampRatePeriod = 0.05; // TODO: GET REAL
     public static final double DriverSlowRampRatePeriod = 0.1;
