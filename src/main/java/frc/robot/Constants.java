@@ -182,8 +182,8 @@ public final class Constants {
       public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 81.5, 0.567, -90.0); // TODO tune this
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 90, 1.59, 45); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 20, 0.2, -10.0); //TODO tune this
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 20, 0.2, -20); //TODO tune this
-      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 30, 0.25, -35); //TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 16, 25, -26); //TODO tune this
+      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 17.5, 0.28, -27); //TODO tune this
     }
 
     /** This contains constants for our Base Pivot. */
