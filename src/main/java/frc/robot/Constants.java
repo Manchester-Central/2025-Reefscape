@@ -292,7 +292,7 @@ public final class Constants {
       public static final double VoltageClosedLoopRampPeriod = 0.1;
 
       //Offset // TODO: Get Real
-      public static final double canCoderOffsetDegrees = -74;
+      public static final double canCoderOffsetDegrees = -175.8;
     }
 
     /** This contains constants for our Gripper. */
