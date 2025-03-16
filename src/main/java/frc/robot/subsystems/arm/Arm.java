@@ -463,7 +463,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   public void setMotorCleanUp() {
     m_extender.setMotorCoast();
     // m_basePivot.setMotorCoast();
-    m_gripperPivot.setMotorCoast();
+    // m_gripperPivot.setMotorCoast();
   }
 
   /**
@@ -472,7 +472,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   public void setMotorStartUp() {
     m_extender.setMotorBrake();
     // m_basePivot.setMotorBrake();
-    m_gripperPivot.setMotorBrake();
+    // m_gripperPivot.setMotorBrake();
   }
 
   @Override
