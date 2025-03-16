@@ -7,6 +7,7 @@ package frc.robot.subsystems.arm;
 import static edu.wpi.first.units.Units.Amps;
 
 import com.chaos131.util.DashboardNumber;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -45,17 +46,26 @@ public class Gripper extends AbstractArmPart {
 
   private Debouncer m_coralSensorDebouncerBack = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
 
+  private ChaosTalonFxTuner m_coralTuner = new ChaosTalonFxTuner("CoralGripper", m_coralMotor);
+
   private ChaosTalonFx m_algaeMotor = new ChaosTalonFx(CanIdentifiers.GripperAlgaeMotorCANID);
 
   private Debouncer m_algaeSensorDebouncer = new Debouncer(GripperConstants.AlgaeDropDebounceSeconds, DebounceType.kFalling);
 
   private ChaosTalonFxTuner m_algaeTuner = new ChaosTalonFxTuner("AlgaeGripper", m_algaeMotor);
 
+
   // Current limits
   private DashboardNumber m_algaeSupplyCurrentLimit = m_algaeTuner.tunable(
       "SupplyCurrentLimit", GripperConstants.AlgaeSupplyCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
   private DashboardNumber m_algaeStatorCurrentLimit = m_algaeTuner.tunable(
       "StatorCurrentLimit", GripperConstants.AlgaeStatorCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
+
+  private DashboardNumber m_coralSupplyCurrentLimit = m_coralTuner.tunable(
+      "SupplyCurrentLimit", GripperConstants.CoralStatorCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
+  private DashboardNumber m_coralStatorCurrentLimit = m_coralTuner.tunable(
+      "StatorCurrentLimit", GripperConstants.CoralStatorCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
+      
 
   /**
    * Creates a new Gripper.
@@ -69,6 +79,13 @@ public class Gripper extends AbstractArmPart {
     m_algaeMotor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_algaeMotor.Configuration.CurrentLimits.SupplyCurrentLimit = m_algaeSupplyCurrentLimit.get();
     m_algaeMotor.applyConfig();
+
+    m_coralMotor.Configuration.CurrentLimits.StatorCurrentLimitEnable = true;
+    m_coralMotor.Configuration.CurrentLimits.StatorCurrentLimit = m_coralStatorCurrentLimit.get();
+    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimit = m_coralSupplyCurrentLimit.get();
+    m_coralMotor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    m_coralMotor.applyConfig();
   }
 
   /**
