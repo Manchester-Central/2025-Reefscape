@@ -41,7 +41,6 @@ import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
 import frc.robot.commands.WaitForState;
 import frc.robot.subsystems.Camera;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.MechManager2D;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.arm.Arm;
@@ -71,7 +70,6 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
   public static Arm m_arm;
   public static Gripper m_gripper;
-  public static Intake m_intake;
   public static Camera m_rightCamera;
   public static Camera m_leftCamera;
   public static MechManager2D m_mech2dManager;
@@ -97,8 +95,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_gyro = new Pigeon2(CanIdentifiers.GyroCANID, CanIdentifiers.CTRECANBus);
     m_swerveDrive = SwerveDrive.createSwerveDrive(m_gyro);
     m_arm = new Arm(m_operator, m_driver);
-    m_intake = new Intake();
-    m_mech2dManager = new MechManager2D(m_arm, m_intake);
+    m_mech2dManager = new MechManager2D(m_arm);
     m_rightCamera =
         new Camera(
             "limelight-right",
