@@ -11,11 +11,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Robot;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.SwerveDrive;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -211,6 +209,14 @@ public class FieldPoint {
     m_redPose = new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180)));
   }
 
+  /**
+   * Creates a new FieldPoint.
+   *
+   * @param name the name of the field point
+   * @param pose the pose on the field
+   * @param isBlue if on blue alliance
+   * 
+   */
   public FieldPoint(String name, Pose2d pose, Boolean isBlue) {
     m_name = name;
     m_defaultAlliance = Alliance.Blue;
@@ -221,6 +227,14 @@ public class FieldPoint {
     m_redPose = isBlue ? new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180))) : pose;
   }
 
+  /**
+   * Creates a new FieldPoint.
+   *
+   * @param name the name of the field point
+   * @param swerveDrive current pose of the swerve drive
+   * @param isBlue if on blue alliance
+   * 
+   */
   public FieldPoint(String name, SwerveDrive swerveDrive, Boolean isBlue) {
     this(name, swerveDrive.getPose(), isBlue);
   }

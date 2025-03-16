@@ -332,7 +332,7 @@ public final class Constants {
   public static class FieldDimensions {
     // Value taken from Limelight fmap
     public static final double FieldLength = 17.5482504;
-    // Value taken from Limelight fmap  
+    // Value taken from Limelight fmap
     public static final double FieldWidth = 8.0519016;
     // Transform to the Driver Perspective Left Reef from the perspective of the April Tag
     public static final Transform2d ReefBranchLeft =

@@ -52,15 +52,6 @@ public class MechManager2D extends SubsystemBase {
   @AutoLogOutput(key = "Mech2d/Intake")
   private LoggedMechanism2d m_intakeBase;
 
-  private LoggedMechanismRoot2d m_intakeRoot;
-  private LoggedMechanismLigament2d m_innerIntakeLigament;
-  private LoggedMechanismLigament2d m_outerIntakeLigament;
-
-  private final Color8Bit m_innerIntakeColor = new Color8Bit(255, 0, 255);
-  private final Color8Bit m_intakeNeutralColor = new Color8Bit(100, 100, 100);
-  private final Color8Bit m_intakeForwardColor = new Color8Bit(0, 255, 0);
-  private final Color8Bit m_intakeReverseColor = new Color8Bit(255, 0, 0);
-
   /**
    * Creates a new mech manager.
    */

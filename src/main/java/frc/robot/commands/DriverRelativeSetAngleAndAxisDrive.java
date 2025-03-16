@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.swerve.BaseSwerveDrive;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,15 +13,12 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.utils.FieldPoint;
-
-import static edu.wpi.first.units.Units.MetersPerSecond;
-
 import java.util.function.Supplier;
 
 /**
  * Type in a sentence.
  */
-public class DriverRelativeSetAngleAndYDrive extends Command {
+public class DriverRelativeSetAngleAndAxisDrive extends Command {
   private Gamepad m_driver;
   private BaseSwerveDrive m_swerveDrive;
   double m_magnitude;
@@ -28,7 +27,7 @@ public class DriverRelativeSetAngleAndYDrive extends Command {
   /**
  * Type in a sentence.
  */
-  public DriverRelativeSetAngleAndYDrive(Gamepad driver, BaseSwerveDrive swerveDrive, Supplier<Rotation2d> rotationSupplier, double magnitude) {
+  public DriverRelativeSetAngleAndAxisDrive(Gamepad driver, BaseSwerveDrive swerveDrive, Supplier<Rotation2d> rotationSupplier, double magnitude) {
     m_driver = driver;
     m_swerveDrive = swerveDrive;
     m_magnitude = magnitude;
@@ -40,14 +39,14 @@ public class DriverRelativeSetAngleAndYDrive extends Command {
   /**
  * Type in a sentence.
  */
-  public DriverRelativeSetAngleAndYDrive(Gamepad driver, BaseSwerveDrive swerveDrive, Rotation2d angle, double magnitude) {
+  public DriverRelativeSetAngleAndAxisDrive(Gamepad driver, BaseSwerveDrive swerveDrive, Rotation2d angle, double magnitude) {
     this(driver, swerveDrive, () -> angle, magnitude);
   }
 
   /**
  * Type in a sentence.
  */
-  public DriverRelativeSetAngleAndYDrive(Gamepad driver, BaseSwerveDrive swerveDrive, FieldPoint fieldPoint, double magnitude) {
+  public DriverRelativeSetAngleAndAxisDrive(Gamepad driver, BaseSwerveDrive swerveDrive, FieldPoint fieldPoint, double magnitude) {
     this(driver, swerveDrive, () -> fieldPoint.getCurrentAlliancePose().relativeTo(swerveDrive.getPose()).getTranslation().getAngle(), magnitude);
   }
 
