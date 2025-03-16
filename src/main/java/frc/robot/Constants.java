@@ -308,9 +308,11 @@ public final class Constants {
       public static final double OutakeAlgaeSpeed = 0.5;
       public static final double IntakeCoralOnAlgaeMotorSpeed = 0.5;
       public static final double OutakeCoralOnAlgaeMotorSpeed = -0.5;
+      public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.5;
       public static final double IntakeCoralSpeed = -0.5;
       public static final double IntakeCoralSlow = -0.2;
       public static final double OutakeCoralSpeed = 0.5;
+      public static final double OutakeInvertedCoralSpeed = -0.5;
     }
   }
 
