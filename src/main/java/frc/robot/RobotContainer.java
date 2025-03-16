@@ -17,10 +17,16 @@ import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -35,8 +41,10 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.commands.DriverRelativeSetAngleAndYDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.ReefAlignment;
+import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
 import frc.robot.commands.WaitForState;
@@ -53,6 +61,8 @@ import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
@@ -152,15 +162,21 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
 
     // Everything after this is for competition
-    m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
-      FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
-      return pose.getCurrentAlliancePose().getRotation();
-    }, 1.0));
+    // m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
+    //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
+    //   return pose.getCurrentAlliancePose().getRotation();
+    // }, 1.0));
     // m_driver.a().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
     //     .alongWith(new ChangeState().setArm(ArmState.INTAKE_FROM_HP)
     //     .withArmInterrupt(ArmState.STOW)));
-        
-    m_driver.b().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Right.getAllianceAngle(), 1.0));
+     
+    m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Right.getAllianceAngle(), 1.0));
+    m_driver.b().whileTrue(new DeferredCommand(() -> PathUtil.driveToPoseCommand(new FieldPoint("ClosestBargePoint",
+        new Pose2d(FieldPoint.CenterBarge.getBluePose().getX(),  
+        new FieldPoint("SwervePose", m_swerveDrive, DriverStation.getAlliance().equals(Alliance.Blue)).getBluePose().getY(), 
+        FieldPoint.CenterBarge.getBluePose().getRotation())), m_swerveDrive), Set.of(m_swerveDrive))
+      .andThen(new DriverRelativeSetAngleAndYDrive(m_driver, m_swerveDrive, () -> DriveDirection.Towards.getAllianceAngle(), 1.0))
+      .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE)));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
     m_driver.y().whileTrue(new ConditionalCommand(
         aimAndPrepCoral(),

@@ -11,8 +11,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Robot;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
+import frc.robot.subsystems.SwerveDrive;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -50,6 +53,8 @@ public class FieldPoint {
       new Pose2d(1.204913, 4.02500, Rotation2d.fromDegrees(180)));
   public static final FieldPoint LollipopRight = new FieldPoint("LollipopRight",
       new Pose2d(1.204913, 2.197100, Rotation2d.fromDegrees(180)));
+  public static final FieldPoint CenterBarge = new FieldPoint("CenterBarge", 
+      new Pose2d(7.5, 4, Rotation2d.fromDegrees(180)));
       
 
   public static HashMap<Integer, AprilTag> aprilTagMap = FieldData.GetAprilTagMap("assets/frc2025.fmap");
@@ -204,6 +209,20 @@ public class FieldPoint {
     poseTranslation = poseTranslation.rotateBy(Rotation2d.fromDegrees(180));
     poseTranslation = poseTranslation.plus(new Translation2d(m_fieldLength, m_fieldWidth).div(2));
     m_redPose = new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180)));
+  }
+
+  public FieldPoint(String name, Pose2d pose, Boolean isBlue) {
+    m_name = name;
+    m_defaultAlliance = Alliance.Blue;
+    Translation2d poseTranslation = pose.getTranslation().minus(new Translation2d(m_fieldLength, m_fieldWidth).div(2));
+    poseTranslation = poseTranslation.rotateBy(Rotation2d.fromDegrees(180));
+    poseTranslation = poseTranslation.plus(new Translation2d(m_fieldLength, m_fieldWidth).div(2));
+    m_bluePose = isBlue ? pose : new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180)));
+    m_redPose = isBlue ? new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180))) : pose;
+  }
+
+  public FieldPoint(String name, SwerveDrive swerveDrive, Boolean isBlue) {
+    this(name, swerveDrive.getPose(), isBlue);
   }
 
   public Pose2d getBluePose() {
