@@ -75,8 +75,8 @@ public final class Constants {
     public static final int GripperPivotCANCoderCANID = 61; // TODO: set on robot
 
     // Gripper (70s)
-    public static final int GripperCoralMotorCANID = 13; // TODO: set on robot
-    public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
+    public static final int GripperCoralMotorCANID = 52; // TODO: set on robot
+    public static final int GripperAlgaeMotorCANID = 53; // TODO: set on robot
 
     // Intake (80s) RIP 2025-2025 for now for now
     public static final int IntakeMotor1CANID = 80; // TODO: set on robot
@@ -220,7 +220,7 @@ public final class Constants {
     /** This contains constants for our Extender. */
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
-      public static final double MaxLengthMeter = 1.6;
+      public static final double MaxLengthMeter = 1.68;
       public static final double HighThresholdMeter = 0.93; // TODO tune this
       public static final double LowThresholdMeter = 0.58; // TODO tune this
       public static final double BaseThresholdMeter = 0.1; // TODO tune this
