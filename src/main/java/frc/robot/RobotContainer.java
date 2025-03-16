@@ -126,7 +126,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("ScoreL3",  new ChangeState().setArm(ArmState.SCORE_L3).andThen(new WaitForState().forArmState(ArmState.STOW)));
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setArm(ArmState.SCORE_L4).andThen(new WaitForState().forArmState(ArmState.STOW)));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForCoral(m_arm)));
-    NamedCommands.registerCommand("IntakeFromFloor", new ChangeState().setArm(ArmState.INTAKE_FROM_FLOOR).andThen(new WaitForCoral(m_arm)));
+    NamedCommands.registerCommand("IntakeFromFloor", new ChangeState().setArm(ArmState.INTAKE_CORAL_FROM_FLOOR).andThen(new WaitForCoral(m_arm)));
     //JOHN SAVE US PLEASE: change hold coral to hold algae
     NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 0.5)
         .andThen(new RunCommand(() -> m_swerveDrive.moveRobotRelative(MetersPerSecond.of(1.75), MetersPerSecond.of(0.0), DegreesPerSecond.of(0)), m_swerveDrive)))
@@ -185,24 +185,30 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       new ConditionalCommand(
           new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL),
           new ConditionalCommand(
-            new ChangeState().setArm(() -> m_selectedAlgaeState.State).withArmInterrupt(ArmState.HOLD_ALGAE), 
-            new ChangeState().setArm(ArmState.INTAKE_ALGAE_FROM_FLOOR),
+              new ChangeState().setArm(() -> m_selectedAlgaeState.State).withArmInterrupt(ArmState.HOLD_ALGAE), 
+              new ChangeState().setArm(ArmState.INTAKE_ALGAE_FROM_FLOOR),
             m_arm.m_gripper::hasAlgae), 
           m_arm.m_gripper::hasCoral));
     m_driver.rightTrigger().whileTrue(new ConditionalCommand(
-      new ChangeState().setArm(ArmState.SCORE_ALGAE).withArmInterrupt(ArmState.HOLD_ALGAE), 
-      new ChangeState().setArm(() -> m_selectedCoralState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL), 
-    m_arm.m_gripper::hasAlgae));
+        new ChangeState().setArm(ArmState.SCORE_ALGAE).withArmInterrupt(ArmState.HOLD_ALGAE), 
+        new ChangeState().setArm(() -> m_selectedCoralState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL), 
+        m_arm.m_gripper::hasAlgae));
     m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_CORAL_FROM_FLOOR).withArmInterrupt(ArmState.STOW));
     m_driver.leftBumper().whileTrue(new ChangeState().setArm(() -> {
       var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
       return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());
     }).withArmInterrupt(ArmState.STOW));
 
-    m_operator.a().onTrue(new ConditionalCommand(new InstantCommand(() -> m_selectedAlgaeState = SelectedAlgaeState.PROCESSOR), new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L1), m_arm.m_gripper::hasAlgae));
+    m_operator.a().onTrue(new ConditionalCommand(
+        new InstantCommand(() -> m_selectedAlgaeState = SelectedAlgaeState.PROCESSOR),
+        new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L1),
+        m_arm.m_gripper::hasAlgae));
     m_operator.x().onTrue(new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L2));
     m_operator.b().onTrue(new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L3));
-    m_operator.y().onTrue(new ConditionalCommand(new InstantCommand(() -> m_selectedAlgaeState = SelectedAlgaeState.BARGE), new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L4), m_arm.m_gripper::hasAlgae));
+    m_operator.y().onTrue(new ConditionalCommand(
+        new InstantCommand(() -> m_selectedAlgaeState = SelectedAlgaeState.BARGE),
+        new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L4),
+        m_arm.m_gripper::hasAlgae));
 
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));

@@ -8,10 +8,10 @@ import com.chaos131.gamepads.Gamepad;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.GripperConstants;
+import frc.robot.Constants.GeneralConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
@@ -230,6 +230,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       changeState(ArmState.HOLD_CORAL);
       return;
     }
+    if (m_gripper.hasAlgae()) {
+      changeState(ArmState.HOLD_ALGAE);
+      return;
+    }
     m_basePivot.setTargetAngle(ArmPoses.Stow.getBasePivotAngle());
     m_extender.setTargetLength(ArmPoses.Stow.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.Stow.getGripperPivotAngle());
@@ -360,7 +364,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_basePivot.setTargetAngle(ArmPoses.AlgaeHigh.getBasePivotAngle());
       m_extender.setTargetLength(ArmPoses.AlgaeHigh.getExtensionMeters());
       m_gripperPivot.setTargetAngle(ArmPoses.AlgaeHigh.getGripperPivotAngle());
-      m_gripper.setAlgaeGripSpeed(-0.5);
+      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed);
     } else {
       changeState(ArmState.HOLD_CORAL);
     }
@@ -371,7 +375,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_basePivot.setTargetAngle(ArmPoses.AlgaeLow.getBasePivotAngle());
       m_extender.setTargetLength(ArmPoses.AlgaeLow.getExtensionMeters());
       m_gripperPivot.setTargetAngle(ArmPoses.AlgaeLow.getGripperPivotAngle());
-      m_gripper.setAlgaeGripSpeed(-0.5);
+      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed);
     } else {
       changeState(ArmState.HOLD_CORAL);
     }
@@ -406,7 +410,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_extender.setTargetLength(armPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(armPose.getGripperPivotAngle());
     if ((!isPrep && isPoseReady()) || m_operator.rightBumper().getAsBoolean() || (DriverStation.isAutonomousEnabled() && isPoseClose() && m_stateTimer.hasElapsed(2))) {
-      m_gripper.setCoralGripSpeed(0.5);
+      m_gripper.setCoralGripSpeed(GripperConstants.OutakeCoralSpeed);
     } else {
       m_gripper.setCoralGripSpeed(0);
     }
@@ -452,8 +456,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     switch (getCurrentState()) {
       case INTAKE_CORAL_FROM_FLOOR:
       case INTAKE_ALGAE_FROM_FLOOR:
+      case ALGAE_HIGH:
+      case ALGAE_LOW:
       case INTAKE_FROM_HP:
-        //TODO: add more states
         m_driver.getHID().setRumble(RumbleType.kBothRumble, GeneralConstants.RumbleIntensity);
         break;
     

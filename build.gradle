@@ -133,7 +133,7 @@ checkstyle {
 
 tasks.withType(Checkstyle) {
     reports {
-        xml.required = false
+        xml.required = true
         html.required = true
         html.stylesheet = resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
     }
@@ -150,8 +150,13 @@ def browse(path) {
 
 task browseCheckstyleReport {
    doLast {
-        def file = project.file('build/reports/checkstyle/main.html')
-        browse file
+        def xmlFile = project.file('build/reports/checkstyle/main.xml')
+        def xplParsed = new XmlParser().parse(xmlFile)
+        def errorCount = xplParsed.file.error.size()
+        if (errorCount > 0) {
+            def reportHtmlFile = project.file('build/reports/checkstyle/main.html')
+            browse reportHtmlFile
+        }
    }
 }
 
