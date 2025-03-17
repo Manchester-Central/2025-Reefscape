@@ -4,8 +4,12 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meter;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDValue;
@@ -23,6 +27,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.subsystems.arm.ArmPose;
+import frc.robot.utils.SafetyUtil.GripperPivotSafety;
 
 /** This class holds all of our 2025 constants. */
 public final class Constants {
@@ -178,7 +183,7 @@ public final class Constants {
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 76.6, 0.51, -36.0); // Last updated 2/22/25
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
       public static final ArmPose Climb = new ArmPose("Climb", 20.0, 0.3, -20.0); // 39 or 38.8 also 47 might work for pivot angle
-      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 75.5, 0.25, -78.9);
+      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 75.5, 0.25, -75.9);
       public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.31, -38.3); // TODO tune this
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 47.9, 0.0, -40.5); //TODO tune this
@@ -201,8 +206,8 @@ public final class Constants {
       public static final double kA = 0.01;
 
       // Motion Magic
-      public static final double MMCruiseVelocity = 10;
-      public static final double MMAcceleration = 10;
+      public static final double MMCruiseVelocity = 0.3;
+      public static final double MMAcceleration = 1;
       public static final double MMJerk = 100;
 
       public static final double SupplyCurrentLimit = 50;
@@ -266,8 +271,14 @@ public final class Constants {
       public static final Rotation2d MinAngleStandard = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
       public static final Rotation2d MaxAngleStandard = Rotation2d.fromDegrees(-30);
       public static final Rotation2d MaxAngleHigh = Rotation2d.fromDegrees(60); // TODO tune this
-      public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
-      public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
+      public static final Angle TrueSafeAngle = Degrees.of(-25);
+
+      // Gripper pivot safety ranges
+      public static final List<GripperPivotSafety> safeties = new ArrayList<GripperPivotSafety>() {{
+          add(new GripperPivotSafety(Meters.of(-0.05), Meters.of(0.3), Degrees.of(-50), Degrees.of(-25)));
+          add(new GripperPivotSafety(Meters.of(0.3), Meters.of(0.5), Degrees.of(-115), Degrees.of(5)));
+          add(new GripperPivotSafety(Meters.of(0.5), Meters.of(1.8), Degrees.of(-115), Degrees.of(60)));
+        }};
 
       public static final double kP = 30.0;
       public static final double kI = 0.0;
