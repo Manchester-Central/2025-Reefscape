@@ -182,7 +182,7 @@ public final class Constants {
       public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 76.6, 0.51, -36.0); // Last updated 2/22/25
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 20.0, 0.3, -20.0); // 39 or 38.8 also 47 might work for pivot angle
+      public static final ArmPose Climb = new ArmPose("Climb", 13.0, 0.34, 0.0); // 39 or 38.8 also 47 might work for pivot angle
       public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 75.5, 0.25, -75.9);
       public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.31, -38.3); // TODO tune this
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
@@ -193,7 +193,7 @@ public final class Constants {
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(18); // TODO: go back to 20
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(13); // TODO: go back to 20
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
       public static final Rotation2d LowerSafetyAngle = Rotation2d.fromDegrees(45);
 
