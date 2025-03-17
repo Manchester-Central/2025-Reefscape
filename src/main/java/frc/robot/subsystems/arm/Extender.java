@@ -170,13 +170,6 @@ public class Extender extends AbstractArmPart {
   }
 
   /**
-   * Checks if the current length is safe for other parts to move.
-   */
-  public boolean isSafeLength() {
-    return Math.abs(getCurrentLength() - m_targetLength) < 0.02 || getCurrentLength() >= ArmPoses.HoldCoral.getExtensionMeters() - 0.005;
-  }
-
-  /**
    * Checks if the extender length is at the target length.
    */
   public boolean atTarget() {

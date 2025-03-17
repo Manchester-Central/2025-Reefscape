@@ -150,10 +150,6 @@ public class GripperPivot extends AbstractArmPart {
     m_targetAngle = newAngle;
     m_motor.moveToPositionMotionMagic(newAngle.getRotations());
   }
-
-  public boolean isSafeAngle() {
-    return Math.abs(getCurrentAngle().minus(GripperPivotConstants.SafeAngle).getDegrees()) < GripperPivotConstants.SafeAngleTolerance.getDegrees();
-  }
   
   /**
    * Disables the FusedCANCoder, this was used when the GripperPivot was breaking.

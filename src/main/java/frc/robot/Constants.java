@@ -232,7 +232,7 @@ public final class Constants {
       public static final double kP = 150.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.7;
+      public static final double kG = 0.83;
       public static final double kS = 0.5;
       public static final double kV = 0.12;
       public static final double kA = 0.01;
@@ -272,7 +272,7 @@ public final class Constants {
       public static final double kP = 30.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.13;
+      public static final double kG = 0.43;
       public static final double kS = 0.25;
       public static final double kV = 0.0;
       public static final double kA = 0.00;
@@ -282,8 +282,8 @@ public final class Constants {
       public static final double MMAcceleration = 160;
       public static final double MMJerk = 1600;
 
-      public static final double SupplyCurrentLimit = 10;
-      public static final double StatorCurrentLimit = 10;
+      public static final double SupplyCurrentLimit = 30;
+      public static final double StatorCurrentLimit = 30;
 
       // Sensor Feedback // TODO: get real values
       public static final double RotorToSensorRatio = 51.04;
