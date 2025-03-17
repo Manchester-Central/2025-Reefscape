@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -16,8 +19,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.Constants.ArmConstants.ArmPoses;
-import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.GripperPivotConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Robot;
@@ -27,12 +28,7 @@ import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
-import frc.robot.utils.SafetyUtil;
 import frc.robot.utils.SafetyUtil.GripperPivotSafety;
-
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
-
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 

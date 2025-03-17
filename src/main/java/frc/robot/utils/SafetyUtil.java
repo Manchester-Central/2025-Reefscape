@@ -12,7 +12,7 @@ import java.util.List;
 /** Add your docs here. */
 public class SafetyUtil {
   /**
-   * Checkstyle ):<.
+   * A class to manage our min/max angles for a given extender range.
    */
   public static class GripperPivotSafety {
     private final Distance m_distanceHigh;
@@ -21,7 +21,7 @@ public class SafetyUtil {
     private final Angle m_maxAngle;
     
     /**
-     * Checkstyle.
+     * Creates a new Gripper Pivot Safety.
      */
     public GripperPivotSafety(Distance distanceLow, Distance distanceHigh, Angle minAngle, Angle maxAngle)  {
       m_distanceLow = distanceLow;
@@ -39,7 +39,7 @@ public class SafetyUtil {
     }
 
     /**
-     * Check.
+     * Gets the min/max angle for the given extender distance.
      */
     public static GripperPivotSafety getGripperPivotSafety(Distance currentDistance, List<GripperPivotSafety> safeties) {
       for (GripperPivotSafety gripperPivotSafety : safeties) {

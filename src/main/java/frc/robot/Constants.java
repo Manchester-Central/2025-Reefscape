@@ -4,12 +4,8 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meter;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDValue;
@@ -28,6 +24,8 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.utils.SafetyUtil.GripperPivotSafety;
+import java.util.ArrayList;
+import java.util.List;
 
 /** This class holds all of our 2025 constants. */
 public final class Constants {
