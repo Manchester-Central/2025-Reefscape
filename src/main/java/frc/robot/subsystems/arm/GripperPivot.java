@@ -94,7 +94,7 @@ public class GripperPivot extends AbstractArmPart {
   public GripperPivot(Supplier<ArmValues> armValuesSupplier) {
     super(armValuesSupplier);
     m_canCoder.Configuration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
-    m_canCoder.Configuration.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    m_canCoder.Configuration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     m_canCoder.Configuration.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(m_canCoderOffsetDegrees.get()).getRotations();
     m_canCoder.applyConfig();
 

@@ -75,8 +75,8 @@ public final class Constants {
     public static final int GripperPivotCANCoderCANID = 61; // TODO: set on robot
 
     // Gripper (70s)
-    public static final int GripperCoralMotorCANID = 13; // TODO: set on robot
-    public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
+    public static final int GripperCoralMotorCANID = 52; // TODO: set on robot
+    public static final int GripperAlgaeMotorCANID = 53; // TODO: set on robot
 
     // Intake (80s) RIP 2025-2025 for now for now
     public static final int IntakeMotor1CANID = 80; // TODO: set on robot
@@ -182,8 +182,8 @@ public final class Constants {
       public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 81.5, 0.567, -90.0); // TODO tune this
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 90, 1.59, 45); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 20, 0.2, -10.0); //TODO tune this
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 20, 0.2, -20); //TODO tune this
-      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 30, 0.25, -35); //TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 16, 25, -26); //TODO tune this
+      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 17.5, 0.28, -27); //TODO tune this
     }
 
     /** This contains constants for our Base Pivot. */
@@ -220,7 +220,7 @@ public final class Constants {
     /** This contains constants for our Extender. */
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
-      public static final double MaxLengthMeter = 1.6;
+      public static final double MaxLengthMeter = 1.68;
       public static final double HighThresholdMeter = 0.93; // TODO tune this
       public static final double LowThresholdMeter = 0.58; // TODO tune this
       public static final double BaseThresholdMeter = 0.1; // TODO tune this
@@ -292,7 +292,7 @@ public final class Constants {
       public static final double VoltageClosedLoopRampPeriod = 0.1;
 
       //Offset // TODO: Get Real
-      public static final double canCoderOffsetDegrees = -74;
+      public static final double canCoderOffsetDegrees = -4.0;
     }
 
     /** This contains constants for our Gripper. */
