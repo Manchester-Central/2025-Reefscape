@@ -126,7 +126,7 @@ public class GripperPivot extends AbstractArmPart {
 
     m_motor.applyConfig();
 
-    m_motor.attachMotorSim(m_motorSim, m_simGearRatio, ChassisReference.Clockwise_Positive, true);
+    m_motor.attachMotorSim(m_motorSim, m_simGearRatio, ChassisReference.CounterClockwise_Positive, true);
     m_motor.attachCanCoderSim(m_canCoder);
   }
 
