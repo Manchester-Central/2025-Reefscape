@@ -7,7 +7,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.Intake.IntakeState;
 import frc.robot.subsystems.arm.Arm.ArmState;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -17,7 +16,6 @@ import java.util.function.Supplier;
  */
 public class ChangeState extends Command {
   Optional<Supplier<ArmState>> m_armStateSupplier = Optional.empty();
-  Optional<IntakeState> m_intakeState = Optional.empty();
   Optional<ArmState> m_armInterruptState = Optional.empty();
 
   /** Creates a new uhhh. */
@@ -42,14 +40,6 @@ public class ChangeState extends Command {
   }
 
   /**
-   * Sets the state of the intake.
-   */
-  public ChangeState setIntake(IntakeState newIntakeState) {
-    m_intakeState = Optional.of(newIntakeState);
-    return this;
-  }
-
-  /**
    * Builder function to handle a return to state when the command is interrupted.
    *
    * @param newArmState state to become
@@ -60,15 +50,13 @@ public class ChangeState extends Command {
     return this;
   }
 
+  
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     if (m_armStateSupplier.isPresent()) {
       RobotContainer.m_arm.changeState(m_armStateSupplier.get().get());
-    }
-
-    if (m_intakeState.isPresent()) {
-      RobotContainer.m_intake.changeState(m_intakeState.get());
     }
   }
 

@@ -23,6 +23,9 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import frc.robot.subsystems.arm.ArmPose;
+import frc.robot.utils.SafetyUtil.GripperPivotSafety;
+import java.util.ArrayList;
+import java.util.List;
 
 /** This class holds all of our 2025 constants. */
 public final class Constants {
@@ -33,6 +36,7 @@ public final class Constants {
     // public static final Mode RobotMode = Mode.REPLAY;
     public static final Mode RobotMode = Robot.isReal() ? Mode.REAL : Mode.SIM;
     public static final Pose2d InitialRobotPose = new Pose2d(7.5, 4, Rotation2d.fromDegrees(180));
+    public static final double RumbleIntensity = 1; //Rumble Intensity is on a range from zero to one.
   }
 
   /** This contains constants needed for setting up our controllers. */
@@ -74,8 +78,8 @@ public final class Constants {
     public static final int GripperPivotCANCoderCANID = 61; // TODO: set on robot
 
     // Gripper (70s)
-    public static final int GripperCoralMotorCANID = 13; // TODO: set on robot
-    public static final int GripperAlgaeMotorCANID = 71; // TODO: set on robot
+    public static final int GripperCoralMotorCANID = 52; // TODO: set on robot
+    public static final int GripperAlgaeMotorCANID = 53; // TODO: set on robot
 
     // Intake (80s) RIP 2025-2025 for now for now
     public static final int IntakeMotor1CANID = 80; // TODO: set on robot
@@ -84,8 +88,8 @@ public final class Constants {
 
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
-    public static final int CoralChannelIDFront = 1;
-    public static final int CoralChannelIDBack = 2;
+    public static final int CoralChannelIDFront = 3;
+    public static final int CoralChannelIDBack = 1;
     public static final int ExtenderMinimumChannelID = 4;
   }
 
@@ -166,27 +170,30 @@ public final class Constants {
   public static class ArmConstants {
     /** Contains values for different known arm poses. */
     public static class ArmPoses {
-      public static final ArmPose Stow = new ArmPose("Stow", 72.0, 0.01, 0.0);
-      public static final ArmPose Handoff = new ArmPose("Handoff", 30.0, 0.4, 0.0);
-      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 28.5, 0.58, -20.0);
-      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 66.0, 0.575, -100.0);
-      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 75.5, 0.93, -103.5);
-      public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 81.5, 1.59, -120.0);
-      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 64.0, 1.0, -72.0);
-      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 51.0, 0.71, -60.0);
-      public static final ArmPose HpIntake = new ArmPose("HpIntake", 72.0, 0.057, -33.5); // Last updated 2/22/25
-      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 80.0, 0.1, 0.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 39.0, 0.1, 0.0); // 39 or 38.8 also 47 might work for pivot angle
-      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 81.5, 0.567, -90.0);
-      public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 90, 1.59, 45); //TODO tune this
-      public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 20, 0.2, -10.0); //TODO tune this
-      public static final ArmPose FloorIntake = new ArmPose("FloorIntake", 20, 0.2, -20); //TODO tune this
+      public static final ArmPose Stow = new ArmPose("Stow", 80.0, 0.25, -18.8);
+      // public static final ArmPose Handoff = new ArmPose("Handoff", 30.0, 0.4, 0.0);
+      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 68.5, 0.14, -47.1);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.57, -80.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -89.0);
+      public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.31, 48.0);
+      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 75.76, 0.85, -70.9);
+      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
+      public static final ArmPose HpIntake = new ArmPose("HpIntake", 76.6, 0.51, -36.0); // Last updated 2/22/25
+      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
+      public static final ArmPose Climb = new ArmPose("Climb", 13.0, 0.34, 0.0); // 39 or 38.8 also 47 might work for pivot angle
+      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 75.5, 0.25, -75.9);
+      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.31, -38.3); // TODO tune this
+      public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
+      public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 47.9, 0.0, -40.5); //TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 17.0, 0.25, -18.8); //TODO tune this
+      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 44.9, 0.31, -104.8); //TODO tune this
     }
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(18); // TODO: go back to 20
+      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(13); // TODO: go back to 20
       public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
+      public static final Rotation2d LowerSafetyAngle = Rotation2d.fromDegrees(45);
 
       public static final double kP = 400.0;
       public static final double kI = 10.00;
@@ -197,8 +204,8 @@ public final class Constants {
       public static final double kA = 0.01;
 
       // Motion Magic
-      public static final double MMCruiseVelocity = 10;
-      public static final double MMAcceleration = 10;
+      public static final double MMCruiseVelocity = 0.3;
+      public static final double MMAcceleration = 1;
       public static final double MMJerk = 100;
 
       public static final double SupplyCurrentLimit = 50;
@@ -214,50 +221,12 @@ public final class Constants {
       public static final double canCoderOffsetDegrees = -107.5;
     }
 
-    /** This contains constants for our Gripper Pivot. */
-    public static class GripperPivotConstants {
-
-      public static final Rotation2d MinAngleBase = Rotation2d.fromDegrees(-25); // TODO tune this
-      public static final Rotation2d MinAngleLow = Rotation2d.fromDegrees(-70); // TODO tune this
-      public static final Rotation2d MinAngleStandard = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
-      public static final Rotation2d MaxAngleStandard = Rotation2d.fromDegrees(0);
-      public static final Rotation2d MaxAngleHigh = Rotation2d.fromDegrees(45); // TODO tune this
-      public static final Rotation2d SafeAngle = Rotation2d.fromDegrees(0); 
-      public static final Rotation2d SafeAngleTolerance = Rotation2d.fromDegrees(4);
-
-      public static final double kP = 30.0;
-      public static final double kI = 0.0;
-      public static final double kD = 0.0;
-      public static final double kG = 0.13;
-      public static final double kS = 0.25;
-      public static final double kV = 0.0;
-      public static final double kA = 0.00;
-
-      // Motion Magic // TODO: get real values
-      public static final double MMCruiseVelocity = 80;
-      public static final double MMAcceleration = 160;
-      public static final double MMJerk = 1600;
-
-      public static final double SupplyCurrentLimit = 10;
-      public static final double StatorCurrentLimit = 10;
-
-      // Sensor Feedback // TODO: get real values
-      public static final double RotorToSensorRatio = 51.04;
-      public static final double SensorToMechanismRatio = 1;
-      
-      // Ramp Rates // TODO: get real values
-      public static final double VoltageClosedLoopRampPeriod = 0.1;
-
-      //Offset // TODO: Get Real
-      public static final double canCoderOffsetDegrees = -74;
-    }
-
     /** This contains constants for our Extender. */
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
-      public static final double MaxLengthMeter = 1.6;
-      public static final double HighThresholdMeter = 0.93; // TODO tune this
-      public static final double LowThresholdMeter = 0.58; // TODO tune this
+      public static final double MaxLengthMeter = 1.68;
+      public static final double HighThresholdMeter = 0.53; // TODO tune this
+      public static final double LowThresholdMeter = 0.2; // TODO tune this
       public static final double BaseThresholdMeter = 0.1; // TODO tune this
       public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto
 
@@ -266,7 +235,7 @@ public final class Constants {
       public static final double kP = 150.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.7;
+      public static final double kG = 0.83;
       public static final double kS = 0.5;
       public static final double kV = 0.12;
       public static final double kA = 0.01;
@@ -290,8 +259,50 @@ public final class Constants {
 
       // Ramp Rates
       public static final double VoltageClosedLoopRampPeriod = 0.1;
+    }
 
+    /** This contains constants for our Gripper Pivot. */
+    public static class GripperPivotConstants {
+
+      public static final Rotation2d MinAngleBase = Rotation2d.fromDegrees(-25); // TODO tune this
+      public static final Rotation2d MinAngleLow = Rotation2d.fromDegrees(-70); // TODO tune this
+      public static final Rotation2d MinAngleStandard = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
+      public static final Rotation2d MaxAngleStandard = Rotation2d.fromDegrees(-30);
+      public static final Rotation2d MaxAngleHigh = Rotation2d.fromDegrees(60); // TODO tune this
+      public static final Angle TrueSafeAngle = Degrees.of(-25);
+
+      // Gripper pivot safety ranges
+      public static final List<GripperPivotSafety> safeties = new ArrayList<GripperPivotSafety>() {{
+          add(new GripperPivotSafety(Meters.of(-0.05), Meters.of(0.3), Degrees.of(-50), Degrees.of(-25)));
+          add(new GripperPivotSafety(Meters.of(0.3), Meters.of(0.5), Degrees.of(-115), Degrees.of(5)));
+          add(new GripperPivotSafety(Meters.of(0.5), Meters.of(1.8), Degrees.of(-115), Degrees.of(60)));
+        }};
+
+      public static final double kP = 30.0;
+      public static final double kI = 0.0;
+      public static final double kD = 0.0;
+      public static final double kG = 0.43;
+      public static final double kS = 0.25;
+      public static final double kV = 0.0;
+      public static final double kA = 0.00;
+
+      // Motion Magic // TODO: get real values
+      public static final double MMCruiseVelocity = 0.1; // 80
+      public static final double MMAcceleration = 0.1; // 20
+      public static final double MMJerk = 1600;
+
+      public static final double SupplyCurrentLimit = 30;
+      public static final double StatorCurrentLimit = 30;
+
+      // Sensor Feedback // TODO: get real values
+      public static final double RotorToSensorRatio = 51.04;
+      public static final double SensorToMechanismRatio = 1;
       
+      // Ramp Rates // TODO: get real values
+      public static final double VoltageClosedLoopRampPeriod = 0.1;
+
+      //Offset // TODO: Get Real
+      public static final double canCoderOffsetDegrees = -4.0;
     }
 
     /** This contains constants for our Gripper. */
@@ -300,9 +311,18 @@ public final class Constants {
       public static final double AlgaeDropDebounceSeconds = 0.5;
       public static final Current AlgaeStatorCurrentLimit = Amps.of(15);
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(15);
+      public static final Current CoralStatorCurrentLimit = Amps.of(15);
+      public static final Current CoralSupplyCurrentLimit = Amps.of(15);
+      public static final double IntakeAlgaeSpeed = -0.5;
+      public static final double HoldAlgaeSpeed = -0.2;
+      public static final double OutakeAlgaeSpeed = 0.5;
+      public static final double IntakeCoralOnAlgaeMotorSpeed = 0.5;
+      public static final double OutakeCoralOnAlgaeMotorSpeed = -0.5;
+      public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.5;
       public static final double IntakeCoralSpeed = -0.5;
       public static final double IntakeCoralSlow = -0.2;
-      public static final double OutakeCoralSpeed = 0.2;
+      public static final double OutakeCoralSpeed = 0.5;
+      public static final double OutakeInvertedCoralSpeed = -0.5;
     }
   }
 
@@ -330,6 +350,9 @@ public final class Constants {
     // Transform to the Driver Perspective Right Reef from the perspective of the April Tag
     public static final Transform2d ReefBranchRight =
         new Transform2d(-0.0536, 0.1643, Rotation2d.fromDegrees(0));
+    // Trasform the Driver Perspective Center Reef from the perspective of the April Tag
+    public static final Transform2d ReefCenterBranch =
+        new Transform2d(-0.0536, 0, Rotation2d.fromDegrees(0));
     // Value taken from field cad
     public static final double TroughHeightMeters = 0.5175;
     // Value taken from field cad
