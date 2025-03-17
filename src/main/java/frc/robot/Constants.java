@@ -85,8 +85,8 @@ public final class Constants {
 
   /** This contains constants for all our IO ports on the RIO. */
   public static class IoPortsConstants {
-    public static final int CoralChannelIDFront = 1;
-    public static final int CoralChannelIDBack = 2;
+    public static final int CoralChannelIDFront = 3;
+    public static final int CoralChannelIDBack = 1;
     public static final int ExtenderMinimumChannelID = 4;
   }
 

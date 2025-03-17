@@ -42,7 +42,7 @@ public class Gripper extends AbstractArmPart {
 
   private DigitalInput m_coralSensorBack = new DigitalInput(IoPortsConstants.CoralChannelIDBack);
 
-  private Debouncer m_coralSensorDebouncerFront = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kBoth);
+  private Debouncer m_coralSensorDebouncerFront = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
 
   private Debouncer m_coralSensorDebouncerBack = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
 
