@@ -43,7 +43,7 @@ public class Gripper extends AbstractArmPart {
 
   private DigitalInput m_coralSensorBack = new DigitalInput(IoPortsConstants.CoralChannelIDBack);
 
-  private Debouncer m_coralSensorDebouncerFront = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
+  private Debouncer m_coralSensorDebouncerFront = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kBoth);
 
   private Debouncer m_coralSensorDebouncerBack = new Debouncer(GripperConstants.CoralDropDebounceSeconds, DebounceType.kFalling);
 
@@ -51,7 +51,7 @@ public class Gripper extends AbstractArmPart {
 
   private ChaosTalonFx m_algaeMotor = new ChaosTalonFx(CanIdentifiers.GripperAlgaeMotorCANID);
 
-  private Debouncer m_algaeSensorDebouncer = new Debouncer(GripperConstants.AlgaeDropDebounceSeconds, DebounceType.kFalling);
+  private Debouncer m_algaeSensorDebouncer = new Debouncer(GripperConstants.AlgaeDropDebounceSeconds, DebounceType.kBoth);
 
   private ChaosTalonFxTuner m_algaeTuner = new ChaosTalonFxTuner("AlgaeGripper", m_algaeMotor);
 
