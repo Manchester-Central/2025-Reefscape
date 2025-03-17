@@ -135,9 +135,9 @@ public class Extender extends AbstractArmPart {
    */
   public void setTargetLength(double newLength) {
     if (hasReachedMinimum()) {
-      if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {
+      if (newLength > ExtenderConstants.MaxLengthMeter) {
         newLength = ExtenderConstants.MaxLengthMeter;
-      } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
+      } else if (newLength < ExtenderConstants.MinLengthMeter) {
         newLength = ExtenderConstants.MinLengthMeter;
       }
 
