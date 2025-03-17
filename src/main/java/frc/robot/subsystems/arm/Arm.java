@@ -29,11 +29,11 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     public Rotation2d gripperPivotAngle;
     public double coralGripSpeed;
     public double extenderLength;
-    public boolean isBasePivotAtSafeAngle;
-    public boolean isExtenderAtSafeLength;
+    public boolean isBasePivotAtCloseAngle;
+    public boolean isExtenderAtCloseLength;
     public boolean hasCoral;
     public boolean hasAlgae;
-    public boolean isGripperPivotAtSafeAngle;
+    public boolean isGripperPivotAtCloseAngle;
   }
 
   /**
@@ -45,11 +45,11 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     values.gripperPivotAngle = m_gripperPivot.getCurrentAngle();
     values.coralGripSpeed = m_gripper.getCoralGripSpeed();
     values.extenderLength = m_extender.getCurrentLength();
-    values.isBasePivotAtSafeAngle = m_basePivot.isSafeAngle();
-    values.isExtenderAtSafeLength = m_extender.isSafeLength();
+    values.isBasePivotAtCloseAngle = m_basePivot.atClose();
+    values.isExtenderAtCloseLength = m_extender.atClose();
     values.hasCoral = m_gripper.hasCoral();
     values.hasAlgae = m_gripper.hasAlgae();
-    values.isGripperPivotAtSafeAngle = m_gripperPivot.isSafeAngle();
+    values.isGripperPivotAtCloseAngle = m_gripperPivot.atClose();
     return values;
   }
 

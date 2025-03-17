@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -14,9 +17,8 @@ import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.Constants.ArmConstants.ArmPoses;
-import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.GripperPivotConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Robot;
@@ -26,6 +28,7 @@ import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
+import frc.robot.utils.SafetyUtil.GripperPivotSafety;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -134,25 +137,21 @@ public class GripperPivot extends AbstractArmPart {
    * Sets the target angle and tries to drive there.
    */
   public void setTargetAngle(Rotation2d newAngle) {
-    Rotation2d lowLevelMin = getArmValues().extenderLength < ExtenderConstants.BaseThresholdMeter ? GripperPivotConstants.MinAngleBase : GripperPivotConstants.MinAngleLow;
-    Rotation2d currentMax = getArmValues().extenderLength > ExtenderConstants.HighThresholdMeter ? GripperPivotConstants.MaxAngleHigh : GripperPivotConstants.MaxAngleStandard;
-    Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? lowLevelMin : GripperPivotConstants.MinAngleStandard;
-    
-    if (newAngle.getDegrees() > currentMax.getDegrees()) {
-      newAngle = currentMax;
-    } else if (newAngle.getDegrees() < currentMin.getDegrees()) {
-      newAngle = currentMin;
+    GripperPivotSafety currentSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(getArmValues().extenderLength), GripperPivotConstants.safeties);
+    Angle currentMin = currentSafety.getMinAngle();
+    Angle currentMax = currentSafety.getMaxAngle();
+
+    if (newAngle.getDegrees() > currentMax.in(Degrees)) {
+      newAngle = Rotation2d.fromDegrees(currentMax.in(Degrees));
+    } else if (newAngle.getDegrees() < currentMin.in(Degrees)) {
+      newAngle = Rotation2d.fromDegrees(currentMin.in(Degrees));
     }
 
-    if (!getArmValues().isBasePivotAtSafeAngle || !getArmValues().isExtenderAtSafeLength) {
-      newAngle = ArmPoses.Stow.getGripperPivotAngle();
-    }
+    // if (!getArmValues().isBasePivotAtSafeAngle || !getArmValues().isExtenderAtSafeLength) {
+    //   newAngle = ArmPoses.Stow.getGripperPivotAngle();
+    // }
     m_targetAngle = newAngle;
     m_motor.moveToPositionMotionMagic(newAngle.getRotations());
-  }
-
-  public boolean isSafeAngle() {
-    return Math.abs(getCurrentAngle().minus(GripperPivotConstants.SafeAngle).getDegrees()) < GripperPivotConstants.SafeAngleTolerance.getDegrees();
   }
   
   /**
@@ -167,13 +166,16 @@ public class GripperPivot extends AbstractArmPart {
    * Sets the direct speed [-1.0, 1.0] of the motors.
    */
   public void setSpeed(double speed) {
-    Rotation2d lowLevelMin = getArmValues().extenderLength < ExtenderConstants.BaseThresholdMeter ? GripperPivotConstants.MinAngleBase : GripperPivotConstants.MinAngleLow;
-    Rotation2d currentMax = getArmValues().extenderLength > ExtenderConstants.HighThresholdMeter ? GripperPivotConstants.MaxAngleHigh : GripperPivotConstants.MaxAngleStandard;
-    Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? lowLevelMin : GripperPivotConstants.MinAngleStandard;
+    // Rotation2d lowLevelMin = getArmValues().extenderLength < ExtenderConstants.BaseThresholdMeter ? GripperPivotConstants.MinAngleBase : GripperPivotConstants.MinAngleLow;
+    // Rotation2d currentMax = getArmValues().extenderLength > ExtenderConstants.HighThresholdMeter ? GripperPivotConstants.MaxAngleHigh : GripperPivotConstants.MaxAngleStandard;
+    // Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? lowLevelMin : GripperPivotConstants.MinAngleStandard;
+    GripperPivotSafety currentSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(getArmValues().extenderLength), GripperPivotConstants.safeties);
+    Angle currentMin = currentSafety.getMinAngle();
+    Angle currentMax = currentSafety.getMaxAngle();
 
-    if (getCurrentAngle().getDegrees() > currentMax.getDegrees()) {
+    if (getCurrentAngle().getDegrees() > currentMax.in(Degrees)) {
       speed = Math.min(speed, 0.0);
-    } else if (getCurrentAngle().getDegrees() < currentMin.getDegrees()) {
+    } else if (getCurrentAngle().getDegrees() < currentMin.in(Degrees)) {
       speed = Math.max(speed, 0.0);
     }
     m_motor.set(speed);

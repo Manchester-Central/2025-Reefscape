@@ -135,9 +135,9 @@ public class Extender extends AbstractArmPart {
    */
   public void setTargetLength(double newLength) {
     if (hasReachedMinimum()) {
-      if (getCurrentLength() > ExtenderConstants.MaxLengthMeter) {
+      if (newLength > ExtenderConstants.MaxLengthMeter) {
         newLength = ExtenderConstants.MaxLengthMeter;
-      } else if (getCurrentLength() < ExtenderConstants.MinLengthMeter) {
+      } else if (newLength < ExtenderConstants.MinLengthMeter) {
         newLength = ExtenderConstants.MinLengthMeter;
       }
 
@@ -167,13 +167,6 @@ public class Extender extends AbstractArmPart {
 
   public double getCurrentLength() {
     return m_motor1.getPosition().getValueAsDouble();
-  }
-
-  /**
-   * Checks if the current length is safe for other parts to move.
-   */
-  public boolean isSafeLength() {
-    return Math.abs(getCurrentLength() - m_targetLength) < 0.02 || getCurrentLength() >= ArmPoses.HoldCoral.getExtensionMeters() - 0.005;
   }
 
   /**
