@@ -144,9 +144,9 @@ public class GripperPivot extends AbstractArmPart {
       newAngle = currentMin;
     }
 
-    if (!getArmValues().isBasePivotAtSafeAngle || !getArmValues().isExtenderAtSafeLength) {
-      newAngle = ArmPoses.Stow.getGripperPivotAngle();
-    }
+    // if (!getArmValues().isBasePivotAtSafeAngle || !getArmValues().isExtenderAtSafeLength) {
+    //   newAngle = ArmPoses.Stow.getGripperPivotAngle();
+    // }
     m_targetAngle = newAngle;
     m_motor.moveToPositionMotionMagic(newAngle.getRotations());
   }

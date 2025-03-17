@@ -143,6 +143,13 @@ public class BasePivot extends AbstractArmPart {
     } else if (newAngle.getDegrees() < BasePivotConstants.MinAngle.getDegrees()) {
       newAngle = BasePivotConstants.MinAngle;
     }
+
+    boolean isExtenderAndGripperAtSafetyPose = getArmValues().isExtenderAtSafeLength && getArmValues().isGripperPivotAtSafeAngle;
+
+    if (newAngle.getDegrees() < BasePivotConstants.LowerSafetyAngle.getDegrees() && !isExtenderAndGripperAtSafetyPose) {
+      newAngle = BasePivotConstants.LowerSafetyAngle;
+    }
+
     m_targetAngle = newAngle;
     m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // Rotation to match the cancoder units
   }
