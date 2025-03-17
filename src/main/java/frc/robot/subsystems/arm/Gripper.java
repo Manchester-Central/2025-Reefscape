@@ -7,6 +7,7 @@ package frc.robot.subsystems.arm;
 import static edu.wpi.first.units.Units.Amps;
 
 import com.chaos131.util.DashboardNumber;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -84,6 +85,7 @@ public class Gripper extends AbstractArmPart {
     m_coralMotor.Configuration.CurrentLimits.StatorCurrentLimit = m_coralStatorCurrentLimit.get();
     m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimit = m_coralSupplyCurrentLimit.get();
+    m_coralMotor.Configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     m_coralMotor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_coralMotor.applyConfig();
   }

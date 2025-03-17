@@ -287,8 +287,8 @@ public final class Constants {
       public static final double kA = 0.00;
 
       // Motion Magic // TODO: get real values
-      public static final double MMCruiseVelocity = 80;
-      public static final double MMAcceleration = 20;
+      public static final double MMCruiseVelocity = 0.1; // 80
+      public static final double MMAcceleration = 0.1; // 20
       public static final double MMJerk = 1600;
 
       public static final double SupplyCurrentLimit = 30;
