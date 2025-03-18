@@ -11,6 +11,7 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.arm.Gripper;

@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotation;
 
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
@@ -28,6 +31,7 @@ import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -200,10 +204,21 @@ public class SwerveDrive extends BaseSwerveDrive {
     resetPose(targetPose);
   }
 
+  /**
+  * .
+  */
+
   public boolean atTargetDynamic() {
-    //TODO: math
-    //calculate standard deviation of angles
-    //return true if greater than threshold
+    if (atTarget() && m_swerveAngles.size() >= 2) {
+      Rotation2d angleToTarget2dLast = m_swerveAngles.get(m_swerveAngles.size() - 2);
+      Rotation2d angleToTargetLast = m_swerveAngles.getLast();
+      Rotation2d dif = angleToTarget2dLast.minus(angleToTargetLast);
+      Logger.recordOutput("thresh", SwerveConstants.AtTargetAngleThreshold);
+      Logger.recordOutput("dif", dif.getDegrees());
+      if (dif.getMeasure().abs(Degrees) > SwerveConstants.AtTargetAngleThreshold.getDegrees()) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -329,6 +344,8 @@ public class SwerveDrive extends BaseSwerveDrive {
     m_pastPoses.addSample(Timer.getFPGATimestamp(), getPose());
     Translation2d targetPosition = new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint());
     Rotation2d currentAngle = getPose().getTranslation().minus(targetPosition).getAngle();
+    Logger.recordOutput("at target dynamic", atTargetDynamic());
+    Logger.recordOutput("Command", getCurrentCommand() != null ? getCurrentCommand().getName() : "");
     m_swerveAngles.addLast(currentAngle);
   }
 
