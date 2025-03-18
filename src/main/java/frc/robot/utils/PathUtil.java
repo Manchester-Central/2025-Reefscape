@@ -11,6 +11,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.robot.Robot;
 import frc.robot.commands.SimpleDriveToPosition;
 import frc.robot.subsystems.SwerveDrive;
 import java.util.ArrayList;
@@ -68,8 +70,15 @@ public class PathUtil {
           FieldPoint nearestPoint = FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets);
           Logger.recordOutput("Swerve/Nearest Point", nearestPoint.getCurrentAlliancePose());
           Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, nearestPoint);
+          if (Robot.isSimulation()) {
+            return AutoBuilder.pathfindToPose(
+              swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0)
+              .andThen(simpleDriveToPosition)
+              .andThen(new RunCommand(() -> swerveDrive.moveToTarget(0), swerveDrive));
+          }
           return AutoBuilder.pathfindToPose(
-              swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0).andThen(simpleDriveToPosition);
+              swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0)
+              .andThen(simpleDriveToPosition);
           // return simpleDriveToPosition;
         },
         Set.of(swerveDrive));

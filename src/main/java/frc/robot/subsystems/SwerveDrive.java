@@ -237,12 +237,12 @@ public class SwerveDrive extends BaseSwerveDrive {
       m_simulatedDrive.runSwerveStates(states);
     }
     Logger.recordOutput("Swerve/TargetSpeeds", states);
-    if (chassisSpeeds.vxMetersPerSecond == 0
-        && chassisSpeeds.vyMetersPerSecond == 0
-        && chassisSpeeds.omegaRadiansPerSecond == 0) {
-      stop();
-      return;
-    }
+    // if (chassisSpeeds.vxMetersPerSecond == 0
+    //     && chassisSpeeds.vyMetersPerSecond == 0
+    //     && chassisSpeeds.omegaRadiansPerSecond == 0) {
+    //   stop();
+    //   return;
+    // }
 
     for (var i = 0; i < states.length; i++) {
       m_swerveModules.get(i).setTarget(states[i]);
