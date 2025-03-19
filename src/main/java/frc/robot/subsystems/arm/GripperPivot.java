@@ -137,7 +137,7 @@ public class GripperPivot extends AbstractArmPart {
    * Sets the target angle and tries to drive there.
    */
   public void setTargetAngle(Rotation2d newAngle) {
-    GripperPivotSafety currentSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(getArmValues().extenderLength), GripperPivotConstants.safeties);
+    GripperPivotSafety currentSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(getArmValues().extenderLength), GripperPivotConstants.Safeties);
     Angle currentMin = currentSafety.getMinAngle();
     Angle currentMax = currentSafety.getMaxAngle();
 
@@ -169,7 +169,7 @@ public class GripperPivot extends AbstractArmPart {
     // Rotation2d lowLevelMin = getArmValues().extenderLength < ExtenderConstants.BaseThresholdMeter ? GripperPivotConstants.MinAngleBase : GripperPivotConstants.MinAngleLow;
     // Rotation2d currentMax = getArmValues().extenderLength > ExtenderConstants.HighThresholdMeter ? GripperPivotConstants.MaxAngleHigh : GripperPivotConstants.MaxAngleStandard;
     // Rotation2d currentMin = getArmValues().extenderLength < ExtenderConstants.LowThresholdMeter ? lowLevelMin : GripperPivotConstants.MinAngleStandard;
-    GripperPivotSafety currentSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(getArmValues().extenderLength), GripperPivotConstants.safeties);
+    GripperPivotSafety currentSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(getArmValues().extenderLength), GripperPivotConstants.Safeties);
     Angle currentMin = currentSafety.getMinAngle();
     Angle currentMax = currentSafety.getMaxAngle();
 

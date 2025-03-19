@@ -38,6 +38,14 @@ public class SafetyUtil {
       return m_minAngle;
     }
 
+    public Distance getDistanceLow() {
+      return m_distanceLow;
+    }
+
+    public Distance getDistanceHigh() {
+      return m_distanceHigh;
+    }
+
     /**
      * Gets the min/max angle for the given extender distance.
      */

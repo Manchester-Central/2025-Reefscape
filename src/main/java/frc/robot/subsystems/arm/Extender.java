@@ -13,10 +13,12 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.ArmConstants.GripperPivotConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.IoPortsConstants;
 import frc.robot.Robot;
@@ -24,6 +26,11 @@ import frc.robot.SimConstants.SimExtenderConstants;
 import frc.robot.subsystems.arm.Arm.ArmValues;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
+import frc.robot.utils.SafetyUtil.GripperPivotSafety;
+
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
+
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -144,6 +151,18 @@ public class Extender extends AbstractArmPart {
       // if (!getArmValues().isBasePivotAtSafeAngle) {
       //   newLength = ArmPoses.Stow.getExtensionMeters();
       // }
+
+      if (newLength < getCurrentLength()) {
+        GripperPivotSafety currentSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(getCurrentLength()), GripperPivotConstants.Safeties);
+        GripperPivotSafety targetSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(newLength), GripperPivotConstants.Safeties);
+        Angle currentGpAngle = getArmValues().gripperPivotAngle.getMeasure(); // )
+        if (currentGpAngle.gt(targetSafety.getMaxAngle()) || currentGpAngle.lt(targetSafety.getMinAngle())) {
+          newLength = currentSafety.getDistanceLow().in(Meters);
+        }
+      }
+
+
+
       m_targetLength = newLength;
       if (newLength > getCurrentLength()) {
         m_motor1.moveToPositionMotionMagic(newLength, m_mmUpCruiseVelocity.get(), m_mmUpAcceleration.get(), m_mmUpJerk.get());
