@@ -172,9 +172,9 @@ public final class Constants {
     public static class ArmPoses {
       public static final ArmPose Stow = new ArmPose("Stow", 80.0, 0.25, -18.8);
       // public static final ArmPose Handoff = new ArmPose("Handoff", 30.0, 0.4, 0.0);
-      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 68.5, 0.14, -47.1);
-      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.57, -80.0);
-      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -89.0);
+      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 75.5, 0.28, -75.9);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.56, -80.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -84.0);
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.31, 48.0);
       public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 75.76, 0.85, -70.9);
       public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
@@ -313,6 +313,7 @@ public final class Constants {
       public static final double HoldAlgaeSpeed = -1.0;
       public static final double OutakeAlgaeSpeed = 0.5;
       public static final double IntakeCoralOnAlgaeMotorSpeed = 1.0;
+      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = 0.4;
       public static final double OutakeCoralOnAlgaeMotorSpeed = -0.5;
       public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.5;
       public static final double IntakeCoralSpeed = -0.75;
