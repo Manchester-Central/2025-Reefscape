@@ -182,11 +182,11 @@ public final class Constants {
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
       public static final ArmPose Climb = new ArmPose("Climb", 13.0, 0.34, 0.0); // 39 or 38.8 also 47 might work for pivot angle
       public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 75.5, 0.28, -75.9);
-      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.31, -38.3); // TODO tune this
+      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.34, -38.3); // TODO tune this
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 47.9, 0.0, -40.5); //TODO tune this
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 17.0, 0.28, -18.8); //TODO tune this
-      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 44.9, 0.31, -104.8); //TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 15.0, 0.28, -11.5); //TODO tune this
+      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 44.9, 0.34, -104.8); //TODO tune this
     }
 
     /** This contains constants for our Base Pivot. */
@@ -283,8 +283,8 @@ public final class Constants {
       public static final double kA = 0.00;
 
       // Motion Magic // TODO: get real values
-      public static final double MMCruiseVelocity = 0.1; // 80
-      public static final double MMAcceleration = 0.1; // 20
+      public static final double MMCruiseVelocity = 0.2; // 80
+      public static final double MMAcceleration = 0.2; // 20
       public static final double MMJerk = 1600;
 
       public static final double SupplyCurrentLimit = 30;
@@ -305,14 +305,14 @@ public final class Constants {
     public static class GripperConstants {
       public static final double CoralDropDebounceSeconds = 0.5;
       public static final double AlgaeDropDebounceSeconds = 0.5;
-      public static final Current AlgaeStatorCurrentLimit = Amps.of(15);
-      public static final Current AlgaeSupplyCurrentLimit = Amps.of(15);
-      public static final Current CoralStatorCurrentLimit = Amps.of(15);
-      public static final Current CoralSupplyCurrentLimit = Amps.of(15);
-      public static final double IntakeAlgaeSpeed = -0.5;
-      public static final double HoldAlgaeSpeed = -0.2;
+      public static final Current AlgaeStatorCurrentLimit = Amps.of(40);
+      public static final Current AlgaeSupplyCurrentLimit = Amps.of(40);
+      public static final Current CoralStatorCurrentLimit = Amps.of(60);
+      public static final Current CoralSupplyCurrentLimit = Amps.of(60);
+      public static final double IntakeAlgaeSpeed = -1.0;
+      public static final double HoldAlgaeSpeed = -1.0;
       public static final double OutakeAlgaeSpeed = 0.5;
-      public static final double IntakeCoralOnAlgaeMotorSpeed = 0.5;
+      public static final double IntakeCoralOnAlgaeMotorSpeed = 1.0;
       public static final double OutakeCoralOnAlgaeMotorSpeed = -0.5;
       public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.5;
       public static final double IntakeCoralSpeed = -0.5;
