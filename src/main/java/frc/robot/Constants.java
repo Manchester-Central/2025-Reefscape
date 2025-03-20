@@ -181,7 +181,7 @@ public final class Constants {
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 76.6, 0.51, -36.0); // Last updated 2/22/25
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
       public static final ArmPose Climb = new ArmPose("Climb", 13.0, 0.34, 0.0); // 39 or 38.8 also 47 might work for pivot angle
-      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 75.5, 0.28, -75.9);
+      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 80, 0.65, -75.9);
       public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.34, -38.3); // TODO tune this
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 47.9, 0.0, -40.5); //TODO tune this
