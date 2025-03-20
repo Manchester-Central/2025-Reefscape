@@ -207,6 +207,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 
     m_extender.setSpeed(m_operator.getLeftY() * 0.5);
 
+    // m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.2);
+
     if (m_operator.leftBumper().getAsBoolean()) {
       m_gripperPivot.setSpeed(0.2);
     } else if (m_operator.leftTrigger().getAsBoolean()) {
@@ -238,7 +240,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_extender.setTargetLength(ArmPoses.Stow.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.Stow.getGripperPivotAngle());
     m_gripper.setCoralGripSpeed(0.0);
-    m_gripper.setAlgaeGripSpeed(0.0);
+    m_gripper.setAlgaeGripSpeed(0.0); // TODO: re-enable to help hold algae?
+    // m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed); // TODO add back
   }
 
   private void intakeCoralFromFloorState() {
@@ -253,7 +256,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeMotorSpeed);
     } else if (m_gripper.hasCoralFront() && !m_gripper.hasCoralBack()) {
       m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSlow);
-      m_gripper.setAlgaeGripSpeed(0.0);
+      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeSlowMotorSpeed);
     } else {
       m_gripper.setCoralGripSpeed(0.0);
       m_gripper.setAlgaeGripSpeed(0.0);
@@ -274,7 +277,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     if (!m_gripper.hasAlgae() && !m_gripper.hasCoral()) {
       m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed); 
     } else {
-      m_gripper.setAlgaeGripSpeed(0.0);
+      m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed);
       changeState(ArmState.HOLD_ALGAE);
       return;
     }
@@ -296,12 +299,12 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       return;
     }
 
-    if (!m_gripper.hasCoralFront()) {
-      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSpeed); 
-      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeMotorSpeed);
-    } else if (m_gripper.hasCoralFront() && !m_gripper.hasCoralBack()) {
-      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSlow);
-      m_gripper.setAlgaeGripSpeed(0.0);
+    if (!m_gripper.hasCoralFrontNoDebounce()) {
+      m_gripper.setCoralGripSpeed(GripperConstants.HpIntakeCoralSpeed); 
+      m_gripper.setAlgaeGripSpeed(GripperConstants.HpIntakeCoralOnAlgaeMotorSpeed);
+    } else if (m_gripper.hasCoralFrontNoDebounce() && !m_gripper.hasCoralBackNoDebounce()) {
+      m_gripper.setCoralGripSpeed(GripperConstants.HpIntakeCoralSlowSpeed);
+      m_gripper.setAlgaeGripSpeed(GripperConstants.HpIntakeCoralOnAlgaeSlowMotorSpeed);
     } else {
       m_gripper.setCoralGripSpeed(0.0);
       m_gripper.setCoralGripSpeed(0.0);

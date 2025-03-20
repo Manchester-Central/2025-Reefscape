@@ -171,23 +171,35 @@ public final class Constants {
   public static class ArmConstants {
     /** Contains values for different known arm poses. */
     public static class ArmPoses {
+      // Default Poses
       public static final ArmPose Stow = new ArmPose("Stow", 80.0, 0.25, -18.8);
-      // public static final ArmPose Handoff = new ArmPose("Handoff", 30.0, 0.4, 0.0);
-      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 68.5, 0.14, -47.1);
-      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.57, -80.0);
-      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -89.0);
+
+      // Holding Poses
+      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 80, 0.65, -75.9);
+      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.34, -38.3); // TODO tune this
+
+      // Coral Scoring Poses
+      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 75.5, 0.28, -75.9);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.56, -80.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -84.0);
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.31, 48.0);
-      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 75.76, 0.85, -70.9);
-      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
+
+      // Coral Pickup Poses
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 76.6, 0.51, -36.0); // Last updated 2/22/25
-      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 13.0, 0.34, 0.0); // 39 or 38.8 also 47 might work for pivot angle
-      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 75.5, 0.25, -75.9);
-      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.31, -38.3); // TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 15.0, 0.28, -11.5); //TODO tune this
+
+      // Algae Scoring Poses
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 47.9, 0.0, -40.5); //TODO tune this
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 17.0, 0.25, -18.8); //TODO tune this
-      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 44.9, 0.31, -104.8); //TODO tune this
+
+      // Algae Pickup Poses
+      public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 44.9, 0.34, -104.8); //TODO tune this
+      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 75.76, 0.85, -70.9);
+      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
+
+      // Climb Poses
+      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
+      public static final ArmPose Climb = new ArmPose("Climb", 13.0, 0.34, 0.0); // 39 or 38.8 also 47 might work for pivot angle
     }
 
     /** This contains constants for our Base Pivot. */
@@ -226,10 +238,8 @@ public final class Constants {
     public static class ExtenderConstants {
       public static final double MinLengthMeter = 0.0;
       public static final double MaxLengthMeter = 1.68;
-      public static final double HighThresholdMeter = 0.53; // TODO tune this
-      public static final double LowThresholdMeter = 0.2; // TODO tune this
-      public static final double BaseThresholdMeter = 0.1; // TODO tune this
-      public static final boolean HasMagnetSensor = true; // TODO: enable hasMagneto
+      
+      public static final boolean HasMagnetSensor = true; // TODO: Magneto enable
 
 
       // Slot 0 Configs
@@ -265,31 +275,30 @@ public final class Constants {
     /** This contains constants for our Gripper Pivot. */
     public static class GripperPivotConstants {
 
-      public static final Rotation2d MinAngleBase = Rotation2d.fromDegrees(-25); // TODO tune this
-      public static final Rotation2d MinAngleLow = Rotation2d.fromDegrees(-70); // TODO tune this
-      public static final Rotation2d MinAngleStandard = Rotation2d.fromDegrees(-113); // TODO: [-140, 0] maps to the same CW+ as the base pivot. Are we okay with only negative numbers?
-      public static final Rotation2d MaxAngleStandard = Rotation2d.fromDegrees(-30);
-      public static final Rotation2d MaxAngleHigh = Rotation2d.fromDegrees(60); // TODO tune this
       public static final Angle TrueSafeAngle = Degrees.of(-25);
 
-      // Gripper pivot safety ranges
-      public static final List<GripperPivotSafety> safeties = new ArrayList<GripperPivotSafety>() {{
-          add(new GripperPivotSafety(Meters.of(-0.05), Meters.of(0.3), Degrees.of(-50), Degrees.of(-25)));
-          add(new GripperPivotSafety(Meters.of(0.3), Meters.of(0.5), Degrees.of(-115), Degrees.of(5)));
-          add(new GripperPivotSafety(Meters.of(0.5), Meters.of(1.8), Degrees.of(-115), Degrees.of(60)));
+      public static final GripperPivotSafety low = new GripperPivotSafety(Meters.of(-0.05), Meters.of(0.2), Degrees.of(-50), Degrees.of(-25));
+      public static final GripperPivotSafety mid = new GripperPivotSafety(Meters.of(0.2), Meters.of(0.5), Degrees.of(-115), Degrees.of(5));
+      public static final GripperPivotSafety high = new GripperPivotSafety(Meters.of(0.5), Meters.of(1.8), Degrees.of(-115), Degrees.of(60));
+     
+      public static final List<GripperPivotSafety> Safeties = new ArrayList<GripperPivotSafety>() {{
+          add(low);
+          add(mid);
+          add(high);
         }};
 
       public static final double kP = 30.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.43;
+      public static final double kG = 0.0; // Don't use this
       public static final double kS = 0.25;
       public static final double kV = 0.0;
       public static final double kA = 0.00;
+      public static final double dynamicKg = 0.43;
 
       // Motion Magic // TODO: get real values
-      public static final double MMCruiseVelocity = 0.1; // 80
-      public static final double MMAcceleration = 0.1; // 20
+      public static final double MMCruiseVelocity = 0.2; // 80
+      public static final double MMAcceleration = 0.2; // 20
       public static final double MMJerk = 1600;
 
       public static final double SupplyCurrentLimit = 30;
@@ -308,22 +317,36 @@ public final class Constants {
 
     /** This contains constants for our Gripper. */
     public static class GripperConstants {
-      public static final double CoralDropDebounceSeconds = 0.5;
+      public static final double CoralFrontDebounceSeconds = 0.1;
+      public static final double CoralBackDebounceSeconds = 0.5;
       public static final double AlgaeDropDebounceSeconds = 0.5;
-      public static final Current AlgaeStatorCurrentLimit = Amps.of(15);
-      public static final Current AlgaeSupplyCurrentLimit = Amps.of(15);
-      public static final Current CoralStatorCurrentLimit = Amps.of(15);
-      public static final Current CoralSupplyCurrentLimit = Amps.of(15);
-      public static final double IntakeAlgaeSpeed = -0.5;
-      public static final double HoldAlgaeSpeed = -0.2;
-      public static final double OutakeAlgaeSpeed = 0.5;
-      public static final double IntakeCoralOnAlgaeMotorSpeed = 0.5;
+      public static final Current AlgaeStatorCurrentLimit = Amps.of(40);
+      public static final Current AlgaeSupplyCurrentLimit = Amps.of(40);
+      public static final Current CoralStatorCurrentLimit = Amps.of(60);
+      public static final Current CoralSupplyCurrentLimit = Amps.of(60);
+
+      // Outake Coral
+      public static final double OutakeCoralSpeed = 0.5;
       public static final double OutakeCoralOnAlgaeMotorSpeed = -0.5;
       public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.5;
-      public static final double IntakeCoralSpeed = -0.5;
-      public static final double IntakeCoralSlow = -0.2;
-      public static final double OutakeCoralSpeed = 0.5;
       public static final double OutakeInvertedCoralSpeed = -0.5;
+
+      // Coral Intake Floor
+      public static final double IntakeCoralOnAlgaeMotorSpeed = 1.0;
+      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = 0.4;
+      public static final double IntakeCoralSpeed = -0.75;
+      public static final double IntakeCoralSlow = -0.4;
+
+      // Algae Speeds
+      public static final double IntakeAlgaeSpeed = -1.0;
+      public static final double HoldAlgaeSpeed = -1.0;
+      public static final double OutakeAlgaeSpeed = 0.5;
+
+      // Coral Intake HP
+      public static final double HpIntakeCoralSpeed = -0.4;
+      public static final double HpIntakeCoralSlowSpeed = -0.2;
+      public static final double HpIntakeCoralOnAlgaeMotorSpeed = 0.5;
+      public static final double HpIntakeCoralOnAlgaeSlowMotorSpeed = 0.2;
     }
   }
 
