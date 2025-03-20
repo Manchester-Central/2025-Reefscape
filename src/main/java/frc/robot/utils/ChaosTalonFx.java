@@ -4,6 +4,9 @@
 
 package frc.robot.utils;
 
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.chaos131.pid.PIDFValue;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -13,6 +16,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.CanIdentifiers;
@@ -163,6 +167,14 @@ public class ChaosTalonFx extends TalonFX {
   public void moveToPositionMotionMagic(double position) {
     m_positionMotionMagicVoltage.Slot = 0;
     setControl(m_positionMotionMagicVoltage.withPosition(position));
+  }
+
+  /** Tells the motor controller to move to the target position using MotionMagic. */
+  public void moveToPositionMotionMagic(double position, double kg, Angle absoluteGravityAngle) {
+    var currentRadians = absoluteGravityAngle.in(Radians);
+    var currentKg = Math.cos(currentRadians) * kg;
+    m_positionMotionMagicVoltage.Slot = 0;
+    setControl(m_positionMotionMagicVoltage.withPosition(position).withFeedForward(Volts.of(currentKg)));
   }
 
   /**
