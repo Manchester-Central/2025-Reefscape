@@ -170,23 +170,35 @@ public final class Constants {
   public static class ArmConstants {
     /** Contains values for different known arm poses. */
     public static class ArmPoses {
+      // Default Poses
       public static final ArmPose Stow = new ArmPose("Stow", 80.0, 0.25, -18.8);
-      // public static final ArmPose Handoff = new ArmPose("Handoff", 30.0, 0.4, 0.0);
+
+      // Holding Poses
+      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 80, 0.65, -75.9);
+      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.34, -38.3); // TODO tune this
+
+      // Coral Scoring Poses
       public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 75.5, 0.28, -75.9);
       public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.56, -80.0);
       public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -84.0);
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.31, 48.0);
-      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 75.76, 0.85, -70.9);
-      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
+
+      // Coral Pickup Poses
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 76.6, 0.51, -36.0); // Last updated 2/22/25
-      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 13.0, 0.34, 0.0); // 39 or 38.8 also 47 might work for pivot angle
-      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 80, 0.65, -75.9);
-      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.34, -38.3); // TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 15.0, 0.28, -11.5); //TODO tune this
+
+      // Algae Scoring Poses
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 47.9, 0.0, -40.5); //TODO tune this
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 15.0, 0.28, -11.5); //TODO tune this
+
+      // Algae Pickup Poses
       public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 44.9, 0.34, -104.8); //TODO tune this
+      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 75.76, 0.85, -70.9);
+      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
+
+      // Climb Poses
+      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
+      public static final ArmPose Climb = new ArmPose("Climb", 13.0, 0.34, 0.0); // 39 or 38.8 also 47 might work for pivot angle
     }
 
     /** This contains constants for our Base Pivot. */
@@ -304,7 +316,8 @@ public final class Constants {
 
     /** This contains constants for our Gripper. */
     public static class GripperConstants {
-      public static final double CoralDropDebounceSeconds = 0.5;
+      public static final double CoralFrontDebounceSeconds = 0.1;
+      public static final double CoralBackDebounceSeconds = 0.5;
       public static final double AlgaeDropDebounceSeconds = 0.5;
       public static final Current AlgaeStatorCurrentLimit = Amps.of(40);
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(40);
