@@ -299,12 +299,12 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       return;
     }
 
-    if (!m_gripper.hasCoralFront()) {
-      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSpeed); 
-      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeMotorSpeed);
-    } else if (m_gripper.hasCoralFront() && !m_gripper.hasCoralBack()) {
-      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSlow);
-      m_gripper.setAlgaeGripSpeed(0.0);
+    if (!m_gripper.hasCoralFrontNoDebounce()) {
+      m_gripper.setCoralGripSpeed(GripperConstants.HpIntakeCoralSpeed); 
+      m_gripper.setAlgaeGripSpeed(GripperConstants.HpIntakeCoralOnAlgaeMotorSpeed);
+    } else if (m_gripper.hasCoralFrontNoDebounce() && !m_gripper.hasCoralBackNoDebounce()) {
+      m_gripper.setCoralGripSpeed(GripperConstants.HpIntakeCoralSlowSpeed);
+      m_gripper.setAlgaeGripSpeed(GripperConstants.HpIntakeCoralOnAlgaeSlowMotorSpeed);
     } else {
       m_gripper.setCoralGripSpeed(0.0);
       m_gripper.setCoralGripSpeed(0.0);

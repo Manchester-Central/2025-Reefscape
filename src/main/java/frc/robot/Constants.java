@@ -309,17 +309,29 @@ public final class Constants {
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(40);
       public static final Current CoralStatorCurrentLimit = Amps.of(60);
       public static final Current CoralSupplyCurrentLimit = Amps.of(60);
+
+      // Outake Coral
+      public static final double OutakeCoralSpeed = 0.5;
+      public static final double OutakeCoralOnAlgaeMotorSpeed = -0.5;
+      public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.5;
+      public static final double OutakeInvertedCoralSpeed = -0.5;
+
+      // Coral Intake Floor
+      public static final double IntakeCoralOnAlgaeMotorSpeed = 1.0;
+      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = 0.4;
+      public static final double IntakeCoralSpeed = -0.75;
+      public static final double IntakeCoralSlow = -0.4;
+
+      // Algae Speeds
       public static final double IntakeAlgaeSpeed = -1.0;
       public static final double HoldAlgaeSpeed = -1.0;
       public static final double OutakeAlgaeSpeed = 0.5;
-      public static final double IntakeCoralOnAlgaeMotorSpeed = 1.0;
-      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = 0.4;
-      public static final double OutakeCoralOnAlgaeMotorSpeed = -0.5;
-      public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.5;
-      public static final double IntakeCoralSpeed = -0.75;
-      public static final double IntakeCoralSlow = -0.4;
-      public static final double OutakeCoralSpeed = 0.5;
-      public static final double OutakeInvertedCoralSpeed = -0.5;
+
+      // Coral Intake HP
+      public static final double HpIntakeCoralSpeed = -0.4;
+      public static final double HpIntakeCoralSlowSpeed = -0.2;
+      public static final double HpIntakeCoralOnAlgaeMotorSpeed = 0.5;
+      public static final double HpIntakeCoralOnAlgaeSlowMotorSpeed = 0.2;
     }
   }
 
