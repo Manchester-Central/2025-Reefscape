@@ -214,17 +214,17 @@ public class FieldPoint {
    *
    * @param name the name of the field point
    * @param pose the pose on the field
-   * @param isBlue if on blue alliance
+   * @param alliance the current alliance
    * 
    */
-  public FieldPoint(String name, Pose2d pose, Boolean isBlue) {
+  public FieldPoint(String name, Pose2d pose, Alliance alliance) {
     m_name = name;
     m_defaultAlliance = Alliance.Blue;
     Translation2d poseTranslation = pose.getTranslation().minus(new Translation2d(m_fieldLength, m_fieldWidth).div(2));
     poseTranslation = poseTranslation.rotateBy(Rotation2d.fromDegrees(180));
     poseTranslation = poseTranslation.plus(new Translation2d(m_fieldLength, m_fieldWidth).div(2));
-    m_bluePose = isBlue ? pose : new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180)));
-    m_redPose = isBlue ? new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180))) : pose;
+    m_bluePose = Alliance.Blue == alliance ? pose : new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180)));
+    m_redPose = Alliance.Blue == alliance ? new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180))) : pose;
   }
 
   /**
@@ -232,11 +232,11 @@ public class FieldPoint {
    *
    * @param name the name of the field point
    * @param swerveDrive current pose of the swerve drive
-   * @param isBlue if on blue alliance
+   * @param alliance the current alliance
    * 
    */
-  public FieldPoint(String name, SwerveDrive swerveDrive, Boolean isBlue) {
-    this(name, swerveDrive.getPose(), isBlue);
+  public FieldPoint(String name, SwerveDrive swerveDrive, Alliance alliance) {
+    this(name, swerveDrive.getPose(), alliance);
   }
 
   public Pose2d getBluePose() {
