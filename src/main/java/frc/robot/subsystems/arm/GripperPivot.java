@@ -64,6 +64,7 @@ public class GripperPivot extends AbstractArmPart {
   private DashboardNumber m_ks = m_tuner.tunable("kS", GripperPivotConstants.kS, (config, newValue) -> config.Slot0.kS = newValue);
   private DashboardNumber m_kv = m_tuner.tunable("kV", GripperPivotConstants.kV, (config, newValue) -> config.Slot0.kV = newValue);
   private DashboardNumber m_ka = m_tuner.tunable("kA", GripperPivotConstants.kA, (config, newValue) -> config.Slot0.kA = newValue);
+  private DashboardNumber m_dynamicKg = m_tuner.tunable("dynamicKg", GripperPivotConstants.dynamicKg, (config, newValue) -> {});
 
   // Motion Magic Constraints
   private DashboardNumber m_mmCruiseVelocity = m_tuner.tunable(
@@ -151,7 +152,7 @@ public class GripperPivot extends AbstractArmPart {
     //   newAngle = ArmPoses.Stow.getGripperPivotAngle();
     // }
     m_targetAngle = newAngle;
-    m_motor.moveToPositionMotionMagic(newAngle.getRotations());
+    m_motor.moveToPositionMotionMagic(newAngle.getRotations(), m_dynamicKg.get(), getCurrentGravityAngle());
   }
   
   /**
@@ -188,6 +189,13 @@ public class GripperPivot extends AbstractArmPart {
   public Rotation2d getCurrentAngle() {
     return Rotation2d.fromRotations(
         m_canCoder.getAbsolutePosition().getValueAsDouble());
+  }
+
+  /** Gets the current angle of the gripper in parallel to the ground (when gravity effects it most). */
+  public Angle getCurrentGravityAngle() {
+    var basePivotAngle = getArmValues().basePivotAngle.getMeasure();
+    var gripperPivotAngle = getCurrentAngle().getMeasure();
+    return basePivotAngle.plus(gripperPivotAngle);
   }
 
   /**
@@ -231,6 +239,7 @@ public class GripperPivot extends AbstractArmPart {
     super.periodic();
     Logger.recordOutput("GripperPivot/Setpoint", m_targetAngle);
     Logger.recordOutput("GripperPivot/CurrentAngle", getCurrentAngle().getDegrees());
+    Logger.recordOutput("GripperPivot/CurrentGravityAngle", getCurrentGravityAngle().in(Degrees));
     Logger.recordOutput("GripperPivot/AtTarget", atTarget());
     Logger.recordOutput("GripperPivot/AngleError", getCurrentAngle().minus(m_targetAngle));
     Logger.recordOutput("GripperPivot/Voltage", m_motor.getMotorVoltage().getValueAsDouble());

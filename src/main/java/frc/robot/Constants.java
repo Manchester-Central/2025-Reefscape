@@ -277,10 +277,11 @@ public final class Constants {
       public static final double kP = 30.0;
       public static final double kI = 0.0;
       public static final double kD = 0.0;
-      public static final double kG = 0.43;
+      public static final double kG = 0.0; // Don't use this
       public static final double kS = 0.25;
       public static final double kV = 0.0;
       public static final double kA = 0.00;
+      public static final double dynamicKg = 0.43;
 
       // Motion Magic // TODO: get real values
       public static final double MMCruiseVelocity = 0.2; // 80
