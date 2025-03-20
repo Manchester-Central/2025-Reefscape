@@ -7,6 +7,7 @@ package frc.robot.utils;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -31,6 +32,16 @@ public class PathUtil {
     return new DeferredCommand(
         () -> AutoBuilder.pathfindToPose(targetPostion.getCurrentAlliancePose(), constraints, 0.0),
         Set.of(swerveDrive));
+  }
+
+  /**
+   * Finds the closest point along a line.
+   */
+  public static Pose2d findClosestPointOnLine(SwerveDrive swerveDrive, FieldPoint linePoint, boolean isXaxisLine) {
+    double x = isXaxisLine ? new FieldPoint("SwervePose", swerveDrive, DriverStation.getAlliance().get()).getBluePose().getX() : linePoint.getBluePose().getX(); 
+    double y = isXaxisLine ? linePoint.getBluePose().getY() : new FieldPoint("SwervePose", swerveDrive, DriverStation.getAlliance().get()).getBluePose().getY();
+    Rotation2d rotation = linePoint.getBluePose().getRotation();
+    return new Pose2d(x, y, rotation);
   }
 
   /**
