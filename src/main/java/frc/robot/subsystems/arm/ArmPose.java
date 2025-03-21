@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.arm;
 
+import java.util.Optional;
+
 import com.chaos131.util.DashboardNumber;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -13,6 +15,7 @@ public class ArmPose {
   private Rotation2d m_basePivotAngle;
   private double m_extensionMeters;
   private Rotation2d m_gripperPivotAngle;
+  private Optional<Rotation2d> m_basePivotSafetyAngle = Optional.empty();
 
   /** Creates a new arm pose. */
   public ArmPose(String name, double basePivotDegrees, double extensionMeters, double gripperPivotDegrees) {
@@ -37,6 +40,23 @@ public class ArmPose {
     );
   }
 
+  /**
+   * add an angle that the base pivot will go to before the proper target.
+   */
+  public ArmPose withBasePivotSafety(Rotation2d safetyRotation) {
+    m_basePivotSafetyAngle = Optional.of(safetyRotation);
+    return this;
+  }
+  
+  /**
+   * add an angle that the base pivot will go to before the proper target.
+   */
+  public ArmPose withBasePivotSafety(double safetyRotation) {
+    return withBasePivotSafety(Rotation2d.fromDegrees(safetyRotation));
+  }
+
+
+
   public Rotation2d getBasePivotAngle() {
     return m_basePivotAngle;
   }
@@ -47,5 +67,9 @@ public class ArmPose {
 
   public Rotation2d getGripperPivotAngle() {
     return m_gripperPivotAngle;
+  }
+
+  public Optional<Rotation2d> getBasePivotSafetyAngle() {
+    return m_basePivotSafetyAngle;
   }
 }

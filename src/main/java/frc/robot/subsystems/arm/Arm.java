@@ -59,6 +59,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   public GripperPivot m_gripperPivot = new GripperPivot(this::getArmValues);
   private Gamepad m_operator;
   private Gamepad m_driver;
+  private boolean m_isPrepAngleReached = false;
 
   /**
    * The possible states of the Arm's state machine.
@@ -82,7 +83,6 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     SCORE_L4,
     ALGAE_HIGH,
     ALGAE_LOW,
-    SCORE_ALGAE,
     HOLD_CORAL,
     HOLD_ALGAE,
     PREP_CLIMB,
@@ -155,9 +155,6 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
         break;
       case SCORE_L4:
         scoreL4State();
-        break;
-      case SCORE_ALGAE:
-        scoreAlgaeState();
         break;
       case ALGAE_HIGH:
         algaeHighState();
@@ -344,6 +341,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_gripperPivot.setTargetAngle(ArmPoses.ScoreProcessor.getGripperPivotAngle());
     m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed);
     m_gripper.setCoralGripSpeed(0.0);
+    if (m_driver.rightTrigger().getAsBoolean()) {
+      scoreAlgaeHelper();
+    }
   }
 
   private void prepBargeState() {
@@ -352,6 +352,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_gripperPivot.setTargetAngle(ArmPoses.ScoreBarge.getGripperPivotAngle());
     m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed);
     m_gripper.setCoralGripSpeed(0.0);
+    if (m_driver.rightTrigger().getAsBoolean()) {
+      scoreAlgaeHelper();
+    }
   }
 
   private void scoreL1State() {
@@ -368,14 +371,6 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 
   private void scoreL4State() {
     scoreHelperCoral(ArmPoses.ScoreL4, false, true);
-  }
-
-  private void scoreAlgaeState() {
-    m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeAlgaeSpeed);
-    m_gripper.setCoralGripSpeed(0.0);
-    if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
-      Gripper.hasAlgaeGrippedSim = false;
-    }
   }
 
   private void algaeHighState() {
@@ -432,19 +427,45 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       changeState(ArmState.STOW);
       return;
     }
+
+    boolean usePrepAngle = armPose.getBasePivotSafetyAngle().isPresent();
+    if (usePrepAngle && isStateStarting()) {
+      // If this is the first time the state has run, reset the angle reached variable
+      m_isPrepAngleReached = false;
+    }
+
+    // If we have a prep base pivot angle, make sure we go there first
+    if (usePrepAngle && !m_isPrepAngleReached) {
+      m_basePivot.setTargetAngle(armPose.getBasePivotSafetyAngle().get());
+      m_extender.setTargetLength(armPose.getExtensionMeters());
+      m_gripperPivot.setTargetAngle(armPose.getGripperPivotAngle());
+      m_isPrepAngleReached = isPoseClose();
+      return;
+    }
+
     m_basePivot.setTargetAngle(armPose.getBasePivotAngle());
     m_extender.setTargetLength(armPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(armPose.getGripperPivotAngle());
-    if ((!isPrep && isPoseReady()) || m_operator.rightBumper().getAsBoolean() || (DriverStation.isAutonomousEnabled() && isPoseClose() && m_stateTimer.hasElapsed(2))) {
+
+    boolean isControllerScoring = m_driver.rightTrigger().getAsBoolean() || m_operator.rightBumper().getAsBoolean();
+    boolean isAutonomousScoringTimedOut = DriverStation.isAutonomousEnabled() && isPoseClose() && m_stateTimer.hasElapsed(2);
+    if ((!isPrep && isPoseReady()) || isControllerScoring || isAutonomousScoringTimedOut) {
       m_gripper.setCoralGripSpeed(isScoringInverted ? GripperConstants.OutakeInvertedCoralSpeed : GripperConstants.OutakeCoralSpeed);
       m_gripper.setAlgaeGripSpeed(isScoringInverted ? GripperConstants.OutakeInvertedCoralOnAlgaeMotorSpeed : GripperConstants.OutakeCoralOnAlgaeMotorSpeed);
+      if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
+        Gripper.hasCoralGrippedSim = false;
+      }
     } else {
       m_gripper.setCoralGripSpeed(0);
       m_gripper.setAlgaeGripSpeed(0.0);
     }
+  }
 
-    if (!isPrep && Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
-      Gripper.hasCoralGrippedSim = false;
+  private void scoreAlgaeHelper() {
+    m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeAlgaeSpeed);
+    m_gripper.setCoralGripSpeed(0.0);
+    if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
+      Gripper.hasAlgaeGrippedSim = false;
     }
   }
 
