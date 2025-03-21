@@ -155,11 +155,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
 
     // Everything after this is for competition
-    // m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
-    //   FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
-    //   return pose.getCurrentAlliancePose().getRotation();
-    // }, 1.0));
-    m_driver.a().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).withArmInterrupt(ArmState.STOW)); // TODO: re-enable driving
+    m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
+      FieldPoint pose = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getHpDrivePoses());
+      return pose.getCurrentAlliancePose().getRotation();
+    }, 1.0).alongWith(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).withArmInterrupt(ArmState.STOW)));
     // m_driver.a().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
     //     .alongWith(new ChangeState().setArm(ArmState.INTAKE_FROM_HP)
     //     .withArmInterrupt(ArmState.STOW)));
@@ -187,11 +186,12 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
     m_driver.rightBumper().whileTrue(
       new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
+    // Right trigger just causes scoring from the prep states
+    // m_driver.rightTrigger().whileTrue(new ConditionalCommand(
+    //     new ChangeState().setArm(ArmState.SCORE_ALGAE).withArmInterrupt(ArmState.HOLD_ALGAE), 
+    //     new ChangeState().setArm(() -> m_selectedCoralState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL), 
+    //     m_arm.m_gripper::hasAlgae));
 
-    m_driver.rightTrigger().whileTrue(new ConditionalCommand(
-        new ChangeState().setArm(ArmState.SCORE_ALGAE).withArmInterrupt(ArmState.HOLD_ALGAE), 
-        new ChangeState().setArm(() -> m_selectedCoralState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL), 
-        m_arm.m_gripper::hasAlgae));
     m_driver.leftTrigger().whileTrue(new ChangeState().setArm(ArmState.INTAKE_CORAL_FROM_FLOOR).withArmInterrupt(ArmState.STOW));
     m_driver.leftBumper().whileTrue(new ChangeState().setArm(() -> {
       var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
@@ -214,19 +214,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     
     m_operator.start().onTrue(new ChangeState().setArm(ArmState.STOW));
     m_operator.back().whileTrue(new ChangeState().setArm(ArmState.MANUAL));
-    //.alongWith(new InstantCommand(() -> m_arm.m_gripperPivot.disableFuseCANcoder()))
 
     // Everything after this is for demos and testing
-
-    // m_driver.rightBumper().whileTrue(new ChangeState().setArm(ArmState.PREP_PROCESSOR));
-    // m_driver.rightTrigger().whileTrue(new ChangeState().setArm(ArmState.PREP_BARGE));
-
-    // m_driver.a().whileTrue(new SimpleDriveToPosition(m_swerveDrive, FieldPoint.leftSource));
-    // m_driver.b().whileTrue(m_swerveDrive.followPathCommand("Test Path"));
-    // m_driver.y().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive));
-    // m_driver.x().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
-
-
 
     // v on keyboard 0
     m_simKeyboard.y().onTrue(
@@ -247,27 +236,6 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     );
     // z on keyboard 0
     m_simKeyboard.a().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim));
-
-    // m_operator.start().whileTrue(new ChangeState().setArm(ArmState.STOW).setIntake(IntakeState.STOW));
-    // m_operator.leftBumper().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_FLOOR).setIntake(IntakeState.DEPLOY));
-    // m_operator.rightBumper().whileTrue(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).setIntake(IntakeState.STOW));
-    // m_operator.back().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim)); // TODO: delete if back button needed for competition
-    // m_operator.povLeft().whileTrue(new ChangeState().setArm(ArmState.MANUAL).setIntake(IntakeState.STOW));
-
-    // m_operator.leftTrigger().whileTrue(new RunCommand(() -> m_arm.m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-20)),
-    //     m_arm));
-    // m_operator.rightTrigger().whileTrue(new RunCommand(() -> m_arm.m_gripperPivot.setTargetAngle(Rotation2d.fromDegrees(-90)),
-    //     m_arm));
-    // m_operator.a().whileTrue(new RunCommand(() -> m_arm.m_extender.setTargetLength(0.5), m_arm));
-    // m_operator.b().whileTrue(new RunCommand(() -> m_arm.m_extender.setTargetLength(1.2), m_arm));
-    // m_operator.a().whileTrue(new RunCommand(() -> {
-    //   m_arm.m_basePivot.setTargetAngle(ArmPoses.HpIntake.getBasePivotAngle());
-    //   double yValue = -0.5;
-    //   if (m_arm.m_gripper.hasCoral()) {
-    //     yValue = yValue < 0 ? 0 : yValue;
-    //   }
-    //   m_arm.m_gripper.setCoralGripSpeed(yValue);
-    // }, m_arm));
   }
 
   /**
