@@ -98,6 +98,7 @@ public class GripperPivot extends AbstractArmPart {
     m_canCoder.Configuration.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(m_canCoderOffsetDegrees.get()).getRotations();
     m_canCoder.applyConfig();
 
+    m_motor.Configuration.ClosedLoopGeneral.ContinuousWrap = true;
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
