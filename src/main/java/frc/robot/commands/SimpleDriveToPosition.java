@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import com.chaos131.swerve.BaseSwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.SwerveDrive;
 import frc.robot.utils.FieldPoint;
 
 /**
@@ -48,6 +49,7 @@ public class SimpleDriveToPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_swerveDrive.atTarget(0.01);
+    //return m_swerveDrive.atTarget(0.01);
+    return ((SwerveDrive) m_swerveDrive).atTargetDynamic();
   }
 }

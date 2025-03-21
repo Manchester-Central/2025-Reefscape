@@ -147,7 +147,7 @@ public class BasePivot extends AbstractArmPart {
     boolean isExtenderAndGripperAtSafetyPose = getArmValues().isExtenderAtCloseLength && getArmValues().isGripperPivotAtCloseAngle;
 
     if (newAngle.getDegrees() < BasePivotConstants.LowerSafetyAngle.getDegrees() && !isExtenderAndGripperAtSafetyPose) {
-      newAngle = BasePivotConstants.LowerSafetyAngle;
+      newAngle = getCurrentAngle().getMeasure().lt(BasePivotConstants.LowerSafetyAngle.getMeasure()) ? getCurrentAngle() : BasePivotConstants.LowerSafetyAngle;
     }
 
     m_targetAngle = newAngle;

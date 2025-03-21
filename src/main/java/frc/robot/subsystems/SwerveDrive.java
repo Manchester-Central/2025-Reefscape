@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degree;
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Rotation;
 
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
@@ -28,7 +31,9 @@ import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -60,6 +65,7 @@ public class SwerveDrive extends BaseSwerveDrive {
       new PIDConstants(1.0, 0.0, 0.0),
       new PIDConstants(2.0, 0.0, 0.0));
   private TimeInterpolatableBuffer<Pose2d> m_pastPoses;
+  private CircularBuffer<Rotation2d> m_swerveAngles;
 
   /** A value to help determine if we should use PathPlanner's reset odometry or not. */
   private boolean m_hasReceivedVisionUpdates = false;
@@ -73,6 +79,7 @@ public class SwerveDrive extends BaseSwerveDrive {
 
     m_acceptVisionUpdates = SwerveConstants.AcceptVisionUpdates;
     m_pastPoses = TimeInterpolatableBuffer.createBuffer(1);
+    m_swerveAngles = new CircularBuffer<>(50);
     m_odometry =
         new SwerveDrivePoseEstimator(
             m_kinematics, getGyroRotation(), getModulePositions(), GeneralConstants.InitialRobotPose,
@@ -197,6 +204,31 @@ public class SwerveDrive extends BaseSwerveDrive {
     resetPose(targetPose);
   }
 
+  /**
+  * .
+  */
+
+  public boolean atTargetDynamic() {
+    if (atTarget() && m_swerveAngles.size() >= 2) {
+      Rotation2d angleToTarget2dLast = m_swerveAngles.get(m_swerveAngles.size() - 2);
+      Rotation2d angleToTargetLast = m_swerveAngles.getLast();
+      Rotation2d dif = angleToTarget2dLast.minus(angleToTargetLast);
+      Logger.recordOutput("thresh", SwerveConstants.AtTargetAngleThreshold);
+      Logger.recordOutput("dif", dif.getDegrees());
+      if (dif.getMeasure().abs(Degrees) > SwerveConstants.AtTargetAngleThreshold.getDegrees()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * To clear the CircularBuffer of swerve rotation values.
+   */
+  public void clearSwerveAngleBuffer() {
+    m_swerveAngles.clear();
+  }
+
   @Override
   public void move(ChassisSpeeds chassisSpeeds) {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
@@ -205,12 +237,12 @@ public class SwerveDrive extends BaseSwerveDrive {
       m_simulatedDrive.runSwerveStates(states);
     }
     Logger.recordOutput("Swerve/TargetSpeeds", states);
-    if (chassisSpeeds.vxMetersPerSecond == 0
-        && chassisSpeeds.vyMetersPerSecond == 0
-        && chassisSpeeds.omegaRadiansPerSecond == 0) {
-      stop();
-      return;
-    }
+    // if (chassisSpeeds.vxMetersPerSecond == 0
+    //     && chassisSpeeds.vyMetersPerSecond == 0
+    //     && chassisSpeeds.omegaRadiansPerSecond == 0) {
+    //   stop();
+    //   return;
+    // }
 
     for (var i = 0; i < states.length; i++) {
       m_swerveModules.get(i).setTarget(states[i]);
@@ -310,6 +342,11 @@ public class SwerveDrive extends BaseSwerveDrive {
     Logger.recordOutput("Swerve/Speed", getRobotSpeed());
     Logger.recordOutput("Swerve/RotationSpeed", getRobotRotationSpeed());
     m_pastPoses.addSample(Timer.getFPGATimestamp(), getPose());
+    Translation2d targetPosition = new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint());
+    Rotation2d currentAngle = getPose().getTranslation().minus(targetPosition).getAngle();
+    Logger.recordOutput("at target dynamic", atTargetDynamic());
+    Logger.recordOutput("Command", getCurrentCommand() != null ? getCurrentCommand().getName() : "");
+    m_swerveAngles.addLast(currentAngle);
   }
 
   /**

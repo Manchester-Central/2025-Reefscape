@@ -196,7 +196,7 @@ public class Extender extends AbstractArmPart {
    * Checks if the extender length is close to target length.
    */
   public boolean atClose() {
-    return Math.abs(getCurrentLength() - m_targetLength) < 0.02;
+    return Math.abs(getCurrentLength() - m_targetLength) < 0.03;
   }
   
   /**
