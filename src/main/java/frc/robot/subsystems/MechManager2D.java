@@ -19,7 +19,6 @@ import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
 /** A class for sending a 2d representation of our robot over network tables. */
 public class MechManager2D extends SubsystemBase {
   private Arm m_arm;
-  private Intake m_intake;
 
   @AutoLogOutput(key = "Mech2d/Arm")
   private LoggedMechanism2d m_armBase;
@@ -40,6 +39,7 @@ public class MechManager2D extends SubsystemBase {
   private LoggedMechanismLigament2d m_gripperCoralWheelsLigament;
   private LoggedMechanismLigament2d m_gripperCoralFrontLigament;
   private LoggedMechanismLigament2d m_gripperCoralBackLigament;
+  private LoggedMechanismLigament2d m_gripperAlgaeLigament;
 
 
   private final Color8Bit m_extenderColor = new Color8Bit(0, 0, 255);
@@ -52,21 +52,11 @@ public class MechManager2D extends SubsystemBase {
   @AutoLogOutput(key = "Mech2d/Intake")
   private LoggedMechanism2d m_intakeBase;
 
-  private LoggedMechanismRoot2d m_intakeRoot;
-  private LoggedMechanismLigament2d m_innerIntakeLigament;
-  private LoggedMechanismLigament2d m_outerIntakeLigament;
-
-  private final Color8Bit m_innerIntakeColor = new Color8Bit(255, 0, 255);
-  private final Color8Bit m_intakeNeutralColor = new Color8Bit(100, 100, 100);
-  private final Color8Bit m_intakeForwardColor = new Color8Bit(0, 255, 0);
-  private final Color8Bit m_intakeReverseColor = new Color8Bit(255, 0, 0);
-
   /**
    * Creates a new mech manager.
    */
-  public MechManager2D(Arm arm, Intake intake) {
+  public MechManager2D(Arm arm) {
     m_arm = arm;
-    m_intake = intake;
 
     m_armBase = new LoggedMechanism2d(2, 3);
     m_armRoot = m_armBase.getRoot("Arm", 0.8, 0.2);
@@ -83,12 +73,7 @@ public class MechManager2D extends SubsystemBase {
     m_gripperCoralWheelsLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("CoralWheels", RobotDimensions.WristToCoralIntakeAxle, -90, 2, m_gripperNeutralColor));
     m_gripperCoralFrontLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralFront", 0.0001, 90, 10, m_gripperHasCoralColor));
     m_gripperCoralBackLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralBack", 0.0001, -90, 10, m_gripperHasCoralColor));
-
-    // Intake
-    m_intakeBase = new LoggedMechanism2d(2, 3);
-    m_intakeRoot = m_intakeBase.getRoot("Intake", 1.2, 0.2);
-    m_innerIntakeLigament = m_intakeRoot.append(new LoggedMechanismLigament2d("InnerIntake", 0.3, 90, 8, m_innerIntakeColor));
-    m_outerIntakeLigament = m_innerIntakeLigament.append(new LoggedMechanismLigament2d("OuterIntake", 0.2, -90, 10, m_intakeNeutralColor));
+    m_gripperAlgaeLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgae", 0.0001, 0, 40, m_gripperHasAlgaeColor));
   }
 
   @Override
@@ -110,7 +95,7 @@ public class MechManager2D extends SubsystemBase {
       m_gripperCoralWheelsLigament.setColor(m_gripperReverseColor);
     }
 
-    // Change color if holding a coral
+    // Change length if holding a coral
     if (values.hasCoral) {
       m_gripperCoralFrontLigament.setLength(RobotDimensions.WristToCoralFront.getX() - RobotDimensions.WristToCoralIntakeAxle);
       m_gripperCoralBackLigament.setLength(RobotDimensions.WristToCoralIntakeAxle - RobotDimensions.WristToCoralBack.getX());
@@ -119,14 +104,11 @@ public class MechManager2D extends SubsystemBase {
       m_gripperCoralBackLigament.setLength(0.001);
     }
 
-    // Control angle and color of intake
-    m_innerIntakeLigament.setAngle(m_intake.getCurrentAngle());
-    if (m_intake.getCurrentSpeed() > 0) {
-      m_outerIntakeLigament.setColor(m_intakeForwardColor);
-    } else if (m_intake.getCurrentSpeed() < 0) {
-      m_outerIntakeLigament.setColor(m_intakeReverseColor);
+    // Change length if holding a coral
+    if (values.hasAlgae) {
+      m_gripperAlgaeLigament.setLength(0.4);
     } else {
-      m_outerIntakeLigament.setColor(m_intakeNeutralColor);
+      m_gripperAlgaeLigament.setLength(0.0001);
     }
   }
 }

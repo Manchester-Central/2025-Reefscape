@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
+import frc.robot.subsystems.SwerveDrive;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,6 +45,14 @@ public class FieldPoint {
       new Pose2d(0.852, 0.6553, Rotation2d.fromDegrees(60)));
   public static final FieldPoint testPoint = new FieldPoint("testPoint",
       new Pose2d(10.0, 5.0, Rotation2d.fromDegrees(37)));
+  public static final FieldPoint LollipopLeft = new FieldPoint("LollipopLeft",
+      new Pose2d(1.204913, 5.854700, Rotation2d.fromDegrees(180)));
+  public static final FieldPoint LollipopCenter = new FieldPoint("LollipopCenter",
+      new Pose2d(1.204913, 4.02500, Rotation2d.fromDegrees(180)));
+  public static final FieldPoint LollipopRight = new FieldPoint("LollipopRight",
+      new Pose2d(1.204913, 2.197100, Rotation2d.fromDegrees(180)));
+  public static final FieldPoint CenterBarge = new FieldPoint("CenterBarge", 
+      new Pose2d(7.5, 4, Rotation2d.fromDegrees(180)));
       
 
   public static HashMap<Integer, AprilTag> aprilTagMap = FieldData.GetAprilTagMap("assets/frc2025.fmap");
@@ -101,6 +110,34 @@ public class FieldPoint {
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefRight", rightPose));
     }
     return reefDrivePoses;
+  }
+
+  /**
+   * Gets all the drive positions we can consider for scoring on the reef (middle
+   * april tag).
+   */
+  public static ArrayList<FieldPoint> getReefCenterDrivePose() {
+    ArrayList<FieldPoint> reefCenterDrivePose = new ArrayList<FieldPoint>();
+    for (AprilTag aprilTag : blueReefAprilTags()) {
+      Pose2d centerPose = aprilTag.pose2d.transformBy(
+          new Transform2d(
+              RobotDimensions.FrontBackLengthMeters / 2 + RobotDimensions.RobotToReefMargin,
+              FieldDimensions.ReefCenterBranch.getY(),
+              Rotation2d.fromDegrees(180)));
+      reefCenterDrivePose.add(new FieldPoint(aprilTag.id + " ReefCenter", centerPose));
+    }
+    return reefCenterDrivePose;
+  }
+
+  /** 
+   * Returns an array list of all the Lollipop poses.
+   */
+  public static ArrayList<FieldPoint> getLollipopPoses() {
+    ArrayList<FieldPoint> lollipopPoses = new ArrayList<FieldPoint>();
+    lollipopPoses.add(LollipopCenter);
+    lollipopPoses.add(LollipopLeft);
+    lollipopPoses.add(LollipopRight);
+    return lollipopPoses;
   }
 
   /**
@@ -172,6 +209,36 @@ public class FieldPoint {
     m_redPose = new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180)));
   }
 
+  /**
+   * Creates a new FieldPoint.
+   *
+   * @param name the name of the field point
+   * @param pose the pose on the field
+   * @param alliance the current alliance
+   * 
+   */
+  public FieldPoint(String name, Pose2d pose, Alliance alliance) {
+    m_name = name;
+    m_defaultAlliance = Alliance.Blue;
+    Translation2d poseTranslation = pose.getTranslation().minus(new Translation2d(m_fieldLength, m_fieldWidth).div(2));
+    poseTranslation = poseTranslation.rotateBy(Rotation2d.fromDegrees(180));
+    poseTranslation = poseTranslation.plus(new Translation2d(m_fieldLength, m_fieldWidth).div(2));
+    m_bluePose = Alliance.Blue == alliance ? pose : new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180)));
+    m_redPose = Alliance.Blue == alliance ? new Pose2d(poseTranslation, pose.getRotation().plus(Rotation2d.fromDegrees(180))) : pose;
+  }
+
+  /**
+   * Creates a new FieldPoint.
+   *
+   * @param name the name of the field point
+   * @param swerveDrive current pose of the swerve drive
+   * @param alliance the current alliance
+   * 
+   */
+  public FieldPoint(String name, SwerveDrive swerveDrive, Alliance alliance) {
+    this(name, swerveDrive.getPose(), alliance);
+  }
+
   public Pose2d getBluePose() {
     return m_bluePose;
   }
@@ -179,6 +246,7 @@ public class FieldPoint {
   public Pose2d getRedPose() {
     return m_redPose;
   }
+
 
   public String getName() {
     return m_name;
