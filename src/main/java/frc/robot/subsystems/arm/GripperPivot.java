@@ -102,7 +102,7 @@ public class GripperPivot extends AbstractArmPart {
     m_canCoder.Configuration.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(m_canCoderOffsetDegrees.get()).getRotations();
     m_canCoder.applyConfig();
 
-    m_motor.Configuration.ClosedLoopGeneral.ContinuousWrap = true;
+    m_motor.Configuration.ClosedLoopGeneral.ContinuousWrap = false;
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_motor.Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     m_motor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -210,7 +210,7 @@ public class GripperPivot extends AbstractArmPart {
    * Checks if the current angle close to the goal angle.
    */
   public boolean atClose() {
-    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 2.0;
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 10.0;
   }
 
   @Override

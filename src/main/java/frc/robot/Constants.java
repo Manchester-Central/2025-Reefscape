@@ -180,13 +180,13 @@ public final class Constants {
 
       // Coral Scoring Poses
       public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 75.5, 0.28, -75.9);
-      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.56, -80.0);
-      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -84.0);
-      public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.31, 48.0);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.56, -75.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -79.0);
+      public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.33, 48.0);
 
       // Coral Pickup Poses
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 76.6, 0.51, -36.0); // Last updated 2/22/25
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 15.0, 0.28, -11.5); //TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 15.0, 0.28, -11); //TODO tune this
 
       // Algae Scoring Poses
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
@@ -297,8 +297,8 @@ public final class Constants {
       public static final double dynamicKg = 0.43;
 
       // Motion Magic // TODO: get real values
-      public static final double MMCruiseVelocity = 0.2; // 80
-      public static final double MMAcceleration = 0.2; // 20
+      public static final double MMCruiseVelocity = 0.5; // 80
+      public static final double MMAcceleration = 3.0; // 20
       public static final double MMJerk = 1600;
 
       public static final double SupplyCurrentLimit = 30;
@@ -322,18 +322,18 @@ public final class Constants {
       public static final double AlgaeDropDebounceSeconds = 0.5;
       public static final Current AlgaeStatorCurrentLimit = Amps.of(40);
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(40);
-      public static final Current CoralStatorCurrentLimit = Amps.of(60);
-      public static final Current CoralSupplyCurrentLimit = Amps.of(60);
+      public static final Current CoralStatorCurrentLimit = Amps.of(50);
+      public static final Current CoralSupplyCurrentLimit = Amps.of(50);
 
       // Outake Coral
-      public static final double OutakeCoralSpeed = 0.5;
-      public static final double OutakeCoralOnAlgaeMotorSpeed = -0.5;
-      public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.5;
-      public static final double OutakeInvertedCoralSpeed = -0.5;
+      public static final double OutakeCoralSpeed = 0.3;
+      public static final double OutakeCoralOnAlgaeMotorSpeed = -0.3;
+      public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.3;
+      public static final double OutakeInvertedCoralSpeed = -0.3;
 
       // Coral Intake Floor
-      public static final double IntakeCoralOnAlgaeMotorSpeed = 1.0;
-      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = 0.4;
+      public static final double IntakeCoralOnAlgaeMotorSpeed = 0.5;
+      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = -0.1;
       public static final double IntakeCoralSpeed = -0.75;
       public static final double IntakeCoralSlow = -0.4;
 
