@@ -186,13 +186,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
     m_driver.rightBumper().whileTrue(
-      new ConditionalCommand(
-          new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL),
-          new ConditionalCommand(
-              new ChangeState().setArm(() -> m_selectedAlgaeState.State).withArmInterrupt(ArmState.HOLD_ALGAE), 
-              new ChangeState().setArm(ArmState.INTAKE_ALGAE_FROM_FLOOR),
-            m_arm.m_gripper::hasAlgae), 
-          m_arm.m_gripper::hasCoral));
+      new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
+
     m_driver.rightTrigger().whileTrue(new ConditionalCommand(
         new ChangeState().setArm(ArmState.SCORE_ALGAE).withArmInterrupt(ArmState.HOLD_ALGAE), 
         new ChangeState().setArm(() -> m_selectedCoralState.ScoreState).withArmInterrupt(ArmState.HOLD_CORAL), 

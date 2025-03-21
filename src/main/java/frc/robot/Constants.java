@@ -185,7 +185,7 @@ public final class Constants {
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.33, 48.0);
 
       // Coral Pickup Poses
-      public static final ArmPose HpIntake = new ArmPose("HpIntake", 76.6, 0.51, -36.0); // Last updated 2/22/25
+      public static final ArmPose HpIntake = new ArmPose("HpIntake", 73, 0.65, -39.0); // Last updated 2/22/25
       public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 15.0, 0.28, -11); //TODO tune this
 
       // Algae Scoring Poses
@@ -333,9 +333,9 @@ public final class Constants {
 
       // Coral Intake Floor
       public static final double IntakeCoralOnAlgaeMotorSpeed = 0.5;
-      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = -0.1;
+      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = 0.5;
       public static final double IntakeCoralSpeed = -0.75;
-      public static final double IntakeCoralSlow = -0.4;
+      public static final double IntakeCoralSlow = -0.75;
 
       // Algae Speeds
       public static final double IntakeAlgaeSpeed = -1.0;
