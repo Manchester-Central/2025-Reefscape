@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public abstract class StateBasedSubsystem<T extends SubsystemState> extends SubsystemBase {
   private T m_currentState;
   protected Timer m_stateTimer = new Timer();
+  private boolean m_isStateFirstRun = true;
 
   /**
    * The base contrusctor for all state based subsystems.
@@ -21,13 +22,16 @@ public abstract class StateBasedSubsystem<T extends SubsystemState> extends Subs
   protected StateBasedSubsystem(T startState) {
     m_currentState = startState;
     m_stateTimer.start();
-    this.setDefaultCommand(new RunCommand(() -> runStateMachine(), this));
+    this.setDefaultCommand(new RunCommand(() -> {
+      runStateMachine(m_isStateFirstRun);
+      m_isStateFirstRun = false;
+    }, this));
   }
 
   /**
    * The function that must be called every loop to run the state machine.
    */
-  protected abstract void runStateMachine();
+  protected abstract void runStateMachine(boolean isFirstRun);
 
   /**
    * Changes the current state of the state machine.
@@ -37,6 +41,7 @@ public abstract class StateBasedSubsystem<T extends SubsystemState> extends Subs
   public void changeState(T newState) {
     if (newState != m_currentState) {
       m_stateTimer.restart();
+      m_isStateFirstRun = true;
     }
 
     m_currentState = newState;

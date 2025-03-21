@@ -105,7 +105,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   @Override
-  protected void runStateMachine() {
+  protected void runStateMachine(boolean isFirstRun) {
     switch (getCurrentState()) {
       case MANUAL:
         manualState();
