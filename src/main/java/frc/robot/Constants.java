@@ -180,8 +180,8 @@ public final class Constants {
 
       // Coral Scoring Poses
       public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 75.5, 0.28, -75.9);
-      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.56, -75.0);
-      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -79.0);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 78.0, 0.51, -75.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 83.0, 0.88, -79.0);
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.33, 48.0).withBasePivotSafety(85);
 
       // Coral Pickup Poses
