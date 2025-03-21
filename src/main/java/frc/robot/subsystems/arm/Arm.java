@@ -432,8 +432,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       changeState(ArmState.STOW);
       return;
     }
-    Rotation2d targetBasePivotAngle = armPose.getBasePivotSafetyAngle().isPresent() &&  ? : armPose.getBasePivotAngle();
-    m_basePivot.setTargetAngle(armPose.getBasePivotAngle());
+    Rotation2d targetBasePivotAngle = armPose.getBasePivotSafetyAngle().isPresent() && (!m_gripperPivot.atTarget() || !m_extender.atTarget()) 
+          ? armPose.getBasePivotSafetyAngle().get() 
+          : armPose.getBasePivotAngle();
+    m_basePivot.setTargetAngle(targetBasePivotAngle);
     m_extender.setTargetLength(armPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(armPose.getGripperPivotAngle());
     if ((!isPrep && isPoseReady()) || m_operator.rightBumper().getAsBoolean() || (DriverStation.isAutonomousEnabled() && isPoseClose() && m_stateTimer.hasElapsed(2))) {
