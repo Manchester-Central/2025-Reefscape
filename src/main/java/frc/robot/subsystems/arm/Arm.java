@@ -202,17 +202,17 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 */
     m_basePivot.setSpeed(m_operator.getRightY() * 0.131);
 
-    // m_extender.setSpeed(m_operator.getLeftY() * 0.5);
+    m_extender.setSpeed(m_operator.getLeftY() * 0.5);
 
-     m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.2);
+    // m_gripperPivot.setSpeed(m_operator.getLeftY() * 0.2);
 
-    // if (m_operator.leftBumper().getAsBoolean()) {
-    //   m_gripperPivot.setSpeed(0.2);
-    // } else if (m_operator.leftTrigger().getAsBoolean()) {
-    //   m_gripperPivot.setSpeed(-0.2);
-    // } else {
-    //   m_gripperPivot.setSpeed(0);
-    // }
+    if (m_operator.leftBumper().getAsBoolean()) {
+      m_gripperPivot.setSpeed(0.2);
+    } else if (m_operator.leftTrigger().getAsBoolean()) {
+      m_gripperPivot.setSpeed(-0.2);
+    } else {
+      m_gripperPivot.setSpeed(0);
+    }
 
     if (m_operator.rightBumper().getAsBoolean()) {
       m_gripper.setCoralGripSpeed(0.2);
