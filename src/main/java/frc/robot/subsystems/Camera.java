@@ -12,6 +12,8 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableValue;
+import frc.robot.LimelightHelpers;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -40,6 +42,10 @@ public class Camera extends LimelightCamera {
 
     m_botpose.readQueue();
     m_botposeMT2.readQueue();
+  }
+
+  public Pose3d getTargetPose3d_RobotSpace() {
+    return LimelightHelpers.getTargetPose3d_RobotSpace(m_name);
   }
 
   @Override
