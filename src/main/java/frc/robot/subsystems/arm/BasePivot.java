@@ -17,6 +17,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.ArmConstants.BasePivotConstants;
+import frc.robot.Constants.ArmConstants.ExtenderConstants;
+import frc.robot.Constants.ArmConstants.GripperPivotConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Robot;
 import frc.robot.SimConstants.SimBasePivotConstants;
@@ -61,6 +63,10 @@ public class BasePivot extends AbstractArmPart {
       "MM_CruiseVelocity", BasePivotConstants.MMCruiseVelocity, (config, newValue) -> config.MotionMagic.MotionMagicCruiseVelocity = newValue);
   private DashboardNumber m_mmAcceleration = m_talonTuner.tunable("MM_Acceleration", BasePivotConstants.MMAcceleration, (config, newValue) -> config.MotionMagic.MotionMagicAcceleration = newValue);
   private DashboardNumber m_mmJerk = m_talonTuner.tunable("MM_Jerk", BasePivotConstants.MMJerk, (config, newValue) -> config.MotionMagic.MotionMagicJerk = newValue);
+  private DashboardNumber m_mmCruiseVelocityHigh = m_talonTuner.tunable(
+      "MM_CruiseVelocityHigh", BasePivotConstants.MMCruiseVelocityHigh, (config, newValue) -> {});
+  private DashboardNumber m_mmAccelerationHigh = m_talonTuner.tunable("MM_AccelerationHigh", BasePivotConstants.MMAccelerationHigh, (config, newValue) -> {});
+  private DashboardNumber m_mmJerkHigh = m_talonTuner.tunable("MM_JerkHigh", BasePivotConstants.MMJerkHigh, (config, newValue) -> {});
   private DashboardNumber m_supplyCurrentLimit = m_talonTuner.tunable(
       "SupplyCurrentLimit", BasePivotConstants.SupplyCurrentLimit, (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
   private DashboardNumber m_statorCurrentLimit = m_talonTuner.tunable(
@@ -151,7 +157,11 @@ public class BasePivot extends AbstractArmPart {
     }
 
     m_targetAngle = newAngle;
-    m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // Rotation to match the cancoder units
+    if (getArmValues().extenderLength > ExtenderConstants.BasePivotHighThresholdMeter) {
+      m_motor.moveToPositionMotionMagic(newAngle.getRotations(), m_mmCruiseVelocityHigh.get(), m_mmAccelerationHigh.get(), m_mmJerkHigh.get());
+    } else {
+      m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // Rotation to match the cancoder units
+    }
   }
 
   public Rotation2d getCurrentAngle() {

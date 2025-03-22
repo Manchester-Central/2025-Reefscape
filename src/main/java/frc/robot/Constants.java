@@ -222,6 +222,10 @@ public final class Constants {
       public static final double MMAcceleration = 1;
       public static final double MMJerk = 100;
 
+      public static final double MMCruiseVelocityHigh = 0.3;
+      public static final double MMAccelerationHigh = 0.5;
+      public static final double MMJerkHigh = 100;
+
       public static final double SupplyCurrentLimit = 50;
       public static final double StatorCurrentLimit = 50; // TODO: up when climbing
 
@@ -242,6 +246,7 @@ public final class Constants {
       
       public static final boolean HasMagnetSensor = true; // TODO: Magneto enable
 
+      public static final double BasePivotHighThresholdMeter = 1.0;
 
       // Slot 0 Configs
       public static final double kP = 150.0;

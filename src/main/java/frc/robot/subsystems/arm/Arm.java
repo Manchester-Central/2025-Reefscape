@@ -449,7 +449,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void scoreHelperCoral(ArmPose armPose, boolean isPrep, double outakeCoralSpeed, double outakeCoralOnAlgaeSpeed) {
-    if (!(m_gripper.hasCoral())) {
+    if (!m_gripper.hasCoral() && DriverStation.isAutonomous()) {
       changeState(ArmState.STOW);
       return;
     }
