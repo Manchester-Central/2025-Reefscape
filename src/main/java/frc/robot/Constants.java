@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDValue;
 import com.chaos131.robot.ChaosRobot.Mode;
+import com.chaos131.util.DashboardNumber;
 import com.chaos131.vision.CameraSpecs;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -180,13 +181,13 @@ public final class Constants {
 
       // Coral Scoring Poses
       public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 75.5, 0.28, -75.9);
-      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 75.0, 0.56, -75.0);
-      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 80.0, 0.93, -79.0);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 78.0, 0.51, -75.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 83.0, 0.88, -79.0);
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.33, 48.0).withBasePivotSafety(85);
 
       // Coral Pickup Poses
-      public static final ArmPose HpIntake = new ArmPose("HpIntake", 73, 0.65, -39.0); // Last updated 2/22/25
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 15.0, 0.28, -11); //TODO tune this
+      public static final ArmPose HpIntake = new ArmPose("HpIntake", 77, 0.54, -39.0); // Last updated 2/22/25
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 14.75, 0.28, -9); //TODO tune this
 
       // Algae Scoring Poses
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
@@ -317,36 +318,41 @@ public final class Constants {
 
     /** This contains constants for our Gripper. */
     public static class GripperConstants {
+      /** Creates quick DashboardNumbers for the gripper. */
+      public static DashboardNumber gripperSpeed(double value, String name) { 
+        return new DashboardNumber("GripperSpeeds/" + name, value, true, newValue -> {});
+      }
+
       public static final double CoralFrontDebounceSeconds = 0.1;
       public static final double CoralBackDebounceSeconds = 0.5;
       public static final double AlgaeDropDebounceSeconds = 0.5;
       public static final Current AlgaeStatorCurrentLimit = Amps.of(40);
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(40);
-      public static final Current CoralStatorCurrentLimit = Amps.of(50);
-      public static final Current CoralSupplyCurrentLimit = Amps.of(50);
+      public static final Current CoralStatorCurrentLimit = Amps.of(60);
+      public static final Current CoralSupplyCurrentLimit = Amps.of(60);
 
       // Outake Coral
-      public static final double OutakeCoralSpeed = 0.3;
-      public static final double OutakeCoralOnAlgaeMotorSpeed = -0.3;
-      public static final double OutakeInvertedCoralOnAlgaeMotorSpeed = 0.3;
-      public static final double OutakeInvertedCoralSpeed = -0.3;
+      public static final DashboardNumber OutakeCoralSpeed = gripperSpeed(0.3, "OutakeCoralSpeed");
+      public static final DashboardNumber OutakeCoralOnAlgaeMotorSpeed = gripperSpeed(-0.3, "OutakeCoralOnAlgaeMotorSpeed");
+      public static final DashboardNumber OutakeInvertedCoralOnAlgaeMotorSpeed = gripperSpeed(0.3, "OutakeInvertedCoralOnAlgaeMotorSpeed");
+      public static final DashboardNumber OutakeInvertedCoralSpeed = gripperSpeed(-0.3, "OutakeInvertedCoralSpeed");
 
       // Coral Intake Floor
-      public static final double IntakeCoralOnAlgaeMotorSpeed = 0.5;
-      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = 0.5;
-      public static final double IntakeCoralSpeed = -0.75;
-      public static final double IntakeCoralSlow = -0.75;
+      public static final DashboardNumber IntakeCoralOnAlgaeMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeMotorSpeed");
+      public static final DashboardNumber IntakeCoralOnAlgaeSlowMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeSlowMotorSpeed");
+      public static final DashboardNumber IntakeCoralSpeed = gripperSpeed(-0.8, "IntakeCoralSpeed");
+      public static final DashboardNumber IntakeCoralSlow = gripperSpeed(-0.8, "IntakeCoralSlow");
 
       // Algae Speeds
-      public static final double IntakeAlgaeSpeed = -1.0;
-      public static final double HoldAlgaeSpeed = -1.0;
-      public static final double OutakeAlgaeSpeed = 0.5;
+      public static final DashboardNumber IntakeAlgaeSpeed = gripperSpeed(-1.0, "IntakeAlgaeSpeed");
+      public static final DashboardNumber HoldAlgaeSpeed = gripperSpeed(-1.0, "HoldAlgaeSpeed");
+      public static final DashboardNumber OutakeAlgaeSpeed = gripperSpeed(0.5, "OutakeAlgaeSpeed");
 
       // Coral Intake HP
-      public static final double HpIntakeCoralSpeed = -0.4;
-      public static final double HpIntakeCoralSlowSpeed = -0.2;
-      public static final double HpIntakeCoralOnAlgaeMotorSpeed = 0.5;
-      public static final double HpIntakeCoralOnAlgaeSlowMotorSpeed = 0.2;
+      public static final DashboardNumber HpIntakeCoralSpeed = gripperSpeed(-0.4, "HpIntakeCoralSpeed");
+      public static final DashboardNumber HpIntakeCoralSlowSpeed = gripperSpeed(-0.2, "HpIntakeCoralSlowSpeed");
+      public static final DashboardNumber HpIntakeCoralOnAlgaeMotorSpeed = gripperSpeed(0.5, "HpIntakeCoralOnAlgaeMotorSpeed");
+      public static final DashboardNumber HpIntakeCoralOnAlgaeSlowMotorSpeed = gripperSpeed(0.2, "HpIntakeCoralOnAlgaeSlowMotorSpeed");
     }
   }
 

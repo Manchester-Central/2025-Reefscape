@@ -4,10 +4,9 @@
 
 package frc.robot.subsystems.arm;
 
-import java.util.Optional;
-
 import com.chaos131.util.DashboardNumber;
 import edu.wpi.first.math.geometry.Rotation2d;
+import java.util.Optional;
 
 /** A class for maintain goal points for certain arm poses. */
 public class ArmPose {

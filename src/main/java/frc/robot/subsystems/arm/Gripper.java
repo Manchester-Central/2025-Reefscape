@@ -63,7 +63,7 @@ public class Gripper extends AbstractArmPart {
       "StatorCurrentLimit", GripperConstants.AlgaeStatorCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
 
   private DashboardNumber m_coralSupplyCurrentLimit = m_coralTuner.tunable(
-      "SupplyCurrentLimit", GripperConstants.CoralStatorCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
+      "SupplyCurrentLimit", GripperConstants.CoralSupplyCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.SupplyCurrentLimit = newValue);
   private DashboardNumber m_coralStatorCurrentLimit = m_coralTuner.tunable(
       "StatorCurrentLimit", GripperConstants.CoralStatorCurrentLimit.in(Amps), (config, newValue) -> config.CurrentLimits.StatorCurrentLimit = newValue);
       
@@ -85,6 +85,8 @@ public class Gripper extends AbstractArmPart {
     m_coralMotor.Configuration.CurrentLimits.StatorCurrentLimit = m_coralStatorCurrentLimit.get();
     m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimit = m_coralSupplyCurrentLimit.get();
+    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLowerLimit = 100.0;
+    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLowerTime = 0.5;
     m_coralMotor.Configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     m_coralMotor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_coralMotor.applyConfig();
