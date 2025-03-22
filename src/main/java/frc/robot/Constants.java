@@ -351,7 +351,7 @@ public final class Constants {
       public static final DashboardNumber IntakeCoralOnAlgaeSlowMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeSlowMotorSpeed");
 
       public static final DashboardNumber IntakeCoralPeriod = new DashboardNumber("Gripper/IntakeCoralPeriod", 1, true, (newValue) -> {});
-      public static final DashboardNumber IntakeCoralSpitAlignSecondsThreshold = new DashboardNumber("Gripper/IntakeCoralSpitAlignSecondsThreshold", 0.9, true, (newValue) -> {});
+      public static final DashboardNumber IntakeCoralSpitAlignSecondsThreshold = new DashboardNumber("Gripper/IntakeCoralSpitAlignSecondsThreshold", 0.95, true, (newValue) -> {});
 
       public static final DashboardNumber IntakeCoralSpitAlignSpeed = gripperSpeed(0.8, "IntakeCoralSpitAlignSpeed");
       public static final DashboardNumber IntakeCoralOnAlgaeSpitAlignSpeed = gripperSpeed(-0.6, "IntakeCoralOnAlgaeSpitAlignSpeed");
