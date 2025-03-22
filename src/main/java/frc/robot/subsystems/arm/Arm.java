@@ -249,11 +249,11 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     }
 
     if (!m_gripper.hasCoralFront()) {
-      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSpeed); 
-      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeMotorSpeed);
+      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSpeed.get()); 
+      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeMotorSpeed.get());
     } else if (m_gripper.hasCoralFront() && !m_gripper.hasCoralBack()) {
-      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSlow);
-      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeSlowMotorSpeed);
+      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSlow.get());
+      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeSlowMotorSpeed.get());
     } else {
       m_gripper.setCoralGripSpeed(0.0);
       m_gripper.setAlgaeGripSpeed(0.0);
@@ -272,9 +272,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 
   private void intakeAlgaeFromFloorState() {
     if (!m_gripper.hasAlgae() && !m_gripper.hasCoral()) {
-      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed); 
+      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed.get()); 
     } else {
-      m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed);
+      m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed.get());
       changeState(ArmState.HOLD_ALGAE);
       return;
     }
@@ -297,11 +297,11 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     }
 
     if (!m_gripper.hasCoralFrontNoDebounce()) {
-      m_gripper.setCoralGripSpeed(GripperConstants.HpIntakeCoralSpeed); 
-      m_gripper.setAlgaeGripSpeed(GripperConstants.HpIntakeCoralOnAlgaeMotorSpeed);
+      m_gripper.setCoralGripSpeed(GripperConstants.HpIntakeCoralSpeed.get()); 
+      m_gripper.setAlgaeGripSpeed(GripperConstants.HpIntakeCoralOnAlgaeMotorSpeed.get());
     } else if (m_gripper.hasCoralFrontNoDebounce() && !m_gripper.hasCoralBackNoDebounce()) {
-      m_gripper.setCoralGripSpeed(GripperConstants.HpIntakeCoralSlowSpeed);
-      m_gripper.setAlgaeGripSpeed(GripperConstants.HpIntakeCoralOnAlgaeSlowMotorSpeed);
+      m_gripper.setCoralGripSpeed(GripperConstants.HpIntakeCoralSlowSpeed.get());
+      m_gripper.setAlgaeGripSpeed(GripperConstants.HpIntakeCoralOnAlgaeSlowMotorSpeed.get());
     } else {
       m_gripper.setCoralGripSpeed(0.0);
       m_gripper.setCoralGripSpeed(0.0);
@@ -339,7 +339,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_basePivot.setTargetAngle(ArmPoses.ScoreProcessor.getBasePivotAngle());
     m_extender.setTargetLength(ArmPoses.ScoreProcessor.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.ScoreProcessor.getGripperPivotAngle());
-    m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed);
+    m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed.get());
     m_gripper.setCoralGripSpeed(0.0);
     if (m_driver.rightTrigger().getAsBoolean()) {
       scoreAlgaeHelper();
@@ -350,7 +350,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_basePivot.setTargetAngle(ArmPoses.ScoreBarge.getBasePivotAngle());
     m_extender.setTargetLength(ArmPoses.ScoreBarge.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.ScoreBarge.getGripperPivotAngle());
-    m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed);
+    m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed.get());
     m_gripper.setCoralGripSpeed(0.0);
     if (m_driver.rightTrigger().getAsBoolean()) {
       scoreAlgaeHelper();
@@ -378,7 +378,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_basePivot.setTargetAngle(ArmPoses.AlgaeHigh.getBasePivotAngle());
       m_extender.setTargetLength(ArmPoses.AlgaeHigh.getExtensionMeters());
       m_gripperPivot.setTargetAngle(ArmPoses.AlgaeHigh.getGripperPivotAngle());
-      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed);
+      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed.get());
       m_gripper.setCoralGripSpeed(0.0);
     } else {
       changeState(ArmState.HOLD_CORAL);
@@ -391,7 +391,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_basePivot.setTargetAngle(ArmPoses.AlgaeLow.getBasePivotAngle());
       m_extender.setTargetLength(ArmPoses.AlgaeLow.getExtensionMeters());
       m_gripperPivot.setTargetAngle(ArmPoses.AlgaeLow.getGripperPivotAngle());
-      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed);
+      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed.get());
       m_gripper.setCoralGripSpeed(0.0);
     } else {
       changeState(ArmState.HOLD_CORAL);
@@ -414,7 +414,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_basePivot.setTargetAngle(ArmPoses.HoldAlgae.getBasePivotAngle());
     m_extender.setTargetLength(ArmPoses.HoldAlgae.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.HoldAlgae.getGripperPivotAngle());
-    m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed);
+    m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed.get());
     m_gripper.setCoralGripSpeed(0.0);
     if (!m_gripper.hasAlgae()) {
       changeState(ArmState.STOW);
@@ -450,8 +450,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     boolean isControllerScoring = m_driver.rightTrigger().getAsBoolean() || m_operator.rightBumper().getAsBoolean();
     boolean isAutonomousScoringTimedOut = DriverStation.isAutonomousEnabled() && isPoseClose() && m_stateTimer.hasElapsed(2);
     if ((!isPrep && isPoseReady()) || isControllerScoring || isAutonomousScoringTimedOut) {
-      m_gripper.setCoralGripSpeed(isScoringInverted ? GripperConstants.OutakeInvertedCoralSpeed : GripperConstants.OutakeCoralSpeed);
-      m_gripper.setAlgaeGripSpeed(isScoringInverted ? GripperConstants.OutakeInvertedCoralOnAlgaeMotorSpeed : GripperConstants.OutakeCoralOnAlgaeMotorSpeed);
+      m_gripper.setCoralGripSpeed(isScoringInverted ? GripperConstants.OutakeInvertedCoralSpeed.get() : GripperConstants.OutakeCoralSpeed.get());
+      m_gripper.setAlgaeGripSpeed(isScoringInverted ? GripperConstants.OutakeInvertedCoralOnAlgaeMotorSpeed.get() : GripperConstants.OutakeCoralOnAlgaeMotorSpeed.get());
       if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
         Gripper.hasCoralGrippedSim = false;
       }
@@ -462,7 +462,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void scoreAlgaeHelper() {
-    m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeAlgaeSpeed);
+    m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeAlgaeSpeed.get());
     m_gripper.setCoralGripSpeed(0.0);
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Gripper.hasAlgaeGrippedSim = false;
