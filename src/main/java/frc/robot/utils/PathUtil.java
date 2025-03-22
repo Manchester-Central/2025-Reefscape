@@ -57,7 +57,9 @@ public class PathUtil {
           for (int i = 0; i < possibleTargets.size(); i++) {
             possiblePoses.add(possibleTargets.get(i).getCurrentAlliancePose());
           }
-          Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets));
+          FieldPoint nearestPoint = FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets);
+          Logger.recordOutput("Swerve/Nearest Point", nearestPoint.getCurrentAlliancePose());
+          Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, nearestPoint);
           if (DriverStation.isAutonomousEnabled()) {
             simpleDriveToPosition = simpleDriveToPosition.withTimeout(timeOutSeconds);
           }

@@ -143,7 +143,8 @@ public class SwerveDrive extends BaseSwerveDrive {
             .setDefaultModuleAnglePIDValues(SwerveConstants.DefaultModuleAnglePIDValue)
             .setDefaultRotationPIDValues(SwerveConstants.AutoAnglePID)
             .setDefaultTranslationPIDValues(SwerveConstants.AutoTranslationPID)
-            .setDebugMode(true);
+            .setDebugMode(true)
+            .setDefaultDriveToTargetTolerance(SwerveConstants.DriveToTargetTolerance);
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(
             "FL",
