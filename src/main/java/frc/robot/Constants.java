@@ -345,10 +345,16 @@ public final class Constants {
       public static final DashboardNumber OutakeCoralOnAlgaeMotorL1 = gripperSpeed(-0.131, "OutakeCoralOnAlgaeMotorL1");
 
       // Coral Intake Floor
-      public static final DashboardNumber IntakeCoralOnAlgaeMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeMotorSpeed");
-      public static final DashboardNumber IntakeCoralOnAlgaeSlowMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeSlowMotorSpeed");
       public static final DashboardNumber IntakeCoralSpeed = gripperSpeed(-0.8, "IntakeCoralSpeed");
       public static final DashboardNumber IntakeCoralSlow = gripperSpeed(-0.8, "IntakeCoralSlow");
+      public static final DashboardNumber IntakeCoralOnAlgaeMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeMotorSpeed");
+      public static final DashboardNumber IntakeCoralOnAlgaeSlowMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeSlowMotorSpeed");
+
+      public static final DashboardNumber IntakeCoralPeriod = new DashboardNumber("Gripper/IntakeCoralPeriod", 1, true, (newValue) -> {});
+      public static final DashboardNumber IntakeCoralSpitAlignSecondsThreshold = new DashboardNumber("Gripper/IntakeCoralSpitAlignSecondsThreshold", 0.9, true, (newValue) -> {});
+
+      public static final DashboardNumber IntakeCoralSpitAlignSpeed = gripperSpeed(0.8, "IntakeCoralSpitAlignSpeed");
+      public static final DashboardNumber IntakeCoralOnAlgaeSpitAlignSpeed = gripperSpeed(-0.6, "IntakeCoralOnAlgaeSpitAlignSpeed");
 
       // Algae Speeds
       public static final DashboardNumber IntakeAlgaeSpeed = gripperSpeed(-1.0, "IntakeAlgaeSpeed");

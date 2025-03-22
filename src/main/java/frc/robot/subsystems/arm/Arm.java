@@ -264,8 +264,15 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSpeed.get()); 
       m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeMotorSpeed.get());
     } else if (m_gripper.hasCoralFront() && !m_gripper.hasCoralBack()) {
-      m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSlow.get());
-      m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeSlowMotorSpeed.get());
+      double currentElapsedSeconds = getElapsedStateSeconds();
+      double currentElapsedSpitAlignSeconds = currentElapsedSeconds % GripperConstants.IntakeCoralPeriod.get();
+      if (currentElapsedSpitAlignSeconds > GripperConstants.IntakeCoralSpitAlignSecondsThreshold.get()) {
+        m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSpitAlignSpeed.get());
+        m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeSpitAlignSpeed.get());
+      } else {
+        m_gripper.setCoralGripSpeed(GripperConstants.IntakeCoralSlow.get());
+        m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeCoralOnAlgaeSlowMotorSpeed.get());
+      }
     } else {
       m_gripper.setCoralGripSpeed(0.0);
       m_gripper.setAlgaeGripSpeed(0.0);
