@@ -86,7 +86,7 @@ public class Gripper extends AbstractArmPart {
     m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimit = m_coralSupplyCurrentLimit.get();
     m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLowerLimit = 100.0;
-    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLowerTime = 0.25;
+    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLowerTime = 0.5;
     m_coralMotor.Configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     m_coralMotor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_coralMotor.applyConfig();
