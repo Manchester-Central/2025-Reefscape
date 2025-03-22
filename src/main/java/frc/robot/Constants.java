@@ -186,7 +186,7 @@ public final class Constants {
 
       // Coral Pickup Poses
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 73, 0.65, -39.0); // Last updated 2/22/25
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 15.0, 0.28, -11); //TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 14.75, 0.28, -9); //TODO tune this
 
       // Algae Scoring Poses
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
@@ -322,8 +322,8 @@ public final class Constants {
       public static final double AlgaeDropDebounceSeconds = 0.5;
       public static final Current AlgaeStatorCurrentLimit = Amps.of(40);
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(40);
-      public static final Current CoralStatorCurrentLimit = Amps.of(50);
-      public static final Current CoralSupplyCurrentLimit = Amps.of(50);
+      public static final Current CoralStatorCurrentLimit = Amps.of(60);
+      public static final Current CoralSupplyCurrentLimit = Amps.of(60);
 
       // Outake Coral
       public static final double OutakeCoralSpeed = 0.3;
@@ -332,10 +332,10 @@ public final class Constants {
       public static final double OutakeInvertedCoralSpeed = -0.3;
 
       // Coral Intake Floor
-      public static final double IntakeCoralOnAlgaeMotorSpeed = 0.5;
-      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = 0.5;
-      public static final double IntakeCoralSpeed = -0.75;
-      public static final double IntakeCoralSlow = -0.75;
+      public static final double IntakeCoralOnAlgaeMotorSpeed = 0.6;
+      public static final double IntakeCoralOnAlgaeSlowMotorSpeed = 0.6;
+      public static final double IntakeCoralSpeed = -0.8;
+      public static final double IntakeCoralSlow = -0.8;
 
       // Algae Speeds
       public static final double IntakeAlgaeSpeed = -1.0;
