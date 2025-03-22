@@ -289,7 +289,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed.get()); 
     } else {
       m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed.get());
-      changeState(ArmState.HOLD_ALGAE);
+      // changeState(ArmState.HOLD_ALGAE);
       return;
     }
 
