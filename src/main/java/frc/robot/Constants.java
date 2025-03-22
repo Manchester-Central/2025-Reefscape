@@ -186,7 +186,7 @@ public final class Constants {
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.33, 48.0).withBasePivotSafety(85);
 
       // Coral Pickup Poses
-      public static final ArmPose HpIntake = new ArmPose("HpIntake", 73, 0.65, -39.0); // Last updated 2/22/25
+      public static final ArmPose HpIntake = new ArmPose("HpIntake", 77, 0.54, -39.0); // Last updated 2/22/25
       public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 14.75, 0.28, -9); //TODO tune this
 
       // Algae Scoring Poses
