@@ -40,6 +40,7 @@ public class DriverRelativeDrive extends Command {
     double speedMod = m_driver.leftStick().getAsBoolean() 
         || m_driver.rightTrigger().getAsBoolean()
         || m_driver.rightBumper().getAsBoolean() 
+        || m_driver.leftTrigger().getAsBoolean()
         ? 0.3 : 1.0;
     m_swerveDrive.moveFieldRelative(
         SwerveConstants.MaxFreeSpeed.times(m_driver.getSlewLeftY() * speedMod), 
