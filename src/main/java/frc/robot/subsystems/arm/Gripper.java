@@ -125,7 +125,7 @@ public class Gripper extends AbstractArmPart {
    * Checks if there is a coral at the sensor.
    */
   public boolean hasCoralBothNoDebounce() {
-    return hasCoralFrontNoDebounce() && hasCoralBackNoDebounce();
+    return hasCoralFrontNoDebounce() || hasCoralBackNoDebounce();
   }
 
   /**
