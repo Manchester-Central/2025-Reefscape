@@ -334,19 +334,19 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   
   //👻👽😺
   private void prepL1State() {
-    scoreHelperCoral(ArmPoses.ScoreL1, true, false);
+    scoreHelperCoral(ArmPoses.ScoreL1, true, GripperConstants.OutakeCoralL1.get(), GripperConstants.OutakeCoralOnAlgaeMotorL1.get());
   }
 
   private void prepL2State() {
-    scoreHelperCoral(ArmPoses.ScoreL2, true, false);
+    scoreHelperCoral(ArmPoses.ScoreL2, true, GripperConstants.OutakeCoralSpeed.get(), GripperConstants.OutakeCoralOnAlgaeMotorSpeed.get());
   }
 
   private void prepL3State() {
-    scoreHelperCoral(ArmPoses.ScoreL3, true, false);
+    scoreHelperCoral(ArmPoses.ScoreL3, true, GripperConstants.OutakeCoralSpeed.get(), GripperConstants.OutakeCoralOnAlgaeMotorSpeed.get());
   }
 
   private void prepL4State() {
-    scoreHelperCoral(ArmPoses.ScoreL4, true, true);
+    scoreHelperCoral(ArmPoses.ScoreL4, true, GripperConstants.OutakeInvertedCoralSpeed.get(), GripperConstants.OutakeInvertedCoralOnAlgaeMotorSpeed.get());
   }
 
   private void prepProcessorState() {
@@ -374,19 +374,19 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void scoreL1State() {
-    scoreHelperCoral(ArmPoses.ScoreL1, false, false);
+    scoreHelperCoral(ArmPoses.ScoreL1, false, GripperConstants.OutakeCoralL1.get(), GripperConstants.OutakeCoralOnAlgaeMotorL1.get());
   }
 
   private void scoreL2State() {
-    scoreHelperCoral(ArmPoses.ScoreL2, false, false);
+    scoreHelperCoral(ArmPoses.ScoreL2, false, GripperConstants.OutakeCoralSpeed.get(), GripperConstants.OutakeCoralOnAlgaeMotorSpeed.get());
   }
 
   private void scoreL3State() {
-    scoreHelperCoral(ArmPoses.ScoreL3, false, false);
+    scoreHelperCoral(ArmPoses.ScoreL3, false, GripperConstants.OutakeCoralSpeed.get(), GripperConstants.OutakeCoralOnAlgaeMotorSpeed.get());
   }
 
   private void scoreL4State() {
-    scoreHelperCoral(ArmPoses.ScoreL4, false, true);
+    scoreHelperCoral(ArmPoses.ScoreL4, false, GripperConstants.OutakeInvertedCoralSpeed.get(), GripperConstants.OutakeInvertedCoralOnAlgaeMotorSpeed.get());
   }
 
   private void algaeHighState() {
@@ -448,7 +448,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     }
   }
 
-  private void scoreHelperCoral(ArmPose armPose, boolean isPrep, boolean isScoringInverted) {
+  private void scoreHelperCoral(ArmPose armPose, boolean isPrep, double outakeCoralSpeed, double outakeCoralOnAlgaeSpeed) {
     if (!(m_gripper.hasCoral())) {
       changeState(ArmState.STOW);
       return;
@@ -476,8 +476,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     boolean isControllerScoring = m_scoringTrigger.getAsBoolean();
     boolean isAutonomousScoringTimedOut = DriverStation.isAutonomousEnabled() && isPoseClose() && m_stateTimer.hasElapsed(2);
     if ((!isPrep && isPoseReady()) || isControllerScoring || isAutonomousScoringTimedOut) {
-      m_gripper.setCoralGripSpeed(isScoringInverted ? GripperConstants.OutakeInvertedCoralSpeed.get() : GripperConstants.OutakeCoralSpeed.get());
-      m_gripper.setAlgaeGripSpeed(isScoringInverted ? GripperConstants.OutakeInvertedCoralOnAlgaeMotorSpeed.get() : GripperConstants.OutakeCoralOnAlgaeMotorSpeed.get());
+      m_gripper.setCoralGripSpeed(outakeCoralSpeed);
+      m_gripper.setAlgaeGripSpeed(outakeCoralOnAlgaeSpeed);
       if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
         Gripper.hasCoralGrippedSim = false;
       }

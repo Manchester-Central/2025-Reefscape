@@ -336,6 +336,8 @@ public final class Constants {
       public static final DashboardNumber OutakeCoralOnAlgaeMotorSpeed = gripperSpeed(-0.3, "OutakeCoralOnAlgaeMotorSpeed");
       public static final DashboardNumber OutakeInvertedCoralOnAlgaeMotorSpeed = gripperSpeed(0.3, "OutakeInvertedCoralOnAlgaeMotorSpeed");
       public static final DashboardNumber OutakeInvertedCoralSpeed = gripperSpeed(-0.3, "OutakeInvertedCoralSpeed");
+      public static final DashboardNumber OutakeCoralL1 = gripperSpeed(0.131, "OutakeCoralL1");
+      public static final DashboardNumber OutakeCoralOnAlgaeMotorL1 = gripperSpeed(-0.131, "OutakeCoralOnAlgaeMotorL1");
 
       // Coral Intake Floor
       public static final DashboardNumber IntakeCoralOnAlgaeMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeMotorSpeed");
