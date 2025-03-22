@@ -73,7 +73,7 @@
       ]
     }
   },
-  "resetOdom": false,
+  "resetOdom": true,
   "folder": "Left1",
   "choreoAuto": false
 }
