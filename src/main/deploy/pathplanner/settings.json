@@ -4,10 +4,13 @@
   "holonomicMode": true,
   "pathFolders": [
     "to RHP",
+    "to M2",
+    "to M1",
     "to LHP",
     "from LHP",
+    "Test",
     "Right Start",
-    "test",
+    "to M3",
     "Left Start",
     "From RHP",
     "Center Start"
