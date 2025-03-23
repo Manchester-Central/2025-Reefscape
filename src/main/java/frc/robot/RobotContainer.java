@@ -187,7 +187,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
 
-    m_driver.rightBumper().or(m_driver.rightTrigger()).whileTrue(
+    m_driver.rightBumper().or(m_driver.rightTrigger()).or(m_driver.leftTrigger()).whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
     m_driver.rightBumper().and(m_isCoralMode).whileTrue(new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
@@ -243,12 +243,12 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    */
   public Command aimAndPrepCoral() {
 
-    return PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive)
-      .alongWith(
-        new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
-        .andThen(
-          new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)
-        ));
+    return PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive);
+      // .alongWith(
+      //   new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
+      //   .andThen(
+      //     new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)
+      //   ));
   }
 
   /**

@@ -115,6 +115,7 @@ public final class Constants {
     public static final PIDValue AutoAnglePID = new PIDValue(0.04, 0.0001, 0.0);
     public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.06, 0.1);
     public static final Rotation2d AtTargetAngleThreshold = Rotation2d.fromDegrees(45);
+    public static final double DriveToTargetTolerance = 0.01;
 
     /** This stores our constants for the front left swerve module. */
     public static class SwerveFrontLeftConstants {
@@ -195,12 +196,12 @@ public final class Constants {
 
       // Algae Pickup Poses
       public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 44.9, 0.34, -104.8); //TODO tune this
-      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 75.76, 0.85, -70.9);
-      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
+      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 73.19, 0.83, -95.7);
+      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 67.93, 0.37, -90.62);
 
       // Climb Poses
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 13.0, 0.34, 0.0); // 39 or 38.8 also 47 might work for pivot angle
+      public static final ArmPose Climb = new ArmPose("Climb", 15.9, 0.27, 0.0); // 39 or 38.8 also 47 might work for pivot angle
     }
 
     /** This contains constants for our Base Pivot. */
@@ -222,6 +223,10 @@ public final class Constants {
       public static final double MMAcceleration = 1;
       public static final double MMJerk = 100;
 
+      public static final double MMCruiseVelocityHigh = 0.3;
+      public static final double MMAccelerationHigh = 0.5;
+      public static final double MMJerkHigh = 100;
+
       public static final double SupplyCurrentLimit = 50;
       public static final double StatorCurrentLimit = 50; // TODO: up when climbing
 
@@ -242,6 +247,7 @@ public final class Constants {
       
       public static final boolean HasMagnetSensor = true; // TODO: Magneto enable
 
+      public static final double BasePivotHighThresholdMeter = 1.0;
 
       // Slot 0 Configs
       public static final double kP = 150.0;
@@ -313,7 +319,7 @@ public final class Constants {
       public static final double VoltageClosedLoopRampPeriod = 0.1;
 
       //Offset // TODO: Get Real
-      public static final double canCoderOffsetDegrees = -4.0;
+      public static final double canCoderOffsetDegrees = -64.0;
     }
 
     /** This contains constants for our Gripper. */
@@ -336,12 +342,20 @@ public final class Constants {
       public static final DashboardNumber OutakeCoralOnAlgaeMotorSpeed = gripperSpeed(-0.3, "OutakeCoralOnAlgaeMotorSpeed");
       public static final DashboardNumber OutakeInvertedCoralOnAlgaeMotorSpeed = gripperSpeed(0.3, "OutakeInvertedCoralOnAlgaeMotorSpeed");
       public static final DashboardNumber OutakeInvertedCoralSpeed = gripperSpeed(-0.3, "OutakeInvertedCoralSpeed");
+      public static final DashboardNumber OutakeCoralL1 = gripperSpeed(0.131, "OutakeCoralL1");
+      public static final DashboardNumber OutakeCoralOnAlgaeMotorL1 = gripperSpeed(-0.131, "OutakeCoralOnAlgaeMotorL1");
 
       // Coral Intake Floor
-      public static final DashboardNumber IntakeCoralOnAlgaeMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeMotorSpeed");
-      public static final DashboardNumber IntakeCoralOnAlgaeSlowMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeSlowMotorSpeed");
       public static final DashboardNumber IntakeCoralSpeed = gripperSpeed(-0.8, "IntakeCoralSpeed");
       public static final DashboardNumber IntakeCoralSlow = gripperSpeed(-0.8, "IntakeCoralSlow");
+      public static final DashboardNumber IntakeCoralOnAlgaeMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeMotorSpeed");
+      public static final DashboardNumber IntakeCoralOnAlgaeSlowMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeSlowMotorSpeed");
+
+      public static final DashboardNumber IntakeCoralPeriod = new DashboardNumber("Gripper/IntakeCoralPeriod", 1, true, (newValue) -> {});
+      public static final DashboardNumber IntakeCoralSpitAlignSecondsThreshold = new DashboardNumber("Gripper/IntakeCoralSpitAlignSecondsThreshold", 0.95, true, (newValue) -> {});
+
+      public static final DashboardNumber IntakeCoralSpitAlignSpeed = gripperSpeed(0.8, "IntakeCoralSpitAlignSpeed");
+      public static final DashboardNumber IntakeCoralOnAlgaeSpitAlignSpeed = gripperSpeed(-0.6, "IntakeCoralOnAlgaeSpitAlignSpeed");
 
       // Algae Speeds
       public static final DashboardNumber IntakeAlgaeSpeed = gripperSpeed(-1.0, "IntakeAlgaeSpeed");

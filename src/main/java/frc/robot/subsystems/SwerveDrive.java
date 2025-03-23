@@ -31,7 +31,6 @@ import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -144,7 +143,8 @@ public class SwerveDrive extends BaseSwerveDrive {
             .setDefaultModuleAnglePIDValues(SwerveConstants.DefaultModuleAnglePIDValue)
             .setDefaultRotationPIDValues(SwerveConstants.AutoAnglePID)
             .setDefaultTranslationPIDValues(SwerveConstants.AutoTranslationPID)
-            .setDebugMode(true);
+            .setDebugMode(true)
+            .setDefaultDriveToTargetTolerance(SwerveConstants.DriveToTargetTolerance);
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(
             "FL",
