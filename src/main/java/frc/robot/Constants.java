@@ -151,9 +151,9 @@ public final class Constants {
     private static CameraSpecs initializeLimelight3G() {
       CameraSpecs limeLight3G = new CameraSpecs();
       limeLight3G.minimum_error = 0.02;
-      limeLight3G.error_exponent = 2.2;
+      limeLight3G.error_exponent = 2;
       limeLight3G.distance_scalar = 1 / 3.15;
-      limeLight3G.error_multiplier = 4.0;  // Higher values reduce confidence, tuned to 10 from 1 based on Isaac's feedback.
+      limeLight3G.error_multiplier = 2.0;  // Higher values reduce confidence, tuned to 10 from 1 based on Isaac's feedback.
       limeLight3G.tag_count_scalar = 1.0;
       limeLight3G.VFOV = 56.0;
       limeLight3G.HFOV = 80.0;
