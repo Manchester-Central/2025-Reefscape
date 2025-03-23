@@ -177,7 +177,7 @@ public final class Constants {
       public static final ArmPose Stow = new ArmPose("Stow", 80.0, 0.25, -18.8);
 
       // Holding Poses
-      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 80, 0.65, -75.9);
+      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 85, 0.65, -70.9);
       public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.34, -38.3); // TODO tune this
 
       // Coral Scoring Poses
