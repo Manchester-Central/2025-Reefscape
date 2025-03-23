@@ -352,6 +352,6 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     } else {
       Logger.recordOutput(data.getName() + "/rejected pose", pose);
     }
-   
+    Logger.recordOutput(data.getName() + "/PreviousPose", m_swerveDrive.getPastPose(data.m_time).get());
   }
 }

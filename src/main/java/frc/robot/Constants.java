@@ -196,8 +196,8 @@ public final class Constants {
 
       // Algae Pickup Poses
       public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 44.9, 0.34, -104.8); //TODO tune this
-      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 73.19, 0.83, -95.7);
-      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 67.93, 0.37, -90.62);
+      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 75.76, 0.85, -70.9);
+      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
 
       // Climb Poses
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);

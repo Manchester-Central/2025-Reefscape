@@ -19,6 +19,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.RobotDimensions;
@@ -36,7 +37,7 @@ public class AlignReefTag extends Command {
   private Camera m_cameraRight;
   private Angle m_targetAngle;
 
-  private static double kTranslationP = 10.0; // TODO: dashboard numbers
+  private static double kTranslationP = 2.0; // TODO: dashboard numbers
   private static double kTranslationI = 0.01;
   private static double kTranslationD = 0.0;
   private static LinearVelocity kMaxVelocity = MetersPerSecond.of(2.0);
@@ -55,6 +56,8 @@ public class AlignReefTag extends Command {
     m_xPid.setTolerance(kTranslationTolerance.in(Meters));
     m_yPid.setTolerance(kTranslationTolerance.in(Meters));
     addRequirements(swerveDrive);
+    SmartDashboard.putData("ReefAlign/xPid", m_xPid);
+    SmartDashboard.putData("ReefAlign/yPid", m_yPid);
   }
 
   // Called when the command is initially scheduled.
