@@ -48,6 +48,10 @@ public class Camera extends LimelightCamera {
     return LimelightHelpers.getTargetPose3d_RobotSpace(m_name);
   }
 
+  public Pose3d getBotPose3d_TargetSpace() {
+    return LimelightHelpers.getBotPose3d_TargetSpace(m_name);
+  }
+
   @Override
   public void periodic() {
     LoadNTQueueToVisionData();
