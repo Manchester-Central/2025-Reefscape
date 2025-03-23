@@ -174,7 +174,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //     PathUtil.findClosestPointOnLine(m_swerveDrive, FieldPoint.CenterBarge, false)), m_swerveDrive), Set.of(m_swerveDrive))
     //     .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, () -> DriveDirection.Towards.getAllianceAngle(), 1.0))
     //     .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE)));
-    m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
+    // m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
+    m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommandV2(FieldPoint.getReefDrivePoses(), m_swerveDrive));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
     m_driver.y().whileTrue(new ConditionalCommand(
         aimAndPrepCoral(),

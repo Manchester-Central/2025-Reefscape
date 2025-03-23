@@ -383,4 +383,34 @@ public class SwerveDrive extends BaseSwerveDrive {
     moveFieldRelativeForPID(
         Units.MetersPerSecond.of(x), Units.MetersPerSecond.of(y), Units.RadiansPerSecond.of(angle));
   }
+ 
+  /**
+   * .
+   */
+  public void moveToTargetV2(double maxTranslationSpeedPercent) {
+    Pose2d pose = getPose();
+    double minTranslationSpeed = 0.05;
+
+    Translation2d difference =
+        pose.getTranslation().minus(new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint()));
+
+    var normalizedDifference = difference.div(difference.getNorm());
+    maxTranslationSpeedPercent *= m_swerveConfigs.maxRobotSpeed().in(MetersPerSecond); //TODO: do this the right way in shared code
+
+    double x =
+        MathUtil.clamp(
+            m_XPid.calculate(pose.getX()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getX()),
+            (maxTranslationSpeedPercent * normalizedDifference.getX()));
+    x = m_XPid.atSetpoint() ? 0.0 : Math.max(x, minTranslationSpeed); 
+    double y =
+        MathUtil.clamp(
+            m_YPid.calculate(pose.getY()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getY()),
+            (maxTranslationSpeedPercent * normalizedDifference.getY()));
+    y = m_YPid.atSetpoint() ? 0.0 : Math.max(y, minTranslationSpeed); 
+    double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
+    moveFieldRelativeForPID(
+        Units.MetersPerSecond.of(x), Units.MetersPerSecond.of(y), Units.RadiansPerSecond.of(angle));
+  }
 }
