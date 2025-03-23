@@ -60,7 +60,7 @@ public class PathUtil {
           }
           FieldPoint nearestPoint = FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets);
           Logger.recordOutput("Swerve/Nearest Point", nearestPoint.getCurrentAlliancePose());
-          Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, nearestPoint);
+          Command simpleDriveToPosition = new SimpleDriveToPositionV2(swerveDrive, nearestPoint);
           if (DriverStation.isAutonomousEnabled()) {
             simpleDriveToPosition = simpleDriveToPosition.withTimeout(timeOutSeconds);
           }
@@ -97,7 +97,7 @@ public class PathUtil {
         },
         Set.of(swerveDrive));
   }
-  
+
   /**
    * Drives to the closest FieldPoint on the field (respective of the current alliance).
    */

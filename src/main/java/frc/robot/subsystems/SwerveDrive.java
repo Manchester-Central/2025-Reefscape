@@ -404,13 +404,13 @@ public class SwerveDrive extends BaseSwerveDrive {
             m_XPid.calculate(pose.getX()),
             -(maxTranslationSpeedPercent * normalizedDifference.getX()),
             (maxTranslationSpeedPercent * normalizedDifference.getX()));
-    x = m_XPid.atSetpoint() ? 0.0 : Math.max(x, minTranslationSpeed); 
+    x = m_XPid.atSetpoint() ? 0.0 : Math.max(Math.abs(x), minTranslationSpeed) * (x < 0 ? -1 : 1); 
     double y =
         MathUtil.clamp(
             m_YPid.calculate(pose.getY()),
             -(maxTranslationSpeedPercent * normalizedDifference.getY()),
             (maxTranslationSpeedPercent * normalizedDifference.getY()));
-    y = m_YPid.atSetpoint() ? 0.0 : Math.max(y, minTranslationSpeed); 
+    y = m_YPid.atSetpoint() ? 0.0 : Math.max(Math.abs(y), minTranslationSpeed) * (y < 0 ? -1 : 1); 
     double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
     moveFieldRelativeForPID(
         Units.MetersPerSecond.of(x), Units.MetersPerSecond.of(y), Units.RadiansPerSecond.of(angle));

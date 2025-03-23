@@ -181,9 +181,9 @@ public final class Constants {
       public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.34, -38.3); // TODO tune this
 
       // Coral Scoring Poses
-      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 75.5, 0.28, -75.9);
-      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 78.0, 0.51, -75.0);
-      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 83.0, 0.88, -79.0);
+      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 61.5, 0.23, -35.5);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 78.0, 0.53, -75.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 83.0, 0.90, -79.0);
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.33, 48.0).withBasePivotSafety(85);
 
       // Coral Pickup Poses
