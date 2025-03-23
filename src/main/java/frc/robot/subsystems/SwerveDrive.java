@@ -12,6 +12,7 @@ import static edu.wpi.first.units.Units.Rotation;
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
 import com.chaos131.swerve.SwerveConfigs;
+import com.chaos131.util.DashboardNumber;
 import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -65,6 +66,7 @@ public class SwerveDrive extends BaseSwerveDrive {
       new PIDConstants(2.0, 0.0, 0.0));
   private TimeInterpolatableBuffer<Pose2d> m_pastPoses;
   private CircularBuffer<Rotation2d> m_swerveAngles;
+  private DashboardNumber m_minTranslationSpeed = new DashboardNumber("MinTranslationSpeed", 0.2, true, newValue -> {});
 
   /** A value to help determine if we should use PathPlanner's reset odometry or not. */
   private boolean m_hasReceivedVisionUpdates = false;
@@ -389,7 +391,7 @@ public class SwerveDrive extends BaseSwerveDrive {
    */
   public void moveToTargetV2(double maxTranslationSpeedPercent) {
     Pose2d pose = getPose();
-    double minTranslationSpeed = 0.05;
+    double minTranslationSpeed = m_minTranslationSpeed.get();
 
     Translation2d difference =
         pose.getTranslation().minus(new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint()));
