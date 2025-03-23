@@ -114,7 +114,7 @@ public final class Constants {
         new PIDFValue(5.0, 0.0, 0.0, 2.19);
     public static final PIDValue AutoAnglePID = new PIDValue(0.04, 0.0001, 0.0);
     public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.06, 0.1);
-    public static final Rotation2d AtTargetAngleThreshold = Rotation2d.fromDegrees(45);
+    public static final Rotation2d AtTargetAngleThreshold = Rotation2d.fromDegrees(90);
     public static final double DriveToTargetTolerance = 0.01;
 
     /** This stores our constants for the front left swerve module. */
