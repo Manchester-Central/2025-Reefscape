@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left2-10L"
+            "pathName": "Right2-2L"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "10L-LHPF"
+            "pathName": "2L-RHPF"
           }
         },
         {
@@ -37,13 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LHPF-8L"
+            "pathName": "RHPF-4R"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 0.25
           }
         },
         {
@@ -61,7 +61,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "8L-LHPF"
+            "pathName": "4R-RHPF"
           }
         },
         {
@@ -73,7 +73,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LHPF-8R"
+            "pathName": "RHPF-4L"
           }
         },
         {
@@ -92,6 +92,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Left2",
+  "folder": "Right2",
   "choreoAuto": false
 }

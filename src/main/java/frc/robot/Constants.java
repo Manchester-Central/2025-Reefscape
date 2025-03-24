@@ -114,7 +114,7 @@ public final class Constants {
         new PIDFValue(5.0, 0.0, 0.0, 2.19);
     public static final PIDValue AutoAnglePID = new PIDValue(0.04, 0.0001, 0.0);
     public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.06, 0.1);
-    public static final Rotation2d AtTargetAngleThreshold = Rotation2d.fromDegrees(45);
+    public static final Rotation2d AtTargetAngleThreshold = Rotation2d.fromDegrees(90);
     public static final double DriveToTargetTolerance = 0.01;
 
     /** This stores our constants for the front left swerve module. */
@@ -151,9 +151,9 @@ public final class Constants {
     private static CameraSpecs initializeLimelight3G() {
       CameraSpecs limeLight3G = new CameraSpecs();
       limeLight3G.minimum_error = 0.02;
-      limeLight3G.error_exponent = 2.2;
+      limeLight3G.error_exponent = 2;
       limeLight3G.distance_scalar = 1 / 3.15;
-      limeLight3G.error_multiplier = 4.0;  // Higher values reduce confidence, tuned to 10 from 1 based on Isaac's feedback.
+      limeLight3G.error_multiplier = 2.0;  // Higher values reduce confidence, tuned to 10 from 1 based on Isaac's feedback.
       limeLight3G.tag_count_scalar = 1.0;
       limeLight3G.VFOV = 56.0;
       limeLight3G.HFOV = 80.0;
@@ -177,13 +177,13 @@ public final class Constants {
       public static final ArmPose Stow = new ArmPose("Stow", 80.0, 0.25, -18.8);
 
       // Holding Poses
-      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 80, 0.65, -75.9);
+      public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 85, 0.65, -70.9);
       public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.34, -38.3); // TODO tune this
 
       // Coral Scoring Poses
-      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 75.5, 0.28, -75.9);
-      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 78.0, 0.51, -75.0);
-      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 83.0, 0.88, -79.0);
+      public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 61.5, 0.23, -35.5);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 78.0, 0.53, -75.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 83.0, 0.90, -79.0);
       public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.33, 48.0).withBasePivotSafety(85);
 
       // Coral Pickup Poses
@@ -196,8 +196,8 @@ public final class Constants {
 
       // Algae Pickup Poses
       public static final ArmPose FloorIntakeAlgae = new ArmPose("FloorIntakeAlgae", 44.9, 0.34, -104.8); //TODO tune this
-      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 73.19, 0.83, -95.7);
-      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 67.93, 0.37, -90.62);
+      public static final ArmPose AlgaeHigh = new ArmPose("AlgaeHigh", 75.76, 0.85, -70.9);
+      public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
 
       // Climb Poses
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);

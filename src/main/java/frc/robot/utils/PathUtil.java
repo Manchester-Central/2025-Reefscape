@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Robot;
 import frc.robot.commands.SimpleDriveToPosition;
+import frc.robot.commands.SimpleDriveToPositionV2;
 import frc.robot.subsystems.SwerveDrive;
 import java.util.ArrayList;
 import java.util.Set;
@@ -59,7 +60,7 @@ public class PathUtil {
           }
           FieldPoint nearestPoint = FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets);
           Logger.recordOutput("Swerve/Nearest Point", nearestPoint.getCurrentAlliancePose());
-          Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, nearestPoint);
+          Command simpleDriveToPosition = new SimpleDriveToPositionV2(swerveDrive, nearestPoint);
           if (DriverStation.isAutonomousEnabled()) {
             simpleDriveToPosition = simpleDriveToPosition.withTimeout(timeOutSeconds);
           }
@@ -83,6 +84,34 @@ public class PathUtil {
           FieldPoint nearestPoint = FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets);
           Logger.recordOutput("Swerve/Nearest Point", nearestPoint.getCurrentAlliancePose());
           Command simpleDriveToPosition = new SimpleDriveToPosition(swerveDrive, nearestPoint);
+          if (Robot.isSimulation()) {
+            return AutoBuilder.pathfindToPose(
+              swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0)
+              .andThen(simpleDriveToPosition)
+              .andThen(new RunCommand(() -> swerveDrive.moveToTarget(0), swerveDrive));
+          }
+          return AutoBuilder.pathfindToPose(
+              swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0)
+              .andThen(simpleDriveToPosition);
+          // return simpleDriveToPosition;
+        },
+        Set.of(swerveDrive));
+  }
+
+  /**
+   * Drives to the closest FieldPoint on the field (respective of the current alliance).
+   */
+  public static Command driveToClosestPointTeleopCommandV2(
+      ArrayList<FieldPoint> possibleTargets, SwerveDrive swerveDrive) {
+    return new DeferredCommand(
+        () -> {
+          ArrayList<Pose2d> possiblePoses = new ArrayList<Pose2d>();
+          for (int i = 0; i < possibleTargets.size(); i++) {
+            possiblePoses.add(possibleTargets.get(i).getCurrentAlliancePose());
+          }
+          FieldPoint nearestPoint = FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets);
+          Logger.recordOutput("Swerve/Nearest Point", nearestPoint.getCurrentAlliancePose());
+          Command simpleDriveToPosition = new SimpleDriveToPositionV2(swerveDrive, nearestPoint);
           if (Robot.isSimulation()) {
             return AutoBuilder.pathfindToPose(
               swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0)
