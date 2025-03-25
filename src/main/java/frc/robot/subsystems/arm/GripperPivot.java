@@ -6,6 +6,7 @@ package frc.robot.subsystems.arm;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -14,7 +15,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.ChassisReference;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
@@ -36,7 +36,7 @@ import org.littletonrobotics.junction.Logger;
 public class GripperPivot extends AbstractArmPart {
   private double m_simGearRatio = GripperPivotConstants.RotorToSensorRatio;
   private double m_jkgMetersSquared = 0.1;
-  private Rotation2d m_targetAngle = Rotation2d.fromDegrees(0);
+  private Angle m_targetAngle = Degrees.of(0);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
@@ -54,7 +54,7 @@ public class GripperPivot extends AbstractArmPart {
 
   private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tuner",
       Robot.isReal() ? GripperPivotConstants.canCoderOffsetDegrees : SimGripperPivotConstants.canCoderOffsetDegrees, (config, newValue) -> 
-      config.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(newValue).getRotations());
+      config.MagnetSensor.MagnetOffset = Degrees.of(newValue).in(Rotations));
 
   // Motion Magic Slot 0 Configs
   private DashboardNumber m_kp = m_tuner.tunable("kP", Robot.isReal() ? GripperPivotConstants.kP : SimGripperPivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
@@ -99,7 +99,7 @@ public class GripperPivot extends AbstractArmPart {
     super(armValuesSupplier);
     m_canCoder.Configuration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
     m_canCoder.Configuration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    m_canCoder.Configuration.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(m_canCoderOffsetDegrees.get()).getRotations();
+    m_canCoder.Configuration.MagnetSensor.MagnetOffset = Degrees.of(m_canCoderOffsetDegrees.get()).in(Rotations);
     m_canCoder.applyConfig();
 
     m_motor.Configuration.ClosedLoopGeneral.ContinuousWrap = false;
@@ -138,22 +138,22 @@ public class GripperPivot extends AbstractArmPart {
   /**
    * Sets the target angle and tries to drive there.
    */
-  public void setTargetAngle(Rotation2d newAngle) {
+  public void setTargetAngle(Angle newAngle) {
     GripperPivotSafety currentSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(getArmValues().extenderLength), GripperPivotConstants.Safeties);
     Angle currentMin = currentSafety.getMinAngle();
     Angle currentMax = currentSafety.getMaxAngle();
 
-    if (newAngle.getDegrees() > currentMax.in(Degrees)) {
-      newAngle = Rotation2d.fromDegrees(currentMax.in(Degrees));
-    } else if (newAngle.getDegrees() < currentMin.in(Degrees)) {
-      newAngle = Rotation2d.fromDegrees(currentMin.in(Degrees));
+    if (newAngle.in(Degrees) > currentMax.in(Degrees)) {
+      newAngle = Degrees.of(currentMax.in(Degrees));
+    } else if (newAngle.in(Degrees) < currentMin.in(Degrees)) {
+      newAngle = Degrees.of(currentMin.in(Degrees));
     }
 
     // if (!getArmValues().isBasePivotAtSafeAngle || !getArmValues().isExtenderAtSafeLength) {
     //   newAngle = ArmPoses.Stow.getGripperPivotAngle();
     // }
     m_targetAngle = newAngle;
-    m_motor.moveToPositionMotionMagic(newAngle.getRotations(), m_dynamicKg.get(), getCurrentGravityAngle());
+    m_motor.moveToPositionMotionMagic(newAngle.in(Rotations), m_dynamicKg.get(), getCurrentGravityAngle());
   }
   
   /**
@@ -175,9 +175,9 @@ public class GripperPivot extends AbstractArmPart {
     Angle currentMin = currentSafety.getMinAngle();
     Angle currentMax = currentSafety.getMaxAngle();
 
-    if (getCurrentAngle().getDegrees() > currentMax.in(Degrees)) {
+    if (getCurrentAngle().in(Degrees) > currentMax.in(Degrees)) {
       speed = Math.min(speed, 0.0);
-    } else if (getCurrentAngle().getDegrees() < currentMin.in(Degrees)) {
+    } else if (getCurrentAngle().in(Degrees) < currentMin.in(Degrees)) {
       speed = Math.max(speed, 0.0);
     }
     m_motor.set(speed);
@@ -187,15 +187,15 @@ public class GripperPivot extends AbstractArmPart {
     return m_motor.getVelocity().getValueAsDouble();
   }
 
-  public Rotation2d getCurrentAngle() {
-    return Rotation2d.fromRotations(
+  public Angle getCurrentAngle() {
+    return Rotations.of(
         m_canCoder.getAbsolutePosition().getValueAsDouble());
   }
 
   /** Gets the current angle of the gripper in parallel to the ground (when gravity effects it most). */
   public Angle getCurrentGravityAngle() {
-    var basePivotAngle = getArmValues().basePivotAngle.getMeasure();
-    var gripperPivotAngle = getCurrentAngle().getMeasure();
+    var basePivotAngle = getArmValues().basePivotAngle;
+    var gripperPivotAngle = getCurrentAngle();
     return basePivotAngle.plus(gripperPivotAngle);
   }
 
@@ -203,14 +203,14 @@ public class GripperPivot extends AbstractArmPart {
    * Checks if the current angle is at the goal angle.
    */
   public boolean atTarget() {
-    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 1.0;
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).in(Degrees)) < 1.0;
   }
 
   /**
    * Checks if the current angle close to the goal angle.
    */
   public boolean atClose() {
-    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 10.0;
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).in(Degrees)) < 10.0;
   }
 
   @Override
@@ -239,15 +239,15 @@ public class GripperPivot extends AbstractArmPart {
     // TODO Auto-generated method stub
     super.periodic();
     Logger.recordOutput("GripperPivot/Setpoint", m_targetAngle);
-    Logger.recordOutput("GripperPivot/CurrentAngle", getCurrentAngle().getDegrees());
+    Logger.recordOutput("GripperPivot/CurrentAngle", getCurrentAngle().in(Degrees));
     Logger.recordOutput("GripperPivot/CurrentGravityAngle", getCurrentGravityAngle().in(Degrees));
     Logger.recordOutput("GripperPivot/AtTarget", atTarget());
     Logger.recordOutput("GripperPivot/AngleError", getCurrentAngle().minus(m_targetAngle));
     Logger.recordOutput("GripperPivot/Voltage", m_motor.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput("GripperPivot/StatorCurrent", m_motor.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("GripperPivot/SupplyCurrent", m_motor.getSupplyCurrent().getValueAsDouble());
-    Logger.recordOutput("GripperPivot/MotorAngle", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).getDegrees());
-    Logger.recordOutput("GripperPivot/Erro", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).minus(getCurrentAngle()).getDegrees());  
+    Logger.recordOutput("GripperPivot/MotorAngle", Rotations.of(m_motor.getPosition().getValueAsDouble()).in(Degrees));
+    Logger.recordOutput("GripperPivot/Erro", Rotations.of(m_motor.getPosition().getValueAsDouble()).minus(getCurrentAngle()).in(Degrees));  
     Logger.recordOutput("GripperPivot/MotorVelocityRPS", m_motor.getVelocity().getValueAsDouble());
   }
 }

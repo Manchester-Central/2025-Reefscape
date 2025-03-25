@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -12,13 +15,12 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.ChassisReference;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.ArmConstants.BasePivotConstants;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
-import frc.robot.Constants.ArmConstants.GripperPivotConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Robot;
 import frc.robot.SimConstants.SimBasePivotConstants;
@@ -34,7 +36,7 @@ import org.littletonrobotics.junction.Logger;
 public class BasePivot extends AbstractArmPart {
   private double m_gearRatio = BasePivotConstants.RotorToSensorRatio;
   private double m_jkgMetersSquared = 1.0;
-  private Rotation2d m_targetAngle = Rotation2d.fromDegrees(120);
+  private Angle m_targetAngle = Degrees.of(120);
   private DCMotor m_dcMotor = DCMotor.getKrakenX60(1);
   private DCMotorSim m_motorSim =
       new DCMotorSim(
@@ -50,7 +52,7 @@ public class BasePivot extends AbstractArmPart {
 
   private DashboardNumber m_canCoderOffsetDegrees = m_canCoderTuner.tunable("CANCoder Tuner",
       Robot.isReal() ? BasePivotConstants.canCoderOffsetDegrees : SimBasePivotConstants.canCoderOffsetDegrees, (config, newValue) -> 
-      config.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(newValue).getRotations());
+      config.MagnetSensor.MagnetOffset = Degrees.of(newValue).in(Rotations));
 
   private DashboardNumber m_kp = m_talonTuner.tunable("kP", Robot.isReal() ? BasePivotConstants.kP : SimBasePivotConstants.kP, (config, newValue) -> config.Slot0.kP = newValue);
   private DashboardNumber m_ki = m_talonTuner.tunable("kI", Robot.isReal() ? BasePivotConstants.kI : SimBasePivotConstants.kI, (config, newValue) -> config.Slot0.kI = newValue);
@@ -91,7 +93,7 @@ public class BasePivot extends AbstractArmPart {
 
     m_canCoder.Configuration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
     m_canCoder.Configuration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    m_canCoder.Configuration.MagnetSensor.MagnetOffset = Rotation2d.fromDegrees(m_canCoderOffsetDegrees.get()).getRotations();
+    m_canCoder.Configuration.MagnetSensor.MagnetOffset = Degrees.of(m_canCoderOffsetDegrees.get()).in(Rotations);
     m_canCoder.applyConfig();
 
     m_motor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -132,9 +134,9 @@ public class BasePivot extends AbstractArmPart {
    * Sets the direct speed [-1.0, 1.0] of the motors.
    */
   public void setSpeed(double speed) {
-    if (getCurrentAngle().getDegrees() > BasePivotConstants.MaxAngle.getDegrees()) {
+    if (getCurrentAngle().in(Degrees) > BasePivotConstants.MaxAngle.in(Degrees)) {
       speed = Math.min(speed, 0.0);
-    } else if (getCurrentAngle().getDegrees() < BasePivotConstants.MinAngle.getDegrees()) {
+    } else if (getCurrentAngle().in(Degrees) < BasePivotConstants.MinAngle.in(Degrees)) {
       speed = Math.max(speed, 0.0);
     }
     m_motor.set(speed);
@@ -143,29 +145,29 @@ public class BasePivot extends AbstractArmPart {
   /**
    * Sets the target angle and tries to drive there.
    */
-  public void setTargetAngle(Rotation2d newAngle) {
-    if (newAngle.getDegrees() > BasePivotConstants.MaxAngle.getDegrees()) {
+  public void setTargetAngle(Angle newAngle) {
+    if (newAngle.in(Degrees) > BasePivotConstants.MaxAngle.in(Degrees)) {
       newAngle = BasePivotConstants.MaxAngle;
-    } else if (newAngle.getDegrees() < BasePivotConstants.MinAngle.getDegrees()) {
+    } else if (newAngle.in(Degrees) < BasePivotConstants.MinAngle.in(Degrees)) {
       newAngle = BasePivotConstants.MinAngle;
     }
 
     boolean isExtenderAndGripperAtSafetyPose = getArmValues().isExtenderAtCloseLength && getArmValues().isGripperPivotAtCloseAngle;
 
-    if (newAngle.getDegrees() < BasePivotConstants.LowerSafetyAngle.getDegrees() && !isExtenderAndGripperAtSafetyPose) {
-      newAngle = getCurrentAngle().getMeasure().lt(BasePivotConstants.LowerSafetyAngle.getMeasure()) ? getCurrentAngle() : BasePivotConstants.LowerSafetyAngle;
+    if (newAngle.in(Degrees) < BasePivotConstants.LowerSafetyAngle.in(Degrees) && !isExtenderAndGripperAtSafetyPose) {
+      newAngle = getCurrentAngle().lt(BasePivotConstants.LowerSafetyAngle) ? getCurrentAngle() : BasePivotConstants.LowerSafetyAngle;
     }
 
     m_targetAngle = newAngle;
     if (getArmValues().extenderLength > ExtenderConstants.BasePivotHighThresholdMeter) {
-      m_motor.moveToPositionMotionMagic(newAngle.getRotations(), m_mmCruiseVelocityHigh.get(), m_mmAccelerationHigh.get(), m_mmJerkHigh.get());
+      m_motor.moveToPositionMotionMagic(newAngle.in(Degrees), m_mmCruiseVelocityHigh.get(), m_mmAccelerationHigh.get(), m_mmJerkHigh.get());
     } else {
-      m_motor.moveToPositionMotionMagic(newAngle.getRotations()); // Rotation to match the cancoder units
+      m_motor.moveToPositionMotionMagic(newAngle.in(Degrees)); // Rotation to match the cancoder units
     }
   }
 
-  public Rotation2d getCurrentAngle() {
-    return Rotation2d.fromRotations(
+  public Angle getCurrentAngle() {
+    return Rotations.of(
         m_canCoder.getAbsolutePosition().getValueAsDouble());
   }
 
@@ -173,14 +175,14 @@ public class BasePivot extends AbstractArmPart {
    * Checks if the current angle is at the goal angle.
    */
   public boolean atTarget() {
-    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 0.5;
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).in(Degrees)) < 0.5;
   }
 
   /**
    * Checks if the current angle is close to goal angle.
    */
   public boolean atClose() {
-    return Math.abs(getCurrentAngle().minus(m_targetAngle).getDegrees()) < 1;
+    return Math.abs(getCurrentAngle().minus(m_targetAngle).in(Degrees)) < 1;
   }
 
   @Override
@@ -208,12 +210,12 @@ public class BasePivot extends AbstractArmPart {
   public void periodic() {
     super.periodic();
     Logger.recordOutput("BasePivot/Setpoint", m_targetAngle);
-    Logger.recordOutput("BasePivot/CurrentAngle", getCurrentAngle().getDegrees());
+    Logger.recordOutput("BasePivot/CurrentAngle", getCurrentAngle().in(Degrees));
     Logger.recordOutput("BasePivot/AtTarget", atTarget());
     Logger.recordOutput("BasePivot/AngleError", getCurrentAngle().minus(m_targetAngle));
     Logger.recordOutput("BasePivot/Voltage", m_motor.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput("BasePivot/StatorCurrent", m_motor.getStatorCurrent().getValueAsDouble());
     Logger.recordOutput("BasePivot/SupplyCurrent", m_motor.getSupplyCurrent().getValueAsDouble());
-    Logger.recordOutput("BasePivot/MotorAngle", Rotation2d.fromRotations(m_motor.getPosition().getValueAsDouble()).getDegrees());
+    Logger.recordOutput("BasePivot/MotorAngle", Rotations.of(m_motor.getPosition().getValueAsDouble()).in(Degrees));
   }
 }

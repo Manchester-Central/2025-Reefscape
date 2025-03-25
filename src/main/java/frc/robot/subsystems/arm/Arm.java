@@ -5,7 +5,7 @@
 package frc.robot.subsystems.arm;
 
 import com.chaos131.gamepads.Gamepad;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -26,8 +26,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
    * (without having to know about the base parts).
    */
   public class ArmValues {
-    public Rotation2d basePivotAngle;
-    public Rotation2d gripperPivotAngle;
+    public Angle basePivotAngle;
+    public Angle gripperPivotAngle;
     public double coralGripSpeed;
     public double extenderLength;
     public boolean isBasePivotAtCloseAngle;
