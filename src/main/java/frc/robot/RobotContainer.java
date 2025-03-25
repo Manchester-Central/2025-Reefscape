@@ -195,8 +195,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.povLeft().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
     m_driver.povRight().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
 
-    m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
-    m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
+    //m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
+    //m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
 
     m_driver.rightBumper().or(m_driver.rightTrigger()).or(m_driver.leftTrigger()).whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
