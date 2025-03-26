@@ -88,8 +88,6 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       "22 ReefTag", ArmState.ALGAE_HIGH
   );
 
-  private SelectedAlgaeState m_selectedAlgaeState = SelectedAlgaeState.PROCESSOR;
-  private SelectedCoralState m_selectedCoralState = SelectedCoralState.L4;
   private Random m_rng = new Random();
   private Trigger m_isAlgaeMode;
   private Trigger m_isCoralMode;
@@ -201,8 +199,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.rightBumper().or(m_driver.rightTrigger()).or(m_driver.leftTrigger()).whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
-    m_driver.rightBumper().and(m_isCoralMode).whileTrue(new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
-    m_driver.rightBumper().and(m_isAlgaeMode).whileTrue(new ChangeState().setArm(() -> m_selectedAlgaeState.State).withArmInterrupt(ArmState.HOLD_ALGAE));
+    m_driver.rightBumper().and(m_isCoralMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedCoralState().PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
+    m_driver.rightBumper().and(m_isAlgaeMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedAlgaeState().State).withArmInterrupt(ArmState.HOLD_ALGAE));
     // Right trigger just causes scoring from the prep states
 
     m_driver.leftTrigger().and(m_isCoralMode).whileTrue(new ChangeState().setArm(ArmState.INTAKE_CORAL_FROM_FLOOR).withArmInterrupt(ArmState.STOW));
@@ -212,13 +210,13 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());
     }).withArmInterrupt(ArmState.STOW));
 
-    m_operator.a().onTrue(new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L1));
-    m_operator.x().onTrue(new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L2));
-    m_operator.b().onTrue(new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L3));
-    m_operator.y().onTrue(new InstantCommand(() -> m_selectedCoralState = SelectedCoralState.L4));
+    m_operator.a().onTrue(new InstantCommand(() -> m_arm.setSelectedCoralState(SelectedCoralState.L1)));
+    m_operator.x().onTrue(new InstantCommand(() -> m_arm.setSelectedCoralState(SelectedCoralState.L2)));
+    m_operator.b().onTrue(new InstantCommand(() -> m_arm.setSelectedCoralState(SelectedCoralState.L3)));
+    m_operator.y().onTrue(new InstantCommand(() -> m_arm.setSelectedCoralState(SelectedCoralState.L4)));
 
-    m_operator.leftBumper().onTrue(new InstantCommand(() -> m_selectedAlgaeState = SelectedAlgaeState.PROCESSOR));
-    m_operator.leftTrigger().onTrue(new InstantCommand(() -> m_selectedAlgaeState = SelectedAlgaeState.BARGE));
+    m_operator.leftBumper().onTrue(new InstantCommand(() -> m_arm.setSelectedAlgaeState(SelectedAlgaeState.PROCESSOR)));
+    m_operator.leftTrigger().onTrue(new InstantCommand(() -> m_arm.setSelectedAlgaeState(SelectedAlgaeState.BARGE)));
 
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));

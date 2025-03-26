@@ -62,6 +62,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   private Gamepad m_driver;
   private boolean m_isPrepAngleReached = false;
   private Trigger m_scoringTrigger;
+  private SelectedAlgaeState m_selectedAlgaeState = SelectedAlgaeState.PROCESSOR;
+  private SelectedCoralState m_selectedCoralState = SelectedCoralState.L4;
 
   /**
    * The possible states of the Arm's state machine.
@@ -423,9 +425,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void holdCoralState() {
-    m_basePivot.setTargetAngle(ArmPoses.HoldCoral.getBasePivotAngle());
-    m_extender.setTargetLength(ArmPoses.HoldCoral.getExtensionMeters());
-    m_gripperPivot.setTargetAngle(ArmPoses.HoldCoral.getGripperPivotAngle());
+    ArmPose holdPose = m_selectedCoralState.HoldPose;
+    m_basePivot.setTargetAngle(holdPose.getBasePivotAngle());
+    m_extender.setTargetLength(holdPose.getExtensionMeters());
+    m_gripperPivot.setTargetAngle(holdPose.getGripperPivotAngle());
     if (m_scoringTrigger.getAsBoolean()) {
       m_gripper.setCoralGripSpeed(GripperConstants.OutakeCoralSpeed.get());
       m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeCoralOnAlgaeMotorSpeed.get());
@@ -550,5 +553,22 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     }
     Logger.recordOutput("CurrentState", getCurrentState().name());
   }
+
+  public SelectedAlgaeState getSelectedAlgaeState() {
+    return m_selectedAlgaeState;
+  }
+
+  public SelectedCoralState getSelectedCoralState() {
+    return m_selectedCoralState;
+  }
+
+  public void setSelectedAlgaeState(SelectedAlgaeState selectedAlgaeState) {
+    this.m_selectedAlgaeState = selectedAlgaeState;
+  }
+
+  public void setSelectedCoralState(SelectedCoralState selectedCoralState) {
+    this.m_selectedCoralState = selectedCoralState;
+  }
+
 }
 // RIP m_oldArm & m_oldGripper 2025-2025
