@@ -160,9 +160,9 @@ public class BasePivot extends AbstractArmPart {
 
     m_targetAngle = newAngle;
     if (getArmValues().extenderLength > ExtenderConstants.BasePivotHighThresholdMeter) {
-      m_motor.moveToPositionMotionMagic(newAngle.in(Degrees), m_mmCruiseVelocityHigh.get(), m_mmAccelerationHigh.get(), m_mmJerkHigh.get());
+      m_motor.moveToPositionMotionMagic(newAngle.in(Rotations), m_mmCruiseVelocityHigh.get(), m_mmAccelerationHigh.get(), m_mmJerkHigh.get());
     } else {
-      m_motor.moveToPositionMotionMagic(newAngle.in(Degrees)); // Rotation to match the cancoder units
+      m_motor.moveToPositionMotionMagic(newAngle.in(Rotations)); // Rotation to match the cancoder units
     }
   }
 
