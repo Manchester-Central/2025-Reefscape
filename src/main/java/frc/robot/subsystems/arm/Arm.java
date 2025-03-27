@@ -5,12 +5,21 @@
 package frc.robot.subsystems.arm;
 
 import com.chaos131.gamepads.Gamepad;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.FieldDimensions;
@@ -19,6 +28,8 @@ import frc.robot.subsystems.shared.StateBasedSubsystem;
 import frc.robot.subsystems.shared.SubsystemState;
 import frc.robot.utils.IkEquations;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -62,9 +73,13 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   public Gripper m_gripper = new Gripper(this::getArmValues);
   public GripperPivot m_gripperPivot = new GripperPivot(this::getArmValues);
   private Gamepad m_operator;
-  private Pose3d m_ikTargetPose = new Pose3d(0, 0, FieldDimensions.Reef3Meters, new Rotation3d());
   private Supplier<Pose2d> m_robotPoseSupplier;
+  private Pose3d m_ikCurrentPose = new Pose3d(0, 0, FieldDimensions.Reef3Meters, new Rotation3d());
+  private Pose3d m_ikTargetPose = new Pose3d(0, 0, FieldDimensions.Reef3Meters, new Rotation3d());
   private boolean m_ikSolverBackScore = false;
+  private Optional<PathPlannerTrajectory> m_armPath = Optional.empty();
+  private Timer m_armPathTimer = new Timer();
+  private Alert m_armStateAlert = new Alert("Arm Alert", AlertType.kWarning);
 
   /**
    * The possible states of the Arm's state machine.
@@ -74,6 +89,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     START,
     STOW,
     IKSOLVER,
+    MOTION_PROFILE,
     INTAKE_FROM_FLOOR,
     INTAKE_FROM_HP, // Probably won't implement -Josh // nevermind -Josh
     PREP_L1,
@@ -121,6 +137,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
         break;
       case IKSOLVER:
         ikSolverState();
+        break;
+      case MOTION_PROFILE:
+        motionProfileState();
         break;
       case INTAKE_FROM_FLOOR:
         intakeFromFloorState();
@@ -170,6 +189,17 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     }
   }
 
+  @Override
+  public void changeState(ArmState newState) {
+    super.changeState(newState);
+    switch (newState) {
+      case MOTION_PROFILE:
+        setupMotionProfile();
+      default:
+        m_armPath = Optional.empty();
+    }
+  }
+
   private void startState() {
     if (ExtenderConstants.HasMagnetSensor && !m_extender.hasReachedMinimum()) {
       m_extender.setSpeed(-0.05); // Mr. Negative - Matt Bisson
@@ -179,13 +209,16 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 
     if (Robot.isSimulation()) {
       // changeState(ArmState.STOW);
-      changeState(ArmState.IKSOLVER);
+      changeState(ArmState.MOTION_PROFILE);
     } else {
       // changeState(ArmState.MANUAL);
       changeState(ArmState.STOW);
     }
   }
 
+  public void setCurrentEndEffectorPose(Pose3d ikCurrent) {
+    m_ikCurrentPose = ikCurrent;
+  }
 
   public void setIkSolverTarget(Pose3d ikTarget) {
     m_ikTargetPose = ikTarget;
@@ -215,6 +248,23 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_extender.setTargetLength(mechanismPose.getExtensionMeters());
     m_basePivot.setTargetAngle(mechanismPose.getBasePivotAngle());
     m_gripperPivot.setTargetAngle(mechanismPose.getGripperPivotAngle());
+  }
+
+  private void setupMotionProfile() {
+    var floor_distance = m_ikCurrentPose.toPose2d().getTranslation().getNorm();
+    Pose2d startPoint = new Pose2d(floor_distance, m_ikCurrentPose.getZ(), Rotation2d.fromRadians(-m_ikCurrentPose.getRotation().getY()));
+    Pose3d end = m_ikTargetPose;
+    Pose2d endPoint = new Pose2d(end.toPose2d().getTranslation().getNorm(), end.getZ(), Rotation2d.fromRadians(-end.getRotation().getY()));
+
+    List<Waypoint> armPath = PathPlannerPath.waypointsFromPoses(startPoint, endPoint);
+    GoalEndState goalEnd = new GoalEndState(0, endPoint.getRotation());
+    PathPlannerPath path = new PathPlannerPath(armPath, null, null, goalEnd);
+    PathPlannerTrajectory traj = new PathPlannerTrajectory(path, new ChassisSpeeds(), startPoint.getRotation(),
+        new RobotConfig(10.0, 1.0, null, null));
+  }
+
+  private void motionProfileState() {
+    //
   }
 
   private void manualState() {

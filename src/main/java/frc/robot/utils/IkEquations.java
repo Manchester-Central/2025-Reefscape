@@ -68,14 +68,21 @@ public class IkEquations {
     Logger.recordOutput("IkSolver/ConstrainedEndEffectorPoint", constrainedEndEffectorPoint);
     Logger.recordOutput("IkSolver/ConstrainedEndEffectorPose", constrainedEndEffectorPose);
 
-    // Calculate End Effector Wrist Point
-    Pose2d endEffectorWristPoint = backScore
-        ? constrainedEndEffectorPoint.transformBy(new Transform2d(-(RobotDimensions.WristToCoralBack.getX() + RobotDimensions.CoralPlacementMargin),
-                                                                  -RobotDimensions.WristToCoralBack.getY(),
-                                                                  Rotation2d.kZero))
-        : constrainedEndEffectorPoint.transformBy(new Transform2d(-(RobotDimensions.WristToCoralFront.getX() + RobotDimensions.CoralPlacementMargin),
-                                                                  -RobotDimensions.WristToCoralFront.getY(),
-                                                                  Rotation2d.kZero));
+    /**
+     * Calculate End Effector Wrist Point
+     */
+    Pose2d endEffectorWristPoint = null;
+    if (backScore) {
+      endEffectorWristPoint = constrainedEndEffectorPoint.transformBy(
+          new Transform2d((-RobotDimensions.WristToCoralBack.getX() + RobotDimensions.CoralPlacementMargin),
+                            RobotDimensions.WristToCoralBack.getY(),
+                            Rotation2d.k180deg));
+    } else {
+      endEffectorWristPoint = constrainedEndEffectorPoint.transformBy(
+          new Transform2d(-(RobotDimensions.WristToCoralFront.getX() + RobotDimensions.CoralPlacementMargin),
+          -RobotDimensions.WristToCoralFront.getY(),
+          Rotation2d.kZero));
+    }
     Pose3d endEffectorWristPose = make3dFromIk2d(endEffectorWristPoint, robotPose.toPose2d());
     Logger.recordOutput("IkSolver/EndEffectorWristPose", endEffectorWristPose);
 
@@ -120,12 +127,7 @@ public class IkEquations {
     double liftLength = blLength - blength;
     Rotation2d gripperPivotAngle = alpha.times(-1)
                                    .plus(Rotation2d.fromRadians(-endEffectorPose.getRotation().getY()));
-    // Examples:
-    // Lift Angle (alpha) degrees, desired gripper angle -> effective gripper angle relative to lift
-    // Lift 45d, gripper pivot 0d -> gripper -(45)+(0) = -45d
-    // Lift 0d, gripper pivot 0d -> gripper -(0)+(0) = 0d
-    // Lift 60d, gripper pivot -60d -> gripper -(60)+(-60) = -120d
-    // Lift 90d, gripper pivot -45d -> gripper -(90)+(-45) = -135d
+    if (backScore) gripperPivotAngle = gripperPivotAngle.plus(Rotation2d.k180deg);
 
     return new ArmPose("IkCalculatedPose", alpha, liftLength, gripperPivotAngle);
   }

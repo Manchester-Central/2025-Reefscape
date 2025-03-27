@@ -243,9 +243,10 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     Transform3d branchLeftR4Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
                                                       FieldDimensions.ReefBranchLeft.getY(),
                                                       FieldDimensions.Reef4Meters,
-                                                      new Rotation3d(0, Degrees.of(-90).in(Radians), Math.PI));
+                                                      new Rotation3d(0, Degrees.of(90).in(Radians), Math.PI));
     Pose3d branchLeftR4 = new Pose3d(FieldPoint.aprilTagMap.get(17).pose2d).transformBy(branchLeftR4Offset);
     m_driver.rightTrigger().whileTrue(new IkScoring(m_driver, m_swerveDrive, m_arm, branchLeftR4, true));
+    m_driver.rightTrigger().whileTrue(new ChangeState().setupArmTarget(() -> branchLeftR4).setArm(ArmState.MOTION_PROFILE));
 
     Transform3d branchLeftR3Offset = new Transform3d(FieldDimensions.ReefBranchLeft.getX(),
                                                       FieldDimensions.ReefBranchLeft.getY(),
@@ -291,6 +292,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public void periodic() {
     // Enables Dashboard Numbers to be updated each loop
     DashboardNumber.checkAll();
+    m_arm.setCurrentEndEffectorPose(m_mech2dManager.calculateEndPose3d(m_swerveDrive.getPose(), "CoralWheels"));
   }
 
   /**

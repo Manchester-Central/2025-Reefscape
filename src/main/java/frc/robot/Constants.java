@@ -377,4 +377,8 @@ public final class Constants {
     public static final Transform2d WristToCoralBack = new Transform2d(0.080727, -0.164647, Rotation2d.kZero);
     public static final Transform2d WristToMidWheels = new Transform2d(0.277484, -0.086859, Rotation2d.kZero);
   }
+
+  public static class IkPoses {
+    public static final Pose2d L4Pose = new Pose2d();
+  }
 }

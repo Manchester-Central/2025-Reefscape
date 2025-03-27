@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
@@ -36,6 +37,11 @@ public class ChangeState extends Command {
    */
   public ChangeState setArm(Supplier<ArmState> newArmStateSupplier) {
     m_armStateSupplier = Optional.of(newArmStateSupplier);
+    return this;
+  }
+
+  public ChangeState setupArmTarget(Supplier<Pose3d> endEffectorPose) {
+    RobotContainer.m_arm.setIkSolverTarget(endEffectorPose.get());
     return this;
   }
 
