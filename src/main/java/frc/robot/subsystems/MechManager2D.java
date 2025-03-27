@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotDimensions;
@@ -82,9 +84,9 @@ public class MechManager2D extends SubsystemBase {
 
     // Set angles and length of Arm parts
     m_extenderLigament.setLength(values.extenderLength == 0 ? 0.0001 : values.extenderLength);
-    m_extenderLigament.setAngle(values.basePivotAngle);
-    m_extenderBaseLigament.setAngle(values.basePivotAngle);
-    m_gripperWristLigament.setAngle(values.gripperPivotAngle);
+    m_extenderLigament.setAngle(values.basePivotAngle.in(Degrees));
+    m_extenderBaseLigament.setAngle(values.basePivotAngle.in(Degrees));
+    m_gripperWristLigament.setAngle(values.gripperPivotAngle.in(Degrees));
 
     // Change coral gripper color
     if (values.coralGripSpeed == 0) {

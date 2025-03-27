@@ -30,7 +30,9 @@ import frc.robot.utils.FieldPoint;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ *  You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands.
+ */
 public class AlignReefTag extends Command {
   private SwerveDrive m_swerveDrive;
   private Camera m_cameraLeft;
@@ -45,26 +47,26 @@ public class AlignReefTag extends Command {
   private static Constraints kConstraints = new Constraints(kMaxVelocity.in(MetersPerSecond), kMaxAccel.in(MetersPerSecondPerSecond));
   private static Distance kTranslationTolerance = Meters.of(0.01);
 
-  private ProfiledPIDController m_xPid = new ProfiledPIDController(kTranslationP, kTranslationI, kTranslationD, kConstraints);
-  private ProfiledPIDController m_yPid = new ProfiledPIDController(kTranslationP, kTranslationI, kTranslationD, kConstraints);
+  private ProfiledPIDController m_pidX = new ProfiledPIDController(kTranslationP, kTranslationI, kTranslationD, kConstraints);
+  private ProfiledPIDController m_pidY = new ProfiledPIDController(kTranslationP, kTranslationI, kTranslationD, kConstraints);
 
   /** Creates a new AlignReefTag. */
   public AlignReefTag(SwerveDrive swerveDrive, Camera cameraLeft, Camera cameraRight) {
     m_swerveDrive = swerveDrive;
     m_cameraLeft = cameraLeft;
     m_cameraRight = cameraRight;
-    m_xPid.setTolerance(kTranslationTolerance.in(Meters));
-    m_yPid.setTolerance(kTranslationTolerance.in(Meters));
+    m_pidX.setTolerance(kTranslationTolerance.in(Meters));
+    m_pidY.setTolerance(kTranslationTolerance.in(Meters));
     addRequirements(swerveDrive);
-    SmartDashboard.putData("ReefAlign/xPid", m_xPid);
-    SmartDashboard.putData("ReefAlign/yPid", m_yPid);
+    SmartDashboard.putData("ReefAlign/xPid", m_pidX);
+    SmartDashboard.putData("ReefAlign/yPid", m_pidY);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_xPid.reset(0.0);
-    m_yPid.reset(0.0);
+    m_pidX.reset(0.0);
+    m_pidY.reset(0.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -80,7 +82,7 @@ public class AlignReefTag extends Command {
       return;
     }
     
-    double targetX = RobotDimensions.FrontBackLengthMeters / 2 + RobotDimensions.RobotToReefMargin;
+    double targetX = RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin;
     double targetY = 0.0;
     Pose2d poseToUse = null;
     if (rightPose.isEmpty()) {
@@ -99,11 +101,11 @@ public class AlignReefTag extends Command {
       poseToUse = distanceLeft < distanceRight ? leftPose.get() : rightPose.get();
     }
 
-    m_xPid.setGoal(new State(targetX, 0.0));
-    m_yPid.setGoal(new State(targetY, 0.0));
+    m_pidX.setGoal(new State(targetX, 0.0));
+    m_pidY.setGoal(new State(targetY, 0.0));
 
-    var speedX = MetersPerSecond.of(m_xPid.calculate(poseToUse.getX())).unaryMinus();
-    var speedY = MetersPerSecond.of(m_yPid.calculate(poseToUse.getY())).unaryMinus();
+    var speedX = MetersPerSecond.of(m_pidX.calculate(poseToUse.getX())).unaryMinus();
+    var speedY = MetersPerSecond.of(m_pidY.calculate(poseToUse.getY())).unaryMinus();
 
     m_swerveDrive.moveRobotRelativeAngle(speedX, speedY, Rotation2d.fromDegrees(m_targetAngle.in(Degrees)), 1.0);
   }
@@ -126,6 +128,6 @@ public class AlignReefTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_xPid.atGoal() && m_yPid.atGoal() && m_swerveDrive.getPose().getRotation().getMeasure().isNear(m_targetAngle, Degrees.of(3));
+    return m_pidX.atGoal() && m_pidY.atGoal() && m_swerveDrive.getPose().getRotation().getMeasure().isNear(m_targetAngle, Degrees.of(3));
   }
 }

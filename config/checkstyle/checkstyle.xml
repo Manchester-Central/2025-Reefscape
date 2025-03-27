@@ -34,6 +34,9 @@
   <module name="BeforeExecutionExclusionFileFilter">
     <property name="fileNamePattern" value="LocalADStarAK.java$"/>
   </module>
+  <module name="BeforeExecutionExclusionFileFilter">
+    <property name="fileNamePattern" value="LimelightHelpers.java$"/>
+  </module>
 
   <module name="SuppressWarningsFilter"/>
 
