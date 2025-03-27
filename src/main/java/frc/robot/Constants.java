@@ -114,35 +114,35 @@ public final class Constants {
         new PIDFValue(5.0, 0.0, 0.0, 2.19);
     public static final PIDValue AutoAnglePID = new PIDValue(0.04, 0.0001, 0.0);
     public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.06, 0.1);
-    public static final Rotation2d AtTargetAngleThreshold = Rotation2d.fromDegrees(90);
+    public static final Angle AtTargetAngleThreshold = Degrees.of(90);
     public static final double DriveToTargetTolerance = 0.01;
 
     /** This stores our constants for the front left swerve module. */
     public static class SwerveFrontLeftConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, 0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(-28.92);
+      public static final Angle AngleEncoderOffset = Degrees.of(-28.92);
     }
 
     /** This stores our constants for the front right swerve module. */
     public static class SwerveFrontRightConstants {
       public static final Translation2d ModOffset = new Translation2d(0.3048, -0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(111.71);
+      public static final Angle AngleEncoderOffset = Degrees.of(111.71);
     }
 
     /** This stores our constants for the back left swerve module. */
     public static class SwerveBackLeftConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, 0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.CounterClockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(129.56);
+      public static final Angle AngleEncoderOffset = Degrees.of(129.56);
     }
 
     /** This stores our constants for the back right swerve module. */
     public static class SwerveBackRightConstants {
       public static final Translation2d ModOffset = new Translation2d(-0.3048, -0.3048);
       public static final InvertedValue InvertedSpeed = InvertedValue.Clockwise_Positive;
-      public static final Rotation2d AngleEncoderOffset = Rotation2d.fromDegrees(96.33);
+      public static final Angle AngleEncoderOffset = Degrees.of(96.33);
     }
   }
 
@@ -210,9 +210,9 @@ public final class Constants {
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Rotation2d MinAngle = Rotation2d.fromDegrees(13); // TODO: go back to 20
-      public static final Rotation2d MaxAngle = Rotation2d.fromDegrees(90);
-      public static final Rotation2d LowerSafetyAngle = Rotation2d.fromDegrees(45);
+      public static final Angle MinAngle = Degrees.of(13); // TODO: go back to 20
+      public static final Angle MaxAngle = Degrees.of(90);
+      public static final Angle LowerSafetyAngle = Degrees.of(45);
 
       public static final double kP = 400.0;
       public static final double kI = 10.00;
@@ -376,9 +376,9 @@ public final class Constants {
 
   /** This contains constants for our Intake. */
   public static class IntakeConstants {
-    public static final Rotation2d StowAngle = Rotation2d.fromDegrees(100.0);
-    public static final Rotation2d DeployAngle = Rotation2d.fromDegrees(10.0);
-    public static final Rotation2d HandoffAngle = Rotation2d.fromDegrees(150.0);
+    public static final Angle StowAngle = Degrees.of(100.0);
+    public static final Angle DeployAngle = Degrees.of(10.0);
+    public static final Angle HandoffAngle = Degrees.of(150.0);
 
     public static final double StowSpeed = 0.0;
     public static final double DeploySpeed = 1.0;
@@ -402,27 +402,27 @@ public final class Constants {
     public static final Transform2d ReefCenterBranch =
         new Transform2d(-0.0536, 0, Rotation2d.fromDegrees(0));
     // Value taken from field cad
-    public static final double TroughHeightMeters = 0.5175;
+    public static final Distance TroughHeight = Meters.of(0.5175);
     // Value taken from field cad
-    public static final double Reef1Meters = 0.7763;
+    public static final Distance Reef1 = Meters.of(0.7763);
     // Value taken from field cad
-    public static final double Reef2Meters = 1.1794;
+    public static final Distance Reef2 = Meters.of(1.1794);
     // Value taken from field cad
-    public static final double Reef3Meters = 1.8287;
+    public static final Distance Reef3 = Meters.of(1.8287);
     // Value taken from field cad
-    public static final double BargeMeters = 1.0;
+    public static final Distance Barge = Meters.of(1.0);
     // Distance between center of robot + safety +center of reef
-    public static final Distance ReefScoringDistanceThreshold = Meters.of((RobotDimensions.FrontBackLengthMeters / 2) + 0.912493).plus(Inches.of(13)); 
+    public static final Distance ReefScoringDistanceThreshold = Meters.of((RobotDimensions.FrontBackLength.in(Meters) / 2) + 0.912493).plus(Inches.of(13)); 
   }
 
   /** This contains constants for our robot dimensions. */
   public static class RobotDimensions {
     // Includes the Bumpers
-    public static final double FrontBackLengthMeters = 0.9157;
+    public static final Distance FrontBackLength = Meters.of(0.9157);
     // Includes the Bumpers
-    public static final double SideSideLengthMeters = 0.9157;
+    public static final Distance SideSideLength = Meters.of(0.9157);
     // Buffer space to use between the end effector and an interaction point
-    public static final double CoralPlacementMargin = 0.03;
+    public static final Distance CoralPlacementMargin = Meters.of(0.03);
     // Robot length buffer
     public static final double RobotToReefMargin = 0.015; // This is in meters
     public static final double WristToCoralIntakeAxle = 0.169627; // -0.209097 down, but who cares?

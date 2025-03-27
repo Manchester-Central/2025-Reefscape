@@ -4,10 +4,8 @@
 
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Degree;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Rotation;
 
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
@@ -217,7 +215,7 @@ public class SwerveDrive extends BaseSwerveDrive {
       Rotation2d dif = angleToTarget2dLast.minus(angleToTargetLast);
       Logger.recordOutput("thresh", SwerveConstants.AtTargetAngleThreshold);
       Logger.recordOutput("dif", dif.getDegrees());
-      if (dif.getMeasure().abs(Degrees) > SwerveConstants.AtTargetAngleThreshold.getDegrees()) {
+      if (dif.getMeasure().abs(Degrees) > SwerveConstants.AtTargetAngleThreshold.in(Degrees)) {
         return true;
       }
     }

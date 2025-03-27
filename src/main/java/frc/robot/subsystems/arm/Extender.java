@@ -152,7 +152,7 @@ public class Extender extends AbstractArmPart {
       if (newLength < getCurrentLength()) {
         GripperPivotSafety currentSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(getCurrentLength()), GripperPivotConstants.Safeties);
         GripperPivotSafety targetSafety = GripperPivotSafety.getGripperPivotSafety(Meters.of(newLength), GripperPivotConstants.Safeties);
-        Angle currentGpAngle = getArmValues().gripperPivotAngle.getMeasure(); // )
+        Angle currentGpAngle = getArmValues().gripperPivotAngle; // )
         if (currentGpAngle.gt(targetSafety.getMaxAngle()) || currentGpAngle.lt(targetSafety.getMinAngle())) {
           newLength = currentSafety.getDistanceLow().in(Meters);
         }

@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -40,7 +42,7 @@ public class ReefAlignment extends Command {
     int invertValue = m_isInvert ? -1 : 1;
 
     m_branchPostion = m_aprilTag.getCurrentAlliancePose().plus(
-        new Transform2d((RobotDimensions.FrontBackLengthMeters / 2) + RobotDimensions.RobotToReefMargin, 
+        new Transform2d((RobotDimensions.FrontBackLength.in(Meters) / 2) + RobotDimensions.RobotToReefMargin, 
                         FieldDimensions.ReefBranchRight.getY() * invertValue, 
                         Rotation2d.fromDegrees(180)));
 

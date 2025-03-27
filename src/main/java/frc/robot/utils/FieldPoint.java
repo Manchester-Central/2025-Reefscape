@@ -98,13 +98,13 @@ public class FieldPoint {
     for (AprilTag aprilTag : blueReefAprilTags()) {
       Pose2d leftPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLengthMeters / 2 + RobotDimensions.RobotToReefMargin,
+              RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
               FieldDimensions.ReefBranchLeft.getY(),
               Rotation2d.fromDegrees(180)));
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefLeft", leftPose));
       Pose2d rightPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLengthMeters / 2 + RobotDimensions.RobotToReefMargin,
+              RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
               FieldDimensions.ReefBranchRight.getY(),
               Rotation2d.fromDegrees(180)));
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefRight", rightPose));
@@ -121,7 +121,7 @@ public class FieldPoint {
     for (AprilTag aprilTag : blueReefAprilTags()) {
       Pose2d centerPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLengthMeters / 2 + RobotDimensions.RobotToReefMargin,
+              RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
               FieldDimensions.ReefCenterBranch.getY(),
               Rotation2d.fromDegrees(180)));
       reefCenterDrivePose.add(new FieldPoint(aprilTag.id + " ReefCenter", centerPose));
@@ -159,14 +159,14 @@ public class FieldPoint {
     for (AprilTag aprilTag : blueHpAprilTags()) {
       Pose2d leftPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
-              RobotDimensions.SideSideLengthMeters / 2 + 0.05,
+              RobotDimensions.FrontBackLength.in(Meters) / 2 + 0.05,
+              RobotDimensions.SideSideLength.in(Meters) / 2 + 0.05,
               Rotation2d.fromDegrees(180)));
       hpDrivePoses.add(new FieldPoint(aprilTag.id + " HPLeft", leftPose));
       Pose2d rightPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLengthMeters / 2 + 0.05,
-              -RobotDimensions.SideSideLengthMeters / 2 - 0.05,
+              RobotDimensions.FrontBackLength.in(Meters) / 2 + 0.05,
+              -RobotDimensions.SideSideLength.in(Meters) / 2 - 0.05,
               Rotation2d.fromDegrees(180)));
       hpDrivePoses.add(new FieldPoint(aprilTag.id + " HPRight", rightPose));
     }

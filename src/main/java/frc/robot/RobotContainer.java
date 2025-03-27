@@ -22,23 +22,18 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.CanIdentifiers;
-import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.commands.AlignReefTag;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
-import frc.robot.commands.DriverRelativeSetAngleAndAxisDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.ReefAlignment;
 import frc.robot.commands.UpdateHeading;
@@ -57,7 +52,6 @@ import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
@@ -173,15 +167,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //     .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, () -> DriveDirection.Towards.getAllianceAngle(), 1.0))
     //     .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE)));
     // m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
-    m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommand
-    
-    
-    
-    
-    
-    
-    
-    (FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
     m_driver.y().whileTrue(new ConditionalCommand(
         aimAndPrepCoral(),
@@ -253,11 +239,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public Command aimAndPrepCoral() {
 
     return PathUtil.driveToClosestPointTeleopCommandV2(FieldPoint.getReefDrivePoses(), m_swerveDrive);
-      // .alongWith(
-      //   new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
-      //   .andThen(
-      //     new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)
-      //   ));
+    // .alongWith(
+    //   new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
+    //   .andThen(
+    //     new ChangeState().setArm(() -> m_selectedCoralState.PrepState).withArmInterrupt(ArmState.HOLD_CORAL)
+    //   ));
   }
 
   /**
@@ -339,7 +325,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       check = false;
     }
 
-    if (m_arm.getArmValues().basePivotAngle.getDegrees() < 60.0) {
+    if (m_arm.getArmValues().basePivotAngle.in(Degrees) < 60.0) {
       check = false;
     }
 
