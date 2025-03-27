@@ -182,7 +182,7 @@ public final class Constants {
       public static final ArmPose HoldCoralL1 = new ArmPose("HoldCoralL1", 85.0, 0.23, -35.5);
       public static final ArmPose HoldCoralL2 = new ArmPose("HoldCoralL2", 85.0, 0.53, -75.0);
       public static final ArmPose HoldCoralL3 = new ArmPose("HoldCoralL3", 85.0, 0.65, -79.0);
-      public static final ArmPose HoldCoralL4 = new ArmPose("HoldCoralL4", 85.0, 0.65, 48.0);
+      public static final ArmPose HoldCoralL4 = new ArmPose("HoldCoralL4", 85.0, 0.65, -79.0);
 
       // Coral Scoring Poses
       public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 61.5, 0.23, -35.5);
@@ -192,7 +192,7 @@ public final class Constants {
 
       // Coral Pickup Poses
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 77, 0.54, -39.0); // Last updated 2/22/25
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 14.75, 0.28, -9); //TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 16.75, 0.28, -11); //TODO tune this
 
       // Algae Scoring Poses
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
