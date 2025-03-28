@@ -241,7 +241,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    */
   public Command aimAndPrepCoral() {
 
-    return PathUtil.driveToClosestPointTeleopCommandV2(FieldPoint.getReefDrivePoses(), m_swerveDrive);
+    return PathUtil.driveToPoseCommand(FieldPoint.getNearestReefDrivePose(m_swerveDrive, m_driver.getLeftX()), m_swerveDrive);
     // .alongWith(
     //   new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
     //   .andThen(

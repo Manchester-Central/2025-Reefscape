@@ -132,11 +132,9 @@ public class FieldPoint {
             Rotation2d.fromDegrees(180)));
     reefDrivePoses.add(new FieldPoint("ReefRight", rightPose));
     if (stickBias < -0.1) {
-      // TODO Isaac relative
-      return leftPose;
+      return swerveDrive.getPose().getRotation().getDegrees() > 0 ? leftPose : rightPose;
     } else if (stickBias > 0.1) {
-      // TODO Isaac relative
-      return rightPose;
+      return swerveDrive.getPose().getRotation().getDegrees() > 0 ? rightPose : leftPose;
     } else {
       return getNearestPoint(swerveDrive.getPose(), reefDrivePoses).getCurrentAlliancePose();
     }

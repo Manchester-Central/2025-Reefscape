@@ -37,6 +37,17 @@ public class PathUtil {
   }
 
   /**
+   * Drives to the Pose on the field (respective of the current alliance).
+   */
+  public static Command driveToPoseCommand(Pose2d targetPostion, SwerveDrive swerveDrive) {
+    return new DeferredCommand(
+        () -> AutoBuilder.pathfindToPose(targetPostion, constraints, 0.0),
+        Set.of(swerveDrive));
+  }
+
+  
+
+  /**
    * Finds the closest point along a line.
    */
   public static Pose2d findClosestPointOnLine(SwerveDrive swerveDrive, FieldPoint linePoint, boolean isXaxisLine) {
