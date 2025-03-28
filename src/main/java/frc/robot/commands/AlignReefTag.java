@@ -116,7 +116,7 @@ public class AlignReefTag extends Command {
       var robotRelativeTranslation = m_swerveDrive.getTranslatedPose(Meters.of(0.0), simOffset).relativeTo(nearestPoint);
       return Optional.of(robotRelativeTranslation);
     }
-    Pose3d targetPose = camera.getTargetPose3d_RobotSpace(); // Do we want the getBotPose3d_TargetSpace pose?
+    Pose3d targetPose = camera.getTargetPose3dRobotSpace(); // Do we want the getBotPose3d_TargetSpace pose?
     boolean hasPose = targetPose.getX() == 0 && targetPose.getY() == 0;
     return hasPose ? Optional.of(targetPose.toPose2d()) : Optional.empty();
   }

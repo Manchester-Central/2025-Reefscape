@@ -22,6 +22,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -34,8 +35,10 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
+import frc.robot.commands.DriverRelativeSetAngleAndAxisDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.ReefAlignment;
+import frc.robot.commands.SimpleDriveToPositionV2;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
 import frc.robot.commands.WaitForState;
@@ -52,6 +55,7 @@ import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
@@ -161,13 +165,13 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // m_driver.a().whileTrue(PathUtil.driveToClosestPointCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive)
     //     .alongWith(new ChangeState().setArm(ArmState.INTAKE_FROM_HP)
     //     .withArmInterrupt(ArmState.STOW)));
-    // m_driver.b().whileTrue(
-    //   new DeferredCommand(() -> PathUtil.driveToPoseCommand(new FieldPoint("ClosestBargePoint",
-    //     PathUtil.findClosestPointOnLine(m_swerveDrive, FieldPoint.CenterBarge, false)), m_swerveDrive), Set.of(m_swerveDrive))
-    //     .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, () -> DriveDirection.Towards.getAllianceAngle(), 1.0))
-    //     .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE)));
+    m_driver.b().whileTrue(
+      new DeferredCommand(() -> PathUtil.driveToPoseCommand(new FieldPoint("ClosestBargePoint",
+        PathUtil.findClosestPointOnLine(m_swerveDrive, FieldPoint.CenterBarge, false)), m_swerveDrive), Set.of(m_swerveDrive))
+        .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, () -> DriveDirection.Towards.getAllianceAngle(), 1.0))
+        .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE)));
     // m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
-    m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
+    // m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
     m_driver.y().whileTrue(new ConditionalCommand(
         aimAndPrepCoral(),
@@ -205,7 +209,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.leftTrigger().onTrue(new InstantCommand(() -> m_arm.setSelectedAlgaeState(SelectedAlgaeState.BARGE)));
 
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
-    m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
+    m_operator.povDown().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     
     m_operator.start().onTrue(new ChangeState().setArm(ArmState.STOW));
     m_operator.back().whileTrue(new ChangeState().setArm(ArmState.MANUAL));
@@ -239,6 +243,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public Command aimAndPrepCoral() {
 
     return PathUtil.driveToClosestPointTeleopCommandV2(FieldPoint.getReefDrivePoses(), m_swerveDrive);
+    // return new SimpleDriveToPositionV2(m_swerveDrive, () -> FieldPoint.getNearestReefDrivePose(m_swerveDrive, m_driver.getLeftX()));
     // .alongWith(
     //   new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
     //   .andThen(
@@ -250,7 +255,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    * aim algae.
    */
   public Command aimAndPrepAlgaeGrab() {
-    return PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefCenterDrivePose(), m_swerveDrive);
+    return PathUtil.driveToClosestPointTeleopCommandV2(FieldPoint.getReefCenterDrivePose(), m_swerveDrive);
   }
 
   @Override

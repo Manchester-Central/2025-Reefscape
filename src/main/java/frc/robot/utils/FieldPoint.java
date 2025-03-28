@@ -1,5 +1,6 @@
 package frc.robot.utils;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.chaos131.util.FieldData;
@@ -110,6 +111,34 @@ public class FieldPoint {
       reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefRight", rightPose));
     }
     return reefDrivePoses;
+  }
+
+  /**
+   * Gets all the drive positions we can consider for scoring on the reef (left
+   * and right of each april tag).
+   */
+  public static Pose2d getNearestReefDrivePose(SwerveDrive swerveDrive, double stickBias) {
+    ArrayList<FieldPoint> reefDrivePoses = new ArrayList<FieldPoint>();
+    FieldPoint aprilTag = getNearestPoint(swerveDrive.getPose(), getReefAprilTagPoses());
+    FieldPoint leftPose = new FieldPoint("ReefLeft", aprilTag.getBluePose().transformBy(
+        new Transform2d(
+            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
+            FieldDimensions.ReefBranchLeft.getY(),
+            Rotation2d.fromDegrees(180))));
+    reefDrivePoses.add(leftPose);
+    FieldPoint rightPose = new FieldPoint("ReefLeft", aprilTag.getBluePose().transformBy(
+        new Transform2d(
+            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
+            FieldDimensions.ReefBranchRight.getY(),
+            Rotation2d.fromDegrees(180))));
+    reefDrivePoses.add(rightPose);
+    if (stickBias < -0.1) {
+      return aprilTag.m_bluePose.getRotation().getMeasure().isNear(Degrees.of(180), Degrees.of(90)) ? leftPose.getCurrentAlliancePose() : rightPose.getCurrentAlliancePose();
+    } else if (stickBias > 0.1) {
+      return aprilTag.m_bluePose.getRotation().getMeasure().isNear(Degrees.of(180), Degrees.of(90)) ? rightPose.getCurrentAlliancePose() : leftPose.getCurrentAlliancePose();
+    } else {
+      return getNearestPoint(swerveDrive.getPose(), reefDrivePoses).getCurrentAlliancePose();
+    }
   }
 
   /**
