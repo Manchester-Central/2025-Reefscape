@@ -6,9 +6,12 @@ package frc.robot.commands;
 
 import com.chaos131.swerve.BaseSwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.SwerveDrive;
 import frc.robot.utils.FieldPoint;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ * A simple command to go to a position on the field using basic PID translation control.
+ */
 public class SimpleDriveToPosition extends Command {
   BaseSwerveDrive m_swerveDrive;
   FieldPoint m_fieldPoint;
@@ -32,7 +35,7 @@ public class SimpleDriveToPosition extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerveDrive.moveToTarget(0.5);
+    m_swerveDrive.moveToTarget(0.3);
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +49,7 @@ public class SimpleDriveToPosition extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_swerveDrive.atTarget(0.01);
+    //return m_swerveDrive.atTarget(0.01);
+    return ((SwerveDrive) m_swerveDrive).atTargetDynamic();
   }
 }

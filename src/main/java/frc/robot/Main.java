@@ -25,7 +25,6 @@ public final class Main {
           try {
             return new Robot();
           } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
           }
           return null;

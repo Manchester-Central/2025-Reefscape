@@ -1,0 +1,45 @@
+<TagVersion>1 <time> 08.272 <message>   The above stacktrace can help determine where the error occurred.
+<TagVersion>1 <time> 08.272 <message> Warning at edu.wpi.first.wpilibj.RobotBase.runRobot(RobotBase.java:433): The robot program quit unexpectedly. This is usually due to a code error.
+<TagVersion>1 <time> 08.271 <count> 1 <flags> 0 <Code> 1 <details> The robot program quit unexpectedly. This is usually due to a code error.
+  The above stacktrace can help determine where the error occurred.
+  See https://wpilib.org/stacktrace for more information. <location> edu.wpi.first.wpilibj.RobotBase.runRobot(RobotBase.java:433) <stack>
+  <TagVersion>1 <time> 08.268 <message>  <TagVersion>1 <time> 08.268 <message> 	at frc.robot.Main.main(Main.java:23)
+  <TagVersion>1 <time> 08.267 <message> 	at edu.wpi.first.wpilibj.RobotBase.startRobot(RobotBase.java:510)
+  <TagVersion>1 <time> 08.267 <message> 	at edu.wpi.first.wpilibj.RobotBase.runRobot(RobotBase.java:419)
+  <TagVersion>1 <time> 08.267 <message> 	at org.littletonrobotics.junction.LoggedRobot.startCompetition(LoggedRobot.java:116)
+  <TagVersion>1 <time> 08.266 <message> 	at edu.wpi.first.wpilibj.IterativeRobotBase.loopFunc(IterativeRobotBase.java:400)
+  <TagVersion>1 <time> 08.266 <message> 	at frc.robot.Robot.robotPeriodic(Robot.java:68)
+  <TagVersion>1 <time> 08.266 <message> 	at com.chaos131.robot.ChaosRobot.robotPeriodic(ChaosRobot.java:168)
+  <TagVersion>1 <time> 08.265 <message> 	at edu.wpi.first.wpilibj2.command.CommandScheduler.run(CommandScheduler.java:269) 
+  <TagVersion>1 <time> 08.265 <message> 	at frc.robot.subsystems.Camera.periodic(Camera.java:48)
+  <TagVersion>1 <time> 08.263 <message> 	at com.chaos131.vision.Camera.periodic(Camera.java:255)
+  <TagVersion>1 <time> 08.263 <message> 	at org.littletonrobotics.junction.Logger.processInputs(Logger.java:440)
+  <TagVersion>1 <time> 08.262 <message> 	at com.chaos131.vision.NetworkPoseDataAutoLogged.toLog(NetworkPoseDataAutoLogged.java:12)
+  <TagVersion>1 <time> 08.262 <message> 	at org.littletonrobotics.junction.LogTable.put(LogTable.java:670)
+  <TagVersion>1 <time> 08.261 <message> 	at org.littletonrobotics.junction.LogTable.put(LogTable.java:541)
+
+
+
+
+  <TagVersion>1 <time> 08.261 <message> 	at edu.wpi.first.util.struct.StructBuffer.writeArray(StructBuffer.java:180)
+  <TagVersion>1 <time> 08.260 <message> 	at edu.wpi.first.math.geometry.struct.Pose3dStruct.pack(Pose3dStruct.java:13)
+  <TagVersion>1 <time> 08.259 <message> 	at edu.wpi.first.math.geometry.struct.Pose3dStruct.pack(Pose3dStruct.java:48)
+  <TagVersion>1 <time> 08.257 <message> Error at org.littletonrobotics.junction.LogTable.put(LogTable.java:541): Unhandled exception: java.lang.NullPointerException: Cannot invoke "edu.wpi.first.math.geometry.Pose3d.getTranslation()" because "value" is null
+  <TagVersion>1 <time> 08.256 <count> 1 <flags> 1 <Code> 1 <details> Unhandled exception: java.lang.NullPointerException: Cannot invoke "edu.wpi.first.math.geometry.Pose3d.getTranslation()" because "value" is null <location> org.littletonrobotics.junction.LogTable.put(LogTable.java:541)
+  <stack> 	at edu.wpi.first.math.geometry.struct.Pose3dStruct.pack(Pose3dStruct.java:48)
+	at edu.wpi.first.math.geometry.struct.Pose3dStruct.pack(Pose3dStruct.java:13)
+	at edu.wpi.first.util.struct.StructBuffer.writeArray(StructBuffer.java:180)
+	at org.littletonrobotics.junction.LogTable.put(LogTable.java:541)
+	at org.littletonrobotics.junction.LogTable.put(LogTable.java:670)
+	at com.chaos131.vision.NetworkPoseDataAutoLogged.toLog(NetworkPoseDataAutoLogged.java:12)
+	at org.littletonrobotics.junction.Logger.processInputs(Logger.java:440)
+	at com.chaos131.vision.Camera.periodic(Camera.java:255)
+	at frc.robot.subsystems.Camera.periodic(Camera.java:48)
+	at edu.wpi.first.wpilibj2.command.CommandScheduler.run(CommandScheduler.java:269)
+	at com.chaos131.robot.ChaosRobot.robotPeriodic(ChaosRobot.java:168)
+	at frc.robot.Robot.robotPeriodic(Robot.java:68)
+	at edu.wpi.first.wpilibj.IterativeRobotBase.loopFunc(IterativeRobotBase.java:400)
+	at org.littletonrobotics.junction.LoggedRobot.startCompetition(LoggedRobot.java:116)
+	at edu.wpi.first.wpilibj.RobotBase.runRobot(RobotBase.java:419)
+	at edu.wpi.first.wpilibj.RobotBase.startRobot(RobotBase.java:510)
+	at frc.robot.Main.main(Main.java:23)

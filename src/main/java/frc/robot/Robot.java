@@ -5,11 +5,16 @@
 package frc.robot;
 
 import com.chaos131.robot.ChaosRobot;
+import com.chaos131.util.DashboardNumber;
 import com.chaos131.util.FieldData;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.GeneralConstants;
+import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.arm.Gripper;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.LocalADStarAK;
 import java.util.ArrayList;
@@ -22,6 +27,10 @@ import org.littletonrobotics.junction.Logger;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends ChaosRobot {
+
+  /**
+   * Creates logging values from out BuildConstants.
+   */
   protected void setupRobot() {
     Logger.recordMetadata("RobotHash", BuildConstants.GIT_SHA);
     Logger.recordMetadata("RobotBranch", BuildConstants.GIT_BRANCH);
@@ -32,11 +41,9 @@ public class Robot extends ChaosRobot {
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
-   *
-   * @throws Exception
    */
   public Robot() throws Exception {
-    super(Mode.SIM);
+    super(GeneralConstants.RobotMode);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -51,18 +58,47 @@ public class Robot extends ChaosRobot {
     Logger.recordOutput(
         "Field/Reef Apriltags", FieldData.GatherAprilTagPoses(FieldPoint.blueReefAprilTags()));
     ArrayList<FieldPoint> reefSwervePoses = FieldPoint.getReefDrivePoses();
-    Pose2d[] ReefPositions = new Pose2d[reefSwervePoses.size()];
-    for (int i = 0; i < ReefPositions.length; i++) {
-      ReefPositions[i] = reefSwervePoses.get(i).getCurrentAlliancePose();
+    Pose2d[] reefPositions = new Pose2d[reefSwervePoses.size()];
+    for (int i = 0; i < reefPositions.length; i++) {
+      reefPositions[i] = reefSwervePoses.get(i).getCurrentAlliancePose();
     }
-    Logger.recordOutput("Field/ReefPositions", ReefPositions);
+    Logger.recordOutput("Field/ReefPositions", reefPositions);
     // System.out.println(coralPose.length);
+  }
+
+  @Override
+  public void robotPeriodic() {
+    super.robotPeriodic();
+    DashboardNumber.checkAll();
+    ((RobotContainer) m_robotContainer).setSwerveDriveAcceptingVisionUpdates(isDisabled() ? true : SwerveConstants.AcceptVisionUpdates);
   }
 
   @Override
   public void robotInit() {
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathfindingCommand.warmupCommand().schedule();
-    super.robotInit();
+    Gripper.hasCoralGrippedSim = true;
+    ((RobotContainer) m_robotContainer).setMotorCleanUp();
+    super.robotInit(); 
+  }
+
+  @Override
+  public void disabledCleanup() {
+    ((RobotContainer) m_robotContainer).setMotorCleanUp();
+  }
+
+  @Override
+  public void teleopInit() {
+    ((RobotContainer) m_robotContainer).setMotorStartUp();
+    ((RobotContainer) m_robotContainer).autoAndTeleInit();
+    super.teleopInit();
+  }
+
+  @Override
+  public void autonomousInit() {
+    ((RobotContainer) m_robotContainer).setMotorStartUp();
+    ((RobotContainer) m_robotContainer).autoAndTeleInit();
+    Gripper.hasCoralGrippedSim = true;
+    super.autonomousInit();
   }
 }

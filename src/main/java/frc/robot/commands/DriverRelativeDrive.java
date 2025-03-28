@@ -7,14 +7,20 @@ package frc.robot.commands;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.swerve.BaseSwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.SwerveConstants;
 
-/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+/**
+ * A class to drive the robot in driver relative mode.
+ */
 public class DriverRelativeDrive extends Command {
   /** Creates a new DriverRelativeDrive. */
   Gamepad m_driver;
 
   BaseSwerveDrive m_swerveDrive;
 
+  /**
+   * Creates a new DriverRelativeDrive.
+   */
   public DriverRelativeDrive(Gamepad driver, BaseSwerveDrive swerve) {
     m_driver = driver;
     m_swerveDrive = swerve;
@@ -31,8 +37,15 @@ public class DriverRelativeDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double speedMod = m_driver.leftStick().getAsBoolean() 
+        || m_driver.rightTrigger().getAsBoolean()
+        || m_driver.rightBumper().getAsBoolean() 
+        || m_driver.leftTrigger().getAsBoolean()
+        ? 0.3 : 1.0;
     m_swerveDrive.moveFieldRelative(
-        m_driver.getSlewLeftY(), -m_driver.getSlewLeftX(), -m_driver.getSlewRightX());
+        SwerveConstants.MaxFreeSpeed.times(m_driver.getSlewLeftY() * speedMod), 
+        SwerveConstants.MaxFreeSpeed.times(-m_driver.getSlewLeftX() * speedMod), 
+        SwerveConstants.MaxRotationSpeed.times(-m_driver.getSlewRightX() * speedMod));
   }
 
   // Called once the command ends or is interrupted.

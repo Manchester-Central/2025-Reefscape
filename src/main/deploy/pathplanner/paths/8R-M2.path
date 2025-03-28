@@ -1,0 +1,71 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.4905,
+        "y": 5.3705
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7098662259768906,
+        "y": 4.052743850548359
+      },
+      "isLocked": false,
+      "linkedName": "8R"
+    },
+    {
+      "anchor": {
+        "x": 1.443,
+        "y": 4.24925
+      },
+      "prevControl": {
+        "x": 1.627347866769672,
+        "y": 4.418116408789526
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "M2L"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2630705394190875,
+      "rotationDegrees": -142.79082704643395
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "IntakePoint",
+      "waypointRelativePos": 0.14392059553350334,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeFromFloor"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 680.0,
+    "maxAngularAcceleration": 540.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -138.9909130984298
+  },
+  "reversed": false,
+  "folder": "to M2",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -60.7176718754881
+  },
+  "useDefaultConstraints": true
+}

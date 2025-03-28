@@ -4,21 +4,58 @@
 
 package frc.robot.subsystems.shared;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /** Add your docs here. */
-public abstract class StateBasedSubsystem<TState extends ISubsystemState> extends SubsystemBase {
-  protected TState m_currentState;
+public abstract class StateBasedSubsystem<T extends SubsystemState> extends SubsystemBase {
+  private T m_currentState;
+  protected Timer m_stateTimer = new Timer();
+  private boolean m_isStateStarting = true;
 
-  protected StateBasedSubsystem(TState startState) {
+  /**
+   * The base contrusctor for all state based subsystems.
+   *
+   * @param startState the state to start the state machine in.
+   */
+  protected StateBasedSubsystem(T startState) {
     m_currentState = startState;
-    this.setDefaultCommand(new RunCommand(() -> runStateMachine(), this));
+    m_stateTimer.start();
+    this.setDefaultCommand(new RunCommand(() -> {
+      runStateMachine();
+      m_isStateStarting = false;
+    }, this));
   }
 
+  /**
+   * The function that must be called every loop to run the state machine.
+   */
   protected abstract void runStateMachine();
 
-  public void changeState(TState newState) {
+  /**
+   * Changes the current state of the state machine.
+   *
+   * @param newState the new state
+   */
+  public void changeState(T newState) {
+    if (newState != m_currentState) {
+      m_stateTimer.restart();
+      m_isStateStarting = true;
+    }
+
     m_currentState = newState;
+  }
+
+  public T getCurrentState() {
+    return m_currentState;
+  }
+
+  public double getElapsedStateSeconds() {
+    return m_stateTimer.get();
+  }
+
+  public boolean isStateStarting() {
+    return m_isStateStarting;
   }
 }

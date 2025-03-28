@@ -4,9 +4,14 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import com.chaos131.robot.ChaosRobot.Mode;
 import com.chaos131.swerve.BaseSwerveDrive;
 import com.chaos131.swerve.SwerveConfigs;
+import com.chaos131.util.DashboardNumber;
+import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
@@ -16,20 +21,30 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.SwerveConstants.SwerveBLConstants;
-import frc.robot.Constants.SwerveConstants.SwerveBRConstants;
-import frc.robot.Constants.SwerveConstants.SwerveFLConstants;
-import frc.robot.Constants.SwerveConstants.SwerveFRConstants;
+import frc.robot.Constants.SwerveConstants.SwerveBackLeftConstants;
+import frc.robot.Constants.SwerveConstants.SwerveBackRightConstants;
+import frc.robot.Constants.SwerveConstants.SwerveFrontLeftConstants;
+import frc.robot.Constants.SwerveConstants.SwerveFrontRightConstants;
+import frc.robot.Robot;
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SelfControlledSwerveDriveSimulation;
@@ -44,6 +59,15 @@ public class SwerveDrive extends BaseSwerveDrive {
   private DriveTrainSimulationConfig m_simDriveTrain;
   private SwerveDriveSimulation m_driveSim;
   private SelfControlledSwerveDriveSimulation m_simulatedDrive;
+  private PPHolonomicDriveController m_holonomicDriveController = new PPHolonomicDriveController(
+      new PIDConstants(1.0, 0.0, 0.0),
+      new PIDConstants(2.0, 0.0, 0.0));
+  private TimeInterpolatableBuffer<Pose2d> m_pastPoses;
+  private CircularBuffer<Rotation2d> m_swerveAngles;
+  private DashboardNumber m_minTranslationSpeed = new DashboardNumber("MinTranslationSpeed", 0.2, true, newValue -> {});
+
+  /** A value to help determine if we should use PathPlanner's reset odometry or not. */
+  private boolean m_hasReceivedVisionUpdates = false;
 
   private SwerveDrive(
       SwerveModule2025[] swerveModules,
@@ -51,6 +75,15 @@ public class SwerveDrive extends BaseSwerveDrive {
       Supplier<Rotation2d> getRotation)
       throws Exception {
     super(swerveModules, swerveConfigs, getRotation);
+
+    m_acceptVisionUpdates = SwerveConstants.AcceptVisionUpdates;
+    m_pastPoses = TimeInterpolatableBuffer.createBuffer(1);
+    m_swerveAngles = new CircularBuffer<>(50);
+    m_odometry =
+        new SwerveDrivePoseEstimator(
+            m_kinematics, getGyroRotation(), getModulePositions(), GeneralConstants.InitialRobotPose,
+             VecBuilder.fill(0.1, 0.1, 0.1),
+        VecBuilder.fill(2.5, 2.5, 2.5));
 
     resetPose(GeneralConstants.InitialRobotPose);
     m_simDriveTrain = DriveTrainSimulationConfig.Default();
@@ -73,17 +106,14 @@ public class SwerveDrive extends BaseSwerveDrive {
 
     AutoBuilder.configure(
         this::getPose, // Robot pose supplier
-        this::resetPose, // Method to reset odometry (will be called if your auto has a starting
+        this::resetPosePathPlanner, // Method to reset odometry (will be called if your auto has a starting
         // pose)
         this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         (speeds, feedforwards) -> move(speeds), // Method that will drive the robot given ROBOT
         // RELATIVE ChassisSpeeds. Also optionally
         // outputs individual module feedforwards
-        new PPHolonomicDriveController( // PPHolonomicController is the built in path following
-            // controller for holonomic drive trains
-            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-            new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-            ),
+       
+        m_holonomicDriveController,
         m_pathPlannerConfig, // The robot configuration
         () -> {
           // Boolean supplier that controls when the path will be mirrored for the red
@@ -98,53 +128,59 @@ public class SwerveDrive extends BaseSwerveDrive {
           return false;
         },
         this // Reference to this subsystem to set requirements
-        );
+    );
   }
 
-  public static SwerveDrive SeparateConstructor(Pigeon2 gyrPigeon2) throws Exception {
+  /**
+   * Creates a new swerve drive with all the values for 2025's robot.
+   */
+  public static SwerveDrive createSwerveDrive(Pigeon2 gyrPigeon2) throws Exception {
     SwerveConfigs swerveConfigs =
         new SwerveConfigs()
-            .setMaxRobotSpeed_mps(SwerveConstants.MaxFreeSpeedMPS)
-            .setMaxRobotRotation_radps(SwerveConstants.MaxRotationSpeedRadPS)
+            .setMaxRobotSpeed(SwerveConstants.MaxFreeSpeed)
+            .setMaxRobotRotation(SwerveConstants.MaxRotationSpeed)
             .setDefaultModuleVelocityPIDFValues(SwerveConstants.DefaultModuleVelocityPIDFValues)
             .setDefaultModuleAnglePIDValues(SwerveConstants.DefaultModuleAnglePIDValue)
-            .setDebugMode(true);
+            .setDefaultRotationPIDValues(SwerveConstants.AutoAnglePID)
+            .setDefaultTranslationPIDValues(SwerveConstants.AutoTranslationPID)
+            .setDebugMode(true)
+            .setDefaultDriveToTargetTolerance(SwerveConstants.DriveToTargetTolerance);
     SwerveModule2025 frontLeftSwerveModule =
         new SwerveModule2025(
             "FL",
-            SwerveFLConstants.ModOffset,
+            SwerveFrontLeftConstants.ModOffset,
             CanIdentifiers.FLSpeedCANID,
             CanIdentifiers.FLAngleCANID,
             CanIdentifiers.FLAbsoEncoCANID,
-            SwerveFLConstants.InvertedSpeed,
-            SwerveFLConstants.AngleEncoderOffset);
+            SwerveFrontLeftConstants.InvertedSpeed,
+            SwerveFrontLeftConstants.AngleEncoderOffset);
     SwerveModule2025 frontRightSwerveModule =
         new SwerveModule2025(
             "FR",
-            SwerveFRConstants.ModOffset,
+            SwerveFrontRightConstants.ModOffset,
             CanIdentifiers.FRSpeedCANID,
             CanIdentifiers.FRAngleCANID,
             CanIdentifiers.FRAbsoEncoCANID,
-            SwerveFRConstants.InvertedSpeed,
-            SwerveFRConstants.AngleEncoderOffset);
+            SwerveFrontRightConstants.InvertedSpeed,
+            SwerveFrontRightConstants.AngleEncoderOffset);
     SwerveModule2025 backLeftSwerveModule =
         new SwerveModule2025(
             "BL",
-            SwerveBLConstants.ModOffset,
+            SwerveBackLeftConstants.ModOffset,
             CanIdentifiers.BLSpeedCANID,
             CanIdentifiers.BLAngleCANID,
             CanIdentifiers.BLAbsoEncoCANID,
-            SwerveBLConstants.InvertedSpeed,
-            SwerveBLConstants.AngleEncoderOffset);
+            SwerveBackLeftConstants.InvertedSpeed,
+            SwerveBackLeftConstants.AngleEncoderOffset);
     SwerveModule2025 backRightSwerveModule =
         new SwerveModule2025(
             "BR",
-            SwerveBRConstants.ModOffset,
+            SwerveBackRightConstants.ModOffset,
             CanIdentifiers.BRSpeedCANID,
             CanIdentifiers.BRAngleCANID,
             CanIdentifiers.BRAbsoEncoCANID,
-            SwerveBRConstants.InvertedSpeed,
-            SwerveBRConstants.AngleEncoderOffset);
+            SwerveBackRightConstants.InvertedSpeed,
+            SwerveBackRightConstants.AngleEncoderOffset);
     SwerveModule2025[] swerveModule2025s = {
       frontLeftSwerveModule, frontRightSwerveModule, backLeftSwerveModule, backRightSwerveModule
     };
@@ -153,44 +189,102 @@ public class SwerveDrive extends BaseSwerveDrive {
     return swerveDrive;
   }
 
+  /**
+   * Resets the robot's position on the field - will skip if certain conditions are met.
+   *
+   *
+   * @param targetPose the pose to set to
+   */
+  public void resetPosePathPlanner(Pose2d targetPose) {
+    if (Robot.isReal() && m_hasReceivedVisionUpdates) {
+      // If this is a real robot and we have received camera updates, trust the camera updates over PathPlanner's starting pose
+      return;
+    }
+    // If it's a sim robot or we have not received vision updates, we can trust PathPlanner's pose
+    resetPose(targetPose);
+  }
+
+  /**
+  * .
+  */
+
+  public boolean atTargetDynamic() {
+    if (atTarget() && m_swerveAngles.size() >= 2) {
+      Rotation2d angleToTarget2dLast = m_swerveAngles.get(m_swerveAngles.size() - 2);
+      Rotation2d angleToTargetLast = m_swerveAngles.getLast();
+      Rotation2d dif = angleToTarget2dLast.minus(angleToTargetLast);
+      Logger.recordOutput("thresh", SwerveConstants.AtTargetAngleThreshold);
+      Logger.recordOutput("dif", dif.getDegrees());
+      if (dif.getMeasure().abs(Degrees) > SwerveConstants.AtTargetAngleThreshold.in(Degrees)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * To clear the CircularBuffer of swerve rotation values.
+   */
+  public void clearSwerveAngleBuffer() {
+    m_swerveAngles.clear();
+  }
+
   @Override
   public void move(ChassisSpeeds chassisSpeeds) {
-    chassisSpeeds.vxMetersPerSecond =
-        MathUtil.clamp(chassisSpeeds.vxMetersPerSecond, -1, 1)
-            * m_swerveConfigs.maxRobotSpeed_mps()
-            * TranslationSpeedModifier;
-    chassisSpeeds.vyMetersPerSecond =
-        MathUtil.clamp(chassisSpeeds.vyMetersPerSecond, -1, 1)
-            * m_swerveConfigs.maxRobotSpeed_mps()
-            * TranslationSpeedModifier;
-    chassisSpeeds.omegaRadiansPerSecond =
-        MathUtil.clamp(chassisSpeeds.omegaRadiansPerSecond, -1, 1)
-            * m_swerveConfigs.maxRobotRotation_radps()
-            * RotationSpeedModifier;
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(chassisSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed_mps());
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, m_swerveConfigs.maxRobotSpeed());
     if (GeneralConstants.RobotMode == Mode.SIM) {
       m_simulatedDrive.runSwerveStates(states);
     }
     Logger.recordOutput("Swerve/TargetSpeeds", states);
-    if (chassisSpeeds.vxMetersPerSecond == 0
-        && chassisSpeeds.vyMetersPerSecond == 0
-        && chassisSpeeds.omegaRadiansPerSecond == 0) {
-      stop();
-      return;
-    }
+    // if (chassisSpeeds.vxMetersPerSecond == 0
+    //     && chassisSpeeds.vyMetersPerSecond == 0
+    //     && chassisSpeeds.omegaRadiansPerSecond == 0) {
+    //   stop();
+    //   return;
+    // }
 
     for (var i = 0; i < states.length; i++) {
       m_swerveModules.get(i).setTarget(states[i]);
     }
   }
 
-  public void pathPlannerRobotRelative(
+  /**
+   * Thread Safe mechanism for adding a vision update from the camera to the swerve estimator.
+   * Checks if the SwervePoseEstimator is going to process vision updates at all first.
+   */
+  public void addVisionMeasurement(VisionData data) {
+    if (!m_acceptVisionUpdates) {
+      return;
+    }
+    synchronized (m_odometry) {
+      m_hasReceivedVisionUpdates = true;
+      m_odometry.addVisionMeasurement(
+          data.getPose2d(), data.getTimestampSeconds(), data.getDeviationMatrix());
+    }
+  }
+
+  /**
+   * To change the ramp rate period on the fly.
+   *
+   * @param newRate time in seconds (clamped to [0-1])
+   */
+  public void setRampRatePeriod(double newRate) {
+    forAllModules((module) -> ((SwerveModule2025) module).setRampRatePeriod(newRate));
+  }
+
+  /**
+   * Allows PathPlanner to drive our robot.
+   */
+  private void pathPlannerRobotRelative(
       ChassisSpeeds chassisSpeeds, DriveFeedforwards driveFeedforwards) {
     pathPlannerRobotRelative(chassisSpeeds);
     // TODO: Investigate decision regarding the use of feed forwards
   }
 
+  /**
+   * Tells the robot to follow a PathPlanner plan.
+   */
   public Command followPathCommand(String pathName) {
     try {
       PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
@@ -201,12 +295,8 @@ public class SwerveDrive extends BaseSwerveDrive {
           this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
           this::pathPlannerRobotRelative, // Method that will drive the robot given ROBOT RELATIVE
           // ChassisSpeeds, AND feedforwards
-          new PPHolonomicDriveController( // PPHolonomicController is the built in path
-              // following controller for holonomic drive
-              // trains
-              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-              ),
+          // 
+          m_holonomicDriveController,
           m_pathPlannerConfig, // The robot configuration
           () -> {
             // Boolean supplier that controls when the path will be mirrored for the
@@ -228,6 +318,8 @@ public class SwerveDrive extends BaseSwerveDrive {
     }
   }
 
+  
+
   @Override
   public Rotation2d getGyroRotation() {
     if (GeneralConstants.RobotMode == Mode.SIM) {
@@ -247,5 +339,78 @@ public class SwerveDrive extends BaseSwerveDrive {
     super.periodic();
     Logger.recordOutput("Swerve/Pose", getPose());
     Logger.recordOutput("Swerve/CurrentSpeeds", getModuleStates());
+    Logger.recordOutput("Swerve/Speed", getRobotSpeed());
+    Logger.recordOutput("Swerve/RotationSpeed", getRobotRotationSpeed());
+    m_pastPoses.addSample(Timer.getFPGATimestamp(), getPose());
+    Translation2d targetPosition = new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint());
+    Rotation2d currentAngle = getPose().getTranslation().minus(targetPosition).getAngle();
+    Logger.recordOutput("at target dynamic", atTargetDynamic());
+    Logger.recordOutput("Command", getCurrentCommand() != null ? getCurrentCommand().getName() : "");
+    m_swerveAngles.addLast(currentAngle);
+  }
+
+  /**
+   * Get past pose.
+   *
+   * @param timeStamp in seconds
+   * @return pose
+   */
+  public Optional<Pose2d> getPastPose(double timeStamp) {
+    return m_pastPoses.getSample(timeStamp);
+  }
+
+  @Override
+  public void moveToTarget(double maxTranslationSpeedPercent) {
+    Pose2d pose = getPose();
+
+    Translation2d difference =
+        pose.getTranslation().minus(new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint()));
+
+    var normalizedDifference = difference.div(difference.getNorm());
+    maxTranslationSpeedPercent *= m_swerveConfigs.maxRobotSpeed().in(MetersPerSecond); //TODO: do this the right way in shared code
+
+    double x =
+        MathUtil.clamp(
+            m_XPid.calculate(pose.getX()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getX()),
+            (maxTranslationSpeedPercent * normalizedDifference.getX()));
+    double y =
+        MathUtil.clamp(
+            m_YPid.calculate(pose.getY()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getY()),
+            (maxTranslationSpeedPercent * normalizedDifference.getY()));
+    double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
+    moveFieldRelativeForPID(
+        Units.MetersPerSecond.of(x), Units.MetersPerSecond.of(y), Units.RadiansPerSecond.of(angle));
+  }
+ 
+  /**
+   * .
+   */
+  public void moveToTargetV2(double maxTranslationSpeedPercent) {
+    Pose2d pose = getPose();
+    double minTranslationSpeed = m_minTranslationSpeed.get();
+
+    Translation2d difference =
+        pose.getTranslation().minus(new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint()));
+
+    var normalizedDifference = difference.div(difference.getNorm());
+    maxTranslationSpeedPercent *= m_swerveConfigs.maxRobotSpeed().in(MetersPerSecond); //TODO: do this the right way in shared code
+
+    double x =
+        MathUtil.clamp(
+            m_XPid.calculate(pose.getX()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getX()),
+            (maxTranslationSpeedPercent * normalizedDifference.getX()));
+    x = m_XPid.atSetpoint() ? 0.0 : Math.max(Math.abs(x), minTranslationSpeed) * (x < 0 ? -1 : 1); 
+    double y =
+        MathUtil.clamp(
+            m_YPid.calculate(pose.getY()),
+            -(maxTranslationSpeedPercent * normalizedDifference.getY()),
+            (maxTranslationSpeedPercent * normalizedDifference.getY()));
+    y = m_YPid.atSetpoint() ? 0.0 : Math.max(Math.abs(y), minTranslationSpeed) * (y < 0 ? -1 : 1); 
+    double angle = m_AngleDegreesPid.calculate(pose.getRotation().getDegrees());
+    moveFieldRelativeForPID(
+        Units.MetersPerSecond.of(x), Units.MetersPerSecond.of(y), Units.RadiansPerSecond.of(angle));
   }
 }

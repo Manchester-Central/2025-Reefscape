@@ -1,8 +1,8 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2025.2.1"
-    id 'com.diffplug.spotless' version '6.20.0'
+    id "edu.wpi.first.GradleRIO" version "2025.3.1"
     id "com.peterabeles.gversion" version "1.10.3"
+    id 'checkstyle'
 }
 
 java {
@@ -35,7 +35,7 @@ deploy {
                 frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
                     files = project.fileTree('src/main/deploy')
                     directory = '/home/lvuser/deploy'
-                    deleteOldFiles = false // Change to true to delete files on roboRIO that no
+                    deleteOldFiles = true // Change to true to delete files on roboRIO that no
                     // longer exist in deploy directory of this project
                 }
             }
@@ -88,7 +88,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    implementation 'com.chaos131:shared:2025.0.9'
+    implementation 'com.chaos131:shared:2025.0.12'
 }
 
 test {
@@ -126,48 +126,41 @@ wpi.java.configureTestTasks(test)
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
-spotless {
-    java {
-        target fileTree('.') {
-            include '**/*.java'
-            exclude '**/build/**', '**/build-*/**', 'bin/generated-sources/**', 'src/main/java/frc/robot/BuildConstants.java'
-        }
-        toggleOffOn()
-        googleJavaFormat()
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
-    groovyGradle {
-        target fileTree('.') {
-            include '**/*.gradle'
-            exclude '**/build/**', '**/build-*/**'
-        }
-        greclipse()
-        indentWithSpaces(4)
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
-    format 'xml', {
-        target fileTree('.') {
-            include '**/*.xml'
-            exclude '**/build/**', '**/build-*/**'
-        }
-        eclipseWtp('xml')
-        trimTrailingWhitespace()
-        indentWithSpaces(2)
-        endWithNewline()
-    }
-    format 'misc', {
-        target fileTree('.') {
-            include '**/*.md', '**/.gitignore'
-            exclude '**/build/**', '**/build-*/**'
-        }
-        trimTrailingWhitespace()
-        indentWithSpaces(2)
-        endWithNewline()
+
+checkstyle {
+    toolVersion = "10.21.2"
+}
+
+tasks.withType(Checkstyle) {
+    reports {
+        xml.required = true
+        html.required = true
+        html.stylesheet = resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
     }
 }
+
+def browse(path) {
+    def os = org.gradle.internal.os.OperatingSystem.current()
+    if (os.isWindows()) {
+        exec { commandLine 'cmd', '/c', "start $path" }
+    } else if (os.isMacOsX()) {
+        exec { commandLine 'open', "$path" }
+    }
+}
+
+task browseCheckstyleReport {
+   doLast {
+        def xmlFile = project.file('build/reports/checkstyle/main.xml')
+        def xplParsed = new XmlParser().parse(xmlFile)
+        def errorCount = xplParsed.file.error.size()
+        if (errorCount > 0) {
+            def reportHtmlFile = project.file('build/reports/checkstyle/main.html')
+            browse reportHtmlFile
+        }
+   }
+}
+
+checkstyleMain.finalizedBy browseCheckstyleReport
 
 project.compileJava.dependsOn(createVersionFile)
 gversion {

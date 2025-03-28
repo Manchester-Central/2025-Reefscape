@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.5185,
+        "y": 5.63375
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.348429577464789,
+        "y": 6.512447183098591
+      },
+      "isLocked": false,
+      "linkedName": "10R"
+    },
+    {
+      "anchor": {
+        "x": 2.2035,
+        "y": 6.4625
+      },
+      "prevControl": {
+        "x": 2.7836922188870936,
+        "y": 6.17739191295313
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "LHPF"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 680.0,
+    "maxAngularAcceleration": 540.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.0,
+    "rotation": 128.3674853848615
+  },
+  "reversed": false,
+  "folder": "to LHP",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -120.34324888423953
+  },
+  "useDefaultConstraints": true
+}
