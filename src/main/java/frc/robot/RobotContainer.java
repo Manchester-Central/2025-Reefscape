@@ -38,6 +38,7 @@ import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleAndAxisDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.ReefAlignment;
+import frc.robot.commands.SimpleDriveToPositionV2;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
 import frc.robot.commands.WaitForState;
@@ -241,7 +242,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    */
   public Command aimAndPrepCoral() {
 
-    return PathUtil.driveToPoseCommand(FieldPoint.getNearestReefDrivePose(m_swerveDrive, m_driver.getLeftX()), m_swerveDrive);
+    return PathUtil.driveToClosestPointTeleopCommandV2(FieldPoint.getReefDrivePoses(), m_swerveDrive);
+    // return new SimpleDriveToPositionV2(m_swerveDrive, () -> FieldPoint.getNearestReefDrivePose(m_swerveDrive, m_driver.getLeftX()));
     // .alongWith(
     //   new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
     //   .andThen(
