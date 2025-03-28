@@ -113,6 +113,36 @@ public class FieldPoint {
   }
 
   /**
+   * Gets all the drive positions we can consider for scoring on the reef (left
+   * and right of each april tag).
+   */
+  public static Pose2d getNearestReefDrivePose(SwerveDrive swerveDrive, double stickBias) {
+    ArrayList<FieldPoint> reefDrivePoses = new ArrayList<FieldPoint>();
+    FieldPoint aprilTag = getNearestPoint(swerveDrive.getPose(), getReefAprilTagPoses());
+    Pose2d leftPose = aprilTag.getCurrentAlliancePose().transformBy(
+        new Transform2d(
+            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
+            FieldDimensions.ReefBranchLeft.getY(),
+            Rotation2d.fromDegrees(180)));
+    reefDrivePoses.add(new FieldPoint("ReefLeft", leftPose));
+    Pose2d rightPose = aprilTag.getCurrentAlliancePose().transformBy(
+        new Transform2d(
+            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
+            FieldDimensions.ReefBranchRight.getY(),
+            Rotation2d.fromDegrees(180)));
+    reefDrivePoses.add(new FieldPoint("ReefRight", rightPose));
+    if (stickBias < -0.1) {
+      // TODO Isaac relative
+      return leftPose;
+    } else if (stickBias > 0.1) {
+      // TODO Isaac relative
+      return rightPose;
+    } else {
+      return getNearestPoint(swerveDrive.getPose(), reefDrivePoses).getCurrentAlliancePose();
+    }
+  }
+
+  /**
    * Gets all the drive positions we can consider for scoring on the reef (middle
    * april tag).
    */
