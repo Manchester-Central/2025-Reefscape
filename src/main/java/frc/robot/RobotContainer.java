@@ -15,8 +15,11 @@ import com.chaos131.robot.ChaosRobotContainer;
 import com.chaos131.util.DashboardNumber;
 import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.chaos131.vision.VisionData;
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.util.Color;
@@ -89,6 +92,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   private Random m_rng = new Random();
   private Trigger m_isAlgaeMode;
   private Trigger m_isCoralMode;
+  private Orchestra m_orchestra = new Orchestra();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -140,7 +144,29 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     
     // Configure the trigger bindings
     configureBindings();
+    //m_Orchestra.addInstrument(m_idLift.getPivotMotor());
   }
+
+  /**
+   * .
+   */
+  public void playMusic() {
+    if (!m_orchestra.isPlaying()) {
+
+      m_orchestra.loadMusic("chaos2024.chrp");
+      m_orchestra.play();
+    }
+  }
+
+  /**
+   * .
+   */
+  public void stopMusic() {
+    if (m_orchestra.isPlaying()) {
+      m_orchestra.stop();
+    }
+  }
+
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -281,6 +307,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // Enables Dashboard Numbers to be updated each loop
     DashboardNumber.checkAll();
     Logger.recordOutput("OperatorMode", m_isAlgaeMode.getAsBoolean() ? Color.kSeaGreen.toHexString() : Color.kWhite.toHexString());
+    Logger.recordOutput("ReefState", m_arm.getSelectedCoralState());
+   
   }
 
   /**
