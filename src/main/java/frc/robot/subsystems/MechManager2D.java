@@ -43,6 +43,11 @@ public class MechManager2D extends SubsystemBase {
   private LoggedMechanismLigament2d m_gripperCoralBackLigament;
   private LoggedMechanismLigament2d m_gripperAlgaeLigament;
 
+  // climber
+  private LoggedMechanismLigament2d m_climberLigament;
+  private LoggedMechanismLigament2d m_cageTopLigament;
+  private LoggedMechanismLigament2d m_cageBottomLigament;
+
 
   private final Color8Bit m_extenderColor = new Color8Bit(0, 0, 255);
   private final Color8Bit m_gripperNeutralColor = new Color8Bit(100, 100, 100);
@@ -50,6 +55,10 @@ public class MechManager2D extends SubsystemBase {
   private final Color8Bit m_gripperReverseColor = new Color8Bit(255, 0, 0);
   private final Color8Bit m_gripperHasCoralColor = new Color8Bit(255, 255, 255);
   private final Color8Bit m_gripperHasAlgaeColor = new Color8Bit(0, 128, 128);
+  private final Color8Bit m_climberNeutralColor = new Color8Bit(255, 128, 0);
+  private final Color8Bit m_climberOutakeColor = new Color8Bit(255, 105, 180);
+  private final Color8Bit m_climberIntakeColor = new Color8Bit(0, 255, 0);
+  private final Color8Bit m_cageColor = new Color8Bit(180, 0, 255);
   
   @AutoLogOutput(key = "Mech2d/Intake")
   private LoggedMechanism2d m_intakeBase;
@@ -76,6 +85,11 @@ public class MechManager2D extends SubsystemBase {
     m_gripperCoralFrontLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralFront", 0.0001, 90, 10, m_gripperHasCoralColor));
     m_gripperCoralBackLigament = m_gripperCoralWheelsLigament.append(new LoggedMechanismLigament2d("GripperCoralBack", 0.0001, -90, 10, m_gripperHasCoralColor));
     m_gripperAlgaeLigament = m_gripperCenterLigament.append(new LoggedMechanismLigament2d("GripperAlgae", 0.0001, 0, 40, m_gripperHasAlgaeColor));
+
+    // Climber
+    m_climberLigament = m_extenderLigament.append(new LoggedMechanismLigament2d("Climber", 0.1, 90, 5, m_climberNeutralColor));
+    m_cageTopLigament = m_climberLigament.append(new LoggedMechanismLigament2d("CageTop", 0.0001, -90, 15, m_cageColor));
+    m_cageBottomLigament = m_climberLigament.append(new LoggedMechanismLigament2d("CageBottom", 0.0001, 90, 15, m_cageColor));
   }
 
   @Override
@@ -97,6 +111,15 @@ public class MechManager2D extends SubsystemBase {
       m_gripperCoralWheelsLigament.setColor(m_gripperReverseColor);
     }
 
+    // Change climber color
+    if (values.climbSpeed < 0) {
+      m_climberLigament.setColor(m_climberIntakeColor);
+    } else if (values.climbSpeed > 0) {
+      m_climberLigament.setColor(m_climberOutakeColor);
+    } else {
+      m_climberLigament.setColor(m_climberNeutralColor);
+    }
+
     // Change length if holding a coral
     if (values.hasCoral) {
       m_gripperCoralFrontLigament.setLength(RobotDimensions.WristToCoralFront.getX() - RobotDimensions.WristToCoralIntakeAxle);
@@ -111,6 +134,15 @@ public class MechManager2D extends SubsystemBase {
       m_gripperAlgaeLigament.setLength(0.4);
     } else {
       m_gripperAlgaeLigament.setLength(0.0001);
+    }
+
+    // Change length if holding a cage
+    if (values.hasCage) {
+      m_cageTopLigament.setLength(0.3);
+      m_cageBottomLigament.setLength(0.3);
+    } else {
+      m_cageTopLigament.setLength(0.0001);
+      m_cageBottomLigament.setLength(0.0001);
     }
   }
 }
