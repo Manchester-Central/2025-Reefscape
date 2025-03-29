@@ -18,6 +18,8 @@ import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.util.Color;
@@ -300,6 +302,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     // Enables Dashboard Numbers to be updated each loop
     DashboardNumber.checkAll();
     Logger.recordOutput("OperatorMode", m_isAlgaeMode.getAsBoolean() ? Color.kSeaGreen.toHexString() : Color.kWhite.toHexString());
+    Logger.recordOutput("ReefState", m_arm.getSelectedCoralState());
+   
   }
 
   /**
