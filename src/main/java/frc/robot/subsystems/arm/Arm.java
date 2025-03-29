@@ -487,7 +487,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     }
 
     // If we have a prep base pivot angle, make sure we go there first
-    if (usePrepAngle && !m_isPrepAngleReached) {
+    if ((usePrepAngle && !m_isPrepAngleReached) || (usePrepAngle && !getArmValues().hasCoral)) {
       m_basePivot.setTargetAngle(armPose.getBasePivotSafetyAngle().get());
       m_extender.setTargetLength(armPose.getExtensionMeters());
       m_gripperPivot.setTargetAngle(armPose.getGripperPivotAngle());
