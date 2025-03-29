@@ -34,6 +34,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.util.CircularBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.CanIdentifiers;
@@ -328,6 +329,10 @@ public class SwerveDrive extends BaseSwerveDrive {
           : GeneralConstants.InitialRobotPose.getRotation();
     }
     return super.getGyroRotation();
+  }
+
+  public Field2d getField(){
+    return m_field;
   }
 
   @Override
