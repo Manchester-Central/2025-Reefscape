@@ -61,7 +61,7 @@ public class SimpleDriveToPositionV2 extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return m_swerveDrive.atTarget(0.01);
-    return ((SwerveDrive) m_swerveDrive).atTargetDynamic() && !DriverStation.isTeleop();
+    return m_swerveDrive.atTarget(0.01) && !DriverStation.isTeleop();
+    //return ((SwerveDrive) m_swerveDrive).atTargetDynamic() && !DriverStation.isTeleop();
   }
 }

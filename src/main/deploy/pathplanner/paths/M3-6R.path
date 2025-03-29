@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9010245901652025,
-        "y": 3.8511782786814273
+        "x": 1.8101434426229508,
+        "y": 2.2688012295081954
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.5947693666864513,
-        "y": 5.294532286141403
+        "x": 2.99193220910655,
+        "y": 2.3513335337002204
       },
       "isLocked": false,
-      "linkedName": "6R"
+      "linkedName": "M3"
     },
     {
       "anchor": {
-        "x": 2.2035,
-        "y": 6.4625
+        "x": 2.9010245901652025,
+        "y": 3.8511782786814273
       },
       "prevControl": {
-        "x": 2.145428111042371,
-        "y": 5.784544652829213
+        "x": 2.586530333215755,
+        "y": 3.6503103655321945
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LHPF"
+      "linkedName": "6R"
     }
   ],
   "rotationTargets": [],
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.0,
-    "rotation": 128.3674853848615
+    "velocity": 0.5,
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "to LHP",
+  "folder": "from M3",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -170.53767779197446
   },
   "useDefaultConstraints": true
 }

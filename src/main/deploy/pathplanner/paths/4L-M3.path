@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.55875,
+        "y": 2.669749999999999
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.080840163934426,
+        "y": 2.5325307377049184
+      },
+      "isLocked": false,
+      "linkedName": "4L"
+    },
+    {
+      "anchor": {
+        "x": 1.8101434426229508,
+        "y": 2.2688012295081954
+      },
+      "prevControl": {
+        "x": 2.3376024590163933,
+        "y": 2.2807889344262287
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "M3"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4584221748400858,
+      "rotationDegrees": -167.79813041845534
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeFromFloor",
+      "waypointRelativePos": 0.43484132343011456,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 680.0,
+    "maxAngularAcceleration": 540.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -170.53767779197446
+  },
+  "reversed": false,
+  "folder": "to M3",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 60.113473059575966
+  },
+  "useDefaultConstraints": true
+}

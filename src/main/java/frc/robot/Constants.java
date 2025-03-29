@@ -228,7 +228,7 @@ public final class Constants {
       public static final double MMJerk = 100;
 
       public static final double MMCruiseVelocityHigh = 0.3;
-      public static final double MMAccelerationHigh = 0.5;
+      public static final double MMAccelerationHigh = 0.25;
       public static final double MMJerkHigh = 100;
 
       public static final double SupplyCurrentLimit = 50;
