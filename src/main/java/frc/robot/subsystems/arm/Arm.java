@@ -308,7 +308,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_gripper.setCoralGripSpeed(0.0);
 
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
-      Gripper.hasAlgaeGrippedSim = true;
+      Gripper.m_hasAlgaeGrippedSim = true;
     }
   }
 
@@ -501,7 +501,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeAlgaeSpeed.get());
     m_gripper.setCoralGripSpeed(0.0);
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
-      Gripper.hasAlgaeGrippedSim = false;
+      Gripper.m_hasAlgaeGrippedSim = false;
     }
   }
 

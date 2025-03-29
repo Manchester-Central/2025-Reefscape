@@ -32,7 +32,7 @@ public class Gripper extends AbstractArmPart {
 
   private static boolean m_hasCoralGrippedBoth = false;
 
-  public static boolean hasAlgaeGrippedSim = false;
+  public static boolean m_hasAlgaeGrippedSim = false;
 
   private static boolean m_hasAlgaeGripped = false;
 
@@ -170,7 +170,7 @@ public class Gripper extends AbstractArmPart {
     m_hasCoralGrippedBack = m_coralSensorDebouncerBack.calculate(Robot.isSimulation() ? hasCoralGrippedSim : hasCoralBackNoDebounce());
     m_hasCoralGrippedBoth = m_hasCoralGrippedFront && m_hasCoralGrippedBack;
     boolean algaeCurrentLimitReached = m_algaeMotor.getStatorCurrent().getValue().gt(Amps.of(m_algaeStatorCurrentLimit.get() - 0.1));
-    m_hasAlgaeGripped = m_algaeSensorDebouncer.calculate(Robot.isSimulation() ? hasAlgaeGrippedSim : algaeCurrentLimitReached);
+    m_hasAlgaeGripped = m_algaeSensorDebouncer.calculate(Robot.isSimulation() ? m_hasAlgaeGrippedSim : algaeCurrentLimitReached);
     Logger.recordOutput("Gripper/HasCoral", hasCoral());
     Logger.recordOutput("Gripper/HasAlgae", hasAlgae());
     Logger.recordOutput("Gripper/CoralSensorFront", hasCoralFront());

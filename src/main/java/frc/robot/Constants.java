@@ -81,6 +81,7 @@ public final class Constants {
     // Gripper (70s)
     public static final int GripperCoralMotorCANID = 52; // TODO: set on robot
     public static final int GripperAlgaeMotorCANID = 53; // TODO: set on robot
+    public static final int ClimberMotorCANID = 54; // TODO: set on robot
 
     // Intake (80s) RIP 2025-2025 for now for now
     public static final int IntakeMotor1CANID = 80; // TODO: set on robot
@@ -374,16 +375,13 @@ public final class Constants {
     }
   }
 
-  /** This contains constants for our Intake. */
-  public static class IntakeConstants {
-    public static final Angle StowAngle = Degrees.of(100.0);
-    public static final Angle DeployAngle = Degrees.of(10.0);
-    public static final Angle HandoffAngle = Degrees.of(150.0);
+  /** This contains constants for our Gripper. */
+  public static class ClimberConstants {
+    public static final double CageDropDebounceSeconds = 0.5;
 
-    public static final double StowSpeed = 0.0;
-    public static final double DeploySpeed = 1.0;
-    public static final double HandoffPrepSpeed = 0.0;
-    public static final double HandoffSpeed = -1.0;
+    public static final Current ClimbSupplyCurrentLimit = Amps.of(40); // TODO get real values
+    public static final Current ClimbStatorCurrentLimit = Amps.of(40); // TODO get real values
+    
   }
 
   /** This contains constants for the field. */
