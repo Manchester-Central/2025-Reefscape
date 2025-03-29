@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.GripperConstants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Robot;
 import frc.robot.subsystems.shared.StateBasedSubsystem;
@@ -29,11 +30,13 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     public Angle basePivotAngle;
     public Angle gripperPivotAngle;
     public double coralGripSpeed;
+    public double climbSpeed;
     public double extenderLength;
     public boolean isBasePivotAtCloseAngle;
     public boolean isExtenderAtCloseLength;
     public boolean hasCoral;
     public boolean hasAlgae;
+    public boolean hasCage;
     public boolean isGripperPivotAtCloseAngle;
   }
 
@@ -45,11 +48,13 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     values.basePivotAngle = m_basePivot.getCurrentAngle();
     values.gripperPivotAngle = m_gripperPivot.getCurrentAngle();
     values.coralGripSpeed = m_gripper.getCoralGripSpeed();
+    values.climbSpeed = m_climber.getClimbSpeed();
     values.extenderLength = m_extender.getCurrentLength();
     values.isBasePivotAtCloseAngle = m_basePivot.atClose();
     values.isExtenderAtCloseLength = m_extender.atClose();
     values.hasCoral = m_gripper.hasCoral();
     values.hasAlgae = m_gripper.hasAlgae();
+    values.hasCage = m_climber.hasCage();
     values.isGripperPivotAtCloseAngle = m_gripperPivot.atClose();
     return values;
   }
@@ -58,6 +63,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   public Extender m_extender = new Extender(this::getArmValues); // TODO: UNDO public
   public Gripper m_gripper = new Gripper(this::getArmValues);
   public GripperPivot m_gripperPivot = new GripperPivot(this::getArmValues);
+  private Climber m_climber = new Climber(this::getArmValues);
   private Gamepad m_operator;
   private Gamepad m_driver;
   private boolean m_isPrepAngleReached = false;
@@ -250,6 +256,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripper.setAlgaeGripSpeed(0.0); // TODO: re-enable to help hold algae?
       // m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed); // TODO add back
     }
+    m_climber.setClimbSpeed(0);
   }
 
   private void intakeCoralFromFloorState() {
@@ -289,6 +296,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Gripper.hasCoralGrippedSim = true;
     }
+    m_climber.setClimbSpeed(0);
   }
 
   private void intakeAlgaeFromFloorState() {
@@ -308,8 +316,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_gripper.setCoralGripSpeed(0.0);
 
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
-      Gripper.m_hasAlgaeGrippedSim = true;
+      Gripper.hasAlgaeGrippedSim = true;
     }
+    m_climber.setClimbSpeed(0);
   }
 
   private void intakeFromHpState() {
@@ -339,6 +348,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Gripper.hasCoralGrippedSim = true;
     }
+    m_climber.setClimbSpeed(0);
   }
   
   //👻👽😺
@@ -368,6 +378,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed.get());
       m_gripper.setCoralGripSpeed(0.0);
     }
+    m_climber.setClimbSpeed(0);
   }
 
   private void prepBargeState() {
@@ -380,6 +391,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed.get());
       m_gripper.setCoralGripSpeed(0.0);
     }
+    m_climber.setClimbSpeed(0);
   }
 
   private void scoreL1State() {
@@ -405,6 +417,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripperPivot.setTargetAngle(ArmPoses.AlgaeHigh.getGripperPivotAngle());
       m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed.get());
       m_gripper.setCoralGripSpeed(0.0);
+      m_climber.setClimbSpeed(0);
     } else {
       changeState(ArmState.HOLD_CORAL);
       return;
@@ -418,6 +431,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripperPivot.setTargetAngle(ArmPoses.AlgaeLow.getGripperPivotAngle());
       m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed.get());
       m_gripper.setCoralGripSpeed(0.0);
+      m_climber.setClimbSpeed(0);
     } else {
       changeState(ArmState.HOLD_CORAL);
       return;
@@ -429,6 +443,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_basePivot.setTargetAngle(holdPose.getBasePivotAngle());
     m_extender.setTargetLength(holdPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(holdPose.getGripperPivotAngle());
+    m_climber.setClimbSpeed(0);
     if (m_scoringTrigger.getAsBoolean()) {
       m_gripper.setCoralGripSpeed(GripperConstants.OutakeCoralSpeed.get());
       m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeCoralOnAlgaeMotorSpeed.get());
@@ -446,6 +461,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_basePivot.setTargetAngle(ArmPoses.HoldAlgae.getBasePivotAngle());
     m_extender.setTargetLength(ArmPoses.HoldAlgae.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.HoldAlgae.getGripperPivotAngle());
+    m_climber.setClimbSpeed(0);
     if (m_scoringTrigger.getAsBoolean()) {
       m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeAlgaeSpeed.get());
     } else {
@@ -495,13 +511,15 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripper.setCoralGripSpeed(0);
       m_gripper.setAlgaeGripSpeed(0.0);
     }
+    m_climber.setClimbSpeed(0);
   }
 
   private void scoreAlgaeHelper() {
+    m_climber.setClimbSpeed(0);
     m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeAlgaeSpeed.get());
     m_gripper.setCoralGripSpeed(0.0);
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
-      Gripper.m_hasAlgaeGrippedSim = false;
+      Gripper.hasAlgaeGrippedSim = false;
     }
   }
 
@@ -509,12 +527,23 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_basePivot.setTargetAngle(ArmPoses.ClimbPrep.getBasePivotAngle());
     m_gripperPivot.setTargetAngle(ArmPoses.ClimbPrep.getGripperPivotAngle());
     m_extender.setTargetLength(ArmPoses.ClimbPrep.getExtensionMeters());
+
+    if (!getArmValues().hasCage) {
+      m_climber.setClimbSpeed(ClimberConstants.IntakeCageSpeed.get());
+    } else {
+      m_climber.setClimbSpeed(0);
+    }
+
+    if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
+      Climber.hasCageGrippedSim = true;
+    }
   }
 
   private void postClimb() {
     m_basePivot.setTargetAngle(ArmPoses.Climb.getBasePivotAngle());
     m_gripperPivot.setTargetAngle(ArmPoses.Climb.getGripperPivotAngle());
     m_extender.setTargetLength(ArmPoses.Climb.getExtensionMeters());
+    m_climber.setClimbSpeed(0);
   }
 
   /**

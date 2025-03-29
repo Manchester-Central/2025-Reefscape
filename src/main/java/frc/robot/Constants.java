@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.pid.PIDValue;
@@ -23,6 +24,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Time;
 import frc.robot.subsystems.arm.ArmPose;
 import frc.robot.utils.SafetyUtil.GripperPivotSafety;
 import java.util.ArrayList;
@@ -341,6 +343,8 @@ public final class Constants {
       public static final Current AlgaeSupplyCurrentLimit = Amps.of(40);
       public static final Current CoralStatorCurrentLimit = Amps.of(60);
       public static final Current CoralSupplyCurrentLimit = Amps.of(60);
+      public static final Current CoralSupplyCurrentLowerLimit = Amps.of(100);
+      public static final Time CoralSupplyCurrentLowerTime = Seconds.of(0.5);
 
       // Outake Coral
       public static final DashboardNumber OutakeCoralSpeed = gripperSpeed(0.3, "OutakeCoralSpeed");
@@ -381,7 +385,11 @@ public final class Constants {
 
     public static final Current ClimbSupplyCurrentLimit = Amps.of(40); // TODO get real values
     public static final Current ClimbStatorCurrentLimit = Amps.of(40); // TODO get real values
+    public static final Current ClimbSupplyCurrentLowerLimit = Amps.of(100);
+    public static final Time ClimbSupplyCurrentLowerTime = Seconds.of(0.5);
     
+    // Climb Speeds
+    public static final DashboardNumber IntakeCageSpeed = new DashboardNumber("Climber/IntakeCageSpeed", -0.4, true, (newValue) -> {}); // TODO get real value
   }
 
   /** This contains constants for the field. */

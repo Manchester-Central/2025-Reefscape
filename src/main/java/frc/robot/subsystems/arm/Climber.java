@@ -5,10 +5,12 @@
 package frc.robot.subsystems.arm;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.chaos131.util.DashboardNumber;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import frc.robot.Constants.ArmConstants.GripperConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Robot;
@@ -22,7 +24,7 @@ import org.littletonrobotics.junction.Logger;
 public class Climber extends AbstractArmPart {
   private static boolean m_hasCageGripped = false;
 
-  private static boolean m_hasCageGrippedSim = false;
+  public static boolean hasCageGrippedSim = false;
 
   private ChaosTalonFx m_climbMotor = new ChaosTalonFx(CanIdentifiers.ClimberMotorCANID);
 
@@ -49,6 +51,8 @@ public class Climber extends AbstractArmPart {
     m_climbMotor.Configuration.CurrentLimits.StatorCurrentLimit = m_cageStatorCurrentLimit.get();
     m_climbMotor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_climbMotor.Configuration.CurrentLimits.SupplyCurrentLimit = m_cageSupplyCurrentLimit.get();
+    m_climbMotor.Configuration.CurrentLimits.SupplyCurrentLowerLimit = ClimberConstants.ClimbSupplyCurrentLowerLimit.in(Amps);
+    m_climbMotor.Configuration.CurrentLimits.SupplyCurrentLowerTime = ClimberConstants.ClimbSupplyCurrentLowerTime.in(Seconds);
     m_climbMotor.applyConfig();
   }
 
@@ -77,7 +81,7 @@ public class Climber extends AbstractArmPart {
   public void periodic() {
     super.periodic();
     boolean cageCurrentLimitReached = m_climbMotor.getStatorCurrent().getValue().gt(Amps.of(m_cageStatorCurrentLimit.get() - 0.1));
-    m_hasCageGripped = m_cageSensorDebouncer.calculate(Robot.isSimulation() ? m_hasCageGrippedSim : cageCurrentLimitReached);
+    m_hasCageGripped = m_cageSensorDebouncer.calculate(Robot.isSimulation() ? hasCageGrippedSim : cageCurrentLimitReached);
     Logger.recordOutput("Climber/HasCage", hasCage());
   }
 }

@@ -5,6 +5,7 @@
 package frc.robot.subsystems.arm;
 
 import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.chaos131.util.DashboardNumber;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -32,7 +33,7 @@ public class Gripper extends AbstractArmPart {
 
   private static boolean m_hasCoralGrippedBoth = false;
 
-  public static boolean m_hasAlgaeGrippedSim = false;
+  public static boolean hasAlgaeGrippedSim = false;
 
   private static boolean m_hasAlgaeGripped = false;
 
@@ -85,8 +86,8 @@ public class Gripper extends AbstractArmPart {
     m_coralMotor.Configuration.CurrentLimits.StatorCurrentLimit = m_coralStatorCurrentLimit.get();
     m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
     m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLimit = m_coralSupplyCurrentLimit.get();
-    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLowerLimit = 100.0;
-    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLowerTime = 0.5;
+    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLowerLimit = GripperConstants.CoralSupplyCurrentLowerLimit.in(Amps);
+    m_coralMotor.Configuration.CurrentLimits.SupplyCurrentLowerTime = GripperConstants.CoralSupplyCurrentLowerTime.in(Seconds);
     m_coralMotor.Configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     m_coralMotor.Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     m_coralMotor.applyConfig();
@@ -170,7 +171,7 @@ public class Gripper extends AbstractArmPart {
     m_hasCoralGrippedBack = m_coralSensorDebouncerBack.calculate(Robot.isSimulation() ? hasCoralGrippedSim : hasCoralBackNoDebounce());
     m_hasCoralGrippedBoth = m_hasCoralGrippedFront && m_hasCoralGrippedBack;
     boolean algaeCurrentLimitReached = m_algaeMotor.getStatorCurrent().getValue().gt(Amps.of(m_algaeStatorCurrentLimit.get() - 0.1));
-    m_hasAlgaeGripped = m_algaeSensorDebouncer.calculate(Robot.isSimulation() ? m_hasAlgaeGrippedSim : algaeCurrentLimitReached);
+    m_hasAlgaeGripped = m_algaeSensorDebouncer.calculate(Robot.isSimulation() ? hasAlgaeGrippedSim : algaeCurrentLimitReached);
     Logger.recordOutput("Gripper/HasCoral", hasCoral());
     Logger.recordOutput("Gripper/HasAlgae", hasAlgae());
     Logger.recordOutput("Gripper/CoralSensorFront", hasCoralFront());
