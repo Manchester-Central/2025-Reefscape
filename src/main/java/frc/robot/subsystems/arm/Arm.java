@@ -580,6 +580,13 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
         m_driver.getHID().setRumble(RumbleType.kBothRumble, 0);
         break;
     }
+
+    if (getCurrentState() == ArmState.PREP_CLIMB && !getArmValues().hasCage) {
+      m_operator.getHID().setRumble(RumbleType.kBothRumble, GeneralConstants.RumbleIntensity);
+    } else {
+      m_operator.getHID().setRumble(RumbleType.kBothRumble, 0);
+    }
+
     Logger.recordOutput("CurrentState", getCurrentState().name());
   }
 
