@@ -145,7 +145,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //m_Orchestra.addInstrument(m_idLift.getPivotMotor());
   }
 
-  public Command getPathPlannerChosser(){
+  public Command getPathPlannerChosser() {
     return getAutonomousCommand();
   }
 
