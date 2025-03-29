@@ -13,10 +13,11 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.WebServer;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -98,6 +99,7 @@ public class Robot extends ChaosRobot {
     Gripper.hasCoralGrippedSim = true;
     ((RobotContainer) m_robotContainer).setMotorCleanUp();
     super.robotInit(); 
+    WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
   }
 
   @Override
