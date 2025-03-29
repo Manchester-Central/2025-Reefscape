@@ -22,7 +22,7 @@ public class SimpleDriveToPositionV2 extends Command {
   /** Creates a new SimpleDriveToPosition. */
   public SimpleDriveToPositionV2(SwerveDrive swerveDrive, FieldPoint fieldPoint) {
     m_swerveDrive = swerveDrive;
-    m_poseSup = () -> fieldPoint.getBluePose();
+    m_poseSup = () -> fieldPoint.getCurrentAlliancePose();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrive);
   }
