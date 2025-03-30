@@ -127,8 +127,13 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("ScoreL2",  new ChangeState().setArm(ArmState.SCORE_L2).andThen(new WaitForState().forArmState(ArmState.STOW)));
     NamedCommands.registerCommand("ScoreL3",  new ChangeState().setArm(ArmState.SCORE_L3).andThen(new WaitForState().forArmState(ArmState.STOW)));
     NamedCommands.registerCommand("ScoreL4",  new ChangeState().setArm(ArmState.SCORE_L4).andThen(new WaitForState().forArmState(ArmState.STOW)));
+    NamedCommands.registerCommand("PrepL1",  new ChangeState().setArm(ArmState.PREP_L1));
+    NamedCommands.registerCommand("PrepL2",  new ChangeState().setArm(ArmState.PREP_L2));
+    NamedCommands.registerCommand("PrepL3",  new ChangeState().setArm(ArmState.PREP_L3));
+    NamedCommands.registerCommand("PrepL4",  new ChangeState().setArm(ArmState.PREP_L4));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForCoral(m_arm)));
     NamedCommands.registerCommand("IntakeFromFloor", new ChangeState().setArm(ArmState.INTAKE_CORAL_FROM_FLOOR).andThen(new WaitForCoral(m_arm)));
+    NamedCommands.registerCommand("HoldCoral", new ChangeState().setArm(ArmState.HOLD_CORAL));
     //JOHN SAVE US PLEASE: change hold coral to hold algae
     NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 0.5)
         .andThen(new RunCommand(() -> m_swerveDrive.moveRobotRelative(MetersPerSecond.of(1.75), MetersPerSecond.of(0.0), DegreesPerSecond.of(0)), m_swerveDrive)))
@@ -201,7 +206,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
       new DeferredCommand(() -> PathUtil.driveToPoseCommand(new FieldPoint("ClosestBargePoint",
         PathUtil.findClosestPointOnLine(m_swerveDrive, FieldPoint.CenterBarge, false)), m_swerveDrive), Set.of(m_swerveDrive))
         .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, () -> DriveDirection.Towards.getAllianceAngle(), 1.0))
-        .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE)));
+        .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE).withArmInterrupt(ArmState.STOW)));
     // m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
     // m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
     m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
