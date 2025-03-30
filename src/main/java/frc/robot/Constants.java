@@ -208,7 +208,7 @@ public final class Constants {
 
       // Climb Poses
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 15.9, 0.36, 0.0); // 39 or 38.8 also 47 might work for pivot angle
+      public static final ArmPose Climb = new ArmPose("Climb", 15.9, 0.36, 0.0); 
     }
 
     /** This contains constants for our Base Pivot. */
