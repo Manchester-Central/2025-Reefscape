@@ -17,16 +17,10 @@ import com.chaos131.vision.LimelightCamera.LimelightVersion;
 import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.Pigeon2;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -46,7 +40,6 @@ import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleAndAxisDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.ReefAlignment;
-import frc.robot.commands.SimpleDriveToPositionV2;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
 import frc.robot.commands.WaitForState;
@@ -152,13 +145,14 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //m_Orchestra.addInstrument(m_idLift.getPivotMotor());
   }
 
-  public Command getPathPlannerChosser(){
+  public Command getPathPlannerChosser() {
     return getAutonomousCommand();
   }
 
   public Field2d getField() {
     return m_swerveDrive.getField();
   }
+
   /**
    * .
    */
@@ -227,7 +221,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.rightBumper().or(m_driver.rightTrigger()).or(m_driver.leftTrigger()).whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
-    m_driver.rightBumper().and(m_isCoralMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedCoralState().PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
+    m_driver.rightBumper().and(m_isCoralMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedCoralState().PrepState).withArmInterrupt(ArmState.SCORE_SAFETY));
     m_driver.rightBumper().and(m_isAlgaeMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedAlgaeState().State).withArmInterrupt(ArmState.HOLD_ALGAE));
     // Right trigger just causes scoring from the prep states
 

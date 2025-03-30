@@ -12,29 +12,20 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.trajectory.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.arm.Gripper;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.LocalADStarAK;
-
-import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.utils.mathutils.GeometryConvertor;
-import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
 
 /**
@@ -143,8 +134,7 @@ public class Robot extends ChaosRobot {
           poses.addAll(path.getAllPathPoints().stream().map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d())).collect(Collectors.toList()));
         }
         getRobotContainer().getField().getObject("path").setPoses(poses);
-      }
-      else {
+      } else {
         getRobotContainer().getField().getObject("path").setPoses(new ArrayList<>());
       }
     }

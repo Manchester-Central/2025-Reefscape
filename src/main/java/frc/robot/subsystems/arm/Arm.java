@@ -96,7 +96,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     HOLD_CORAL,
     HOLD_ALGAE,
     PREP_CLIMB,
-    POST_CLIMB;
+    POST_CLIMB,
+    SCORE_SAFETY;
   }
 
   /** Creates a new Arm. */
@@ -184,6 +185,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
         break;
       case POST_CLIMB:
         postClimb();
+        break;
+      case SCORE_SAFETY:
+        scoreSafety();
         break;
     }
   }
@@ -476,7 +480,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
 
   private void scoreHelperCoral(ArmPose armPose, boolean isPrep, double outakeCoralSpeed, double outakeCoralOnAlgaeSpeed) {
     if (!m_gripper.hasCoral() && DriverStation.isAutonomous()) {
-      changeState(ArmState.STOW);
+      changeState(ArmState.SCORE_SAFETY);
       return;
     }
 
@@ -544,6 +548,19 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_gripperPivot.setTargetAngle(ArmPoses.Climb.getGripperPivotAngle());
     m_extender.setTargetLength(ArmPoses.Climb.getExtensionMeters());
     m_climber.setClimbSpeed(0);
+  }
+
+  private void scoreSafety() {
+    if (m_isPrepAngleReached && m_selectedCoralState == SelectedCoralState.L4) {
+      m_basePivot.setTargetAngle(ArmPoses.ScoreL4.getBasePivotSafetyAngle().get());
+      m_extender.setTargetLength(ArmPoses.ScoreL4.getExtensionMeters());
+      m_gripperPivot.setTargetAngle(ArmPoses.ScoreL4.getGripperPivotAngle());
+      if (getArmValues().isBasePivotAtCloseAngle) {
+        changeState(ArmState.STOW);
+      }
+    } else {
+      changeState(ArmState.STOW);
+    }
   }
 
   /**
