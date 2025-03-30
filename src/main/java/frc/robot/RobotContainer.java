@@ -221,7 +221,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.rightBumper().or(m_driver.rightTrigger()).or(m_driver.leftTrigger()).whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
-    m_driver.rightBumper().and(m_isCoralMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedCoralState().PrepState).withArmInterrupt(ArmState.HOLD_CORAL));
+    m_driver.rightBumper().and(m_isCoralMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedCoralState().PrepState).withArmInterrupt(ArmState.SCORE_SAFETY));
     m_driver.rightBumper().and(m_isAlgaeMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedAlgaeState().State).withArmInterrupt(ArmState.HOLD_ALGAE));
     // Right trigger just causes scoring from the prep states
 
