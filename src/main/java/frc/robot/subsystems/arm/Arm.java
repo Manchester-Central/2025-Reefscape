@@ -567,21 +567,25 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   @Override
   public void periodic() {
     super.periodic();
-    switch (getCurrentState()) {
-      case INTAKE_CORAL_FROM_FLOOR:
-      case INTAKE_ALGAE_FROM_FLOOR:
-      case ALGAE_HIGH:
-      case ALGAE_LOW:
-      case INTAKE_FROM_HP:
-        m_driver.getHID().setRumble(RumbleType.kBothRumble, GeneralConstants.RumbleIntensity);
-        break;
-    
-      default:
-        m_driver.getHID().setRumble(RumbleType.kBothRumble, 0);
-        break;
+    if (DriverStation.isTeleopEnabled()) {
+      switch (getCurrentState()) {
+        case INTAKE_CORAL_FROM_FLOOR:
+        case INTAKE_ALGAE_FROM_FLOOR:
+        case ALGAE_HIGH:
+        case ALGAE_LOW:
+        case INTAKE_FROM_HP:
+          m_driver.getHID().setRumble(RumbleType.kBothRumble, GeneralConstants.RumbleIntensity);
+          break;
+      
+        default:
+          m_driver.getHID().setRumble(RumbleType.kBothRumble, 0);
+          break;
+      }
+    } else {
+      m_driver.getHID().setRumble(RumbleType.kBothRumble, 0);
     }
 
-    if (getCurrentState() == ArmState.PREP_CLIMB && !getArmValues().hasCage) {
+    if (getCurrentState() == ArmState.PREP_CLIMB && !getArmValues().hasCage && DriverStation.isTeleopEnabled()) {
       m_operator.getHID().setRumble(RumbleType.kBothRumble, GeneralConstants.RumbleIntensity);
     } else {
       m_operator.getHID().setRumble(RumbleType.kBothRumble, 0);

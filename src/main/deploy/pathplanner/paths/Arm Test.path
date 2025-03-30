@@ -3,35 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.365,
-        "y": 2.2114999999999996
+        "x": 7.130985915492958,
+        "y": 1.927464788732393
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5467887664835995,
-        "y": 2.2940323041920245
+        "x": 5.63422131147541,
+        "y": 1.9091700819672122
       },
       "isLocked": false,
-      "linkedName": "M3"
+      "linkedName": "Red2"
     },
     {
       "anchor": {
-        "x": 3.0413352272727274,
-        "y": 3.8255681818181815
+        "x": 1.365,
+        "y": 2.2114999999999996
       },
       "prevControl": {
-        "x": 2.72684097032328,
-        "y": 3.6247002686689487
+        "x": 2.49935655737705,
+        "y": 2.1346987704918035
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "6R"
+      "linkedName": "M3"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeFromFloor",
+      "waypointRelativePos": 0.2014888337468851,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeFromFloor"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 3.5,
@@ -41,14 +53,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.5,
-    "rotation": 0.0
-  },
-  "reversed": false,
-  "folder": "from M3",
-  "idealStartingState": {
     "velocity": 0,
     "rotation": -177.91743472026909
+  },
+  "reversed": false,
+  "folder": "Test",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 141.41084002023248
   },
   "useDefaultConstraints": true
 }

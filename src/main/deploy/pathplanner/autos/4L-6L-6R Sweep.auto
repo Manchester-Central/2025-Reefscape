@@ -7,7 +7,34 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right1-Sweep-4L"
+            "pathName": "Arm Test"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Test",
+  "choreoAuto": false
+}: "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "4L-M2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M2-6L"
           }
         },
         {
@@ -25,25 +52,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6R-LHPF"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AimHP"
+            "pathName": "6L-M3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LHPF-6L"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "M3-6R"
           }
         },
         {
@@ -56,18 +71,6 @@
           "type": "named",
           "data": {
             "name": "ScoreL4"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "6L-LHPF"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AimHP"
           }
         }
       ]
