@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left1-Reef10R"
+            "pathName": "Left1 -sweep-8R"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "GoToReef8L"
+            "name": "AimReef"
           }
         },
         {
@@ -25,19 +25,43 @@
         {
           "type": "path",
           "data": {
-            "pathName": "10R-RHPC"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeFromHP"
+            "pathName": "8R-M2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RHPC-4R"
+            "pathName": "M2L-6R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "6R-M1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M1-6L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
           }
         },
         {
@@ -50,6 +74,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Left1",
   "choreoAuto": false
 }

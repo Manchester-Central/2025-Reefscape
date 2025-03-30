@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right1-Sweep-4L"
+            "pathName": "Right2-2R"
           }
         },
         {
@@ -25,25 +25,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6R-LHPF"
+            "pathName": "2R-M3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AimHP"
+            "name": "HoldCoral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LHPF-6L"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "M3-6R"
           }
         },
         {
@@ -61,19 +55,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6L-LHPF"
+            "pathName": "6R-M2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AimHP"
+            "name": "HoldCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M2-6L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Right1",
+  "folder": "Right2",
   "choreoAuto": false
 }

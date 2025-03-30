@@ -25,25 +25,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6R-LHPF"
+            "pathName": "4L-M2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AimHP"
+            "name": "HoldCoral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LHPF-6L"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "M2-6L"
           }
         },
         {
@@ -61,13 +55,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6L-LHPF"
+            "pathName": "6L-M3"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AimHP"
+            "name": "HoldCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M3C-6R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL2"
           }
         }
       ]

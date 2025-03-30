@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.93475,
-        "y": 3.8202499999999993
+        "x": 3.588,
+        "y": 2.8939999999999997
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5509898776836555,
-        "y": 4.228065123377252
+        "x": 3.4417500000000003,
+        "y": 2.2407499999999994
       },
       "isLocked": false,
-      "linkedName": "6R"
+      "linkedName": "4L"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 4.0249999999999995
       },
       "prevControl": {
-        "x": 2.0865,
-        "y": 3.9957499999999997
+        "x": 2.15475,
+        "y": 3.4497499999999994
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,18 +30,18 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5435684647302904,
-      "rotationDegrees": -179.8517449443798
+      "waypointRelativePos": 0.5286307053942008,
+      "rotationDegrees": 145.0479853489181
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6263027295285392,
+      "minWaypointRelativePos": 0.7473945409429316,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.75,
-        "maxAcceleration": 3.5,
+        "maxVelocity": 0.5,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 680.0,
         "maxAngularAcceleration": 540.0,
         "nominalVoltage": 12.0,
@@ -79,7 +79,7 @@
   "folder": "to M2",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 60.113473059575966
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
