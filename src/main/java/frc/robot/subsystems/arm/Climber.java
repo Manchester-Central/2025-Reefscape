@@ -10,7 +10,6 @@ import static edu.wpi.first.units.Units.Seconds;
 import com.chaos131.util.DashboardNumber;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import frc.robot.Constants.ArmConstants.GripperConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Robot;

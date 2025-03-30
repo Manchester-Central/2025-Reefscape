@@ -331,7 +331,7 @@ public class SwerveDrive extends BaseSwerveDrive {
     return super.getGyroRotation();
   }
 
-  public Field2d getField(){
+  public Field2d getField() {
     return m_field;
   }
 
