@@ -417,7 +417,8 @@ public final class Constants {
     public static final Distance Reef3 = Meters.of(1.8287);
     // Value taken from field cad
     public static final Distance Barge = Meters.of(1.0);
-    // Distance between center of robot + safety +center of reef
+    public static final Distance CoralWidth = Inches.of(4.5); 
+    // Distance between center of robot + safety +center of reef 
     public static final Distance ReefScoringDistanceThreshold = Meters.of((RobotDimensions.FrontBackLength.in(Meters) / 2) + 0.912493).plus(Inches.of(13)); 
   }
 
@@ -430,7 +431,7 @@ public final class Constants {
     // Buffer space to use between the end effector and an interaction point
     public static final Distance CoralPlacementMargin = Meters.of(0.03);
     // Robot length buffer
-    public static final double RobotToReefMargin = 0.015; // This is in meters
+    public static final Distance RobotToReefMargin = Meters.of(0.015).plus(FieldDimensions.CoralWidth); // silly :3
     public static final double WristToCoralIntakeAxle = 0.169627; // -0.209097 down, but who cares?
     public static final Angle AlgaeBarAngle = Degrees.of(117.160050);
     // Distance from the robot origin to the axle for the Base Pivot
