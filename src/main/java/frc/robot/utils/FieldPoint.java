@@ -129,11 +129,11 @@ public class FieldPoint {
     return reefDrivePoses;
   }
 
-  private static FieldPoint getDrivePoseFromReefFace(Pose2d aprilTagPose, boolean isLeft) {
+  private static FieldPoint getDrivePoseFromReefFace(Pose2d aprilTagPose, boolean isRight) {
     Pose2d pose = aprilTagPose.transformBy(
         new Transform2d(
             RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
-            isLeft ? FieldDimensions.ReefBranchLeft.getY() : FieldDimensions.ReefBranchRight.getY(),
+            isRight ? FieldDimensions.ReefBranchRight.getY() : FieldDimensions.ReefBranchLeft.getY(),
             Rotation2d.fromDegrees(180)));
     return new FieldPoint("ReefDrivePose", pose);
   }
@@ -145,9 +145,9 @@ public class FieldPoint {
   public static Pose2d getNearestReefDrivePose(SwerveDrive swerveDrive, double stickBias) {
     ArrayList<FieldPoint> reefDrivePoses = new ArrayList<FieldPoint>();
     FieldPoint aprilTag = getNearestPoint(swerveDrive.getPose(), getReefAprilTagPoses());
-    FieldPoint leftPose = getDrivePoseFromReefFace(aprilTag.getBluePose(), true);
+    FieldPoint leftPose = getDrivePoseFromReefFace(aprilTag.getBluePose(), false);
     reefDrivePoses.add(leftPose);
-    FieldPoint rightPose = getDrivePoseFromReefFace(aprilTag.getBluePose(), false);
+    FieldPoint rightPose = getDrivePoseFromReefFace(aprilTag.getBluePose(), true);
     reefDrivePoses.add(rightPose);
     if (stickBias < -0.1) {
       return aprilTag.m_bluePose.getRotation().getMeasure().isNear(Degrees.of(180), Degrees.of(90)) ? leftPose.getCurrentAlliancePose() : rightPose.getCurrentAlliancePose();
