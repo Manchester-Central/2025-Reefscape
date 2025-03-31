@@ -495,7 +495,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_basePivot.setTargetAngle(armPose.getBasePivotSafetyAngle().get());
       m_extender.setTargetLength(armPose.getExtensionMeters());
       m_gripperPivot.setTargetAngle(armPose.getGripperPivotAngle());
-      m_isPrepAngleReached = isPoseClose();
+      m_isPrepAngleReached = isPoseClose() || (Robot.isSimulation() && getElapsedStateSeconds() > 1.0);
       return;
     }
 
@@ -555,7 +555,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_basePivot.setTargetAngle(ArmPoses.ScoreL4.getBasePivotSafetyAngle().get());
       m_extender.setTargetLength(ArmPoses.ScoreL4.getExtensionMeters());
       m_gripperPivot.setTargetAngle(ArmPoses.ScoreL4.getGripperPivotAngle());
-      if (getArmValues().isBasePivotAtCloseAngle) {
+      if (getArmValues().isBasePivotAtCloseAngle || (Robot.isSimulation() && getElapsedStateSeconds() > 1.0)) {
         changeState(ArmState.STOW);
       }
     } else {

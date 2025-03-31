@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.chaos131.robot.ChaosRobot.Mode;
@@ -38,6 +39,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.SwerveConstants.SwerveBackLeftConstants;
@@ -45,6 +47,7 @@ import frc.robot.Constants.SwerveConstants.SwerveBackRightConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontLeftConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontRightConstants;
 import frc.robot.Robot;
+import frc.robot.utils.FieldPoint;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
@@ -351,6 +354,9 @@ public class SwerveDrive extends BaseSwerveDrive {
     Rotation2d currentAngle = getPose().getTranslation().minus(targetPosition).getAngle();
     Logger.recordOutput("at target dynamic", atTargetDynamic());
     Logger.recordOutput("Command", getCurrentCommand() != null ? getCurrentCommand().getName() : "");
+
+    Logger.recordOutput("ReefScoringDistanceThresholdIsMet", FieldPoint.ReefCenter.getDistance(getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold));
+    Logger.recordOutput("ReefCenterDistanceMeters", FieldPoint.ReefCenter.getDistance(getPose()));
     m_swerveAngles.addLast(currentAngle);
   }
 

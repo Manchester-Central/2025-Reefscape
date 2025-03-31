@@ -19,6 +19,7 @@ import edu.wpi.first.net.WebServer;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.arm.Gripper;
 import frc.robot.utils.FieldPoint;
 import frc.robot.utils.LocalADStarAK;
@@ -33,7 +34,7 @@ import org.littletonrobotics.junction.Logger;
  * the TimedRobot documentation. If you change the name of this class or the package after creating
  * this project, you must also update the Main.java file in the project.
  */
-public class Robot extends ChaosRobot {
+public class Robot extends ChaosRobot<SwerveDrive, RobotContainer> {
 
   public String m_autoName = "";
   public String m_newAutoName = "";
@@ -80,7 +81,7 @@ public class Robot extends ChaosRobot {
   public void robotPeriodic() {
     super.robotPeriodic();
     DashboardNumber.checkAll();
-    ((RobotContainer) m_robotContainer).setSwerveDriveAcceptingVisionUpdates(isDisabled() ? true : SwerveConstants.AcceptVisionUpdates);
+    m_robotContainer.setSwerveDriveAcceptingVisionUpdates(isDisabled() ? true : SwerveConstants.AcceptVisionUpdates);
   }
 
   @Override
@@ -88,27 +89,27 @@ public class Robot extends ChaosRobot {
     Pathfinding.setPathfinder(new LocalADStarAK());
     PathfindingCommand.warmupCommand().schedule();
     Gripper.hasCoralGrippedSim = true;
-    ((RobotContainer) m_robotContainer).setMotorCleanUp();
+    m_robotContainer.setMotorCleanUp();
     super.robotInit(); 
     WebServer.start(5800, Filesystem.getDeployDirectory().getPath());
   }
 
   @Override
   public void disabledCleanup() {
-    ((RobotContainer) m_robotContainer).setMotorCleanUp();
+    m_robotContainer.setMotorCleanUp();
   }
 
   @Override
   public void teleopInit() {
-    ((RobotContainer) m_robotContainer).setMotorStartUp();
-    ((RobotContainer) m_robotContainer).autoAndTeleInit();
+    m_robotContainer.setMotorStartUp();
+    m_robotContainer.autoAndTeleInit();
     super.teleopInit();
   }
 
   @Override
   public void autonomousInit() {
-    ((RobotContainer) m_robotContainer).setMotorStartUp();
-    ((RobotContainer) m_robotContainer).autoAndTeleInit();
+    m_robotContainer.setMotorStartUp();
+    m_robotContainer.autoAndTeleInit();
     Gripper.hasCoralGrippedSim = true;
     super.autonomousInit();
   }
@@ -133,15 +134,11 @@ public class Robot extends ChaosRobot {
         for (PathPlannerPath path : pathPlannerPaths) {
           poses.addAll(path.getAllPathPoints().stream().map(point -> new Pose2d(point.position.getX(), point.position.getY(), new Rotation2d())).collect(Collectors.toList()));
         }
-        getRobotContainer().getField().getObject("path").setPoses(poses);
+        m_robotContainer.getField().getObject("path").setPoses(poses);
       } else {
-        getRobotContainer().getField().getObject("path").setPoses(new ArrayList<>());
+        m_robotContainer.getField().getObject("path").setPoses(new ArrayList<>());
       }
     }
 
-  }
-
-  public RobotContainer getRobotContainer() {
-    return (RobotContainer) m_robotContainer;
   }
 }

@@ -70,12 +70,23 @@ public class PathUtil {
           }
           FieldPoint nearestPoint = FieldPoint.getNearestPoint(swerveDrive.getPose(), possibleTargets);
           Logger.recordOutput("Swerve/Nearest Point", nearestPoint.getCurrentAlliancePose());
-          Command simpleDriveToPosition = new SimpleDriveToPositionV2(swerveDrive, nearestPoint);
-          if (DriverStation.isAutonomousEnabled()) {
-            simpleDriveToPosition = simpleDriveToPosition.withTimeout(timeOutSeconds);
-          }
+          Command simpleDriveToPosition = new SimpleDriveToPositionV2(swerveDrive, nearestPoint).withTimeout(timeOutSeconds);
           return AutoBuilder.pathfindToPose(
               swerveDrive.getPose().nearest(possiblePoses), constraints, 0.0).andThen(simpleDriveToPosition);
+        },
+        Set.of(swerveDrive));
+  }
+
+  /**
+   * Drives to the target FieldPoint on the field (respective of the current alliance).
+   */
+  public static Command driveToClosestPointAutoCommand(FieldPoint target, SwerveDrive swerveDrive, double timeOutSeconds) {
+    return new DeferredCommand(
+        () -> {
+          Logger.recordOutput("Swerve/Nearest Point", target.getCurrentAlliancePose());
+          Command simpleDriveToPosition = new SimpleDriveToPositionV2(swerveDrive, target).withTimeout(timeOutSeconds);
+          return AutoBuilder.pathfindToPose(
+            target.getCurrentAlliancePose(), constraints, 0.0).andThen(simpleDriveToPosition);
         },
         Set.of(swerveDrive));
   }

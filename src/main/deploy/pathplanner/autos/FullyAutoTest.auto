@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right3-2L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-2L-L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimHP"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6R-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimHP"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6L-L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Test",
+  "choreoAuto": false
+}
