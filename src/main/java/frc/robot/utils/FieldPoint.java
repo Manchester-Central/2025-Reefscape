@@ -77,20 +77,19 @@ public class FieldPoint {
     return new FieldPoint(newName, new Pose2d(x, y, Rotation2d.kZero));
   }
 
-  // TODO: evaluate L/R matches driver's perspective
   public static Map<String, FieldPoint> ReefClockPoses = Map.ofEntries(
-      Map.entry("2L", getDrivePoseFromReefFace(ReefPose2.getBluePose(), false)),
-      Map.entry("2R", getDrivePoseFromReefFace(ReefPose2.getBluePose(), true)),
+      Map.entry("2L", getDrivePoseFromReefFace(ReefPose2.getBluePose(), true)),
+      Map.entry("2R", getDrivePoseFromReefFace(ReefPose2.getBluePose(), false)),
       Map.entry("4L", getDrivePoseFromReefFace(ReefPose4.getBluePose(), false)),
       Map.entry("4R", getDrivePoseFromReefFace(ReefPose4.getBluePose(), true)),
       Map.entry("6L", getDrivePoseFromReefFace(ReefPose6.getBluePose(), false)),
       Map.entry("6R", getDrivePoseFromReefFace(ReefPose6.getBluePose(), true)),
       Map.entry("8L", getDrivePoseFromReefFace(ReefPose8.getBluePose(), false)),
       Map.entry("8R", getDrivePoseFromReefFace(ReefPose8.getBluePose(), true)),
-      Map.entry("10L", getDrivePoseFromReefFace(ReefPose10.getBluePose(), false)),
-      Map.entry("10R", getDrivePoseFromReefFace(ReefPose10.getBluePose(), true)),
-      Map.entry("12L", getDrivePoseFromReefFace(ReefPose12.getBluePose(), false)),
-      Map.entry("12R", getDrivePoseFromReefFace(ReefPose12.getBluePose(), true))
+      Map.entry("10L", getDrivePoseFromReefFace(ReefPose10.getBluePose(), true)),
+      Map.entry("10R", getDrivePoseFromReefFace(ReefPose10.getBluePose(), false)),
+      Map.entry("12L", getDrivePoseFromReefFace(ReefPose12.getBluePose(), true)),
+      Map.entry("12R", getDrivePoseFromReefFace(ReefPose12.getBluePose(), false))
   );
 
   /**
