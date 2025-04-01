@@ -48,6 +48,16 @@ public class ChaosTalonFx extends TalonFX {
   }
 
   /**
+   * Creates the new TalonFX wrapper WITHOUT simulation support.
+   */
+  public ChaosTalonFx(int canId, String canBus) {
+    super(canId, canBus);
+    this.m_gearRatio = 0.0;
+    m_motorSimModel = null;
+    m_isMainSimMotor = false;
+  }
+
+  /**
    * Adds physical simulation support. 
    */
   public void attachMotorSim(DCMotorSim dcMotorSim, double gearRatio, ChassisReference simDirection, boolean isMainSimMotor) {

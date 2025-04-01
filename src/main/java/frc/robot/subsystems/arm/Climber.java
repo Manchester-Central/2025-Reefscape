@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Seconds;
 
 import com.chaos131.util.DashboardNumber;
+import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import frc.robot.Constants.CanIdentifiers;
@@ -25,12 +26,11 @@ public class Climber extends AbstractArmPart {
 
   public static boolean hasCageGrippedSim = false;
 
-  private ChaosTalonFx m_climbMotor = new ChaosTalonFx(CanIdentifiers.ClimberMotorCANID);
+  private ChaosTalonFx m_climbMotor = new ChaosTalonFx(CanIdentifiers.ClimberMotorCANID, CanIdentifiers.RioCANBus);
 
   private Debouncer m_cageSensorDebouncer = new Debouncer(ClimberConstants.CageDropDebounceSeconds, DebounceType.kBoth);
 
   private ChaosTalonFxTuner m_cageTuner = new ChaosTalonFxTuner("Climber", m_climbMotor);
-
 
   // Current limits
   private DashboardNumber m_cageSupplyCurrentLimit = m_cageTuner.tunable(
@@ -52,6 +52,7 @@ public class Climber extends AbstractArmPart {
     m_climbMotor.Configuration.CurrentLimits.SupplyCurrentLimit = m_cageSupplyCurrentLimit.get();
     m_climbMotor.Configuration.CurrentLimits.SupplyCurrentLowerLimit = ClimberConstants.ClimbSupplyCurrentLowerLimit.in(Amps);
     m_climbMotor.Configuration.CurrentLimits.SupplyCurrentLowerTime = ClimberConstants.ClimbSupplyCurrentLowerTime.in(Seconds);
+    m_climbMotor.Configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     m_climbMotor.applyConfig();
   }
 

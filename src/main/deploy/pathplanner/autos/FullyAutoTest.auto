@@ -13,37 +13,103 @@
         {
           "type": "named",
           "data": {
+            "name": "AimReef-2L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-2R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-4R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-4L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-8R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-8L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "AimReef-2L-L4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ScoreL4"
+            "name": "AimReef-2R-L4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AimHP"
+            "name": "AimReef-4R-L4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AimReef-6R-L2"
+            "name": "AimReef-4L-L4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ScoreL2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AimHP"
+            "name": "AimReef-6R-L4"
           }
         },
         {
@@ -55,7 +121,253 @@
         {
           "type": "named",
           "data": {
-            "name": "ScoreL4"
+            "name": "AimReef-8R-L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-8L-L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10L-L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10R-L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12L-L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12R-L4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-2L-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-2R-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-4R-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-4L-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6R-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6L-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-8R-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-8L-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10L-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10R-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12L-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12R-L3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-2L-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-2R-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-4R-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-4L-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6R-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6L-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-8R-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-8L-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10L-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10R-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12L-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12R-L2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-2L-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-2R-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-4R-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-4L-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6R-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-6L-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-8R-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-8L-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10L-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-10R-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12L-L1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef-12R-L1"
           }
         }
       ]
