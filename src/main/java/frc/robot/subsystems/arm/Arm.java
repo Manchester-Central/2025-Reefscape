@@ -257,8 +257,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeCoralOnAlgaeMotorSpeed.get());
     } else {
       m_gripper.setCoralGripSpeed(0.0);
-      m_gripper.setAlgaeGripSpeed(0.0); // TODO: re-enable to help hold algae?
-      // m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed); // TODO add back
+      m_gripper.setAlgaeGripSpeed(GripperConstants.HoldAlgaeSpeed.get());
     }
     m_climber.setClimbSpeed(0);
   }
