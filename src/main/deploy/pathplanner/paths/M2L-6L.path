@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4903169014084494,
-        "y": 5.839084507042253
+        "x": 1.443,
+        "y": 4.24925
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.917442745459961,
-        "y": 5.834028447580099
+        "x": 1.6908689900751728,
+        "y": 4.216677561357584
       },
       "isLocked": false,
-      "linkedName": "M1"
+      "linkedName": "M2L"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 4.24925
       },
       "prevControl": {
-        "x": 2.1866825824100404,
-        "y": 4.66045474768536
+        "x": 1.6890271636658563,
+        "y": 3.8897120335485478
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,14 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "PrepL4",
+      "waypointRelativePos": 0.8865671641791041,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 3.5,
@@ -41,14 +48,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.5,
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "From M1",
+  "folder": "from M2",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 178.81881108667332
+    "rotation": -138.9909130984298
   },
   "useDefaultConstraints": true
 }

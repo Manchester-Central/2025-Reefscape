@@ -1,0 +1,91 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left2-10L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "10L-M1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HoldCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M1-8L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "8L-M2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "HoldCoral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "M2L-6L"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimReef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": false,
+  "folder": "Left2",
+  "choreoAuto": false
+}
