@@ -390,7 +390,7 @@ public final class Constants {
     public static final Time ClimbSupplyCurrentLowerTime = Seconds.of(0.5);
     
     // Climb Speeds
-    public static final DashboardNumber IntakeCageSpeed = new DashboardNumber("Climber/IntakeCageSpeed", -0.4, true, (newValue) -> {}); // TODO get real value
+    public static final DashboardNumber IntakeCageSpeed = new DashboardNumber("Climber/IntakeCageSpeed", -1, true, (newValue) -> {}); // TODO get real value
   }
 
   /** This contains constants for the field. */
