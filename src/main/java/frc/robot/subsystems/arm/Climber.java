@@ -25,12 +25,11 @@ public class Climber extends AbstractArmPart {
 
   public static boolean hasCageGrippedSim = false;
 
-  private ChaosTalonFx m_climbMotor = new ChaosTalonFx(CanIdentifiers.ClimberMotorCANID);
+  private ChaosTalonFx m_climbMotor = new ChaosTalonFx(CanIdentifiers.ClimberMotorCANID, CanIdentifiers.RioCANBus);
 
   private Debouncer m_cageSensorDebouncer = new Debouncer(ClimberConstants.CageDropDebounceSeconds, DebounceType.kBoth);
 
   private ChaosTalonFxTuner m_cageTuner = new ChaosTalonFxTuner("Climber", m_climbMotor);
-
 
   // Current limits
   private DashboardNumber m_cageSupplyCurrentLimit = m_cageTuner.tunable(

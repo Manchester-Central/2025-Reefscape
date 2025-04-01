@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.chaos131.robot.ChaosRobot.Mode;
@@ -352,12 +351,12 @@ public class SwerveDrive extends BaseSwerveDrive {
     m_pastPoses.addSample(Timer.getFPGATimestamp(), getPose());
     Translation2d targetPosition = new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint());
     Rotation2d currentAngle = getPose().getTranslation().minus(targetPosition).getAngle();
+    m_swerveAngles.addLast(currentAngle);
     Logger.recordOutput("at target dynamic", atTargetDynamic());
     Logger.recordOutput("Command", getCurrentCommand() != null ? getCurrentCommand().getName() : "");
 
     Logger.recordOutput("ReefScoringDistanceThresholdIsMet", FieldPoint.ReefCenter.getDistance(getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold));
     Logger.recordOutput("ReefCenterDistanceMeters", FieldPoint.ReefCenter.getDistance(getPose()));
-    m_swerveAngles.addLast(currentAngle);
   }
 
   /**

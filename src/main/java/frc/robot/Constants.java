@@ -53,6 +53,7 @@ public final class Constants {
   /** This contains all of our constants for CAN IDs and Can Bus Names. */
   public static class CanIdentifiers {
     public static final String CTRECANBus = "CTRE bus";
+    public static final String RioCANBus = "rio";
 
     // Swerve (30s & 40s)
     public static final int FLSpeedCANID = 30;
