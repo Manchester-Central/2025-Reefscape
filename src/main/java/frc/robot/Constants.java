@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -234,6 +235,8 @@ public final class Constants {
       public static final double MMCruiseVelocityHigh = 0.3;
       public static final double MMAccelerationHigh = 0.25;
       public static final double MMJerkHigh = 100;
+
+      public static final LinearVelocity MMClimbCruiseVelocity = MetersPerSecond.of(0.15);
 
       public static final double SupplyCurrentLimit = 50;
       public static final double StatorCurrentLimit = 50; // TODO: up when climbing

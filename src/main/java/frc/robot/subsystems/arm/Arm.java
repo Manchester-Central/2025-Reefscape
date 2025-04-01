@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.ArmPoses;
+import frc.robot.Constants.ArmConstants.BasePivotConstants;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
 import frc.robot.Constants.ArmConstants.GripperConstants;
 import frc.robot.Constants.ClimberConstants;
@@ -545,7 +546,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void postClimb() {
-    m_basePivot.setTargetAngle(ArmPoses.Climb.getBasePivotAngle());
+    m_basePivot.setTargetAngle(ArmPoses.Climb.getBasePivotAngle(), BasePivotConstants.MMClimbCruiseVelocity);
     m_gripperPivot.setTargetAngle(ArmPoses.Climb.getGripperPivotAngle());
     m_extender.setTargetLength(ArmPoses.Climb.getExtensionMeters());
     m_climber.setClimbSpeed(0);
