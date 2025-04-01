@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.GeneralConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.SwerveConstants.SwerveBackLeftConstants;
@@ -45,6 +46,7 @@ import frc.robot.Constants.SwerveConstants.SwerveBackRightConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontLeftConstants;
 import frc.robot.Constants.SwerveConstants.SwerveFrontRightConstants;
 import frc.robot.Robot;
+import frc.robot.utils.FieldPoint;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
@@ -349,9 +351,12 @@ public class SwerveDrive extends BaseSwerveDrive {
     m_pastPoses.addSample(Timer.getFPGATimestamp(), getPose());
     Translation2d targetPosition = new Translation2d(m_XPid.getSetpoint(), m_YPid.getSetpoint());
     Rotation2d currentAngle = getPose().getTranslation().minus(targetPosition).getAngle();
+    m_swerveAngles.addLast(currentAngle);
     Logger.recordOutput("at target dynamic", atTargetDynamic());
     Logger.recordOutput("Command", getCurrentCommand() != null ? getCurrentCommand().getName() : "");
-    m_swerveAngles.addLast(currentAngle);
+
+    Logger.recordOutput("ReefScoringDistanceThresholdIsMet", FieldPoint.ReefCenter.getDistance(getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold));
+    Logger.recordOutput("ReefCenterDistanceMeters", FieldPoint.ReefCenter.getDistance(getPose()));
   }
 
   /**

@@ -17,6 +17,7 @@ import frc.robot.Constants.RobotDimensions;
 import frc.robot.subsystems.SwerveDrive;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A class to help managing positions on the field (for either alliance color).
@@ -64,7 +65,32 @@ public class FieldPoint {
   public static final FieldPoint ReefPose8 = new FieldPoint("reefPose8", aprilTagMap.get(19).pose2d);
   public static final FieldPoint ReefPose10 = new FieldPoint("reefPose10", aprilTagMap.get(20).pose2d);
   public static final FieldPoint ReefPose12 = new FieldPoint("reefPose12", aprilTagMap.get(21).pose2d);
-  public static final FieldPoint ReefCenter = new FieldPoint("reefCenter", ReefPose2.getBluePose().interpolate(ReefPose8.getBluePose(), 0.5));
+  // public static final FieldPoint ReefCenter = new FieldPoint("reefCenter", ReefPose2.getBluePose().interpolate(ReefPose8.getBluePose().rotateBy(Rotation2d.fromDegrees(180)), 0.5));
+  public static final FieldPoint ReefCenter = getMidPoint("reefCenter", ReefPose2, ReefPose8);
+
+  /**
+   * Creates a FieldPoint between two FieldPoints (ignores angles).
+   */
+  public static final FieldPoint getMidPoint(String newName, FieldPoint pointA, FieldPoint pointB) {
+    var x = (pointA.getBluePose().getX() + pointB.getBluePose().getX()) / 2.0;
+    var y = (pointA.getBluePose().getY() + pointB.getBluePose().getY()) / 2.0;
+    return new FieldPoint(newName, new Pose2d(x, y, Rotation2d.kZero));
+  }
+
+  public static Map<String, FieldPoint> ReefClockPoses = Map.ofEntries(
+      Map.entry("2L", getDrivePoseFromReefFace(ReefPose2.getBluePose(), true)),
+      Map.entry("2R", getDrivePoseFromReefFace(ReefPose2.getBluePose(), false)),
+      Map.entry("4L", getDrivePoseFromReefFace(ReefPose4.getBluePose(), false)),
+      Map.entry("4R", getDrivePoseFromReefFace(ReefPose4.getBluePose(), true)),
+      Map.entry("6L", getDrivePoseFromReefFace(ReefPose6.getBluePose(), false)),
+      Map.entry("6R", getDrivePoseFromReefFace(ReefPose6.getBluePose(), true)),
+      Map.entry("8L", getDrivePoseFromReefFace(ReefPose8.getBluePose(), false)),
+      Map.entry("8R", getDrivePoseFromReefFace(ReefPose8.getBluePose(), true)),
+      Map.entry("10L", getDrivePoseFromReefFace(ReefPose10.getBluePose(), true)),
+      Map.entry("10R", getDrivePoseFromReefFace(ReefPose10.getBluePose(), false)),
+      Map.entry("12L", getDrivePoseFromReefFace(ReefPose12.getBluePose(), true)),
+      Map.entry("12R", getDrivePoseFromReefFace(ReefPose12.getBluePose(), false))
+  );
 
   /**
    * Gets the april tabs for the blue reef.
@@ -97,20 +123,19 @@ public class FieldPoint {
   public static ArrayList<FieldPoint> getReefDrivePoses() {
     ArrayList<FieldPoint> reefDrivePoses = new ArrayList<FieldPoint>();
     for (AprilTag aprilTag : blueReefAprilTags()) {
-      Pose2d leftPose = aprilTag.pose2d.transformBy(
-          new Transform2d(
-              RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
-              FieldDimensions.ReefBranchLeft.getY(),
-              Rotation2d.fromDegrees(180)));
-      reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefLeft", leftPose));
-      Pose2d rightPose = aprilTag.pose2d.transformBy(
-          new Transform2d(
-              RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
-              FieldDimensions.ReefBranchRight.getY(),
-              Rotation2d.fromDegrees(180)));
-      reefDrivePoses.add(new FieldPoint(aprilTag.id + " ReefRight", rightPose));
+      reefDrivePoses.add(getDrivePoseFromReefFace(aprilTag.pose2d, true));
+      reefDrivePoses.add(getDrivePoseFromReefFace(aprilTag.pose2d, false));
     }
     return reefDrivePoses;
+  }
+
+  private static FieldPoint getDrivePoseFromReefFace(Pose2d aprilTagPose, boolean isRight) {
+    Pose2d pose = aprilTagPose.transformBy(
+        new Transform2d(
+            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin.in(Meters),
+            isRight ? FieldDimensions.ReefBranchRight.getY() : FieldDimensions.ReefBranchLeft.getY(),
+            Rotation2d.fromDegrees(180)));
+    return new FieldPoint("ReefDrivePose", pose);
   }
 
   /**
@@ -120,17 +145,9 @@ public class FieldPoint {
   public static Pose2d getNearestReefDrivePose(SwerveDrive swerveDrive, double stickBias) {
     ArrayList<FieldPoint> reefDrivePoses = new ArrayList<FieldPoint>();
     FieldPoint aprilTag = getNearestPoint(swerveDrive.getPose(), getReefAprilTagPoses());
-    FieldPoint leftPose = new FieldPoint("ReefLeft", aprilTag.getBluePose().transformBy(
-        new Transform2d(
-            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
-            FieldDimensions.ReefBranchLeft.getY(),
-            Rotation2d.fromDegrees(180))));
+    FieldPoint leftPose = getDrivePoseFromReefFace(aprilTag.getBluePose(), false);
     reefDrivePoses.add(leftPose);
-    FieldPoint rightPose = new FieldPoint("ReefLeft", aprilTag.getBluePose().transformBy(
-        new Transform2d(
-            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
-            FieldDimensions.ReefBranchRight.getY(),
-            Rotation2d.fromDegrees(180))));
+    FieldPoint rightPose = getDrivePoseFromReefFace(aprilTag.getBluePose(), true);
     reefDrivePoses.add(rightPose);
     if (stickBias < -0.1) {
       return aprilTag.m_bluePose.getRotation().getMeasure().isNear(Degrees.of(180), Degrees.of(90)) ? leftPose.getCurrentAlliancePose() : rightPose.getCurrentAlliancePose();
@@ -150,7 +167,7 @@ public class FieldPoint {
     for (AprilTag aprilTag : blueReefAprilTags()) {
       Pose2d centerPose = aprilTag.pose2d.transformBy(
           new Transform2d(
-              RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin,
+              RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin.in(Meters),
               FieldDimensions.ReefCenterBranch.getY(),
               Rotation2d.fromDegrees(180)));
       reefCenterDrivePose.add(new FieldPoint(aprilTag.id + " ReefCenter", centerPose));

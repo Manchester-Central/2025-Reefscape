@@ -53,6 +53,7 @@ public final class Constants {
   /** This contains all of our constants for CAN IDs and Can Bus Names. */
   public static class CanIdentifiers {
     public static final String CTRECANBus = "CTRE bus";
+    public static final String RioCANBus = "rio";
 
     // Swerve (30s & 40s)
     public static final int FLSpeedCANID = 30;
@@ -207,8 +208,8 @@ public final class Constants {
       public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
 
       // Climb Poses
-      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 15.9, 0.36, 0.0); 
+      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 83.0, 0.3, -20.0);
+      public static final ArmPose Climb = new ArmPose("Climb", 12.9, 0.35, 4.5); 
     }
 
     /** This contains constants for our Base Pivot. */
@@ -389,7 +390,7 @@ public final class Constants {
     public static final Time ClimbSupplyCurrentLowerTime = Seconds.of(0.5);
     
     // Climb Speeds
-    public static final DashboardNumber IntakeCageSpeed = new DashboardNumber("Climber/IntakeCageSpeed", -0.4, true, (newValue) -> {}); // TODO get real value
+    public static final DashboardNumber IntakeCageSpeed = new DashboardNumber("Climber/IntakeCageSpeed", -1, true, (newValue) -> {}); // TODO get real value
   }
 
   /** This contains constants for the field. */
@@ -417,7 +418,8 @@ public final class Constants {
     public static final Distance Reef3 = Meters.of(1.8287);
     // Value taken from field cad
     public static final Distance Barge = Meters.of(1.0);
-    // Distance between center of robot + safety +center of reef
+    public static final Distance CoralWidth = Inches.of(4.5); 
+    // Distance between center of robot + safety +center of reef 
     public static final Distance ReefScoringDistanceThreshold = Meters.of((RobotDimensions.FrontBackLength.in(Meters) / 2) + 0.912493).plus(Inches.of(13)); 
   }
 
@@ -430,7 +432,7 @@ public final class Constants {
     // Buffer space to use between the end effector and an interaction point
     public static final Distance CoralPlacementMargin = Meters.of(0.03);
     // Robot length buffer
-    public static final double RobotToReefMargin = 0.015; // This is in meters
+    public static final Distance RobotToReefMargin = Meters.of(0.015).plus(FieldDimensions.CoralWidth); // silly :3
     public static final double WristToCoralIntakeAxle = 0.169627; // -0.209097 down, but who cares?
     public static final Angle AlgaeBarAngle = Degrees.of(117.160050);
     // Distance from the robot origin to the axle for the Base Pivot

@@ -28,10 +28,12 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.ArmPoses;
 import frc.robot.Constants.CanIdentifiers;
+import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.VisionConstants;
@@ -141,6 +143,24 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("AimHPOld", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 2)
         .withDeadline(new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForState().forArmState(ArmState.HOLD_CORAL))));
     NamedCommands.registerCommand("XMode", new RunCommand(() -> m_swerveDrive.setXMode()).withTimeout(0.1));
+
+    // Adds named commands for specific reef poses with prep arm states, such as:
+    // "AimReef-2R"
+    // "AimReef-10L-L4"
+    // "AimReef-6R-L1"
+    for (var reefClockEntry : FieldPoint.ReefClockPoses.entrySet()) {
+      String clockValue = reefClockEntry.getKey();
+      FieldPoint drivePose = reefClockEntry.getValue();
+      NamedCommands.registerCommand("AimReef-" + clockValue, 
+          PathUtil.driveToClosestPointAutoCommand(drivePose, m_swerveDrive, 2).alongWith(
+            new ChangeState().setArm(ArmState.HOLD_CORAL))
+      );
+      NamedCommands.registerCommand("AimReef-" + clockValue + "-L1", aimAndPrepCoralAuto(drivePose, SelectedCoralState.L1));
+      NamedCommands.registerCommand("AimReef-" + clockValue + "-L2", aimAndPrepCoralAuto(drivePose, SelectedCoralState.L2));
+      NamedCommands.registerCommand("AimReef-" + clockValue + "-L3", aimAndPrepCoralAuto(drivePose, SelectedCoralState.L3));
+      NamedCommands.registerCommand("AimReef-" + clockValue + "-L4", aimAndPrepCoralAuto(drivePose, SelectedCoralState.L4));
+    }
+
     buildPathplannerAutoChooser();
 
     System.out.println(ArmPoses.ScoreL4); // needed for static poses TODO find better way
@@ -272,6 +292,25 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     );
     // z on keyboard 0
     m_simKeyboard.a().onTrue(new InstantCommand(() -> Gripper.hasCoralGrippedSim = !Gripper.hasCoralGrippedSim));
+  }
+
+  /**
+   * Sim and prep the coral (to be used for auto named commands).
+   */
+  public Command aimAndPrepCoralAuto(FieldPoint target, SelectedCoralState coralState) {
+
+    return PathUtil.driveToClosestPointAutoCommand(target, m_swerveDrive, 2)
+    .alongWith(
+      new ChangeState().setArm(ArmState.HOLD_CORAL)
+      .andThen(
+        new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
+      )
+      .andThen(
+        new InstantCommand(() -> m_arm.setSelectedCoralState(coralState))
+      )
+      .andThen(
+        new ChangeState().setArm(() -> coralState.PrepState)
+      ));
   }
 
   /**

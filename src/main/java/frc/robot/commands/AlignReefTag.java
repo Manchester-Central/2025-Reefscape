@@ -82,7 +82,7 @@ public class AlignReefTag extends Command {
       return;
     }
     
-    double targetX = RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin;
+    double targetX = RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin.in(Meters);
     double targetY = 0.0;
     Pose2d poseToUse = null;
     if (rightPose.isEmpty()) {
