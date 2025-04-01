@@ -540,6 +540,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Climber.hasCageGrippedSim = true;
     }
+    m_gripper.setAlgaeGripSpeed(0);
+    m_gripper.setCoralGripSpeed(0);
   }
 
   private void postClimb() {
@@ -547,6 +549,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_gripperPivot.setTargetAngle(ArmPoses.Climb.getGripperPivotAngle());
     m_extender.setTargetLength(ArmPoses.Climb.getExtensionMeters());
     m_climber.setClimbSpeed(0);
+    m_gripper.setAlgaeGripSpeed(0);
+    m_gripper.setCoralGripSpeed(0);
   }
 
   private void scoreSafety() {

@@ -208,8 +208,8 @@ public final class Constants {
       public static final ArmPose AlgaeLow = new ArmPose("AlgaeLow", 63.54, 0.55, -54.84);
 
       // Climb Poses
-      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 90.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 15.9, 0.36, 0.0); 
+      public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 83.0, 0.3, -20.0);
+      public static final ArmPose Climb = new ArmPose("Climb", 12.9, 0.35, 4.5); 
     }
 
     /** This contains constants for our Base Pivot. */
