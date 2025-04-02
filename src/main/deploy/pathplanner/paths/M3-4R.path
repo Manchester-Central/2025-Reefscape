@@ -3,35 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4903169014084494,
-        "y": 5.839084507042253
+        "x": 1.3552499999999998,
+        "y": 2.1725
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.917442745459961,
-        "y": 5.834028447580099
+        "x": 2.7316651997987615,
+        "y": 3.122559865737135
       },
       "isLocked": false,
-      "linkedName": "M1"
+      "linkedName": "M3"
     },
     {
       "anchor": {
-        "x": 2.87625,
-        "y": 4.24925
+        "x": 3.8287852112676046,
+        "y": 2.4943661971830977
       },
       "prevControl": {
-        "x": 2.1866825824100404,
-        "y": 4.66045474768536
+        "x": 2.98751823334438,
+        "y": 2.276266105137156
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "6L"
+      "linkedName": "4R"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "PrepL4",
+      "waypointRelativePos": 0.8089552238805973,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "PrepL4"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.5,
     "maxAcceleration": 3.5,
@@ -41,14 +53,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 0.0,
+    "rotation": 60.64224645720875
   },
   "reversed": false,
-  "folder": "From M1",
+  "folder": "from M3",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 178.81881108667332
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
