@@ -212,7 +212,13 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_isAlgaeMode = m_operator.leftBumper().or(m_operator.leftTrigger());
     m_isCoralMode = m_isAlgaeMode.negate();
 
-    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
+    Trigger slowModeTrigger = m_driver.leftStick()
+        .or(m_driver.rightTrigger())
+        .or(m_driver.rightTrigger())
+        .or(m_driver.leftTrigger())
+        .or(m_operator.povUp());
+
+    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive, slowModeTrigger)); 
 
     // Everything after this is for competition
     m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
@@ -224,7 +230,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //     .withArmInterrupt(ArmState.STOW)));
     m_driver.b().whileTrue(
       new DeferredCommand(() -> PathUtil.driveToPoseCommand(new FieldPoint("ClosestBargePoint",
-        PathUtil.findClosestPointOnLine(m_swerveDrive, FieldPoint.CenterBarge, false)), m_swerveDrive), Set.of(m_swerveDrive))
+        PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge)), m_swerveDrive), Set.of(m_swerveDrive))
         .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, () -> DriveDirection.Towards.getAllianceAngle(), 1.0))
         .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE).withArmInterrupt(ArmState.STOW)));
     // m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
@@ -243,7 +249,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     //m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
 
-    m_driver.rightBumper().or(m_driver.rightTrigger()).or(m_driver.leftTrigger()).whileTrue(
+    slowModeTrigger.whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
     m_driver.rightBumper().and(m_isCoralMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedCoralState().PrepState).withArmInterrupt(ArmState.SCORE_SAFETY));
