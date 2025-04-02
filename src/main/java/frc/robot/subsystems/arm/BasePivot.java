@@ -5,6 +5,7 @@
 package frc.robot.subsystems.arm;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.chaos131.util.DashboardNumber;
@@ -18,6 +19,7 @@ import com.ctre.phoenix6.sim.ChassisReference;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.Constants.ArmConstants.BasePivotConstants;
 import frc.robot.Constants.ArmConstants.ExtenderConstants;
@@ -29,6 +31,7 @@ import frc.robot.utils.ChaosCanCoder;
 import frc.robot.utils.ChaosCanCoderTuner;
 import frc.robot.utils.ChaosTalonFx;
 import frc.robot.utils.ChaosTalonFxTuner;
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -146,6 +149,20 @@ public class BasePivot extends AbstractArmPart {
    * Sets the target angle and tries to drive there.
    */
   public void setTargetAngle(Angle newAngle) {
+    setTargetAngle(newAngle, Optional.empty());
+  }
+  
+  /**
+  * Sets the target angle and tries to drive there.
+  */
+  public void setTargetAngle(Angle newAngle, LinearVelocity maxVelocity) {
+    setTargetAngle(newAngle, Optional.of(maxVelocity));
+  }
+
+  /**
+   * Sets the target angle and tries to drive there.
+   */
+  public void setTargetAngle(Angle newAngle, Optional<LinearVelocity> maxVelocity) {
     if (newAngle.in(Degrees) > BasePivotConstants.MaxAngle.in(Degrees)) {
       newAngle = BasePivotConstants.MaxAngle;
     } else if (newAngle.in(Degrees) < BasePivotConstants.MinAngle.in(Degrees)) {
@@ -159,7 +176,9 @@ public class BasePivot extends AbstractArmPart {
     }
 
     m_targetAngle = newAngle;
-    if (getArmValues().extenderLength > ExtenderConstants.BasePivotHighThresholdMeter) {
+    if (maxVelocity.isPresent()) {
+      m_motor.moveToPositionMotionMagic(newAngle.in(Rotations), maxVelocity.get().in(MetersPerSecond), m_mmAcceleration.get(), m_mmJerk.get());
+    } else if (getArmValues().extenderLength > ExtenderConstants.BasePivotHighThresholdMeter) {
       m_motor.moveToPositionMotionMagic(newAngle.in(Rotations), m_mmCruiseVelocityHigh.get(), m_mmAccelerationHigh.get(), m_mmJerkHigh.get());
     } else {
       m_motor.moveToPositionMotionMagic(newAngle.in(Rotations)); // Rotation to match the cancoder units
