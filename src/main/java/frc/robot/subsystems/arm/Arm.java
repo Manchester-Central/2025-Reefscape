@@ -484,21 +484,6 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       return;
     }
 
-    boolean usePrepAngle = armPose.getBasePivotSafetyAngle().isPresent();
-    if (usePrepAngle && isStateStarting()) {
-      // If this is the first time the state has run, reset the angle reached variable
-      m_isPrepAngleReached = false;
-    }
-
-    // If we have a prep base pivot angle, make sure we go there first
-    if (usePrepAngle && !m_isPrepAngleReached) {
-      m_basePivot.setTargetAngle(armPose.getBasePivotSafetyAngle().get());
-      m_extender.setTargetLength(armPose.getExtensionMeters());
-      m_gripperPivot.setTargetAngle(armPose.getGripperPivotAngle());
-      m_isPrepAngleReached = isPoseClose() || (Robot.isSimulation() && getElapsedStateSeconds() > 1.0);
-      return;
-    }
-
     m_basePivot.setTargetAngle(armPose.getBasePivotAngle());
     m_extender.setTargetLength(armPose.getExtensionMeters());
     m_gripperPivot.setTargetAngle(armPose.getGripperPivotAngle());
@@ -555,13 +540,14 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void scoreSafety() {
-    if (m_isPrepAngleReached && m_selectedCoralState == SelectedCoralState.L4) {
-      m_basePivot.setTargetAngle(ArmPoses.ScoreL4.getBasePivotSafetyAngle().get());
-      m_extender.setTargetLength(ArmPoses.ScoreL4.getExtensionMeters());
-      m_gripperPivot.setTargetAngle(ArmPoses.ScoreL4.getGripperPivotAngle());
-      if (getArmValues().isBasePivotAtCloseAngle || (Robot.isSimulation() && getElapsedStateSeconds() > 1.0)) {
-        changeState(ArmState.STOW);
-      }
+
+    if (m_selectedCoralState == SelectedCoralState.L4 && m_extender.getCurrentLength() > ArmPoses.HoldCoralL4.getExtensionMeters() + 0.05) {
+
+      m_basePivot.setTargetAngle(ArmPoses.HoldCoralL4.getBasePivotAngle());
+      m_extender.setTargetLength(ArmPoses.HoldCoralL4.getExtensionMeters());
+      m_gripperPivot.setTargetAngle(ArmPoses.HoldCoralL4.getGripperPivotAngle());
+      return;
+
     } else {
       changeState(ArmState.STOW);
     }

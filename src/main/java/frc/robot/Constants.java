@@ -183,17 +183,17 @@ public final class Constants {
 
       // Holding Poses
       //  public static final ArmPose HoldCoral = new ArmPose("HoldCoral", 85, 0.65, -70.9);
-      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.34, -38.3); // TODO tune this
+      public static final ArmPose HoldAlgae = new ArmPose("HoldAlgae", 83.5, 0.05, -38.3); // TODO tune this
       public static final ArmPose HoldCoralL1 = new ArmPose("HoldCoralL1", 85.0, 0.23, -35.5);
-      public static final ArmPose HoldCoralL2 = new ArmPose("HoldCoralL2", 85.0, 0.53, -75.0);
-      public static final ArmPose HoldCoralL3 = new ArmPose("HoldCoralL3", 85.0, 0.65, -79.0);
-      public static final ArmPose HoldCoralL4 = new ArmPose("HoldCoralL4", 85.0, 0.65, -79.0);
+      public static final ArmPose HoldCoralL2 = new ArmPose("HoldCoralL2", 85.0, 0.55, -75.0);
+      public static final ArmPose HoldCoralL3 = new ArmPose("HoldCoralL3", 85.0, 0.65, -74.0);
+      public static final ArmPose HoldCoralL4 = new ArmPose("HoldCoralL4", 73.5, 0.65, 53);
 
       // Coral Scoring Poses
       public static final ArmPose ScoreL1 = new ArmPose("ScoreL1", 61.5, 0.23, -35.5);
-      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 78.0, 0.53, -75.0);
-      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 83.0, 0.90, -79.0);
-      public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 75.5, 1.33, 48.0).withBasePivotSafety(85);
+      public static final ArmPose ScoreL2 = new ArmPose("ScoreL2", 74.0, 0.55, -75.0);
+      public static final ArmPose ScoreL3 = new ArmPose("ScoreL3", 78.0, 0.92, -74.0);
+      public static final ArmPose ScoreL4 = new ArmPose("ScoreL4", 73.5, 1.37, 53.0).withBasePivotSafety(85);
 
       // Coral Pickup Poses
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 77, 0.54, -39.0); // Last updated 2/22/25
@@ -210,12 +210,12 @@ public final class Constants {
 
       // Climb Poses
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 83.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 12.9, 0.35, 4.5); 
+      public static final ArmPose Climb = new ArmPose("Climb", 12, 0.35, 4.5); 
     }
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Angle MinAngle = Degrees.of(13); // TODO: go back to 20
+      public static final Angle MinAngle = Degrees.of(12); // TODO: go back to 20
       public static final Angle MaxAngle = Degrees.of(90);
       public static final Angle LowerSafetyAngle = Degrees.of(45);
 
