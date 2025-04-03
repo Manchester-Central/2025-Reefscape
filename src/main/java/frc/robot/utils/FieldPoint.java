@@ -1,6 +1,7 @@
 package frc.robot.utils;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.chaos131.util.FieldData;
@@ -54,7 +55,7 @@ public class FieldPoint {
   public static final FieldPoint LollipopRight = new FieldPoint("LollipopRight",
       new Pose2d(1.204913, 2.197100, Rotation2d.fromDegrees(180)));
   public static final FieldPoint CenterBarge = new FieldPoint("CenterBarge", 
-      new Pose2d(7.5, 4, Rotation2d.fromDegrees(180)));
+      new Pose2d(Meters.of(7.5).plus(Feet.of(1.2)).in(Meters), 4, Rotation2d.fromDegrees(180)));
       
 
   public static HashMap<Integer, AprilTag> aprilTagMap = FieldData.GetAprilTagMap("assets/frc2025.fmap");
