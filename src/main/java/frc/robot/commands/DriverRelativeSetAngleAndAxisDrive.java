@@ -59,8 +59,8 @@ public class DriverRelativeSetAngleAndAxisDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_swerveDrive.moveFieldRelativeAngle(LinearVelocity.ofBaseUnits(0, MetersPerSecond), 
-                                         SwerveConstants.MaxFreeSpeed.times(-m_driver.getSlewLeftX()),
+    m_swerveDrive.moveFieldRelativeAngle(MetersPerSecond.of(0), 
+                                         SwerveConstants.MaxFreeSpeed.times(-m_driver.getSlewLeftX() * 0.3),
                                          m_rotationSupplier.get(), m_magnitude);
   }
 
