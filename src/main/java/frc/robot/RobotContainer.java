@@ -18,6 +18,8 @@ import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -229,9 +231,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //     .alongWith(new ChangeState().setArm(ArmState.INTAKE_FROM_HP)
     //     .withArmInterrupt(ArmState.STOW)));
     m_driver.b().whileTrue(
-      new DeferredCommand(() -> PathUtil.driveToPoseCommand(new FieldPoint("ClosestBargePoint",
-        PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge)), m_swerveDrive), Set.of(m_swerveDrive))
-        .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, () -> DriveDirection.Towards.getAllianceAngle(), 1.0))
+      new DeferredCommand(() -> new ConditionalCommand(
+          PathUtil.driveToPoseCommand(PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getBluePose(), m_swerveDrive), 
+          PathUtil.driveToPoseCommand(PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getRedPose(), m_swerveDrive), 
+          () -> m_swerveDrive.getPose().getX() < FieldDimensions.FieldLength / 2), Set.of(m_swerveDrive))
+        .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, m_swerveDrive.getPose().getX() < FieldDimensions.FieldLength ? Rotation2d.fromDegrees(90) : Rotation2d.fromDegrees(-90)))
         .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE).withArmInterrupt(ArmState.STOW)));
     // m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
     // m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
