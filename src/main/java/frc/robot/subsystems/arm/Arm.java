@@ -264,7 +264,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void intakeCoralFromFloorState() {
-    if (m_gripper.hasAlgae()) {
+    if (m_gripper.hasAlgae() && isStateStarting()) {
       m_gripper.setCoralGripSpeed(0.0);
       changeState(ArmState.HOLD_ALGAE);
       return;
