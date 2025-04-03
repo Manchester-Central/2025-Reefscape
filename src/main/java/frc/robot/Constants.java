@@ -200,7 +200,7 @@ public final class Constants {
       public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 16, 0.28, -13); //TODO tune this
 
       // Algae Scoring Poses
-      public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 85, 1.7, 47); //TODO tune this
+      public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 86.5, 1.7, 47); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 47.9, 0.0, -40.5); //TODO tune this
 
       // Algae Pickup Poses

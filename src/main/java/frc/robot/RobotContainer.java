@@ -43,8 +43,10 @@ import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleAndAxisDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.ReefAlignment;
+import frc.robot.commands.SimpleDriveToPositionV2;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
+import frc.robot.commands.WaitForNoCoral;
 import frc.robot.commands.WaitForState;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.MechManager2D;
@@ -231,8 +233,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //     .withArmInterrupt(ArmState.STOW)));
     m_driver.b().whileTrue(
       new DeferredCommand(() -> new ConditionalCommand(
-          PathUtil.driveToPoseCommand(PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getBluePose(), m_swerveDrive), 
-          PathUtil.driveToPoseCommand(PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getRedPose(), m_swerveDrive), 
+          new SimpleDriveToPositionV2(m_swerveDrive, () -> PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getBluePose(), true), 
+          new SimpleDriveToPositionV2(m_swerveDrive, () -> PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getRedPose(), true), 
           () -> m_swerveDrive.getPose().getX() < FieldDimensions.FieldLength / 2), Set.of(m_swerveDrive))
         .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, 
             () -> m_swerveDrive.getPose().getX() < FieldDimensions.FieldLength / 2
