@@ -326,6 +326,22 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   }
 
   /**
+   * Sim and prep the coral (to be used for auto named commands).
+   */
+  public Command aimAndPrepCoralTeleop() {
+
+    return PathUtil.driveToClosestPointTeleopCommandV2(FieldPoint.getReefDrivePoses(), m_swerveDrive)
+    .alongWith(
+      new ChangeState().setArm(ArmState.HOLD_CORAL)
+      .andThen(
+        new WaitUntilCommand(() -> FieldPoint.ReefCenter.getDistance(m_swerveDrive.getPose()).lte(FieldDimensions.ReefScoringDistanceThreshold))
+      )
+      .andThen(
+        new ChangeState().setArm(() -> m_arm.getSelectedCoralState().PrepState)
+      ));
+  }
+
+  /**
    * aim and prep the coral.
    */
   public Command aimAndPrepCoral() {

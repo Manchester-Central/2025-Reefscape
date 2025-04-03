@@ -48,7 +48,7 @@
   "folder": "from M3",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -97.12501634890182
+    "rotation": -128.40160695497627
   },
   "useDefaultConstraints": true
 }
