@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.865061475409836,
-        "y": 3.8631659836065575
+        "x": 2.87625,
+        "y": 4.24925
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8177499999999998,
-        "y": 4.1419999999999995
+        "x": 2.964,
+        "y": 3.8592499999999994
       },
       "isLocked": false,
-      "linkedName": "6R"
+      "linkedName": "6L"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 4.0249999999999995
       },
       "prevControl": {
-        "x": 2.48625,
-        "y": 4.05425
+        "x": 2.7592499999999998,
+        "y": 3.9957499999999997
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5435684647302904,
-      "rotationDegrees": -179.40124597412864
+      "rotationDegrees": 176.08024643254063
     }
   ],
   "constraintZones": [
@@ -53,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "IntakePoint",
-      "waypointRelativePos": 0.20545905707195788,
+      "waypointRelativePos": 0.24317617866004504,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
