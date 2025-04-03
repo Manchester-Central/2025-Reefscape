@@ -42,7 +42,7 @@ public class ReefAlignment extends Command {
     int invertValue = m_isInvert ? -1 : 1;
 
     m_branchPostion = m_aprilTag.getCurrentAlliancePose().plus(
-        new Transform2d((RobotDimensions.FrontBackLength.in(Meters) / 2) + RobotDimensions.RobotToReefMargin.in(Meters), 
+        new Transform2d((RobotDimensions.FrontBackLength.in(Meters) / 2) + RobotDimensions.RobotToReefCoralMargin.in(Meters), 
                         FieldDimensions.ReefBranchRight.getY() * invertValue, 
                         Rotation2d.fromDegrees(180)));
 

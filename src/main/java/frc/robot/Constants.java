@@ -435,7 +435,8 @@ public final class Constants {
     // Buffer space to use between the end effector and an interaction point
     public static final Distance CoralPlacementMargin = Meters.of(0.03);
     // Robot length buffer
-    public static final Distance RobotToReefMargin = Meters.of(0.015).plus(FieldDimensions.CoralWidth); // silly :3
+    public static final Distance RobotToReefMargin = Meters.of(0.015);
+    public static final Distance RobotToReefCoralMargin = RobotToReefMargin.plus(FieldDimensions.CoralWidth); // silly :3
     public static final double WristToCoralIntakeAxle = 0.169627; // -0.209097 down, but who cares?
     public static final Angle AlgaeBarAngle = Degrees.of(117.160050);
     // Distance from the robot origin to the axle for the Base Pivot

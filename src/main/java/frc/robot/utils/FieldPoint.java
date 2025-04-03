@@ -133,7 +133,7 @@ public class FieldPoint {
   private static FieldPoint getDrivePoseFromReefFace(Pose2d aprilTagPose, boolean isRight) {
     Pose2d pose = aprilTagPose.transformBy(
         new Transform2d(
-            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin.in(Meters),
+            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefCoralMargin.in(Meters),
             isRight ? FieldDimensions.ReefBranchRight.getY() : FieldDimensions.ReefBranchLeft.getY(),
             Rotation2d.fromDegrees(180)));
     return new FieldPoint("ReefDrivePose", pose);
