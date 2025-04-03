@@ -18,6 +18,7 @@ import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -212,7 +213,13 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_isAlgaeMode = m_operator.leftBumper().or(m_operator.leftTrigger());
     m_isCoralMode = m_isAlgaeMode.negate();
 
-    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive)); 
+    Trigger slowModeTrigger = m_driver.leftStick()
+        .or(m_driver.rightTrigger())
+        .or(m_driver.rightTrigger())
+        .or(m_driver.leftTrigger())
+        .or(m_operator.povUp());
+
+    m_swerveDrive.setDefaultCommand(new DriverRelativeDrive(m_driver, m_swerveDrive, slowModeTrigger)); 
 
     // Everything after this is for competition
     m_driver.a().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive,  () -> {
@@ -223,9 +230,14 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //     .alongWith(new ChangeState().setArm(ArmState.INTAKE_FROM_HP)
     //     .withArmInterrupt(ArmState.STOW)));
     m_driver.b().whileTrue(
-      new DeferredCommand(() -> PathUtil.driveToPoseCommand(new FieldPoint("ClosestBargePoint",
-        PathUtil.findClosestPointOnLine(m_swerveDrive, FieldPoint.CenterBarge, false)), m_swerveDrive), Set.of(m_swerveDrive))
-        .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, () -> DriveDirection.Towards.getAllianceAngle(), 1.0))
+      new DeferredCommand(() -> new ConditionalCommand(
+          PathUtil.driveToPoseCommand(PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getBluePose(), m_swerveDrive), 
+          PathUtil.driveToPoseCommand(PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getRedPose(), m_swerveDrive), 
+          () -> m_swerveDrive.getPose().getX() < FieldDimensions.FieldLength / 2), Set.of(m_swerveDrive))
+        .andThen(new DriverRelativeSetAngleAndAxisDrive(m_driver, m_swerveDrive, 
+            () -> m_swerveDrive.getPose().getX() < FieldDimensions.FieldLength / 2
+            ? Rotation2d.fromDegrees(180) 
+            : Rotation2d.fromDegrees(0), 1))
         .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE).withArmInterrupt(ArmState.STOW)));
     // m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
     // m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
@@ -243,7 +255,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     //m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
 
-    m_driver.rightBumper().or(m_driver.rightTrigger()).or(m_driver.leftTrigger()).whileTrue(
+    slowModeTrigger.whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
                           () -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverRampRatePeriod)));
     m_driver.rightBumper().and(m_isCoralMode).whileTrue(new ChangeState().setArm(() -> m_arm.getSelectedCoralState().PrepState).withArmInterrupt(ArmState.SCORE_SAFETY));

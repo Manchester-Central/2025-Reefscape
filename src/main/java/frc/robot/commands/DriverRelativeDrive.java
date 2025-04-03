@@ -7,6 +7,7 @@ package frc.robot.commands;
 import com.chaos131.gamepads.Gamepad;
 import com.chaos131.swerve.BaseSwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.SwerveConstants;
 
 /**
@@ -15,15 +16,17 @@ import frc.robot.Constants.SwerveConstants;
 public class DriverRelativeDrive extends Command {
   /** Creates a new DriverRelativeDrive. */
   Gamepad m_driver;
+  Trigger m_slowModeTrigger;
 
   BaseSwerveDrive m_swerveDrive;
 
   /**
    * Creates a new DriverRelativeDrive.
    */
-  public DriverRelativeDrive(Gamepad driver, BaseSwerveDrive swerve) {
+  public DriverRelativeDrive(Gamepad driver, BaseSwerveDrive swerve, Trigger slowModeTrigger) {
     m_driver = driver;
     m_swerveDrive = swerve;
+    m_slowModeTrigger = slowModeTrigger;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerve);
   }
@@ -37,11 +40,11 @@ public class DriverRelativeDrive extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speedMod = m_driver.leftStick().getAsBoolean() 
-        || m_driver.rightTrigger().getAsBoolean()
-        || m_driver.rightBumper().getAsBoolean() 
-        || m_driver.leftTrigger().getAsBoolean()
-        ? 0.3 : 1.0;
+    double speedMod = m_slowModeTrigger.getAsBoolean() ? 0.3 : 1.0;
+    // double speedMod = m_driver.leftStick().getAsBoolean() 
+    // || m_driver.rightTrigger().getAsBoolean()
+    // || m_driver.rightBumper().getAsBoolean() 
+    // || m_driver.leftTrigger().getAsBoolean()
     m_swerveDrive.moveFieldRelative(
         SwerveConstants.MaxFreeSpeed.times(m_driver.getSlewLeftY() * speedMod), 
         SwerveConstants.MaxFreeSpeed.times(-m_driver.getSlewLeftX() * speedMod), 

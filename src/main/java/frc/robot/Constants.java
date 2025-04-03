@@ -200,7 +200,7 @@ public final class Constants {
       public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 16, 0.28, -13); //TODO tune this
 
       // Algae Scoring Poses
-      public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.65, 60); //TODO tune this
+      public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.7, 50); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 47.9, 0.0, -40.5); //TODO tune this
 
       // Algae Pickup Poses
@@ -210,12 +210,12 @@ public final class Constants {
 
       // Climb Poses
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 83.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 12, 0.35, 4.5); 
+      public static final ArmPose Climb = new ArmPose("Climb", 10, 0.35, 4.5); 
     }
 
     /** This contains constants for our Base Pivot. */
     public static class BasePivotConstants {
-      public static final Angle MinAngle = Degrees.of(12); // TODO: go back to 20
+      public static final Angle MinAngle = Degrees.of(9); // TODO: go back to 20
       public static final Angle MaxAngle = Degrees.of(90);
       public static final Angle LowerSafetyAngle = Degrees.of(45);
 

@@ -50,11 +50,11 @@ public class PathUtil {
   /**
    * Finds the closest point along a line.
    */
-  public static Pose2d findClosestPointOnLine(SwerveDrive swerveDrive, FieldPoint linePoint, boolean isXaxisLine) {
-    double x = isXaxisLine ? new FieldPoint("SwervePose", swerveDrive, DriverStation.getAlliance().get()).getBluePose().getX() : linePoint.getBluePose().getX(); 
-    double y = isXaxisLine ? linePoint.getBluePose().getY() : new FieldPoint("SwervePose", swerveDrive, DriverStation.getAlliance().get()).getBluePose().getY();
+  public static FieldPoint findClosestXpointOnLine(SwerveDrive swerveDrive, FieldPoint linePoint) {
+    double x = linePoint.getBluePose().getX(); 
+    double y = new FieldPoint("SwervePose", swerveDrive, DriverStation.getAlliance().get()).getBluePose().getY();
     Rotation2d rotation = linePoint.getBluePose().getRotation();
-    return new Pose2d(x, y, rotation);
+    return new FieldPoint("ClosestPointOnLine", new Pose2d(x, y, rotation));
   }
 
   /**
