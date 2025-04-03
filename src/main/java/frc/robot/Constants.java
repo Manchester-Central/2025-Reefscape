@@ -373,7 +373,7 @@ public final class Constants {
       // Algae Speeds
       public static final DashboardNumber IntakeAlgaeSpeed = gripperSpeed(-1.0, "IntakeAlgaeSpeed");
       public static final DashboardNumber HoldAlgaeSpeed = gripperSpeed(-1.0, "HoldAlgaeSpeed");
-      public static final DashboardNumber OutakeAlgaeSpeed = gripperSpeed(0.5, "OutakeAlgaeSpeed");
+      public static final DashboardNumber OutakeAlgaeSpeed = gripperSpeed(1.0, "OutakeAlgaeSpeed");
 
       // Coral Intake HP
       public static final DashboardNumber HpIntakeCoralSpeed = gripperSpeed(-0.4, "HpIntakeCoralSpeed");
