@@ -197,7 +197,7 @@ public final class Constants {
 
       // Coral Pickup Poses
       public static final ArmPose HpIntake = new ArmPose("HpIntake", 77, 0.54, -39.0); // Last updated 2/22/25
-      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 16, 0.28, -13); //TODO tune this
+      public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 17, 0.28, -13); //TODO tune this
 
       // Algae Scoring Poses
       public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 86.5, 1.7, 47); //TODO tune this
@@ -211,6 +211,7 @@ public final class Constants {
       // Climb Poses
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 83.0, 0.3, -20.0);
       public static final ArmPose Climb = new ArmPose("Climb", 9.2, 0.35, 4.5); 
+      public static final ArmPose CloseClimb = new ArmPose("CloseClimb", 16, 0.35, 4.5);
     }
 
     /** This contains constants for our Base Pivot. */
@@ -365,10 +366,10 @@ public final class Constants {
       public static final DashboardNumber IntakeCoralOnAlgaeSlowMotorSpeed = gripperSpeed(0.6, "IntakeCoralOnAlgaeSlowMotorSpeed");
 
       public static final DashboardNumber IntakeCoralPeriod = new DashboardNumber("Gripper/IntakeCoralPeriod", 1, true, (newValue) -> {});
-      public static final DashboardNumber IntakeCoralSpitAlignSecondsThreshold = new DashboardNumber("Gripper/IntakeCoralSpitAlignSecondsThreshold", 0.95, true, (newValue) -> {});
+      public static final DashboardNumber IntakeCoralSpitAlignSecondsThreshold = new DashboardNumber("Gripper/IntakeCoralSpitAlignSecondsThreshold", 0.925, true, (newValue) -> {});
 
-      public static final DashboardNumber IntakeCoralSpitAlignSpeed = gripperSpeed(0.8, "IntakeCoralSpitAlignSpeed");
-      public static final DashboardNumber IntakeCoralOnAlgaeSpitAlignSpeed = gripperSpeed(-0.6, "IntakeCoralOnAlgaeSpitAlignSpeed");
+      public static final DashboardNumber IntakeCoralSpitAlignSpeed = gripperSpeed(-1, "IntakeCoralSpitAlignSpeed");
+      public static final DashboardNumber IntakeCoralOnAlgaeSpitAlignSpeed = gripperSpeed(-1, "IntakeCoralOnAlgaeSpitAlignSpeed");
 
       // Algae Speeds
       public static final DashboardNumber IntakeAlgaeSpeed = gripperSpeed(-1.0, "IntakeAlgaeSpeed");

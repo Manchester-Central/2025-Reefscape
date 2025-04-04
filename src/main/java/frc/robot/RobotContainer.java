@@ -280,6 +280,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.leftTrigger().onTrue(new InstantCommand(() -> m_arm.setSelectedAlgaeState(SelectedAlgaeState.BARGE)));
 
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
+    m_operator.povRight().whileTrue(new ChangeState().setArm(ArmState.CLOSE_CLIMB));
     m_operator.povDown().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     
     m_operator.start().onTrue(new ChangeState().setArm(ArmState.STOW));

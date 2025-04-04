@@ -97,6 +97,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     HOLD_CORAL,
     HOLD_ALGAE,
     PREP_CLIMB,
+    CLOSE_CLIMB,
     POST_CLIMB,
     SCORE_SAFETY;
   }
@@ -183,6 +184,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
         break;
       case PREP_CLIMB:
         prepClimb();
+        break;
+      case CLOSE_CLIMB:
+        closeClimb();
         break;
       case POST_CLIMB:
         postClimb();
@@ -529,6 +533,15 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     if (Robot.isSimulation() && getElapsedStateSeconds() > 2.0) {
       Climber.hasCageGrippedSim = true;
     }
+    m_gripper.setAlgaeGripSpeed(0);
+    m_gripper.setCoralGripSpeed(0);
+  }
+
+  private void closeClimb() {
+    m_basePivot.setTargetAngle(ArmPoses.CloseClimb.getBasePivotAngle(), BasePivotConstants.MMClimbCruiseVelocity);
+    m_gripperPivot.setTargetAngle(ArmPoses.CloseClimb.getGripperPivotAngle());
+    m_extender.setTargetLength(ArmPoses.CloseClimb.getExtensionMeters());
+    m_climber.setClimbSpeed(0);
     m_gripper.setAlgaeGripSpeed(0);
     m_gripper.setCoralGripSpeed(0);
   }
