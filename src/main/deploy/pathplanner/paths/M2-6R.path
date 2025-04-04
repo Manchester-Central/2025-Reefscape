@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5474339184028827,
-        "y": 4.199578689007727
+        "x": 2.4479824842344104,
+        "y": 3.8237841713619476
       },
       "isLocked": false,
       "linkedName": "M2C"
@@ -20,15 +20,20 @@
         "y": 3.8631659836065575
       },
       "prevControl": {
-        "x": 1.496331181997991,
-        "y": 3.6486406416929325
+        "x": 1.3084676823852792,
+        "y": 3.9294931844993526
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "6R"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 179.37328898737462
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],

@@ -106,7 +106,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     super(ArmState.START);
     m_operator = operator;
     m_driver = driver;
-    m_scoringTrigger = operator.rightBumper().or(driver.rightTrigger());
+    m_scoringTrigger = operator.rightBumper().or(driver.rightTrigger()).or(driver.a());
   }
 
   private boolean isPoseReady() {
@@ -338,8 +338,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     } else if (m_gripper.hasCoralFrontNoDebounce() && !m_gripper.hasCoralBackNoDebounce()) {
       m_gripper.setCoralGripSpeed(GripperConstants.HpIntakeCoralSlowSpeed.get());
       m_gripper.setAlgaeGripSpeed(GripperConstants.HpIntakeCoralOnAlgaeSlowMotorSpeed.get());
-    } else {
+    } else if (m_scoringTrigger.getAsBoolean()) {
       m_gripper.setCoralGripSpeed(0.0);
+    } else {
       m_gripper.setCoralGripSpeed(0.0);
       changeState(ArmState.HOLD_CORAL);
       return;
