@@ -200,7 +200,7 @@ public final class Constants {
       public static final ArmPose FloorIntakeCoral = new ArmPose("FloorIntakeCoral", 16, 0.28, -13); //TODO tune this
 
       // Algae Scoring Poses
-      public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 83.5, 1.7, 50); //TODO tune this
+      public static final ArmPose ScoreBarge = new ArmPose("ScoreBarge", 86.5, 1.7, 47); //TODO tune this
       public static final ArmPose ScoreProcessor = new ArmPose("ScoreProcessor", 47.9, 0.0, -40.5); //TODO tune this
 
       // Algae Pickup Poses
@@ -210,7 +210,7 @@ public final class Constants {
 
       // Climb Poses
       public static final ArmPose ClimbPrep = new ArmPose("ClimbPrep", 83.0, 0.3, -20.0);
-      public static final ArmPose Climb = new ArmPose("Climb", 10, 0.35, 4.5); 
+      public static final ArmPose Climb = new ArmPose("Climb", 9.2, 0.35, 4.5); 
     }
 
     /** This contains constants for our Base Pivot. */
@@ -373,7 +373,7 @@ public final class Constants {
       // Algae Speeds
       public static final DashboardNumber IntakeAlgaeSpeed = gripperSpeed(-1.0, "IntakeAlgaeSpeed");
       public static final DashboardNumber HoldAlgaeSpeed = gripperSpeed(-1.0, "HoldAlgaeSpeed");
-      public static final DashboardNumber OutakeAlgaeSpeed = gripperSpeed(0.5, "OutakeAlgaeSpeed");
+      public static final DashboardNumber OutakeAlgaeSpeed = gripperSpeed(1.0, "OutakeAlgaeSpeed");
 
       // Coral Intake HP
       public static final DashboardNumber HpIntakeCoralSpeed = gripperSpeed(-0.4, "HpIntakeCoralSpeed");
@@ -435,7 +435,8 @@ public final class Constants {
     // Buffer space to use between the end effector and an interaction point
     public static final Distance CoralPlacementMargin = Meters.of(0.03);
     // Robot length buffer
-    public static final Distance RobotToReefMargin = Meters.of(0.015).plus(FieldDimensions.CoralWidth); // silly :3
+    public static final Distance RobotToReefMargin = Meters.of(0.015);
+    public static final Distance RobotToReefCoralMargin = RobotToReefMargin.plus(FieldDimensions.CoralWidth); // silly :3
     public static final double WristToCoralIntakeAxle = 0.169627; // -0.209097 down, but who cares?
     public static final Angle AlgaeBarAngle = Degrees.of(117.160050);
     // Distance from the robot origin to the axle for the Base Pivot

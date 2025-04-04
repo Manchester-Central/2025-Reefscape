@@ -1,6 +1,7 @@
 package frc.robot.utils;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.chaos131.util.FieldData;
@@ -54,7 +55,7 @@ public class FieldPoint {
   public static final FieldPoint LollipopRight = new FieldPoint("LollipopRight",
       new Pose2d(1.204913, 2.197100, Rotation2d.fromDegrees(180)));
   public static final FieldPoint CenterBarge = new FieldPoint("CenterBarge", 
-      new Pose2d(7.5, 4, Rotation2d.fromDegrees(180)));
+      new Pose2d(Meters.of(7.4).in(Meters), 4, Rotation2d.fromDegrees(180)));
       
 
   public static HashMap<Integer, AprilTag> aprilTagMap = FieldData.GetAprilTagMap("assets/frc2025.fmap");
@@ -132,7 +133,7 @@ public class FieldPoint {
   private static FieldPoint getDrivePoseFromReefFace(Pose2d aprilTagPose, boolean isRight) {
     Pose2d pose = aprilTagPose.transformBy(
         new Transform2d(
-            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefMargin.in(Meters),
+            RobotDimensions.FrontBackLength.in(Meters) / 2 + RobotDimensions.RobotToReefCoralMargin.in(Meters),
             isRight ? FieldDimensions.ReefBranchRight.getY() : FieldDimensions.ReefBranchLeft.getY(),
             Rotation2d.fromDegrees(180)));
     return new FieldPoint("ReefDrivePose", pose);

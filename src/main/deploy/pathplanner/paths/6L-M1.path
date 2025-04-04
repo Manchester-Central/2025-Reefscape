@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.075968309859155,
-        "y": 2.4943661971830977
+        "x": 2.87625,
+        "y": 4.24925
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.792517605633802,
-        "y": 2.012499999999999
+        "x": 2.5545000000000004,
+        "y": 3.9274999999999993
       },
       "isLocked": false,
-      "linkedName": "2R"
+      "linkedName": "6L"
     },
     {
       "anchor": {
-        "x": 1.2706967213114755,
-        "y": 2.1848872950819667
+        "x": 1.2467213114754097,
+        "y": 5.8171618852459
       },
       "prevControl": {
-        "x": 3.9001298199030234,
-        "y": 2.138267576772106
+        "x": 1.8542527707226981,
+        "y": 4.992063033941352
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "M3"
+      "linkedName": "M1R"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5942028985507251,
-      "rotationDegrees": 178.62843028872064
+      "waypointRelativePos": 0.39419087136929293,
+      "rotationDegrees": 126.98925219764536
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.9194029850746279,
+      "minWaypointRelativePos": 0.786108918705604,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 0.75,
@@ -53,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "IntakeFromFloor",
-      "waypointRelativePos": 0.30519918973666726,
+      "waypointRelativePos": 0.25118163403106286,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -73,13 +73,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 125.11201118442219
   },
   "reversed": false,
-  "folder": "to M3",
+  "folder": "to M1",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 118.61045966596527
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.3665983606557375,
-        "y": 5.649334016393442
+        "x": 1.2467213114754097,
+        "y": 5.8171618852459
       },
       "prevControl": {
-        "x": 1.974129819903026,
-        "y": 4.8242351650888935
+        "x": 1.8542527707226981,
+        "y": 4.992063033941352
       },
       "nextControl": null,
       "isLocked": false,
@@ -53,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "IntakeFromFloor",
-      "waypointRelativePos": 0.32853598014888474,
+      "waypointRelativePos": 0.25118163403106286,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

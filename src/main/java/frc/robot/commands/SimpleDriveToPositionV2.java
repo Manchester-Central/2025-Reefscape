@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 public class SimpleDriveToPositionV2 extends Command {
   SwerveDrive m_swerveDrive;
   Supplier<Pose2d> m_poseSup;
+  boolean m_allowTeleop = false;
 
   /** Creates a new SimpleDriveToPosition. */
   public SimpleDriveToPositionV2(SwerveDrive swerveDrive, FieldPoint fieldPoint) {
@@ -32,6 +33,15 @@ public class SimpleDriveToPositionV2 extends Command {
     m_poseSup = poseSup;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerveDrive);
+  }
+
+  /** Creates a new SimpleDriveToPosition. */
+  public SimpleDriveToPositionV2(SwerveDrive swerveDrive, Supplier<Pose2d> poseSup, boolean allowTeleop) {
+    m_swerveDrive = swerveDrive;
+    m_poseSup = poseSup;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(swerveDrive);
+    m_allowTeleop = allowTeleop;
   }
 
   // Called when the command is initially scheduled.
@@ -60,7 +70,7 @@ public class SimpleDriveToPositionV2 extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_swerveDrive.atTarget(0.01) && !DriverStation.isTeleop();
+    return m_swerveDrive.atTarget(0.01) && (m_allowTeleop || !DriverStation.isTeleop());
     //return ((SwerveDrive) m_swerveDrive).atTargetDynamic() && !DriverStation.isTeleop();
   }
 }
