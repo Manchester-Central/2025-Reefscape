@@ -422,6 +422,9 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
       m_gripper.setAlgaeGripSpeed(GripperConstants.IntakeAlgaeSpeed.get());
       m_gripper.setCoralGripSpeed(0.0);
       m_climber.setClimbSpeed(0);
+      if (DriverStation.isAutonomous() && m_gripper.hasAlgae()) {
+        changeState(ArmState.HOLD_ALGAE);
+      }
     } else {
       changeState(ArmState.HOLD_CORAL);
       return;

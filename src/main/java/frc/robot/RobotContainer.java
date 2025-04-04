@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.ArmPoses;
+import frc.robot.Constants.ArmConstants.GripperConstants;
 import frc.robot.Constants.CanIdentifiers;
 import frc.robot.Constants.FieldDimensions;
 import frc.robot.Constants.OperatorConstants;
@@ -127,6 +128,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("AimReef", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 2));
     NamedCommands.registerCommand("AimReefPrep", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 1)
         .alongWith(new ChangeState().setArm(ArmState.PREP_L4)));
+    NamedCommands.registerCommand("AimReefAlgae", new ChangeState().setArm(() -> {
+      var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
+      return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());
+    }).withArmInterrupt(ArmState.STOW)
+        .andThen(new DeferredCommand(() -> PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefCenterDrivePose(), m_swerveDrive, 2), Set.of(m_swerveDrive))));
     NamedCommands.registerCommand("GoToReef8L", new ReefAlignment(FieldPoint.ReefPose8, true, m_swerveDrive));
     NamedCommands.registerCommand("ScoreL1",  new ChangeState().setArm(ArmState.SCORE_L1).andThen(new WaitForState().forArmState(ArmState.STOW)));
     NamedCommands.registerCommand("ScoreL2",  new ChangeState().setArm(ArmState.SCORE_L2).andThen(new WaitForState().forArmState(ArmState.STOW)));
@@ -136,8 +142,14 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("PrepL2",  new ChangeState().setArm(ArmState.PREP_L2));
     NamedCommands.registerCommand("PrepL3",  new ChangeState().setArm(ArmState.PREP_L3));
     NamedCommands.registerCommand("PrepL4",  new ChangeState().setArm(ArmState.PREP_L4));
+    NamedCommands.registerCommand("ScoreAlgae", new InstantCommand(() -> m_arm.m_gripper.setAlgaeGripSpeed(GripperConstants.OutakeAlgaeSpeed.get()))
+        .andThen(new WaitForState().forArmState(ArmState.STOW)));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForCoral(m_arm)));
     NamedCommands.registerCommand("IntakeFromFloor", new ChangeState().setArm(ArmState.INTAKE_CORAL_FROM_FLOOR).andThen(new WaitForCoral(m_arm)));
+    NamedCommands.registerCommand("IntakeAlgae", new ChangeState().setArm(() -> {
+      var closestTag = FieldPoint.getNearestPoint(m_swerveDrive.getPose(), FieldPoint.getReefAprilTagPoses());
+      return m_aprilTagToAlgaeHeightMap.get(closestTag.getName());
+    }).withArmInterrupt(ArmState.STOW));
     NamedCommands.registerCommand("HoldCoral", new ChangeState().setArm(ArmState.HOLD_CORAL));
     //JOHN SAVE US PLEASE: change hold coral to hold algae
     NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 0.5)
