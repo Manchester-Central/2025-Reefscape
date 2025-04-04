@@ -387,8 +387,8 @@ public final class Constants {
   public static class ClimberConstants {
     public static final double CageDropDebounceSeconds = 0.5;
 
-    public static final Current ClimbSupplyCurrentLimit = Amps.of(40); // TODO get real values
-    public static final Current ClimbStatorCurrentLimit = Amps.of(40); // TODO get real values
+    public static final Current ClimbSupplyCurrentLimit = Amps.of(45); // TODO get real values
+    public static final Current ClimbStatorCurrentLimit = Amps.of(45); // TODO get real values
     public static final Current ClimbSupplyCurrentLowerLimit = Amps.of(100);
     public static final Time ClimbSupplyCurrentLowerTime = Seconds.of(0.5);
     

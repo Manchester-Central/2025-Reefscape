@@ -385,7 +385,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   @Override
   public void periodic() {
     // Enables Dashboard Numbers to be updated each loop
-    DashboardNumber.checkAll();
+    // DashboardNumber.checkAll();
     Logger.recordOutput("OperatorMode", m_isAlgaeMode.getAsBoolean() ? Color.kSeaGreen.toHexString() : Color.kWhite.toHexString());
     Logger.recordOutput("ReefState", m_arm.getSelectedCoralState());
   }
