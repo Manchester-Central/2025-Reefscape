@@ -53,7 +53,7 @@ public class DriverRelativeSetAngleAndAxisDrive extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_swerveDrive.driverModeInit();
+    // m_swerveDrive.driverModeInit();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
