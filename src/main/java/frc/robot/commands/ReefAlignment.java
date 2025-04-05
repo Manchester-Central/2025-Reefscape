@@ -38,7 +38,7 @@ public class ReefAlignment extends Command {
 
   @Override
   public void initialize() {
-    m_swerveDrive.driverModeInit();
+    // m_swerveDrive.driverModeInit();
     int invertValue = m_isInvert ? -1 : 1;
 
     m_branchPostion = m_aprilTag.getCurrentAlliancePose().plus(

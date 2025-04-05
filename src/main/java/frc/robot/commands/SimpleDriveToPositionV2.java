@@ -47,7 +47,7 @@ public class SimpleDriveToPositionV2 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_swerveDrive.driveToPositionInit();
+    // m_swerveDrive.driveToPositionInit();
     m_swerveDrive.resetPids();
     m_swerveDrive.setTarget(m_poseSup.get());
   }
@@ -63,7 +63,7 @@ public class SimpleDriveToPositionV2 extends Command {
   @Override
   public void end(boolean interrupted) {
     m_swerveDrive.resetPids();
-    m_swerveDrive.driverModeInit();
+    // m_swerveDrive.driverModeInit();
     m_swerveDrive.stop();
   }
 

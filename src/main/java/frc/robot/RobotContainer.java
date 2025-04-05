@@ -280,6 +280,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.leftTrigger().onTrue(new InstantCommand(() -> m_arm.setSelectedAlgaeState(SelectedAlgaeState.BARGE)));
 
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
+    m_operator.povRight().whileTrue(new ChangeState().setArm(ArmState.CLOSE_CLIMB));
     m_operator.povDown().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     
     m_operator.start().onTrue(new ChangeState().setArm(ArmState.STOW));
@@ -385,7 +386,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   @Override
   public void periodic() {
     // Enables Dashboard Numbers to be updated each loop
-    DashboardNumber.checkAll();
+    // DashboardNumber.checkAll();
     Logger.recordOutput("OperatorMode", m_isAlgaeMode.getAsBoolean() ? Color.kSeaGreen.toHexString() : Color.kWhite.toHexString());
     Logger.recordOutput("ReefState", m_arm.getSelectedCoralState());
   }
