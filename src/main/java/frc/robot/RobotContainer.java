@@ -217,7 +217,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
 
     Trigger slowModeTrigger = m_driver.leftStick()
         .or(m_driver.rightTrigger())
-        .or(m_driver.rightTrigger())
+        .or(m_driver.rightBumper())
         .or(m_driver.leftTrigger())
         .or(m_operator.povUp());
 
