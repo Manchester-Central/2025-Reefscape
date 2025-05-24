@@ -25,25 +25,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "6R-RHPF"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AimHP"
+            "pathName": "6R-M2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "RHPF-6L"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
+            "pathName": "M2-6L"
           }
         },
         {

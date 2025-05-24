@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AimReef"
+            "name": "AimReef-4L"
           }
         },
         {
@@ -26,6 +26,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "center",
   "choreoAuto": false
 }
