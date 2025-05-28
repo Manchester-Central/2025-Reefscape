@@ -67,10 +67,10 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   private Climber m_climber = new Climber(this::getArmValues);
   private Gamepad m_operator;
   private Gamepad m_driver;
-  private boolean m_isPrepAngleReached = false;
   private Trigger m_scoringTrigger;
   private SelectedAlgaeState m_selectedAlgaeState = SelectedAlgaeState.PROCESSOR;
   private SelectedCoralState m_selectedCoralState = SelectedCoralState.L4;
+  private boolean m_isClimbMode = false;
 
   /**
    * The possible states of the Arm's state machine.
@@ -99,6 +99,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     PREP_CLIMB,
     CLOSE_CLIMB,
     POST_CLIMB,
+    ESCAPE_CLIMB,
+    DOT,
     SCORE_SAFETY;
   }
 
@@ -190,6 +192,12 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
         break;
       case POST_CLIMB:
         postClimb();
+        break;
+      case ESCAPE_CLIMB:
+        escapeClimb();
+        break;
+      case DOT:
+        dot();
         break;
       case SCORE_SAFETY:
         scoreSafety();
@@ -520,6 +528,7 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void prepClimb() {
+    m_isClimbMode = true;
     m_basePivot.setTargetAngle(ArmPoses.ClimbPrep.getBasePivotAngle());
     m_gripperPivot.setTargetAngle(ArmPoses.ClimbPrep.getGripperPivotAngle());
     m_extender.setTargetLength(ArmPoses.ClimbPrep.getExtensionMeters());
@@ -538,21 +547,38 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   }
 
   private void closeClimb() {
-    m_basePivot.setTargetAngle(ArmPoses.CloseClimb.getBasePivotAngle(), BasePivotConstants.MMClimbCruiseVelocity);
-    m_gripperPivot.setTargetAngle(ArmPoses.CloseClimb.getGripperPivotAngle());
-    m_extender.setTargetLength(ArmPoses.CloseClimb.getExtensionMeters());
-    m_climber.setClimbSpeed(0);
-    m_gripper.setAlgaeGripSpeed(0);
-    m_gripper.setCoralGripSpeed(0);
+    if (m_isClimbMode) {
+      m_basePivot.setTargetAngle(ArmPoses.CloseClimb.getBasePivotAngle(), BasePivotConstants.MMClimbCruiseVelocity);
+      m_gripperPivot.setTargetAngle(ArmPoses.CloseClimb.getGripperPivotAngle());
+      m_extender.setTargetLength(ArmPoses.CloseClimb.getExtensionMeters());
+      m_climber.setClimbSpeed(0);
+      m_gripper.setAlgaeGripSpeed(0);
+      m_gripper.setCoralGripSpeed(0);
+    } else {
+      changeState(ArmState.STOW);
+    }
   }
 
   private void postClimb() {
-    m_basePivot.setTargetAngle(ArmPoses.Climb.getBasePivotAngle(), BasePivotConstants.MMClimbCruiseVelocity);
-    m_gripperPivot.setTargetAngle(ArmPoses.Climb.getGripperPivotAngle());
-    m_extender.setTargetLength(ArmPoses.Climb.getExtensionMeters());
-    m_climber.setClimbSpeed(0);
-    m_gripper.setAlgaeGripSpeed(0);
-    m_gripper.setCoralGripSpeed(0);
+    if (m_isClimbMode) {
+      m_basePivot.setTargetAngle(ArmPoses.Climb.getBasePivotAngle(), BasePivotConstants.MMClimbCruiseVelocity);
+      m_gripperPivot.setTargetAngle(ArmPoses.Climb.getGripperPivotAngle());
+      m_extender.setTargetLength(ArmPoses.Climb.getExtensionMeters());
+      m_climber.setClimbSpeed(0);
+      m_gripper.setAlgaeGripSpeed(0);
+      m_gripper.setCoralGripSpeed(0);
+    } else {
+      changeState(ArmState.STOW);
+    }
+  }
+
+  private void escapeClimb() {
+    m_isClimbMode = false;
+    changeState(ArmState.STOW);
+  }
+
+  private void dot() {
+    changeState(ArmState.DOT);
   }
 
   private void scoreSafety() {
