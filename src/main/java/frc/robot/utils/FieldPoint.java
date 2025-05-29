@@ -1,7 +1,6 @@
 package frc.robot.utils;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Feet;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.chaos131.util.FieldData;
