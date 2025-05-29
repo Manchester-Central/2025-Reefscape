@@ -214,7 +214,7 @@ public final class Constants {
       public static final ArmPose CloseClimb = new ArmPose("CloseClimb", 45, 0.35, 4.5);
 
       // Other Poses
-      public static final ArmPose Dot = new ArmPose("Dot", 45, 0.35, 4.5);
+      public static final ArmPose Dot = new ArmPose("Dot", 47.9, 0.0, -40.5);
     }
 
     /** This contains constants for our Base Pivot. */

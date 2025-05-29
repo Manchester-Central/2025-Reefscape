@@ -42,6 +42,7 @@ import frc.robot.commands.ReefAlignment;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
 import frc.robot.commands.WaitForState;
+import frc.robot.commands.Xmode;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.MechManager2D;
 import frc.robot.subsystems.SwerveDrive;
@@ -236,9 +237,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //     .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE).withArmInterrupt(ArmState.STOW)));
     // m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
     // m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
-    m_driver.b().whileTrue(new ChangeState().setArm(ArmState.DOT));
+    m_driver.b().whileTrue(new ConditionalCommand(new ChangeState().setArm(ArmState.STOW), new ChangeState().setArm(ArmState.DOT), () -> m_arm.getCurrentState() == ArmState.DOT));
     // m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
-    m_driver.x().whileTrue(new InstantCommand(() -> m_swerveDrive.setXMode()));
+    m_driver.x().whileTrue(new Xmode(m_swerveDrive));
     m_driver.y().whileTrue(new ConditionalCommand(
         aimAndPrepCoral(),
         aimAndPrepAlgaeGrab(),
