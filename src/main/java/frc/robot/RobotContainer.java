@@ -278,7 +278,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
     m_operator.povRight().whileTrue(new ChangeState().setArm(ArmState.CLOSE_CLIMB));
     m_operator.povDown().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
-    m_operator.povLeft().onTrue(new ChangeState().setArm(ArmState.ESCAPE_CLIMB));
+    m_operator.povLeft().whileTrue(new ChangeState().setArm(ArmState.ESCAPE_CLIMB));
     
     m_operator.start().onTrue(new ChangeState().setArm(ArmState.STOW));
     m_operator.back().whileTrue(new ChangeState().setArm(ArmState.MANUAL));
