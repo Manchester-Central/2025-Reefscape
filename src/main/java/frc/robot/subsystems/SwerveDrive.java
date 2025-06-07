@@ -13,6 +13,7 @@ import com.chaos131.swerve.SwerveConfigs;
 import com.chaos131.util.DashboardNumber;
 import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.config.PIDConstants;
@@ -274,6 +275,15 @@ public class SwerveDrive extends BaseSwerveDrive {
    */
   public void setRampRatePeriod(double newRate) {
     forAllModules((module) -> ((SwerveModule2025) module).setRampRatePeriod(newRate));
+  }
+
+  /**
+   * To change motor neutral mode on the fly.
+   * 
+   * @param mode new mode
+   */
+  public void setSpeedMotorNeutralMode(NeutralModeValue mode) {
+    forAllModules((module) -> ((SwerveModule2025) module).setSpeedMotorNeutralMode(mode));
   }
 
   /**

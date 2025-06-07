@@ -581,6 +581,8 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
     m_basePivot.setTargetAngle(ArmPoses.Dot.getBasePivotAngle());
     m_extender.setTargetLength(ArmPoses.Dot.getExtensionMeters());
     m_gripperPivot.setTargetAngle(ArmPoses.Dot.getGripperPivotAngle());
+    m_gripper.setAlgaeGripSpeed(0);
+    m_gripper.setCoralGripSpeed(0);
   }
 
   private void scoreSafety() {

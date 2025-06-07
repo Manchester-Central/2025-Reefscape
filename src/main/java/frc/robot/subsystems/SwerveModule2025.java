@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Degrees;
 import com.chaos131.swerve.implementation.TalonFxAndCancoderSwerveModule;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.units.measure.Angle;
@@ -75,5 +76,14 @@ public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
     m_speedConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = newRate;
     m_speedConfig.ClosedLoopRamps.VoltageClosedLoopRampPeriod = newRate;
     m_speedController.getConfigurator().apply(m_speedConfig.ClosedLoopRamps);
+  }
+
+  /**
+   * To change between brake and coast mode.
+   * 
+   * @param mode new mode
+   */
+  public void setSpeedMotorNeutralMode(NeutralModeValue mode) {
+    m_speedConfig.MotorOutput.NeutralMode = mode;
   }
 }
