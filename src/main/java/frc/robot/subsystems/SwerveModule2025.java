@@ -85,5 +85,6 @@ public class SwerveModule2025 extends TalonFxAndCancoderSwerveModule {
    */
   public void setSpeedMotorNeutralMode(NeutralModeValue mode) {
     m_speedConfig.MotorOutput.NeutralMode = mode;
+    m_speedController.getConfigurator().apply(m_speedConfig.MotorOutput);
   }
 }
