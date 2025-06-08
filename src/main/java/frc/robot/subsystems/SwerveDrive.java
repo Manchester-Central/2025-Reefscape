@@ -286,6 +286,10 @@ public class SwerveDrive extends BaseSwerveDrive {
     forAllModules((module) -> ((SwerveModule2025) module).setSpeedMotorNeutralMode(mode));
   }
 
+  public void setSupplyCurrentLimit(int currentLimit) {
+    forAllModules((module) -> ((SwerveModule2025) module).setSupplyCurrentLimit(currentLimit));
+  }
+
   /**
    * Allows PathPlanner to drive our robot.
    */
