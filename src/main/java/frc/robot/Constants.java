@@ -121,6 +121,8 @@ public final class Constants {
     public static final PIDValue AutoTranslationPID = new PIDValue(1.2, 0.06, 0.1);
     public static final Angle AtTargetAngleThreshold = Degrees.of(90);
     public static final double DriveToTargetTolerance = 0.01;
+    public static final int DefaultSwerveSupplyCurrentLimit = 35;
+    public static final int DotSwerveSupplyCurrentLimit = 45;
 
     /** This stores our constants for the front left swerve module. */
     public static class SwerveFrontLeftConstants {

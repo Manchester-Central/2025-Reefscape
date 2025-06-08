@@ -237,7 +237,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     //     .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE).withArmInterrupt(ArmState.STOW)));
     // m_driver.b().whileTrue(new AlignReefTag(m_swerveDrive, m_leftCamera, m_rightCamera));
     // m_driver.b().whileTrue(PathUtil.driveToClosestPointTeleopCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive));
-    m_driver.b().whileTrue(new ConditionalCommand(new ChangeState().setArm(ArmState.STOW), new ChangeState().setArm(ArmState.DOT), () -> m_arm.getCurrentState() == ArmState.DOT));
+    m_driver.b().whileTrue(new ConditionalCommand(new ChangeState().setArm(ArmState.STOW).alongWith(new InstantCommand(() -> m_swerveDrive.setSupplyCurrentLimit(SwerveConstants.DefaultSwerveSupplyCurrentLimit))), 
+        new ChangeState().setArm(ArmState.DOT).alongWith(new InstantCommand(() -> m_swerveDrive.setSupplyCurrentLimit(SwerveConstants.DotSwerveSupplyCurrentLimit))), 
+        () -> m_arm.getCurrentState() == ArmState.DOT));
     // m_driver.x().whileTrue(new DriverRelativeSetAngleDrive(m_driver, m_swerveDrive, () -> DriveDirection.Away.getAllianceAngle(), 1.0));
     m_driver.x().whileTrue(new Xmode(m_swerveDrive));
     m_driver.y().whileTrue(new ConditionalCommand(
