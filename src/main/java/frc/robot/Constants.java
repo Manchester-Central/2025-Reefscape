@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Amps;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meter;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
@@ -174,6 +175,11 @@ public final class Constants {
     public static final CameraSpecs limeLight3GSpecs = initializeLimelight3G();
     // Fudge factor to adjust camera capture time between the limelight and the robot's timestamps
     public static final double timeOffset = 0.00;
+  }
+
+  /** This contains constants for our quest nav system. */
+  public static class QuestNavConstants {
+    public static final Transform2d RobotToQuest = new Transform2d(0, 0, Rotation2d.fromDegrees(0));
   }
 
   /** This contains constants for our entire arm system. */

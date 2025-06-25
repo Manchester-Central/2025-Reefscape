@@ -45,6 +45,7 @@ import frc.robot.commands.WaitForState;
 import frc.robot.commands.Xmode;
 import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.MechManager2D;
+import frc.robot.subsystems.Quest;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Arm.ArmState;
@@ -75,6 +76,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
   public static Gripper m_gripper;
   public static Camera m_rightCamera;
   public static Camera m_leftCamera;
+  public static Quest m_quest;
   public static MechManager2D m_mech2dManager;
   public static SwerveDriveSimulation m_driveSim;
   private Map<String, ArmState> m_aprilTagToAlgaeHeightMap = Map.of(
@@ -118,6 +120,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             (data) -> updatePoseEstimator(data),
             () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
             () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
+    m_quest = new Quest(m_swerveDrive);
     NamedCommands.registerCommand("AimReef", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 2));
     NamedCommands.registerCommand("AimReefPrep", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 1)
         .alongWith(new ChangeState().setArm(ArmState.PREP_L4)));
