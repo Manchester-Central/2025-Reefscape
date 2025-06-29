@@ -266,6 +266,8 @@ public class SwerveDrive extends BaseSwerveDrive {
       m_odometry.addVisionMeasurement(
           data.getPose2d(), data.getTimestampSeconds(), data.getDeviationMatrix());
     }
+    Logger.recordOutput("DeleteMe/deviationMatrix", data.getDeviationMatrix());
+    Logger.recordOutput("DeleteMe/timestamp", data.getTimestampSeconds());
   }
 
   /**

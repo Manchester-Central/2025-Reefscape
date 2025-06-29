@@ -19,6 +19,7 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -431,6 +432,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    */
   @Override
   public synchronized void updatePoseEstimator(VisionData data) {
+    if (DriverStation.isEnabled()) {
+      return;
+    }
     var pose = data.getPose2d();
     boolean check = true;
     if (pose == null

@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.chaos131.vision.VisionData;
+import com.ctre.phoenix6.Utils;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -29,29 +32,38 @@ public class Quest extends SubsystemBase {
   @Override
   public void periodic() {
     questNav.commandPeriodic();
+    Pose2d questPose = questNav.getPose();
+    Pose2d robotPose = questPose.transformBy(QuestNavConstants.RobotToQuest.inverse());
+    Pose3d robotPose3d = new Pose3d(robotPose);
+    Logger.recordOutput("Quest/isConnected", questNav.isConnected());
+    Logger.recordOutput("Quest/isTracking", questNav.isTracking());
+    Logger.recordOutput("Quest/questPose", questPose);
+    Logger.recordOutput("Quest/robotPose", robotPose);
+    Logger.recordOutput("Quest/battery", questNav.getBatteryPercent());
+    Logger.recordOutput("Quest/robotPose3d", robotPose3d);
     if (DriverStation.isEnabled()) {
-      Pose2d questPose = questNav.getPose();
-      Pose2d robotPose = questPose.transformBy(QuestNavConstants.RobotToQuest.inverse());
-      Matrix<N3, N1> QUESTNAV_STD_DEVS =
-          VecBuilder.fill(
-              0.02, // Trust down to 2cm in X direction
-              0.02, // Trust down to 2cm in Y direction
-              0.035 // Trust down to 2 degrees rotational
-          );
+      // Matrix<N3, N1> QUESTNAV_STD_DEVS =
+      //     VecBuilder.fill(
+      //         0.02, // Trust down to 2cm in X direction
+      //         0.02, // Trust down to 2cm in Y direction
+      //         0.035 // Trust down to 2 degrees rotational
+      //     );
 
       if (questNav.isConnected() && questNav.isTracking()) {
         // Get timestamp from the QuestNav instance
         double timestamp = questNav.getDataTimestamp();
+        // double ctreTimestamp = Utils.fpgaToCurrentTime(timestamp);
 
         // You can put some sort of filtering here if you would like!
 
         // Add the measurement to our estimator
-        m_swerveDrive.addVisionMeasurement(new VisionData(new Pose3d(robotPose), timestamp, QUESTNAV_STD_DEVS.getData(), timestamp, getName())); //TODO Find a better way to get a Pose3d value.
+        m_swerveDrive.addVisionMeasurement(new VisionData(robotPose3d, timestamp, new double[] {0.02, 0.02, 0.035}, 1, getName())); //TODO Find a better way to get a Pose3d value.
+        // m_swerveDrive.resetPose(robotPose);
       }
     } else {
-      Pose2d robotPose = m_swerveDrive.getPose();
-      Pose2d questPose = robotPose.transformBy(QuestNavConstants.RobotToQuest);
-      questNav.setPose(questPose);
+      Pose2d robotDisabledPose = m_swerveDrive.getPose();
+      Pose2d questDisabledPose = robotDisabledPose.transformBy(QuestNavConstants.RobotToQuest);
+      questNav.setPose(questDisabledPose);
     }
   }
 }
