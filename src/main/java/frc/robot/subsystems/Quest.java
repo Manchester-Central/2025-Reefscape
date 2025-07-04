@@ -4,17 +4,15 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Microseconds;
+import static edu.wpi.first.units.Units.Seconds;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.chaos131.vision.VisionData;
-import com.ctre.phoenix6.Utils;
-
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.QuestNavConstants;
@@ -51,13 +49,13 @@ public class Quest extends SubsystemBase {
 
       if (questNav.isConnected() && questNav.isTracking()) {
         // Get timestamp from the QuestNav instance
-        double timestamp = questNav.getDataTimestamp();
+        Time timestamp = Microseconds.of(questNav.getDataTimestamp());
         // double ctreTimestamp = Utils.fpgaToCurrentTime(timestamp);
 
         // You can put some sort of filtering here if you would like!
 
         // Add the measurement to our estimator
-        m_swerveDrive.addVisionMeasurement(new VisionData(robotPose3d, timestamp, new double[] {0.02, 0.02, 0.035}, 1, getName())); //TODO Find a better way to get a Pose3d value.
+        m_swerveDrive.addVisionMeasurement(new VisionData(robotPose3d, timestamp.in(Seconds), new double[] {0.02, 0.02, 0.035}, 1, getName())); //TODO Find a better way to get a Pose3d value.
         // m_swerveDrive.resetPose(robotPose);
       }
     } else {
