@@ -119,6 +119,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
             () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
     NamedCommands.registerCommand("AimReef", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 2));
+    NamedCommands.registerCommand("AimReefCenter", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefCenterDrivePose(), m_swerveDrive, 2));
     NamedCommands.registerCommand("AimReefPrep", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 1)
         .alongWith(new ChangeState().setArm(ArmState.PREP_L4)));
     NamedCommands.registerCommand("GoToReef8L", new ReefAlignment(FieldPoint.ReefPose8, true, m_swerveDrive));
@@ -132,6 +133,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("PrepL4",  new ChangeState().setArm(ArmState.PREP_L4));
     NamedCommands.registerCommand("IntakeFromHP", new ChangeState().setArm(ArmState.INTAKE_FROM_HP).andThen(new WaitForCoral(m_arm)));
     NamedCommands.registerCommand("IntakeFromFloor", new ChangeState().setArm(ArmState.INTAKE_CORAL_FROM_FLOOR).andThen(new WaitForCoral(m_arm)));
+    NamedCommands.registerCommand("IntakeAlgaeHigh", new ChangeState().setArm(ArmState.ALGAE_HIGH));
+    NamedCommands.registerCommand("IntakeAlgaeLow", new ChangeState().setArm(ArmState.ALGAE_LOW));
     NamedCommands.registerCommand("HoldCoral", new ChangeState().setArm(ArmState.HOLD_CORAL));
     //JOHN SAVE US PLEASE: change hold coral to hold algae
     NamedCommands.registerCommand("AimHP", (PathUtil.driveToClosestPointAutoCommand(FieldPoint.getHpDrivePoses(), m_swerveDrive, 0.5)
