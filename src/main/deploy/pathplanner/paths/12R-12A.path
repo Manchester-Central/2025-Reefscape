@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.749308762410529,
-        "y": 5.768840192796121
+        "x": 5.981407244113173,
+        "y": 4.031346526228246
       },
       "isLocked": false,
       "linkedName": "12R"
     },
     {
       "anchor": {
-        "x": 2.2035,
-        "y": 6.4625
+        "x": 6.331960227272727,
+        "y": 4.0
       },
       "prevControl": {
-        "x": 4.882109154929577,
-        "y": 5.158626760563381
+        "x": 6.524960692089484,
+        "y": 3.7912117885622068
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LHPF"
+      "linkedName": "12A"
     }
   ],
   "rotationTargets": [],
@@ -41,11 +41,11 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 128.3674853848615
+    "velocity": 0.0,
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "to LHP",
+  "folder": "to Reef Align",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 179.8632561557819

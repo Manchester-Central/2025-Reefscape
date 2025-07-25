@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.125717213114753,
-        "y": 3.8272028688524586
+        "x": 5.8333806818181815,
+        "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.749308762410529,
-        "y": 5.768840192796121
+        "x": 6.30588555187008,
+        "y": 4.3258083974718895
       },
       "isLocked": false,
-      "linkedName": "12R"
+      "linkedName": "12C"
     },
     {
       "anchor": {
-        "x": 2.2035,
-        "y": 6.4625
+        "x": 7.827698863636364,
+        "y": 5.042102272727273
       },
       "prevControl": {
-        "x": 4.882109154929577,
-        "y": 5.158626760563381
+        "x": 7.2125930179063715,
+        "y": 4.6311344736864335
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LHPF"
+      "linkedName": "B1"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.5,
-    "maxAcceleration": 3.5,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 1.5,
     "maxAngularVelocity": 680.0,
     "maxAngularAcceleration": 540.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 128.3674853848615
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "to LHP",
+  "folder": "to Barge",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 179.8632561557819
+    "rotation": 180.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -39,6 +40,7 @@ import frc.robot.commands.ChangeState;
 import frc.robot.commands.DriverRelativeDrive;
 import frc.robot.commands.DriverRelativeSetAngleDrive;
 import frc.robot.commands.ReefAlignment;
+import frc.robot.commands.SimpleDriveToPositionV2;
 import frc.robot.commands.UpdateHeading;
 import frc.robot.commands.WaitForCoral;
 import frc.robot.commands.WaitForState;
@@ -56,6 +58,8 @@ import frc.robot.utils.FieldPoint;
 import frc.robot.utils.PathUtil;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.seasonspecific.reefscape2025.ReefscapeCoralOnFly;
@@ -122,6 +126,11 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     NamedCommands.registerCommand("AimReefCenter", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefCenterDrivePose(), m_swerveDrive, 2));
     NamedCommands.registerCommand("AimReefPrep", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 1)
         .alongWith(new ChangeState().setArm(ArmState.PREP_L4)));
+    NamedCommands.registerCommand("AimBarge", new DeferredCommand(() -> new ConditionalCommand(
+        new SimpleDriveToPositionV2(m_swerveDrive, () -> PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getBluePose(), true), 
+        new SimpleDriveToPositionV2(m_swerveDrive, () -> PathUtil.findClosestXpointOnLine(m_swerveDrive, FieldPoint.CenterBarge).getRedPose(), true), 
+        () -> m_swerveDrive.getPose().getX() < FieldDimensions.FieldLength / 2), Set.of(m_swerveDrive))
+        .alongWith(new ChangeState().setArm(ArmState.PREP_BARGE).withArmInterrupt(ArmState.STOW)));
     NamedCommands.registerCommand("GoToReef8L", new ReefAlignment(FieldPoint.ReefPose8, true, m_swerveDrive));
     NamedCommands.registerCommand("ScoreL1",  new ChangeState().setArm(ArmState.SCORE_L1).andThen(new WaitForState().forArmState(ArmState.STOW)));
     NamedCommands.registerCommand("ScoreL2",  new ChangeState().setArm(ArmState.SCORE_L2).andThen(new WaitForState().forArmState(ArmState.STOW)));

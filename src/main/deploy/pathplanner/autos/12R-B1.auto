@@ -23,15 +23,39 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "AimReefCenter"
+            "pathName": "12R-12A"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "IntakeAlgaeLow"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.7
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "12A-12C"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "12A-B1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimBarge"
           }
         }
       ]
