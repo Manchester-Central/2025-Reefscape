@@ -123,86 +123,85 @@ public class Arm extends StateBasedSubsystem<Arm.ArmState> {
   @Override
   protected void runStateMachine() {
     switch (getCurrentState()) {
-      default:
       case MANUAL:
         manualState();
         break;
-      // case START:
-      //   startState();
-      //   break;
-      // default:
-      // case STOW:
-      //   stowState();
-      //   break;
-      // case INTAKE_CORAL_FROM_FLOOR:
-      //   intakeCoralFromFloorState();
-      //   break;
-      // case INTAKE_ALGAE_FROM_FLOOR:
-      //   intakeAlgaeFromFloorState();
-      //   break;
-      // case INTAKE_FROM_HP:
-      //   intakeFromHpState();
-      //   break;
-      // case PREP_L1:
-      //   prepL1State();
-      //   break;
-      // case PREP_L2:
-      //   prepL2State();
-      //   break;
-      // case PREP_L3:
-      //   prepL3State();
-      //   break;
-      // case PREP_L4:
-      //   prepL4State();
-      //   break;
-      // case PREP_PROCESSOR:
-      //   prepProcessorState();
-      //   break;
-      // case PREP_BARGE:
-      //   prepBargeState();
-      //   break;
-      // case SCORE_L1:
-      //   scoreL1State();
-      //   break;
-      // case SCORE_L2:
-      //   scoreL2State();
-      //   break;
-      // case SCORE_L3:
-      //   scoreL3State();
-      //   break;
-      // case SCORE_L4:
-      //   scoreL4State();
-      //   break;
-      // case ALGAE_HIGH:
-      //   algaeHighState();
-      //   break;
-      // case ALGAE_LOW:
-      //   algaeLowState();
-      //   break;
-      // case HOLD_CORAL:
-      //   holdCoralState();
-      //   break;
-      // case HOLD_ALGAE:
-      //   holdAlgaeState();
-      //   break;
-      // case PREP_CLIMB:
-      //   prepClimb();
-      //   break;
-      // case CLOSE_CLIMB:
-      //   closeClimb();
-      //   break;
-      // case POST_CLIMB:
-      //   postClimb();
-      //   break;
-      // case ESCAPE_CLIMB:
-      //   escapeClimb();
-      //   break;
-      // case DOT:
-      //   dot();
-      //   break;
-      // case SCORE_SAFETY:
-      //   scoreSafety();
-      //   break;
+      case START:
+        startState();
+        break;
+      default:
+      case STOW:
+        stowState();
+        break;
+      case INTAKE_CORAL_FROM_FLOOR:
+        intakeCoralFromFloorState();
+        break;
+      case INTAKE_ALGAE_FROM_FLOOR:
+        intakeAlgaeFromFloorState();
+        break;
+      case INTAKE_FROM_HP:
+        intakeFromHpState();
+        break;
+      case PREP_L1:
+        prepL1State();
+        break;
+      case PREP_L2:
+        prepL2State();
+        break;
+      case PREP_L3:
+        prepL3State();
+        break;
+      case PREP_L4:
+        prepL4State();
+        break;
+      case PREP_PROCESSOR:
+        prepProcessorState();
+        break;
+      case PREP_BARGE:
+        prepBargeState();
+        break;
+      case SCORE_L1:
+        scoreL1State();
+        break;
+      case SCORE_L2:
+        scoreL2State();
+        break;
+      case SCORE_L3:
+        scoreL3State();
+        break;
+      case SCORE_L4:
+        scoreL4State();
+        break;
+      case ALGAE_HIGH:
+        algaeHighState();
+        break;
+      case ALGAE_LOW:
+        algaeLowState();
+        break;
+      case HOLD_CORAL:
+        holdCoralState();
+        break;
+      case HOLD_ALGAE:
+        holdAlgaeState();
+        break;
+      case PREP_CLIMB:
+        prepClimb();
+        break;
+      case CLOSE_CLIMB:
+        closeClimb();
+        break;
+      case POST_CLIMB:
+        postClimb();
+        break;
+      case ESCAPE_CLIMB:
+        escapeClimb();
+        break;
+      case DOT:
+        dot();
+        break;
+      case SCORE_SAFETY:
+        scoreSafety();
+        break;
     }
   }
 

@@ -179,7 +179,10 @@ public final class Constants {
 
   /** This contains constants for our quest nav system. */
   public static class QuestNavConstants {
-    public static final Transform2d RobotToQuest = new Transform2d(Inches.of(10.5), Inches.of(-14), Rotation2d.fromDegrees(-90));
+    public static final DashboardNumber RobotToQuestXInches = new DashboardNumber("RobotToQuestXInches", -7.608, true, (x) -> {});
+    public static final DashboardNumber RobotToQuestYInches = new DashboardNumber("RobotToQuestYInches", -13.896, true, (y) -> {});
+    public static final Rotation2d RobotToQuestRotation = Rotation2d.fromDegrees(-90);
+    // public static final Transform2d RobotToQuest = new Transform2d(Inches.of(-13.896), Inches.of(-7.608), Rotation2d.fromDegrees(-90));
   }
 
   /** This contains constants for our entire arm system. */
