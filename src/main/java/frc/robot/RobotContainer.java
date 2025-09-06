@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -284,7 +285,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
     m_operator.povRight().whileTrue(new ChangeState().setArm(ArmState.CLOSE_CLIMB));
     m_operator.povDown().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
-    m_operator.povLeft().whileTrue(new ChangeState().setArm(ArmState.ESCAPE_CLIMB));
+    m_operator.povLeft().whileTrue(new InstantCommand(() -> m_quest.resetQuestPose(true)));
+    m_operator.povLeft().onFalse(new InstantCommand(() -> m_quest.resetQuestPose(false)));
     
     m_operator.start().onTrue(new ChangeState().setArm(ArmState.STOW));
     m_operator.back().whileTrue(new ChangeState().setArm(ArmState.MANUAL));

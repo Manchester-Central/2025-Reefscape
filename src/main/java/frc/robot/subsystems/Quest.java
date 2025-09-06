@@ -36,34 +36,46 @@ import gg.questnav.questnav.QuestNav;
 public class Quest extends SubsystemBase {
   QuestNav questNav = new QuestNav();
   private SwerveDrive m_swerveDrive;
+  private boolean isResetting = false;
+  private boolean isResetActive = false;
+  private boolean planB = false;
 
   /** Creates a new Quest. */
   public Quest(SwerveDrive swerveDrive) {
     m_swerveDrive = swerveDrive;
   }
 
+  Pose2d questPose = null;
+  Pose2d robotPose = null;
+
   @Override
   public void periodic() {
     questNav.commandPeriodic();
-    OptionalInt battery = questNav.getBatteryPercent();
-    PoseFrame[] poseFrames = questNav.getAllUnreadPoseFrames();
-    if (poseFrames.length <= 0) {
-      return;
-    }
     Transform2d robotToQuest = new Transform2d(
-        Inches.of(QuestNavConstants.RobotToQuestXInches.get()), 
-        Inches.of(QuestNavConstants.RobotToQuestYInches.get()), 
-        QuestNavConstants.RobotToQuestRotation);
-    Pose2d questPose = poseFrames[poseFrames.length - 1].questPose();
-    Pose2d robotPose = questPose.transformBy(robotToQuest.inverse());
-    Pose3d robotPose3d = new Pose3d(robotPose);
+      Inches.of(QuestNavConstants.RobotToQuestXInches.get()), 
+      Inches.of(QuestNavConstants.RobotToQuestYInches.get()), 
+      QuestNavConstants.RobotToQuestRotation);
+    PoseFrame[] poseFrames = questNav.getAllUnreadPoseFrames();
+    OptionalInt battery = questNav.getBatteryPercent();
     Logger.recordOutput("Quest/isConnected", questNav.isConnected());
     Logger.recordOutput("Quest/isTracking", questNav.isTracking());
+    Logger.recordOutput("Quest/battery", battery.isPresent() ? battery.getAsInt() : 0);
+    Logger.recordOutput("Quest/isResetting", isResetting);
+    Logger.recordOutput("Quest/isResetActive", isResetActive);
+    Logger.recordOutput("Quest/planB", planB);
+    if (poseFrames.length > 0) {
+      questPose = poseFrames[poseFrames.length - 1].questPose();
+      robotPose = questPose.transformBy(robotToQuest.inverse());
+    }
+    if (robotPose == null) {
+      return;
+    }
+    Pose3d robotPose3d = new Pose3d(robotPose);
     Logger.recordOutput("Quest/questPose", questPose);
     Logger.recordOutput("Quest/robotPose", robotPose);
-    Logger.recordOutput("Quest/battery", battery.isPresent() ? battery.getAsInt() : 0);
     Logger.recordOutput("Quest/robotPose3d", robotPose3d);
-    if (DriverStation.isEnabled()) {
+    planB = DriverStation.isEnabled() && !isResetting;
+    if (planB) {
       Matrix<N3, N1> QUESTNAV_STD_DEVS =
           VecBuilder.fill(
               0.02, // Trust down to 2cm in X direction
@@ -87,7 +99,7 @@ public class Quest extends SubsystemBase {
 
 
           // Add the measurement to our estimator
-          m_swerveDrive.addVisionMeasurement(new VisionData(robotPose3d, ctreTimestamp, new double[] {0.02, 0.02, 0.035}, 1, getName())); //TODO Find a better way to get a Pose3d value.
+          m_swerveDrive.addVisionMeasurement(new VisionData(robotPose3d, ctreTimestamp, QUESTNAV_STD_DEVS.getData(), 1, getName())); //TODO Find a better way to get a Pose3d value.
           // m_swerveDrive.resetPose(robotPose);
 
           // Add the measurement to our estimator
@@ -95,10 +107,15 @@ public class Quest extends SubsystemBase {
         }
       } 
     } else {
+      isResetActive = true;
       Pose2d robotDisabledPose = m_swerveDrive.getPose();
       Pose2d questDisabledPose = robotDisabledPose.transformBy(robotToQuest);
       questNav.setPose(questDisabledPose);
     }
+  }
+
+  public void resetQuestPose(boolean resetting) {
+    isResetting = resetting;
   }
 }
 
