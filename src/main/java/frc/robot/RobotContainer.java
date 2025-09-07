@@ -257,6 +257,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.povLeft().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Left)); // 90 degrees for blue
     m_driver.povRight().onTrue(new UpdateHeading(m_swerveDrive, DriveDirection.Right)); // -90 degrees for blue
 
+    m_driver.start().whileTrue(new InstantCommand(() -> m_quest.resetRobotPose()));
     //m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     //m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
 
@@ -285,8 +286,7 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_operator.povUp().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
     m_operator.povRight().whileTrue(new ChangeState().setArm(ArmState.CLOSE_CLIMB));
     m_operator.povDown().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
-    m_operator.povLeft().whileTrue(new InstantCommand(() -> m_quest.resetQuestPose(true)));
-    m_operator.povLeft().onFalse(new InstantCommand(() -> m_quest.resetQuestPose(false)));
+    m_operator.povLeft().whileTrue(new ChangeState().setArm(ArmState.ESCAPE_CLIMB));
     
     m_operator.start().onTrue(new ChangeState().setArm(ArmState.STOW));
     m_operator.back().whileTrue(new ChangeState().setArm(ArmState.MANUAL));
@@ -434,7 +434,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
    */
   @Override
   public synchronized void updatePoseEstimator(VisionData data) {
-    if (DriverStation.isEnabled()) {
+    // cancel out limelight pose estimation, normally isEnabled
+    if (true) {
       return;
     }
     var pose = data.getPose2d();

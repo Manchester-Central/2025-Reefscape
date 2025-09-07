@@ -11,10 +11,8 @@ import static edu.wpi.first.units.Units.Seconds;
 import java.util.OptionalInt;
 
 import org.littletonrobotics.junction.Logger;
-
 import com.chaos131.vision.VisionData;
 import com.ctre.phoenix6.Utils;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -29,6 +27,7 @@ import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.QuestNavConstants;
+import frc.robot.utils.FieldPoint;
 import gg.questnav.questnav.PoseFrame;
 import gg.questnav.questnav.QuestNav;
 
@@ -36,7 +35,11 @@ import gg.questnav.questnav.QuestNav;
 public class Quest extends SubsystemBase {
   QuestNav questNav = new QuestNav();
   private SwerveDrive m_swerveDrive;
-  private boolean isResetting = false;
+  Transform2d robotToQuest = new Transform2d(
+    Inches.of(QuestNavConstants.RobotToQuestXInches.get()), 
+    Inches.of(QuestNavConstants.RobotToQuestYInches.get()), 
+    QuestNavConstants.RobotToQuestRotation);
+  private boolean hasSetPose = false;
   private boolean isResetActive = false;
   private boolean planB = false;
 
@@ -48,19 +51,22 @@ public class Quest extends SubsystemBase {
   Pose2d questPose = null;
   Pose2d robotPose = null;
 
+  public void resetRobotPose() {
+    Pose2d robotPoseReset = FieldPoint.RobotPose12.getCurrentAlliancePose();
+    Pose2d questPoseReset = robotPoseReset.transformBy(robotToQuest);
+    questNav.setPose(questPoseReset);
+    hasSetPose = true;
+  }
+
   @Override
   public void periodic() {
     questNav.commandPeriodic();
-    Transform2d robotToQuest = new Transform2d(
-      Inches.of(QuestNavConstants.RobotToQuestXInches.get()), 
-      Inches.of(QuestNavConstants.RobotToQuestYInches.get()), 
-      QuestNavConstants.RobotToQuestRotation);
     PoseFrame[] poseFrames = questNav.getAllUnreadPoseFrames();
     OptionalInt battery = questNav.getBatteryPercent();
     Logger.recordOutput("Quest/isConnected", questNav.isConnected());
     Logger.recordOutput("Quest/isTracking", questNav.isTracking());
     Logger.recordOutput("Quest/battery", battery.isPresent() ? battery.getAsInt() : 0);
-    Logger.recordOutput("Quest/isResetting", isResetting);
+    Logger.recordOutput("Quest/hasSetPose", hasSetPose);
     Logger.recordOutput("Quest/isResetActive", isResetActive);
     Logger.recordOutput("Quest/planB", planB);
     if (poseFrames.length > 0) {
@@ -74,7 +80,7 @@ public class Quest extends SubsystemBase {
     Logger.recordOutput("Quest/questPose", questPose);
     Logger.recordOutput("Quest/robotPose", robotPose);
     Logger.recordOutput("Quest/robotPose3d", robotPose3d);
-    planB = DriverStation.isEnabled() && !isResetting;
+    planB = true;
     if (planB) {
       Matrix<N3, N1> QUESTNAV_STD_DEVS =
           VecBuilder.fill(
@@ -84,6 +90,9 @@ public class Quest extends SubsystemBase {
           );
 
       if (questNav.isConnected() && questNav.isTracking()) {
+        if (!hasSetPose) {
+          resetRobotPose();
+        }
         // Loop over the pose data frames and send them to the pose estimator
         for (PoseFrame questFrame : poseFrames) {
           // Get the pose of the Quest
@@ -102,16 +111,7 @@ public class Quest extends SubsystemBase {
 
         }
       } 
-    } else {
-      isResetActive = true;
-      Pose2d robotDisabledPose = m_swerveDrive.getPose();
-      Pose2d questDisabledPose = robotDisabledPose.transformBy(robotToQuest);
-      questNav.setPose(questDisabledPose);
     }
-  }
-
-  public void resetQuestPose(boolean resetting) {
-    isResetting = resetting;
   }
 }
 
