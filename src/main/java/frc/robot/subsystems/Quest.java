@@ -58,6 +58,20 @@ public class Quest extends SubsystemBase {
     hasSetPose = true;
   }
 
+  public void resetRobotPoseBlue() {
+    Pose2d robotPoseReset = FieldPoint.RobotPose12.getBluePose();
+    Pose2d questPoseReset = robotPoseReset.transformBy(robotToQuest);
+    questNav.setPose(questPoseReset);
+    hasSetPose = true;
+  }
+
+  public void resetRobotPoseRed() {
+    Pose2d robotPoseReset = FieldPoint.RobotPose12.getRedPose();
+    Pose2d questPoseReset = robotPoseReset.transformBy(robotToQuest);
+    questNav.setPose(questPoseReset);
+    hasSetPose = true;
+  }
+
   @Override
   public void periodic() {
     questNav.commandPeriodic();
@@ -80,7 +94,7 @@ public class Quest extends SubsystemBase {
     Logger.recordOutput("Quest/questPose", questPose);
     Logger.recordOutput("Quest/robotPose", robotPose);
     Logger.recordOutput("Quest/robotPose3d", robotPose3d);
-    planB = true;
+    planB = DriverStation.isFMSAttached(); // TODO: fix this?
     if (planB) {
       Matrix<N3, N1> QUESTNAV_STD_DEVS =
           VecBuilder.fill(

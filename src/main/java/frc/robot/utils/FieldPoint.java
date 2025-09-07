@@ -69,7 +69,7 @@ public class FieldPoint {
       ReefPose12.getBluePose().transformBy(new Transform2d(
         RobotDimensions.FrontBackLength.in(Meters) / 2, 
         0.0, 
-        Rotation2d.fromDegrees(0))));
+        Rotation2d.fromDegrees(180))));
   // public static final FieldPoint ReefCenter = new FieldPoint("reefCenter", ReefPose2.getBluePose().interpolate(ReefPose8.getBluePose().rotateBy(Rotation2d.fromDegrees(180)), 0.5));
   public static final FieldPoint ReefCenter = getMidPoint("reefCenter", ReefPose2, ReefPose8);
 
