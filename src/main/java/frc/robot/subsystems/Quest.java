@@ -94,12 +94,8 @@ public class Quest extends SubsystemBase {
           // Transform by the mount pose to get your robot pose
           robotPose3d = questPose3d.transformBy(new Transform3d(robotToQuest.inverse()));
 
-          // Convert FPGA timestamp to CTRE's time domain using Phoenix 6 utility
-          double ctreTimestamp = Utils.fpgaToCurrentTime(timestamp);
-
-
           // Add the measurement to our estimator
-          m_swerveDrive.addVisionMeasurement(new VisionData(robotPose3d, ctreTimestamp, QUESTNAV_STD_DEVS.getData(), 1, getName())); //TODO Find a better way to get a Pose3d value.
+          m_swerveDrive.addVisionMeasurement(new VisionData(robotPose3d, timestamp, QUESTNAV_STD_DEVS.getData(), 1, getName())); //TODO Find a better way to get a Pose3d value.
           // m_swerveDrive.resetPose(robotPose);
 
           // Add the measurement to our estimator
