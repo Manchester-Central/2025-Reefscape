@@ -52,24 +52,26 @@ public class Quest extends SubsystemBase {
   Pose2d robotPose = null;
 
   public void resetRobotPose() {
-    Pose2d robotPoseReset = FieldPoint.RobotPose12.getCurrentAlliancePose();
+    Pose2d robotPoseReset = FieldPoint.RobotPose6.getCurrentAlliancePose();
     Pose2d questPoseReset = robotPoseReset.transformBy(robotToQuest);
     questNav.setPose(questPoseReset);
     hasSetPose = true;
   }
 
   public void resetRobotPoseBlue() {
-    Pose2d robotPoseReset = FieldPoint.RobotPose12.getBluePose();
+    Pose2d robotPoseReset = FieldPoint.RobotPose6.getBluePose();
     Pose2d questPoseReset = robotPoseReset.transformBy(robotToQuest);
     questNav.setPose(questPoseReset);
     hasSetPose = true;
+    planB = true;
   }
 
   public void resetRobotPoseRed() {
-    Pose2d robotPoseReset = FieldPoint.RobotPose12.getRedPose();
+    Pose2d robotPoseReset = FieldPoint.RobotPose6.getRedPose();
     Pose2d questPoseReset = robotPoseReset.transformBy(robotToQuest);
     questNav.setPose(questPoseReset);
     hasSetPose = true;
+    planB = true;
   }
 
   @Override
@@ -94,7 +96,6 @@ public class Quest extends SubsystemBase {
     Logger.recordOutput("Quest/questPose", questPose);
     Logger.recordOutput("Quest/robotPose", robotPose);
     Logger.recordOutput("Quest/robotPose3d", robotPose3d);
-    planB = DriverStation.isFMSAttached(); // TODO: fix this?
     if (planB) {
       Matrix<N3, N1> QUESTNAV_STD_DEVS =
           VecBuilder.fill(
@@ -125,6 +126,8 @@ public class Quest extends SubsystemBase {
 
         }
       } 
+    } else {
+      planB = DriverStation.isDSAttached(); // TODO: fix this?
     }
   }
 }

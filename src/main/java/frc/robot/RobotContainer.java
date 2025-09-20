@@ -260,14 +260,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.start().whileTrue(new InstantCommand(() -> m_quest.resetRobotPose()));
     //m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     //m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
-
-    if (DriverStation.isDisabled()) {
-      if (m_driver.start().getAsBoolean()) {
-        m_quest.resetRobotPoseRed();
-      } else if (m_driver.back().getAsBoolean()) {
-        m_quest.resetRobotPoseBlue();
-      }
-    }
+    m_driver.start().whileTrue(new InstantCommand(() -> m_quest.resetRobotPoseRed()));
+    m_driver.back().whileTrue(new InstantCommand(() -> m_quest.resetRobotPoseBlue()));
 
     slowModeTrigger.whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
