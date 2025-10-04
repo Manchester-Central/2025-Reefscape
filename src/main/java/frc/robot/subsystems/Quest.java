@@ -52,7 +52,7 @@ public class Quest extends SubsystemBase {
   Pose2d robotPose = null;
 
   public void resetRobotPose() {
-    Pose2d robotPoseReset = FieldPoint.RobotPose6.getCurrentAlliancePose();
+    Pose2d robotPoseReset = FieldPoint.RobotPose12.getCurrentAlliancePose();
     Pose2d questPoseReset = robotPoseReset.transformBy(robotToQuest);
     questNav.setPose(questPoseReset);
     hasSetPose = true;
@@ -120,10 +120,6 @@ public class Quest extends SubsystemBase {
 
           // Add the measurement to our estimator
           m_swerveDrive.addVisionMeasurement(new VisionData(robotPose3d, timestamp, QUESTNAV_STD_DEVS.getData(), 1, getName())); //TODO Find a better way to get a Pose3d value.
-          // m_swerveDrive.resetPose(robotPose);
-
-          // Add the measurement to our estimator
-
         }
       } 
     } else {

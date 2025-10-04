@@ -122,6 +122,8 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
             (data) -> updatePoseEstimator(data),
             () -> m_swerveDrive.getRobotSpeed().in(MetersPerSecond),
             () -> m_swerveDrive.getRobotRotationSpeed().in(RadiansPerSecond));
+    // m_leftCamera.setUseForOdometry(false);
+
     m_quest = new Quest(m_swerveDrive);
     NamedCommands.registerCommand("AimReef", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 2));
     NamedCommands.registerCommand("AimReefPrep", PathUtil.driveToClosestPointAutoCommand(FieldPoint.getReefDrivePoses(), m_swerveDrive, 1)
@@ -260,8 +262,9 @@ public class RobotContainer extends ChaosRobotContainer<SwerveDrive> {
     m_driver.start().whileTrue(new InstantCommand(() -> m_quest.resetRobotPose()));
     //m_driver.start().whileTrue(new ChangeState().setArm(ArmState.POST_CLIMB));
     //m_driver.back().whileTrue(new ChangeState().setArm(ArmState.PREP_CLIMB));
-    m_driver.start().whileTrue(new InstantCommand(() -> m_quest.resetRobotPoseRed()));
-    m_driver.back().whileTrue(new InstantCommand(() -> m_quest.resetRobotPoseBlue()));
+    // m_driver.start().whileTrue(new InstantCommand(() -> m_quest.resetRobotPoseRed()));
+    // m_driver.back().whileTrue(new InstantCommand(() -> m_quest.resetRobotPoseBlue()));
+    m_driver.back().whileTrue(new InstantCommand(() -> m_quest.resetRobotPose()));
 
     slowModeTrigger.whileTrue(
       new StartEndCommand(() -> m_swerveDrive.setRampRatePeriod(SwerveConstants.DriverSlowRampRatePeriod),
